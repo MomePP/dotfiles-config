@@ -4,7 +4,7 @@ if !exists('g:loaded_defx') | finish | endif
 "cnoreabbrev sf Defx -listed -new
 "      \ -columns=indent:mark:icon:icons:filename:git:size
 "      \ -buffer-name=tab`tabpagenr()`<CR>
-nnoremap <silent>sf :<C-u>Defx -listed -resume
+nnoremap <silent>sf :<C-u>Defx -listed -resume -show-ignored-files
       \ -columns=indent:mark:icon:icons:filename:git:size
       \ -buffer-name=tab`tabpagenr()`
       \ `expand('%:p:h')` -search=`expand('%:p')`<CR>
@@ -106,7 +106,7 @@ function! s:open_defx_if_directory()
   " If the path is a directory, delete the (useless) buffer and open defx for
   " that directory instead.
   if isdirectory(l:full_path)
-    execute "Defx -listed -columns=indent:mark:icon:icons:filename:git:size -buffer-name=tab`tabpagenr()` `expand('%:p')` | bd " . expand('%:r')
+    execute "Defx -listed -show-ignored-files -columns=indent:mark:icon:icons:filename:git:size -buffer-name=tab`tabpagenr()` `expand('%:p')` | bd " . expand('%:r')
   endif
 endfunction
 
