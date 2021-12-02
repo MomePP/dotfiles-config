@@ -23,7 +23,7 @@ set scrolloff=8
 set sidescrolloff=8
 " set list
 " set listchars=tab:\ ,trail:
-set hidden
+" set hidden " -- this push to buffer if not save
 set expandtab
 set mouse=a
 set shell=fish

@@ -27,6 +27,7 @@ if has("nvim")
   Plug 'onsails/lspkind-nvim'
   " Plug 'flrnprz/plastic.vim'
   Plug 'MomePP/plastic.vim'
+  Plug 'numToStr/Comment.nvim'
 endif
 
 call plug#end()

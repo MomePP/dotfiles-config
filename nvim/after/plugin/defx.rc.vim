@@ -13,7 +13,8 @@ nnoremap <silent>fi :<C-u>Defx -new `expand('%:p:h')` -search=`expand('%:p')`<CR
 function! s:defx_my_settings() abort
   " Define mappings
   nnoremap <silent><buffer><expr> <CR>
-        \ defx#do_action('open')
+        \ defx#is_directory() ? defx#do_action('open') :
+        \ defx#do_action('drop')
   nnoremap <silent><buffer><expr> c
         \ defx#do_action('copy')
   nnoremap <silent><buffer><expr> m
@@ -22,8 +23,6 @@ function! s:defx_my_settings() abort
         \ defx#do_action('paste')
   nnoremap <silent><buffer><expr> l
         \ defx#do_action('open')
-  nnoremap <silent><buffer><expr> E
-        \ defx#do_action('open', 'vsplit')
   nnoremap <silent><buffer><expr> P
         \ defx#do_action('open', 'pedit')
   nnoremap <silent><buffer><expr> o
@@ -75,6 +74,12 @@ function! s:defx_my_settings() abort
         \ defx#do_action('change_vim_cwd')
 endfunction
 
+call defx#custom#option('_', {
+      \ 'winwidth': 30,
+      \ 'split': 'vertical',
+      \ 'direction': 'topleft',
+      \ })
+
 call defx#custom#column('icon', {
       \ 'directory_icon': '▸ ',
       \ 'opened_icon': '▾ ',
@@ -106,7 +111,7 @@ function! s:open_defx_if_directory()
   " If the path is a directory, delete the (useless) buffer and open defx for
   " that directory instead.
   if isdirectory(l:full_path)
-    execute "Defx -listed -show-ignored-files -columns=indent:mark:icon:icons:filename:git:size -buffer-name=tab`tabpagenr()` `expand('%:p')` | bd " . expand('%:r')
+    execute "Defx -listed -show-ignored-files -columns=indent:mark:icon:icons:filename:git:size `expand('%:p')` | bd " . expand('%:r')
   endif
 endfunction
 
