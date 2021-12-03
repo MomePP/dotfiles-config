@@ -49,10 +49,13 @@ set ai "Auto indent
 set si "Smart indent
 set nowrap "No Wrap lines
 set backspace=start,eol,indent
+
 " Finding files - Search down into subfolders
 set path+=**
-set wildignore+=*/node_modules/*
-set wildignore+=*/.pio/*
+" Ignore files
+set wildignore+=**/node_modules/*
+set wildignore+=**/.pio/*
+set wildignore+=**/.git/*
 
 " Turn off paste mode when leaving insert
 autocmd InsertLeave * set nopaste
