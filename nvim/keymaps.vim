@@ -8,6 +8,12 @@ nnoremap dw vb"_d
 nnoremap <leader>d "_d
 nnoremap x "_x
 
+" replace-paste with yank
+vnoremap <leader>p "_dP
+
+" de-tab while in insert mode
+inoremap <S-Tab> <C-d>
+
 " select all
 nmap <C-a> gg<S-v>G
 
@@ -56,8 +62,18 @@ nmap <C-w><down> <C-w>-
 " move line or visually selected block - opt+j/k - must set iterm to esc+
 inoremap <m-j> <Esc>:m .+1<CR>==gi
 inoremap <m-k> <Esc>:m .-2<CR>==gi
+inoremap <m-down> <Esc>:m .+1<CR>==gi
+inoremap <m-up> <Esc>:m .-2<CR>==gi
+
 vnoremap <m-j> :m '>+1<CR>gv=gv
 vnoremap <m-k> :m '<-2<CR>gv=gv
+vnoremap <m-down> :m '>+1<CR>gv=gv
+vnoremap <m-up> :m '<-2<CR>gv=gv
+
+nnoremap <m-j> :m+<CR>
+nnoremap <m-k> :m-2<CR>
+nnoremap <m-down> :m+<CR>
+nnoremap <m-up> :m-2<CR>
 
 " --- Terminal
 "  exit terminal to normal mode

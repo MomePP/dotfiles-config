@@ -3,8 +3,8 @@ if !exists('g:loaded_cmp') | finish | endif
 set completeopt=menuone,noinsert,noselect
 
 lua << EOF
-  local cmp = require'cmp'
-  local lspkind = require'lspkind'
+  local cmp = require('cmp')
+  local lspkind = require('lspkind')
 
   cmp.setup({
     snippet = {
@@ -21,6 +21,20 @@ lua << EOF
         behavior = cmp.ConfirmBehavior.Replace,
         select = true
       }),
+      ['<Tab>'] = function(fallback)
+        if cmp.visible() then
+          cmp.select_next_item()
+        else
+          fallback()
+        end
+      end,
+      ['<S-Tab>'] = function(fallback)
+       if cmp.visible() then
+          cmp.select_prev_item()
+        else
+         fallback()
+        end
+      end,
     },
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
