@@ -1,6 +1,3 @@
-
-lua << EOF
-
 require('gitsigns').setup {
   signs = {
     add          = {hl = 'GitSignsAdd'   , text = '+', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},
@@ -66,10 +63,4 @@ require('gitsigns').setup {
     enable = false
   },
 }
-
-EOF
-
-" git status line 
-"
-" set statusline+=%{get(b:,'gitsigns_status','')}
 

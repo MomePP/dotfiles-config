@@ -1,16 +1,3 @@
-if !exists('g:loaded_telescope') | finish | endif
-
-nnoremap <silent> <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
-nnoremap <silent> <leader>fs <cmd>lua require('telescope.builtin').live_grep()<cr>
-nnoremap <silent> <leader>fb <cmd>lua require('telescope.builtin').file_browser( { hidden = true } )<cr>
-nnoremap <silent> <leader>gf <cmd>lua require('telescope.builtin').git_files()<cr>
-nnoremap <silent> <leader>gb <cmd>lua require('telescope.builtin').git_branches()<cr>
-nnoremap <silent> <leader>gs <cmd>lua require('telescope.builtin').git_status()<cr>
-nnoremap <silent> <leader>gS <cmd>lua require('telescope.builtin').git_stash()<cr>
-nnoremap <silent> <leader>\ <cmd>Telescope buffers<cr>
-nnoremap <silent> <leader>; <cmd>Telescope help_tags<cr>
-
-lua << EOF
 function telescope_buffer_dir()
   return vim.fn.expand('%:p:h')
 end
@@ -39,10 +26,14 @@ telescope.setup{
       override_generic_sorter = false,
       override_file_sorter = true,
     },
+    file_browser = {
+      -- theme = 'ivy'
+    }
   }
 }
 
 telescope.load_extension("fzy_native")
+telescope.load_extension("file_browser")
 
 _G.open_telescope = function()
     local first_arg = vim.v.argv[2]
@@ -53,7 +44,7 @@ _G.open_telescope = function()
           first_arg = vim.fn.expand('%')
         end
         vim.api.nvim_set_current_dir(first_arg)
-        require("telescope.builtin").file_browser({cwd = first_arg, hidden = true})
+        telescope.extensions.file_browser.file_browser({cwd = first_arg, hidden = true})
       end
     end
 end
@@ -65,4 +56,3 @@ augroup TelescopeOnEnter
 augroup END
 ]], false)
 
-EOF

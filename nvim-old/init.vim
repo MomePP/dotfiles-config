@@ -110,3 +110,13 @@ if &term =~ "screen"
   autocmd VimLeave * silent!  exe '!echo -n "\ek[`hostname`:`basename $PWD`]\e\\"'
 endif
 
+" Plugins
+" ---------------------------------------------------------------------
+lua require('plugins/nvim-lspconfig')
+lua require('plugins/nvim-cmp')
+lua require('plugins/nvim-autopairs')
+" lua require('plugins/lsp-colors')
+lua require('plugins/gitsigns')
+lua require('plugins/comment')
+lua require('plugins/telescope')
+
