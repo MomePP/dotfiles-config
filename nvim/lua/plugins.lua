@@ -26,6 +26,7 @@ Plug 'hoob3rt/lualine.nvim'
 Plug 'MomePP/plastic.vim'
 Plug 'numToStr/Comment.nvim'
 Plug 'lewis6991/gitsigns.nvim'
+Plug 'alvarosevilla95/luatab.nvim'
 
 vim.call('plug#end')
 

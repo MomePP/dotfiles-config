@@ -11,4 +11,5 @@ require('config.lualine-conf')
 require('config.telescope-conf')
 require('config.treesitter-conf')
 require('config.devicons-conf')
+require('config.luatab-conf')
 

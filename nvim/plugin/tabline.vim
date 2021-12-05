@@ -15,9 +15,9 @@ function CustomTabLine()
     let s .= ' %{CustomTabLabel(' . (i + 1) . ')} '
 
     if i + 1 == tabpagenr()
-      let s .= '%#TabLineSep#>'
+      let s .= '%#TabLineSep#'
     elseif i + 2 == tabpagenr()
-      let s .= '%#TabLineSep2#>'
+      let s .= '%#TabLineSep2#'
     else
       let s .= ''
     endif
@@ -42,4 +42,4 @@ function CustomTabLabel(n)
   return len(label) == 0 ? '[No Name]' : label
 endfunction
 
-set tabline=%!CustomTabLine()
+" set tabline=%!CustomTabLine()

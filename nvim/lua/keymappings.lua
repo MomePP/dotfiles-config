@@ -10,9 +10,10 @@ utils.map('i', '<S-Tab>', '<C-d>')                        -- de-tab while in ins
 utils.map('n', '<C-a>', 'gg<S-v>G', remap)                -- visual - select all
 
 -- Tab config
-utils.map('n', 'te', '<cmd>tabedit', remap)
-utils.map('n', '<Tab>', '<cmd>tabnext', remap)
-utils.map('n', '<S-Tab>', '<cmd>tabprev', remap)
+utils.map('n', 'te', '<cmd>tabedit<cr>', remap)
+utils.map('n', 'tc', '<cmd>tabclose<cr>', remap)
+utils.map('n', '<Tab>', '<cmd>tabnext<cr>', remap)
+utils.map('n', '<S-Tab>', '<cmd>tabprev<cr>', remap)
 
 -- Window config
 -- split window
