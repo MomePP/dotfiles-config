@@ -34,13 +34,29 @@ cmp.setup({
       end
     end,
   },
-  sources = cmp.config.sources({
+  sources = {
+    { name = 'nvim_lua' },
     { name = 'nvim_lsp' },
-  }, {
-    { name = 'buffer' },
-  }),
+    { name = 'luasnip' },
+    { name = 'path' },
+    { name = 'buffer', keyword_length = 4 },
+  },
   formatting = {
-    format = lspkind.cmp_format({with_text = false, maxwidth = 50})
+    format = lspkind.cmp_format {
+      with_text = true,
+      maxwidth = 80,
+      menu = {
+        buffer = "[Buf]",
+        nvim_lua = "[API]",
+        nvim_lsp = "[LSP]",
+        path = "[path]",
+        luasnip = "[snip]",
+      }
+    }
+  },
+  experimental = {
+    native_menu = false,
+    ghost_text = true,
   }
 })
 
