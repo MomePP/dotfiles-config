@@ -29,15 +29,19 @@ utils.opt('o', 'wildmode', 'list:longest')
 utils.opt('o', 'clipboard','unnamed,unnamedplus')
 utils.opt('o', 'mouse', 'a')
 utils.opt('o', 'shell', 'fish')
-utils.opt('o', 'inccommand', 'split')
+utils.opt('o', 'inccommand', 'nosplit')
 utils.opt('o', 'lazyredraw', true)
 utils.opt('w', 'wrap', false)
+utils.opt('w', 'signcolumn', 'yes')
 
 -- set files search recursive sub-folder except following ...
 utils.opt('o', 'wildignore', '**/node_module/*, **/.pio/*, **/.git/*')
 
 -- turn off paste mode when leaving insert
 cmd 'autocmd InsertLeave * set nopaste'
+
+-- open help in vertical
+cmd([[autocmd! FileType help :wincmd L | :vert resize 90]])
 
 -- add asterisks in block comments
 utils.opt('b', 'formatoptions', 'tcqjr')

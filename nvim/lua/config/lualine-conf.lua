@@ -1,10 +1,12 @@
 local status, lualine = pcall(require, "lualine")
 if (not status) then return end
+local status, plastic_lualine = pcall(require, "lualine.plastic")
+if (not status) then plastic_lualine = 'auto' end -- set fallback theme
 
 lualine.setup {
   options = {
     icons_enabled = true,
-    theme = 'auto',
+    theme = plastic_lualine,
     section_separators = {left = '', right = ''},
     component_separators = {left = '', right = ''},
     disabled_filetypes = {}

@@ -18,6 +18,7 @@ set -g theme_hostname always
 
 # aliases
 alias ls "l"
+alias g "git"
 alias rbrew='arch -x86_64 /usr/local/bin/brew'
 alias rosetta="arch -x86_64"
 alias py="python3"
