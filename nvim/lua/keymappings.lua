@@ -26,19 +26,13 @@ utils.map('i', '?', '?<C-g>u')
 utils.map('n', 'k', '(v:count > 5 ? "m\'" . v:count : "") . "k"', { noremap = true, expr = true })
 utils.map('n', 'j', '(v:count > 5 ? "m\'" . v:count : "") . "j"', { noremap = true, expr = true })
 
--- Tab config
-utils.map('n', 'te', '<cmd>tabedit<cr>')
-utils.map('n', 'tc', '<cmd>tabclose<cr>')
-utils.map('n', '<Tab>', '<cmd>tabnext<cr>')
-utils.map('n', '<S-Tab>', '<cmd>tabprev<cr>')
-
 -- separate tab and ctrl-i -> Tab was bound to tabnext
 utils.map('n', '<C-i>', '<C-i>')
 
 -- Window config
 -- split window
-utils.map('n', 'ss', '<cmd>split<Return><C-w>w')
-utils.map('n', 'sv', '<cmd>vsplit<Return><C-w>w')
+utils.map('n', 'ss', '<cmd>split<cr><Space>')
+utils.map('n', 'sv', '<cmd>vsplit<cr><Space>')
 
 -- move window
 utils.map('n', 'sq', '<C-w>q')
@@ -79,4 +73,10 @@ utils.map('n', '<m-up>', ':m-2<CR>')
 -- Terminal
 -- exit terminal to normal mode
 utils.map('t', '<Esc>', '<C-\\><C-n>')
+
+-- Tab config
+utils.map('n', 'te', '<cmd>tabedit<cr>')
+utils.map('n', 'tc', '<cmd>tabclose<cr>')
+utils.map('n', '<Tab>', '<cmd>tabnext<cr>')
+utils.map('n', '<S-Tab>', '<cmd>tabprev<cr>')
 

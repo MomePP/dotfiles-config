@@ -20,7 +20,7 @@ utils.opt('b', 'tabstop', indent_size)
 utils.opt('o', 'hidden', true)
 utils.opt('o', 'ignorecase', true)
 utils.opt('o', 'scrolloff', 8)
-utils.opt('o', 'sidescrolloff', 4)
+utils.opt('o', 'sidescrolloff', 8)
 utils.opt('o', 'shiftround', true)
 utils.opt('o', 'smartcase', true)
 utils.opt('o', 'splitbelow', true)
@@ -44,7 +44,7 @@ cmd 'autocmd InsertLeave * set nopaste'
 cmd([[autocmd! FileType help :wincmd L | :vert resize 90]])
 
 -- add asterisks in block comments
-utils.opt('b', 'formatoptions', 'tcqjr')
+utils.opt('b', 'formatoptions', 'r', true)
 
 -- set bg highlights
 cmd([[
