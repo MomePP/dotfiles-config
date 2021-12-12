@@ -11,5 +11,5 @@ require('config.telescope-conf')
 require('config.treesitter-conf')
 require('config.devicons-conf')
 require('config.luatab-conf')
--- require('config.colorizer-conf')
+require('config.colorizer-conf')
 
