@@ -23,10 +23,11 @@ Plug 'nvim-telescope/telescope-file-browser.nvim'
 Plug 'windwp/nvim-autopairs'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'hoob3rt/lualine.nvim'
-Plug 'MomePP/plastic.vim'
 Plug 'numToStr/Comment.nvim'
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'alvarosevilla95/luatab.nvim'
+Plug 'norcalli/nvim-colorizer.lua'
+Plug 'MomePP/plastic-nvim'
 
 vim.call('plug#end')
 

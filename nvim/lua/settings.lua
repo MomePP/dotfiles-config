@@ -41,7 +41,7 @@ utils.opt('o', 'wildignore', '**/node_module/*, **/.pio/*, **/.git/*')
 cmd 'autocmd InsertLeave * set nopaste'
 
 -- open help in vertical
-cmd([[autocmd! FileType help :wincmd L | :vert resize 90]])
+cmd([[autocmd! FileType help :wincmd L | :vert resize 80]])
 
 -- add asterisks in block comments
 utils.opt('b', 'formatoptions', 'r', true)
