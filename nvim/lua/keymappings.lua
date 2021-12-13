@@ -1,5 +1,6 @@
 local utils = require('utils')
 local remap = { noremap = false }
+local silent_noremap = { noremap = true, silent = true }
 
 utils.map('n', '<C-l>', '<cmd>nohl<cr>')  -- clear highlight
 utils.map('n', 'dw', 'vb"_d')             -- delete a word backward
@@ -81,19 +82,19 @@ utils.map('n', '<Tab>', '<cmd>tabnext<cr>')
 utils.map('n', '<S-Tab>', '<cmd>tabprev<cr>')
 
 -- Lsp saga keymap
-utils.map('n', '<leader>t', ":Lspsaga open_floaterm<CR>", { noremap = true, silent = true })
-utils.map('t', '<leader>t', "<C-\\><C-n>:Lspsaga close_floaterm<CR>", { noremap = true, silent = true })
+utils.map('n', '<leader>t', ":Lspsaga open_floaterm<CR>", silent_noremap)
+utils.map('t', '<leader>t', "<C-\\><C-n>:Lspsaga close_floaterm<CR>", silent_noremap)
 
 -- Telescope keymap
-utils.map('n', '<leader>ff', "<cmd>lua require('telescope.builtin').find_files()<CR>", { noremap = true, silent = true })
-utils.map('n', '<leader>fw', "<cmd>lua require('telescope.builtin').grep_string()<CR>", { noremap = true, silent = true })
-utils.map('n', '<leader>fs', "<cmd>lua require('telescope.builtin').live_grep()<CR>", { noremap = true, silent = true })
-utils.map('n', '<leader>fb', "<cmd>lua require('telescope').extensions.file_browser.file_browser()<CR>", { noremap = true, silent = true })
-utils.map('n', '<leader>fm', "<cmd>lua require('telescope').extensions.media_files.media_files()<CR>", { noremap = true, silent = true })
-utils.map('n', '<leader>gf', "<cmd>lua require('telescope.builtin').git_files()<CR>", { noremap = true, silent = true })
-utils.map('n', '<leader>gb', "<cmd>lua require('telescope.builtin').git_branches()<CR>", { noremap = true, silent = true })
-utils.map('n', '<leader>gs', "<cmd>lua require('telescope.builtin').git_status()<CR>", { noremap = true, silent = true })
-utils.map('n', '<leader>gS', "<cmd>lua require('telescope.builtin').git_stash()<CR>", { noremap = true, silent = true })
-utils.map('n', '<leader>\\', "<cmd>Telescope buffers<CR>", { noremap = true, silent = true })
-utils.map('n', '<leader>;', "<cmd>Telescope help_tags<CR>", { noremap = true, silent = true })
+utils.map('n', '<leader>fs', "<cmd>lua require('telescope.builtin').find_files()<CR>", silent_noremap)
+utils.map('n', '<leader>fw', "<cmd>lua require('telescope.builtin').grep_string()<CR>", silent_noremap)
+utils.map('n', '<leader>fg', "<cmd>lua require('telescope.builtin').live_grep()<CR>", silent_noremap)
+utils.map('n', '<leader>fb', "<cmd>lua require('telescope').extensions.file_browser.file_browser()<CR>", silent_noremap)
+utils.map('n', '<leader>fm', "<cmd>lua require('telescope').extensions.media_files.media_files()<CR>", silent_noremap)
+utils.map('n', '<leader>gf', "<cmd>lua require('telescope.builtin').git_files()<CR>", silent_noremap)
+utils.map('n', '<leader>gb', "<cmd>lua require('telescope.builtin').git_branches()<CR>", silent_noremap)
+utils.map('n', '<leader>gs', "<cmd>lua require('telescope.builtin').git_status()<CR>", silent_noremap)
+utils.map('n', '<leader>gS', "<cmd>lua require('telescope.builtin').git_stash()<CR>", silent_noremap)
+utils.map('n', '<leader>\\', "<cmd>Telescope buffers<CR>", silent_noremap)
+utils.map('n', '<leader>;', "<cmd>Telescope help_tags<CR>", silent_noremap)
 

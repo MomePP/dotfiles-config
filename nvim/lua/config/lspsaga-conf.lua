@@ -33,7 +33,7 @@ lspsaga.setup {
     exec = "<CR>",
   },
   rename_action_keys = {
-    quit = "<C-c>",
+    quit = "<Esc>",
     exec = "<CR>",
   },
   definition_preview_icon = "  ",

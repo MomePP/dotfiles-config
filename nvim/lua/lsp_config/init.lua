@@ -12,29 +12,28 @@ local on_attach = function(client, bufnr)
 	local opts = { noremap = true, silent = true }
 
   -- See `:help vim.lsp.*` for documentation on any of the below functions
-  buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-  buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'gr', "<cmd>Lspsaga rename<CR>", opts)
-  buf_set_keymap('n', 'gx', "<cmd>Lspsaga code_action<CR>", opts)
-  buf_set_keymap('x', 'gx', ":<C-u>Lspsaga range_code_action<CR>", opts)
+  buf_set_keymap("n", "<leader>ff", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+  buf_set_keymap('n', 'gd', '<cmd>Telescope lsp_definitions<CR>', opts)
+  buf_set_keymap('n', 'gt', "<cmd>Telescope lsp_type_definitions<CR>", opts)
+  buf_set_keymap('n', 'gx', "<cmd>Telescope lsp_code_actions<CR>", opts)
+  buf_set_keymap('x', 'gx', "<cmd>Telescope lsp_range_code_actions<CR>", opts)
+  buf_set_keymap('n', 'gr', "<cmd>Telescope lsp_references<CR>", opts)
+  buf_set_keymap('n', '<leader>ls', "<cmd>Telescope lsp_document_symbols<CR>", opts)
+  buf_set_keymap('n', '<leader>ld', "<cmd>Telescope diagnostics<CR>", opts)
   buf_set_keymap('n', 'gs', "<cmd>Lspsaga signature_help<CR>", opts)
   buf_set_keymap('n', 'gp', "<cmd>Lspsaga preview_definition<CR>", opts)
-  buf_set_keymap('n', 'gf', "<cmd>Lspsaga lsp_finder<CR>", opts)
-  buf_set_keymap('n', 'K', "<cmd>Lspsaga hover_doc<CR>", opts)
-  buf_set_keymap('n', 'go', "<cmd>Lspsaga show_line_diagnostics<CR>", opts)
+  buf_set_keymap('n', 'gh', "<cmd>Lspsaga hover_doc<CR>", opts)
   buf_set_keymap('n', '[d', "<cmd>Lspsaga diagnostic_jump_next<CR>", opts)
   buf_set_keymap('n', ']d', "<cmd>Lspsaga diagnostic_jump_prev<CR>", opts)
-  buf_set_keymap('n', '<C-u>', "<cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>", {})
-  buf_set_keymap('n', '<C-d>', "<cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>", {})
+  buf_set_keymap('n', '<leader>lr', "<cmd>Lspsaga rename<CR>", opts)
 
-  -- formatting ..
-  if client.resolved_capabilities.document_formatting then
-    vim.api.nvim_command [[augroup Format]]
-    vim.api.nvim_command [[autocmd! * <buffer>]]
-    vim.api.nvim_command [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
-    vim.api.nvim_command [[augroup END]]
-  end
+  -- formatting when save file
+  -- if client.resolved_capabilities.document_formatting then
+  --   vim.api.nvim_command [[augroup Format]]
+  --   vim.api.nvim_command [[autocmd! * <buffer>]]
+  --   vim.api.nvim_command [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
+  --   vim.api.nvim_command [[augroup END]]
+  -- end
   
   --protocol.SymbolKind = { }
   protocol.CompletionItemKind = {
