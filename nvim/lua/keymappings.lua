@@ -71,10 +71,6 @@ utils.map('n', '<m-k>', ':m-2<CR>')
 utils.map('n', '<m-down>', ':m+<CR>')
 utils.map('n', '<m-up>', ':m-2<CR>')
 
--- Terminal
--- exit terminal to normal mode
-utils.map('t', '<Esc>', '<C-\\><C-n>')
-
 -- Tab config
 utils.map('n', 'te', '<cmd>tabedit<cr>')
 utils.map('n', 'tc', '<cmd>tabclose<cr>')
