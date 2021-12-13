@@ -28,6 +28,7 @@ Plug 'lewis6991/gitsigns.nvim'
 Plug 'alvarosevilla95/luatab.nvim'
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'MomePP/plastic-nvim'
+Plug 'davidgranstrom/nvim-markdown-preview'
 
 vim.call('plug#end')
 
