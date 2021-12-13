@@ -10,11 +10,11 @@ require('plugins')
 -- apply colorscheme
 require('colorscheme')
 
--- key mappings
-require('keymappings')
-
 -- setup lsp server
 require('lsp_config')
 
 -- plugin configs
 require('config')
+
+-- key mappings
+require('keymappings')

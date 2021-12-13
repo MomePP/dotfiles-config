@@ -28,12 +28,19 @@ telescope.setup{
     },
     file_browser = {
       -- theme = 'ivy'
+    },
+    media_files = {
+      -- filetypes whitelist
+      -- defaults to {"png", "jpg", "mp4", "webm", "pdf"}
+      filetypes = {"png", "webm", "jpg", "jpeg", "pdf", "webp"},
+      find_cmd = "rg" -- find command (defaults to `fd`)
     }
   }
 }
 
 telescope.load_extension("fzy_native")
 telescope.load_extension("file_browser")
+telescope.load_extension("media_files")
 
 _G.open_telescope = function()
     local first_arg = vim.v.argv[2]

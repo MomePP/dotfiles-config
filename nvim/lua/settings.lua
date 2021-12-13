@@ -62,3 +62,18 @@ cmd 'au TextYankPost * lua vim.highlight.on_yank {on_visual = false}'
 vim.g.loaded_netrw       = 1
 vim.g.loaded_netrwPlugin = 1
 
+-- Command-line abbreviations
+cmd([[
+cnoreabbrev g Git
+cnoreabbrev gopen GBrowse
+cnoreabbrev W! w!
+cnoreabbrev Q! q!
+cnoreabbrev Qall! qall!
+cnoreabbrev Wq wq
+cnoreabbrev Wa wa
+cnoreabbrev Wq wq
+cnoreabbrev WQ wq
+cnoreabbrev W w
+cnoreabbrev Q q
+cnoreabbrev Qall qall
+]])
