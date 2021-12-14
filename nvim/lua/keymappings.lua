@@ -27,9 +27,6 @@ utils.map('i', '?', '?<C-g>u')
 utils.map('n', 'k', '(v:count > 5 ? "m\'" . v:count : "") . "k"', { noremap = true, expr = true })
 utils.map('n', 'j', '(v:count > 5 ? "m\'" . v:count : "") . "j"', { noremap = true, expr = true })
 
--- separate tab and ctrl-i -> Tab was bound to tabnext
-utils.map('n', '<C-i>', '<C-i>')
-
 -- Window config
 -- split window
 utils.map('n', 'ss', '<cmd>split<cr><Space>')
@@ -70,6 +67,10 @@ utils.map('n', '<m-j>', ':m+<CR>')
 utils.map('n', '<m-k>', ':m-2<CR>')
 utils.map('n', '<m-down>', ':m+<CR>')
 utils.map('n', '<m-up>', ':m-2<CR>')
+
+-- remap jump keys
+utils.map('n', '<C-j>', '<C-i>')
+utils.map('n', '<C-k>', '<C-o>')
 
 -- Tab config
 utils.map('n', 'te', '<cmd>tabedit<cr>')
