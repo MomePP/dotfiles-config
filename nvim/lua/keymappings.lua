@@ -83,7 +83,7 @@ utils.map('t', '<leader>t', "<C-\\><C-n>:Lspsaga close_floaterm<CR>", silent_nor
 
 -- Telescope keymap
 utils.map('n', '<leader>fs', "<cmd>lua require('telescope.builtin').find_files()<CR>", silent_noremap)
-utils.map('n', '<leader>fw', "<cmd>lua require('telescope.builtin').grep_string()<CR>", silent_noremap)
+utils.map('n', 'gw', "<cmd>lua require('telescope.builtin').grep_string()<CR>", silent_noremap)
 utils.map('n', '<leader>fg', "<cmd>lua require('telescope.builtin').live_grep()<CR>", silent_noremap)
 utils.map('n', '<leader>fb', "<cmd>lua require('telescope').extensions.file_browser.file_browser()<CR>", silent_noremap)
 utils.map('n', '<leader>fm', "<cmd>lua require('telescope').extensions.media_files.media_files()<CR>", silent_noremap)
