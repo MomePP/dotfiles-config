@@ -95,3 +95,6 @@ utils.map('n', '<leader>gS', "<cmd>lua require('telescope.builtin').git_stash()<
 utils.map('n', '<leader>\\', "<cmd>Telescope buffers<CR>", silent_noremap)
 utils.map('n', '<leader>;', "<cmd>Telescope help_tags<CR>", silent_noremap)
 
+-- Zen mode keymap
+utils.map('n', '<leader>z', "<cmd>ZenMode<CR>", silent_noremap)
+

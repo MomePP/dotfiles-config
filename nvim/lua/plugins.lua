@@ -30,6 +30,7 @@ Plug 'alvarosevilla95/luatab.nvim'
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'MomePP/plastic-nvim'
 Plug 'davidgranstrom/nvim-markdown-preview'
+Plug 'folke/zen-mode.nvim'
 
 vim.call('plug#end')
 
