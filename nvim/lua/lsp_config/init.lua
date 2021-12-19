@@ -23,8 +23,8 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', 'gs', "<cmd>Lspsaga signature_help<CR>", opts)
   buf_set_keymap('n', 'gp', "<cmd>Lspsaga preview_definition<CR>", opts)
   buf_set_keymap('n', 'gh', "<cmd>Lspsaga hover_doc<CR>", opts)
-  buf_set_keymap('n', '[d', "<cmd>Lspsaga diagnostic_jump_next<CR>", opts)
-  buf_set_keymap('n', ']d', "<cmd>Lspsaga diagnostic_jump_prev<CR>", opts)
+  buf_set_keymap('n', ']d', "<cmd>Lspsaga diagnostic_jump_next<CR>", opts)
+  buf_set_keymap('n', '[d', "<cmd>Lspsaga diagnostic_jump_prev<CR>", opts)
   buf_set_keymap('n', '<leader>lr', "<cmd>Lspsaga rename<CR>", opts)
 
   -- formatting when save file
