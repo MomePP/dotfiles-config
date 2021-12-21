@@ -14,7 +14,7 @@ require('colorscheme')
 require('lsp_config')
 
 -- plugin configs
-require('config')
+require('plugins-config')
 
 -- key mappings
 require('keymappings')
