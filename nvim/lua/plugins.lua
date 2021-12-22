@@ -66,7 +66,6 @@ return packer.startup(function(use)
   use 'hrsh7th/cmp-path'
   use 'hrsh7th/cmp-cmdline'
   use 'saadparwaiz1/cmp_luasnip'
-  use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
 
   -- telescope
   use 'nvim-telescope/telescope.nvim'
@@ -86,7 +85,8 @@ return packer.startup(function(use)
   use 'alvarosevilla95/luatab.nvim'
   use 'hoob3rt/lualine.nvim'
   use 'folke/zen-mode.nvim'
-
+  use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+  use 'p00f/nvim-ts-rainbow'
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
