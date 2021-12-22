@@ -50,7 +50,7 @@ return packer.startup(function(use)
 
   -- LSP
   use 'neovim/nvim-lspconfig'
-  use 'williamboman/nvim-lsp-installer'
+  use { 'williamboman/nvim-lsp-installer', branch = 'fix-ccls-mac' }
   use 'onsails/lspkind-nvim'
   use 'tami5/lspsaga.nvim'
 

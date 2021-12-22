@@ -6,7 +6,7 @@ utils.map('n', '<C-l>', '<cmd>nohl<cr>')  -- clear highlight
 utils.map('n', 'dw', 'vb"_d')             -- delete a word backward
 utils.map('n', '<leader>d', '"_d')        -- delete without yank
 utils.map('n', 'x', '"_x')
-utils.map('v', '<leader>p', '"_dP')       -- replace-paste without yank
+utils.map('v', 'p', '"_dP')               -- replace-paste without yank
 utils.map('i', '<S-Tab>', '<C-d>')        -- de-tab while in insert mode
 utils.map('n', '<C-a>', 'gg<S-v>G')       -- visual - select all
 utils.map('n', 'Y', 'y$')                 -- Yank line after cursor
