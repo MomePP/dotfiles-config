@@ -11,7 +11,7 @@ require('plugins')
 require('colorscheme')
 
 -- setup lsp server
-require('lsp_config')
+require('lsp-config')
 
 -- plugin configs
 require('plugins-config')

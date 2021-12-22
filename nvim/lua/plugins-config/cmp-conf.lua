@@ -16,6 +16,34 @@ local check_backspace = function()
   return col == 0 or vim.fn.getline("."):sub(col, col):match "%s"
 end
 
+local lspkind_icons = {
+  Text = "",
+  Method = "",
+  Function = "",
+  Constructor = "",
+  Field = "ﰠ",
+  Variable = "",
+  Class = "ﴯ",
+  Interface = "",
+  Module = "",
+  Property = "ﰠ",
+  Unit = "塞",
+  Value = "",
+  Enum = "",
+  Keyword = "",
+  Snippet = "",
+  Color = "",
+  File = "",
+  Reference = "",
+  Folder = "",
+  EnumMember = "",
+  Constant = "",
+  Struct = "פּ",
+  Event = "",
+  Operator = "",
+  TypeParameter = ""
+}
+
 cmp.setup({
   snippet = {
     expand = function(args)
@@ -62,8 +90,11 @@ cmp.setup({
     { name = 'path' },
   },
   formatting = {
+    fields = { 'kind', 'abbr', 'menu' },
     format = lspkind.cmp_format {
       with_text = true,
+      preset = 'codicons',
+      symbol_map = lspkind_icons,
       maxwidth = 80,
       menu = {
         buffer = "[Buffer]",

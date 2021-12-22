@@ -50,9 +50,10 @@ return packer.startup(function(use)
 
   -- LSP
   use 'neovim/nvim-lspconfig'
+  use 'williamboman/nvim-lsp-installer'
   use 'onsails/lspkind-nvim'
   use 'tami5/lspsaga.nvim'
-
+  
   -- snippets
   use 'L3MON4D3/LuaSnip'
   use 'rafamadriz/friendly-snippets'
@@ -75,13 +76,13 @@ return packer.startup(function(use)
   
   -- utilities
   use 'windwp/nvim-autopairs'
-  use 'numToStr/Comment.nvim'
-  use 'norcalli/nvim-colorizer.lua'
+  use { 'numToStr/Comment.nvim', config = function() require('Comment').setup() end }
+  use { 'norcalli/nvim-colorizer.lua', config = function() require('colorizer').setup() end }
   use 'davidgranstrom/nvim-markdown-preview'
 
   -- UI decoration
+  use { 'kyazdani42/nvim-web-devicons', config = function() require('nvim-web-devicons').setup() end }
   use 'MomePP/plastic-nvim'
-  use 'kyazdani42/nvim-web-devicons'
   use 'alvarosevilla95/luatab.nvim'
   use 'hoob3rt/lualine.nvim'
   use 'folke/zen-mode.nvim'
