@@ -78,6 +78,11 @@ utils.map('n', 'tc', '<cmd>tabclose<cr>')
 utils.map('n', '<Tab>', '<cmd>tabnext<cr>')
 utils.map('n', '<S-Tab>', '<cmd>tabprev<cr>')
 
+-- Buffers config
+utils.map('n', 'bn', '<cmd>bnext<cr>')
+utils.map('n', 'bp', '<cmd>bprev<cr>')
+utils.map('n', 'bc', '<cmd>bdelete<cr>')
+
 -- Lsp saga keymap
 utils.map('n', '<leader>t', ":Lspsaga open_floaterm<CR>", silent_noremap)
 utils.map('t', '<leader>t', "<C-\\><C-n>:Lspsaga close_floaterm<CR>", silent_noremap)
