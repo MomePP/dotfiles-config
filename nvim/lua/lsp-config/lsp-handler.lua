@@ -2,10 +2,6 @@ local M = {}
 
 M.setup = function()
   local diagnostic_config = {
-    virtual_text = false,
-    signs = {
-      active = signs,
-    },
     update_in_insert = true,
     underline = true,
     severity_sort = true,
@@ -59,4 +55,3 @@ if not status_ok then return end
 M.capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
 
 return M
-      
