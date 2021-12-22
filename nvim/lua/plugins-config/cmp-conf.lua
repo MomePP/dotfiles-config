@@ -90,7 +90,7 @@ cmp.setup({
     { name = 'path' },
   },
   formatting = {
-    fields = { 'kind', 'abbr', 'menu' },
+    fields = { 'abbr', 'menu', 'kind' },
     format = lspkind.cmp_format {
       with_text = true,
       preset = 'codicons',
