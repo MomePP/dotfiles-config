@@ -53,7 +53,7 @@ return packer.startup(function(use)
   use 'williamboman/nvim-lsp-installer'
   use 'onsails/lspkind-nvim'
   use 'tami5/lspsaga.nvim'
-  
+
   -- snippets
   use 'L3MON4D3/LuaSnip'
   use 'rafamadriz/friendly-snippets'
@@ -73,7 +73,7 @@ return packer.startup(function(use)
   use 'nvim-telescope/telescope-fzy-native.nvim'
   use 'nvim-telescope/telescope-file-browser.nvim'
   use 'nvim-telescope/telescope-media-files.nvim'
-  
+
   -- utilities
   use 'windwp/nvim-autopairs'
   use { 'numToStr/Comment.nvim', config = function() require('Comment').setup() end }
