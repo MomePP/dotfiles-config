@@ -44,7 +44,7 @@ cmp.setup({
         fallback()
       end
     end, { 'i', 's' }),
-    ['<S-Tab>'] = function(fallback)
+    ['<S-Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
       elseif luasnip.jumpable(-1) then
@@ -52,7 +52,7 @@ cmp.setup({
       else
         fallback()
       end
-    end, { 'i', 's' }
+    end, { 'i', 's' })
   },
   sources = {
     { name = 'nvim_lsp' },
