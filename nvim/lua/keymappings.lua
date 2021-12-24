@@ -78,9 +78,22 @@ utils.map('n', 'tc', '<cmd>tabclose<cr>')
 utils.map('n', '<Tab>', '<cmd>tabnext<cr>')
 utils.map('n', '<S-Tab>', '<cmd>tabprev<cr>')
 
--- Lsp saga keymap
-utils.map('n', '<leader>t', ":Lspsaga open_floaterm<CR>", silent_noremap)
-utils.map('t', '<leader>t', "<C-\\><C-n>:Lspsaga close_floaterm<CR>", silent_noremap)
+-- GitSign keymap
+utils.map('n', ']c', "&diff ? ']c' : '<cmd>lua require\"gitsigns.actions\".next_hunk()<CR>'", { noremap = true, expr = true })
+utils.map('n', '[c', "&diff ? '[c' : '<cmd>lua require\"gitsigns.actions\".prev_hunk()<CR>'", { noremap = true, expr = true })
+
+utils.map('n', '<leader>hs', '<cmd>lua require"gitsigns".stage_hunk()<CR>')
+utils.map('v', '<leader>hs', '<cmd>lua require"gitsigns".stage_hunk({vim.fn.line("."), vim.fn.line("v")})<CR>')
+utils.map('n', '<leader>hu', '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>')
+utils.map('n', '<leader>hr', '<cmd>lua require"gitsigns".reset_hunk()<CR>')
+utils.map('v', '<leader>hr', '<cmd>lua require"gitsigns".reset_hunk({vim.fn.line("."), vim.fn.line("v")})<CR>')
+utils.map('n', '<leader>hR', '<cmd>lua require"gitsigns".reset_buffer()<CR>')
+utils.map('n', '<leader>hp', '<cmd>lua require"gitsigns".preview_hunk()<CR>')
+utils.map('n', '<leader>hb', '<cmd>lua require"gitsigns".blame_line{full=true}<CR>')
+utils.map('n', '<leader>hS', '<cmd>lua require"gitsigns".stage_buffer()<CR>')
+utils.map('n', '<leader>hU', '<cmd>lua require"gitsigns".reset_buffer_index()<CR>')
+utils.map('o', 'ih', ':<C-U>lua require"gitsigns.actions".select_hunk()<CR>')
+utils.map('x', 'ih', ':<C-U>lua require"gitsigns.actions".select_hunk()<CR>')
 
 -- Telescope keymap
 -- utils.map('n', '<leader>fs', "<cmd>lua require('telescope.builtin').find_files()<CR>", silent_noremap)
@@ -88,13 +101,25 @@ utils.map('n', 'gw', "<cmd>lua require('telescope.builtin').grep_string()<CR>", 
 utils.map('n', '<leader>fs', "<cmd>lua require('telescope.builtin').live_grep()<CR>", silent_noremap)
 utils.map('n', '<leader>fb', "<cmd>lua require('telescope').extensions.file_browser.file_browser()<CR>", silent_noremap)
 utils.map('n', '<leader>fm', "<cmd>lua require('telescope').extensions.media_files.media_files()<CR>", silent_noremap)
-utils.map('n', '<leader>gf', "<cmd>lua require('telescope.builtin').git_files()<CR>", silent_noremap)
-utils.map('n', '<leader>gb', "<cmd>lua require('telescope.builtin').git_branches()<CR>", silent_noremap)
-utils.map('n', '<leader>gs', "<cmd>lua require('telescope.builtin').git_status()<CR>", silent_noremap)
-utils.map('n', '<leader>gS', "<cmd>lua require('telescope.builtin').git_stash()<CR>", silent_noremap)
+-- utils.map('n', '<leader>gf', "<cmd>lua require('telescope.builtin').git_files()<CR>", silent_noremap)
+-- utils.map('n', '<leader>gb', "<cmd>lua require('telescope.builtin').git_branches()<CR>", silent_noremap)
+-- utils.map('n', '<leader>gs', "<cmd>lua require('telescope.builtin').git_status()<CR>", silent_noremap)
+-- utils.map('n', '<leader>gS', "<cmd>lua require('telescope.builtin').git_stash()<CR>", silent_noremap)
 utils.map('n', '<leader>\\', "<cmd>Telescope buffers<CR>", silent_noremap)
 utils.map('n', '<leader>;', "<cmd>Telescope help_tags<CR>", silent_noremap)
 
 -- Zen mode keymap
 utils.map('n', '<leader>z', "<cmd>ZenMode<CR>", silent_noremap)
+
+-- Terminal & ToggleTerm keymap
+--  toggleterm keymap, set in `toggleterm-conf` file. Currently used : <leader>t
+function _G.set_terminal_keymaps()
+  utils.map('t', 'sh',[[<C-\><C-n><C-W>h]])
+  utils.map('t', 'sj', [[<C-\><C-n><C-W>j]])
+  utils.map('t', 'sk', [[<C-\><C-n><C-W>k]])
+  utils.map('t', 'sl', [[<C-\><C-n><C-W>l]])
+end
+vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
+
+utils.map('n', '<leader>g', "<cmd>lua _LAZYGIT_TOGGLE()<CR>", silent_noremap)
 

@@ -1,7 +1,7 @@
 local lualine_loadded, lualine = pcall(require, "lualine")
 if not lualine_loadded then return end
-local theme_loadded, plastic_lualine = pcall(require, "lualine.plastic")
-if not theme_loadded then plastic_lualine = 'auto' end -- set fallback theme
+-- local theme_loadded, plastic_lualine = pcall(require, "lualine.plastic")
+-- if not theme_loadded then plastic_lualine = 'auto' end -- set fallback theme
 
 local hide_in_width = function()
 	return vim.fn.winwidth(0) > 80
@@ -50,7 +50,8 @@ local branch = {
 lualine.setup({
 	options = {
 		icons_enabled = true,
-		theme = plastic_lualine,
+		-- theme = plastic_lualine,
+    theme = 'auto',
     section_separators = {left = '', right = ''},
     component_separators = {left = '', right = ''},
 		disabled_filetypes = { "alpha", "dashboard", "Outline" },

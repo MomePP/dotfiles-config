@@ -8,4 +8,5 @@ require('plugins-config.telescope-conf')
 require('plugins-config.treesitter-conf')
 require('plugins-config.luatab-conf')
 require('plugins-config.zenmode-conf')
+require('plugins-config.toggleterm-conf')
 

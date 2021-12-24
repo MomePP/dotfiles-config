@@ -63,9 +63,9 @@ vim.g.loaded_netrw       = 1
 vim.g.loaded_netrwPlugin = 1
 
 -- Command-line abbreviations
+-- cnoreabbrev g Git
+-- cnoreabbrev gopen GBrowse
 cmd([[
-cnoreabbrev g Git
-cnoreabbrev gopen GBrowse
 cnoreabbrev W! w!
 cnoreabbrev Q! q!
 cnoreabbrev Qall! qall!

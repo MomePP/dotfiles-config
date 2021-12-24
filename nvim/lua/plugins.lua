@@ -44,15 +44,14 @@ return packer.startup(function(use)
   use 'nvim-lua/plenary.nvim'
 
   -- git plugins
-  use 'tpope/vim-fugitive'
-  use 'tpope/vim-rhubarb'
+  -- use 'tpope/vim-fugitive'
+  -- use 'tpope/vim-rhubarb'
   use 'lewis6991/gitsigns.nvim'
 
   -- LSP
   use 'neovim/nvim-lspconfig'
-  use { 'williamboman/nvim-lsp-installer', branch = 'fix-ccls-mac' }
+  use 'williamboman/nvim-lsp-installer'
   use 'onsails/lspkind-nvim'
-  use 'tami5/lspsaga.nvim'
 
   -- snippets
   use 'L3MON4D3/LuaSnip'
@@ -78,15 +77,17 @@ return packer.startup(function(use)
   use { 'numToStr/Comment.nvim', config = function() require('Comment').setup() end }
   use { 'norcalli/nvim-colorizer.lua', config = function() require('colorizer').setup() end }
   use 'davidgranstrom/nvim-markdown-preview'
+  use 'akinsho/toggleterm.nvim'
 
   -- UI decoration
   use { 'kyazdani42/nvim-web-devicons', config = function() require('nvim-web-devicons').setup() end }
-  use 'MomePP/plastic-nvim'
   use 'alvarosevilla95/luatab.nvim'
   use 'hoob3rt/lualine.nvim'
   use 'folke/zen-mode.nvim'
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use 'p00f/nvim-ts-rainbow'
+  use 'MomePP/plastic-nvim'
+  use 'rebelot/kanagawa.nvim'
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
