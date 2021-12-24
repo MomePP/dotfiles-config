@@ -2,54 +2,56 @@ local status_ok, telescope = pcall(require, 'telescope')
 if not status_ok then return end
 
 local actions = require('telescope.actions')
-local entry_display = require('telescope.pickers.entry_display')
-local utils = require('telescope.utils')
 
 -- custom entry makers for some components
-local function entry_lsp_references(opts)
-  opts = opts or {}
-
-  local displayer = entry_display.create {
-    separator = "│ ",
-    items = {
-      { width = 8 },
-      { width = 0.75 },
-      { remaining = true },
-    },
-  }
-
-  local make_display = function(entry)
-    local filename = utils.transform_path(opts, entry.filename)
-
-    local line_info = { table.concat({ entry.lnum, entry.col }, ":"), "TelescopeResultsLineNr" }
-
-    return displayer {
-      line_info,
-      entry.text:gsub(".* | ", ""),
-      filename,
-    }
-  end
-
-  return function(entry)
-    local filename = entry.filename or vim.api.nvim_buf_get_name(entry.bufnr)
-
-    return {
-      valid = true,
-
-      value = entry,
-      ordinal = (not opts.ignore_filename and filename or "") .. " " .. entry.text,
-      display = make_display,
-
-      bufnr = entry.bufnr,
-      filename = filename,
-      lnum = entry.lnum,
-      col = entry.col,
-      text = entry.text,
-      start = entry.start,
-      finish = entry.finish,
-    }
-  end
-end
+--
+-- local entry_display = require('telescope.pickers.entry_display')
+-- local utils = require('telescope.utils')
+--
+-- local function entry_lsp_references(opts)
+--   opts = opts or {}
+--
+--   local displayer = entry_display.create {
+--     separator = "│ ",
+--     items = {
+--       { width = 8 },
+--       { width = 0.75 },
+--       { remaining = true },
+--     },
+--   }
+--
+--   local make_display = function(entry)
+--     local filename = utils.transform_path(opts, entry.filename)
+--
+--     local line_info = { table.concat({ entry.lnum, entry.col }, ":"), "TelescopeResultsLineNr" }
+--
+--     return displayer {
+--       line_info,
+--       entry.text:gsub(".* | ", ""),
+--       filename,
+--     }
+--   end
+--
+--   return function(entry)
+--     local filename = entry.filename or vim.api.nvim_buf_get_name(entry.bufnr)
+--
+--     return {
+--       valid = true,
+--
+--       value = entry,
+--       ordinal = (not opts.ignore_filename and filename or "") .. " " .. entry.text,
+--       display = make_display,
+--
+--       bufnr = entry.bufnr,
+--       filename = filename,
+--       lnum = entry.lnum,
+--       col = entry.col,
+--       text = entry.text,
+--       start = entry.start,
+--       finish = entry.finish,
+--     }
+--   end
+-- end
 
 telescope.setup {
   defaults = {
@@ -137,19 +139,19 @@ telescope.setup {
       -- theme = 'ivy'
       layout_strategy = 'bottom_pane',
       layout_config = {
-        preview_width = 0.35,
+        preview_width = 0.4,
         prompt_position = 'bottom'
       },
-      entry_maker = entry_lsp_references()
+      -- entry_maker = entry_lsp_references()
     },
     diagnostics = {
       -- theme = 'ivy'
       layout_strategy = 'bottom_pane',
       layout_config = {
-        preview_width = 0.35,
+        preview_width = 0.4,
         prompt_position = 'bottom'
       },
-      line_width = 0.75
+      -- line_width = 0.75
     },
     lsp_code_actions = {
       theme = 'cursor'
