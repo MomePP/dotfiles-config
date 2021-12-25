@@ -21,3 +21,6 @@ require('kanagawa').setup({
     overrides = {},
 })
 cmd 'colorscheme kanagawa'
+
+-- override signcolumn fg to be transparent
+cmd 'hi SignColumn guifg=NONE guibg=NONE'
