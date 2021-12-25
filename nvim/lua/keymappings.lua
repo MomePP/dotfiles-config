@@ -12,6 +12,16 @@ utils.map('n', '<C-a>', 'gg<S-v>G')       -- visual - select all
 utils.map('n', 'Y', 'y$')                 -- Yank line after cursor
 utils.map('n', 'P', '<cmd>pu<cr>', remap) -- Paste on new line
 
+-- map shift scroll wheel to scroll horizontal
+utils.map('', '<S-ScrollWheelUp>', 'zh')
+utils.map('', '<S-2-ScrollWheelUp>', '2zh')
+utils.map('', '<S-3-ScrollWheelUp>', '3zh')
+utils.map('', '<S-4-ScrollWheelUp>', '4zh')
+utils.map('', '<S-ScrollWheelDown>', 'zl')
+utils.map('', '<S-2-ScrollWheelDown>', '2zl')
+utils.map('', '<S-3-ScrollWheelDown>', '3zl')
+utils.map('', '<S-4-ScrollWheelDown>', '4zl')
+
 -- Keeping cursor centered
 utils.map('n', 'n', 'nzzzv')
 utils.map('n', 'N', 'Nzzzv')
@@ -36,15 +46,15 @@ utils.map('n', 'sv', '<cmd>vsplit<cr><Space>')
 utils.map('n', 'sq', '<C-w>q')
 utils.map('n', '<Space>', '<C-w>w')
 
-utils.map('', 's<left>', '<C-w>h')
-utils.map('', 's<right>', '<C-w>l')
-utils.map('', 's<up>', '<C-w>k')
-utils.map('', 's<down>', '<C-w>j')
+utils.map('n', 's<left>', '<C-w>h')
+utils.map('n', 's<right>', '<C-w>l')
+utils.map('n', 's<up>', '<C-w>k')
+utils.map('n', 's<down>', '<C-w>j')
 
-utils.map('', 'sh', '<C-w>h')
-utils.map('', 'sl', '<C-w>l')
-utils.map('', 'sk', '<C-w>k')
-utils.map('', 'sj', '<C-w>j')
+-- utils.map('n', 'sh', '<C-w>h')
+-- utils.map('n', 'sl', '<C-w>l')
+-- utils.map('n', 'sk', '<C-w>k')
+-- utils.map('n', 'sj', '<C-w>j')
 
 -- resize window
 utils.map('n', '<C-w><left>', '<C-w><')

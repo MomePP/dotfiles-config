@@ -5,60 +5,59 @@ local actions = require('telescope.actions')
 
 -- custom entry makers for some components
 --
--- local entry_display = require('telescope.pickers.entry_display')
--- local utils = require('telescope.utils')
---
--- local function entry_lsp_references(opts)
---   opts = opts or {}
---
---   local displayer = entry_display.create {
---     separator = "│ ",
---     items = {
---       { width = 8 },
---       { width = 0.75 },
---       { remaining = true },
---     },
---   }
---
---   local make_display = function(entry)
---     local filename = utils.transform_path(opts, entry.filename)
---
---     local line_info = { table.concat({ entry.lnum, entry.col }, ":"), "TelescopeResultsLineNr" }
---
---     return displayer {
---       line_info,
---       entry.text:gsub(".* | ", ""),
---       filename,
---     }
---   end
---
---   return function(entry)
---     local filename = entry.filename or vim.api.nvim_buf_get_name(entry.bufnr)
---
---     return {
---       valid = true,
---
---       value = entry,
---       ordinal = (not opts.ignore_filename and filename or "") .. " " .. entry.text,
---       display = make_display,
---
---       bufnr = entry.bufnr,
---       filename = filename,
---       lnum = entry.lnum,
---       col = entry.col,
---       text = entry.text,
---       start = entry.start,
---       finish = entry.finish,
---     }
---   end
--- end
+local entry_display = require('telescope.pickers.entry_display')
+local utils = require('telescope.utils')
+
+local function entry_lsp_references(opts)
+  opts = opts or {}
+
+  local displayer = entry_display.create {
+    separator = "│ ",
+    items = {
+      { width = 8 },
+      { width = 0.65 },
+      { remaining = true },
+    },
+  }
+
+  local make_display = function(entry)
+    local filename = utils.transform_path(opts, entry.filename)
+
+    local line_info = { table.concat({ entry.lnum, entry.col }, ":"), "TelescopeResultsLineNr" }
+
+    return displayer {
+      line_info,
+      entry.text:gsub(".* | ", ""),
+      filename,
+    }
+  end
+
+  return function(entry)
+    local filename = entry.filename or vim.api.nvim_buf_get_name(entry.bufnr)
+
+    return {
+      valid = true,
+
+      value = entry,
+      ordinal = (not opts.ignore_filename and filename or "") .. " " .. entry.text,
+      display = make_display,
+
+      bufnr = entry.bufnr,
+      filename = filename,
+      lnum = entry.lnum,
+      col = entry.col,
+      text = entry.text,
+      start = entry.start,
+      finish = entry.finish,
+    }
+  end
+end
 
 telescope.setup {
   defaults = {
     prompt_prefix = "   ",
     color_devicons = true,
 
-    file_sorter = require("telescope.sorters").get_fzy_sorter,
     file_previewer = require("telescope.previewers").vim_buffer_cat.new,
     grep_previewer = require("telescope.previewers").vim_buffer_vimgrep.new,
     qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
@@ -142,7 +141,7 @@ telescope.setup {
         preview_width = 0.4,
         prompt_position = 'bottom'
       },
-      -- entry_maker = entry_lsp_references()
+      entry_maker = entry_lsp_references()
     },
     diagnostics = {
       -- theme = 'ivy'
@@ -151,7 +150,7 @@ telescope.setup {
         preview_width = 0.4,
         prompt_position = 'bottom'
       },
-      -- line_width = 0.75
+      line_width = 0.65
     },
     lsp_code_actions = {
       theme = 'cursor'
@@ -161,9 +160,12 @@ telescope.setup {
     }
   },
   extensions = {
-    fzy_native = {
-      override_generic_sorter = false,
-      override_file_sorter = true,
+    fzf = {
+      fuzzy = true,                    -- false will only do exact matching
+      override_generic_sorter = true,  -- override the generic sorter
+      override_file_sorter = true,     -- override the file sorter
+      case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
+                                       -- the default case_mode is "smart_case"
     },
     file_browser = {
       -- theme = 'ivy'
@@ -176,8 +178,7 @@ telescope.setup {
     }
   }
 }
-
-telescope.load_extension("fzy_native")
+telescope.load_extension("fzf")
 telescope.load_extension("file_browser")
 telescope.load_extension("media_files")
 
