@@ -86,6 +86,7 @@ return packer.startup(function(use)
   use 'folke/zen-mode.nvim'
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use 'p00f/nvim-ts-rainbow'
+  use { 'folke/todo-comments.nvim', requires = 'nvim-lua/plenary.nvim' }
   use 'MomePP/plastic-nvim'
   use 'rebelot/kanagawa.nvim'
 

@@ -106,17 +106,15 @@ utils.map('o', 'ih', ':<C-U>lua require"gitsigns.actions".select_hunk()<CR>')
 utils.map('x', 'ih', ':<C-U>lua require"gitsigns.actions".select_hunk()<CR>')
 
 -- Telescope keymap
--- utils.map('n', '<leader>fs', "<cmd>lua require('telescope.builtin').find_files()<CR>", silent_noremap)
 utils.map('n', 'gw', "<cmd>lua require('telescope.builtin').grep_string()<CR>", silent_noremap)
 utils.map('n', '<leader>fs', "<cmd>lua require('telescope.builtin').live_grep()<CR>", silent_noremap)
 utils.map('n', '<leader>fb', "<cmd>lua require('telescope').extensions.file_browser.file_browser()<CR>", silent_noremap)
 utils.map('n', '<leader>fm', "<cmd>lua require('telescope').extensions.media_files.media_files()<CR>", silent_noremap)
--- utils.map('n', '<leader>gf', "<cmd>lua require('telescope.builtin').git_files()<CR>", silent_noremap)
--- utils.map('n', '<leader>gb', "<cmd>lua require('telescope.builtin').git_branches()<CR>", silent_noremap)
--- utils.map('n', '<leader>gs', "<cmd>lua require('telescope.builtin').git_status()<CR>", silent_noremap)
--- utils.map('n', '<leader>gS', "<cmd>lua require('telescope.builtin').git_stash()<CR>", silent_noremap)
 utils.map('n', '<leader>\\', "<cmd>Telescope buffers<CR>", silent_noremap)
 utils.map('n', '<leader>;', "<cmd>Telescope help_tags<CR>", silent_noremap)
+
+-- Todo comments keymap
+utils.map('n', '<leader>c', "<cmd>TodoTelescope<CR>", silent_noremap)
 
 -- Zen mode keymap
 utils.map('n', '<leader>z', "<cmd>ZenMode<CR>", silent_noremap)
