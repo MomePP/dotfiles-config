@@ -51,10 +51,10 @@ utils.map('n', 's<right>', '<C-w>l')
 utils.map('n', 's<up>', '<C-w>k')
 utils.map('n', 's<down>', '<C-w>j')
 
--- utils.map('n', 'sh', '<C-w>h')
--- utils.map('n', 'sl', '<C-w>l')
--- utils.map('n', 'sk', '<C-w>k')
--- utils.map('n', 'sj', '<C-w>j')
+utils.map('n', 'sh', '<C-w>h')
+utils.map('n', 'sl', '<C-w>l')
+utils.map('n', 'sk', '<C-w>k')
+utils.map('n', 'sj', '<C-w>j')
 
 -- resize window
 utils.map('n', '<C-w><left>', '<C-w><')
@@ -123,13 +123,13 @@ utils.map('n', '<leader>z', "<cmd>ZenMode<CR>", silent_noremap)
 
 -- Terminal & ToggleTerm keymap
 --  toggleterm keymap, set in `toggleterm-conf` file. Currently used : <leader>t
-function _G.set_terminal_keymaps()
-  utils.map('t', 'sh',[[<C-\><C-n><C-W>h]])
-  utils.map('t', 'sj', [[<C-\><C-n><C-W>j]])
-  utils.map('t', 'sk', [[<C-\><C-n><C-W>k]])
-  utils.map('t', 'sl', [[<C-\><C-n><C-W>l]])
-end
-vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
+-- function _G.set_terminal_keymaps()
+--   utils.map('t', 'sh',[[<C-\><C-n><C-W>h]])
+--   utils.map('t', 'sj', [[<C-\><C-n><C-W>j]])
+--   utils.map('t', 'sk', [[<C-\><C-n><C-W>k]])
+--   utils.map('t', 'sl', [[<C-\><C-n><C-W>l]])
+-- end
+-- vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
 
 utils.map('n', '<leader>g', "<cmd>lua _LAZYGIT_TOGGLE()<CR>", silent_noremap)
 
