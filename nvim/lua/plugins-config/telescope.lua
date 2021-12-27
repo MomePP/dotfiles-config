@@ -191,7 +191,7 @@ _G.open_telescope = function()
         first_arg = vim.fn.expand('%')
       end
       vim.api.nvim_set_current_dir(first_arg)
-      telescope.extensions.file_browser.file_browser({cwd = first_arg, hidden = true})
+      telescope.extensions.file_browser.file_browser({cwd = first_arg})
     end
   end
 end

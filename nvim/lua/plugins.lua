@@ -44,8 +44,6 @@ return packer.startup(function(use)
   use 'nvim-lua/plenary.nvim'
 
   -- git plugins
-  -- use 'tpope/vim-fugitive'
-  -- use 'tpope/vim-rhubarb'
   use 'lewis6991/gitsigns.nvim'
 
   -- LSP

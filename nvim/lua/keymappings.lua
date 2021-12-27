@@ -108,7 +108,7 @@ utils.map('x', 'ih', ':<C-U>lua require"gitsigns.actions".select_hunk()<CR>')
 -- Telescope keymap
 utils.map('n', 'gw', "<cmd>lua require('telescope.builtin').grep_string()<CR>", silent_noremap)
 utils.map('n', '<leader>fs', "<cmd>lua require('telescope.builtin').live_grep()<CR>", silent_noremap)
-utils.map('n', '<leader>fb', "<cmd>lua require('telescope').extensions.file_browser.file_browser()<CR>", silent_noremap)
+utils.map('n', '<leader>fb', "<cmd>lua require('telescope').extensions.file_browser.file_browser({path =  vim.fn.expand('%:p:h')})<CR>", silent_noremap)
 utils.map('n', '<leader>fm', "<cmd>lua require('telescope').extensions.media_files.media_files()<CR>", silent_noremap)
 utils.map('n', '<leader>\\', "<cmd>Telescope buffers<CR>", silent_noremap)
 utils.map('n', '<leader>;', "<cmd>Telescope help_tags<CR>", silent_noremap)
