@@ -128,6 +128,8 @@ utils.map('n', '<leader>z', "<cmd>ZenMode<CR>", silent_noremap)
 --   utils.map('t', 'sl', [[<C-\><C-n><C-W>l]])
 -- end
 -- vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
-
 utils.map('n', '<leader>g', "<cmd>lua _LAZYGIT_TOGGLE()<CR>", silent_noremap)
+
+-- Glow keymap (markdown preview)
+utils.map('n', '<leader>m', "<cmd>Glow<CR>", silent_noremap)
 

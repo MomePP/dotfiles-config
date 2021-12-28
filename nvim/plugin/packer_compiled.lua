@@ -120,6 +120,12 @@ _G.packer_plugins = {
     path = "/Users/momeppkt/.local/share/nvim/site/pack/packer/start/gitsigns.nvim",
     url = "https://github.com/lewis6991/gitsigns.nvim"
   },
+  ["glow.nvim"] = {
+    config = { "\27LJ\2\n5\0\0\2\0\4\0\0056\0\0\0009\0\1\0'\1\3\0=\1\2\0K\0\1\0\frounded\16glow_border\6g\bvim\0" },
+    loaded = true,
+    path = "/Users/momeppkt/.local/share/nvim/site/pack/packer/start/glow.nvim",
+    url = "https://github.com/ellisonleao/glow.nvim"
+  },
   ["kanagawa.nvim"] = {
     loaded = true,
     path = "/Users/momeppkt/.local/share/nvim/site/pack/packer/start/kanagawa.nvim",
@@ -165,11 +171,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/momeppkt/.local/share/nvim/site/pack/packer/start/nvim-lspconfig",
     url = "https://github.com/neovim/nvim-lspconfig"
-  },
-  ["nvim-markdown-preview"] = {
-    loaded = true,
-    path = "/Users/momeppkt/.local/share/nvim/site/pack/packer/start/nvim-markdown-preview",
-    url = "https://github.com/davidgranstrom/nvim-markdown-preview"
   },
   ["nvim-treesitter"] = {
     loaded = true,
@@ -245,6 +246,10 @@ _G.packer_plugins = {
 }
 
 time([[Defining packer_plugins]], false)
+-- Config for: glow.nvim
+time([[Config for glow.nvim]], true)
+try_loadstring("\27LJ\2\n5\0\0\2\0\4\0\0056\0\0\0009\0\1\0'\1\3\0=\1\2\0K\0\1\0\frounded\16glow_border\6g\bvim\0", "config", "glow.nvim")
+time([[Config for glow.nvim]], false)
 -- Config for: nvim-web-devicons
 time([[Config for nvim-web-devicons]], true)
 try_loadstring("\27LJ\2\n?\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\22nvim-web-devicons\frequire\0", "config", "nvim-web-devicons")

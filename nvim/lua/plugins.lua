@@ -74,7 +74,7 @@ return packer.startup(function(use)
   use 'windwp/nvim-autopairs'
   use { 'numToStr/Comment.nvim', config = function() require('Comment').setup() end }
   use { 'norcalli/nvim-colorizer.lua', config = function() require('colorizer').setup() end }
-  use 'davidgranstrom/nvim-markdown-preview'
+  use { 'ellisonleao/glow.nvim', config = function () vim.g.glow_border = "rounded" end }
   use 'akinsho/toggleterm.nvim'
 
   -- UI decoration
