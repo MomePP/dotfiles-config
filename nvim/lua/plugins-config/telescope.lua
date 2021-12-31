@@ -170,17 +170,10 @@ telescope.setup {
     file_browser = {
       -- theme = 'ivy'
     },
-    media_files = {
-      -- filetypes whitelist
-      -- defaults to {"png", "jpg", "mp4", "webm", "pdf"}
-      filetypes = {"png", "webm", "jpg", "jpeg", "pdf", "webp"},
-      find_cmd = "rg" -- find command (defaults to `fd`)
-    }
   }
 }
 telescope.load_extension("fzf")
 telescope.load_extension("file_browser")
-telescope.load_extension("media_files")
 
 _G.open_telescope = function()
   local first_arg = vim.v.argv[2]
@@ -188,7 +181,7 @@ _G.open_telescope = function()
   if first_arg then
     if vim.fn.isdirectory(first_arg) == 1 then
       if first_arg == "." then
-        first_arg = vim.fn.expand('%')
+        first_arg = vim.fn.expand('%:p')
       end
       vim.api.nvim_set_current_dir(first_arg)
       telescope.extensions.file_browser.file_browser({cwd = first_arg})
