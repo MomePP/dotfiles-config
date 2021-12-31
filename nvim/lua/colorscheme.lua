@@ -15,7 +15,7 @@ require('kanagawa').setup({
     typeStyle = "NONE",
     variablebuiltinStyle = "italic",
     specialReturn = true,       -- special highlight for the return keyword
-    specialException = true,    -- special highlight for exception handling keywords 
+    specialException = true,    -- special highlight for exception handling keywords
     transparent = true,        -- do not set background color
     colors = {},
     overrides = {},

@@ -44,10 +44,10 @@ end
 -- 	ncdu:toggle()
 -- end
 --
--- local htop = Terminal:new({ cmd = "htop", hidden = true })
--- function _HTOP_TOGGLE()
--- 	htop:toggle()
--- end
+local gotop = Terminal:new({ cmd = "gotop", hidden = true })
+function _GOTOP_TOGGLE()
+	gotop:toggle()
+end
 --
 -- local python = Terminal:new({ cmd = "python", hidden = true })
 -- function _PYTHON_TOGGLE()
