@@ -1,7 +1,7 @@
 -- load plugin configs
 --
 require('plugins-config.autopairs')
-require('plugins-config.cmp')
+require('plugins-config.completions')
 require('plugins-config.gitsigns')
 require('plugins-config.lualine')
 require('plugins-config.telescope')
