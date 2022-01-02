@@ -1,11 +1,14 @@
 -- nvim setting configs
 require('settings')
-
--- install plugins
-require('plugins')
+require('impatient')
+-- require('impatient').enable_profile()
 
 -- apply colorscheme
 require('colorscheme')
+
+-- install plugins
+require('packer_compiled')
+require('plugins')
 
 -- key mappings
 require('keymappings')

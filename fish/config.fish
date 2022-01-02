@@ -32,14 +32,18 @@ set -Ux EXA_STANDARD_OPTIONS --long --group --icons
 set -Ux EXA_LA_OPTIONS --all
 set -Ux EXA_LT_OPTIONS --all --tree --level 2
 
-export PATH="$PATH:/Users/momeppkt/Documents/Dev/flutter/bin"
+fish_add_path /Users/momeppkt/Documents/Dev/flutter/bin
 
 pyenv init - | source
-
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
 
 function nvm
     bass source ~/.nvm/nvm.sh --no-use ';' nvm $argv
 end
+
+# config ruby
+fish_add_path /opt/homebrew/opt/ruby/bin
+
+set -gx LDFLAGS "-L/opt/homebrew/opt/ruby/lib"
+set -gx CPPFLAGS "-I/opt/homebrew/opt/ruby/include"
+set -gx PKG_CONFIG_PATH "/opt/homebrew/opt/ruby/lib/pkgconfig"
 

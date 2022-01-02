@@ -121,6 +121,11 @@ _G.packer_plugins = {
     path = "/Users/momeppkt/.local/share/nvim/site/pack/packer/start/glow.nvim",
     url = "https://github.com/ellisonleao/glow.nvim"
   },
+  ["impatient.nvim"] = {
+    loaded = true,
+    path = "/Users/momeppkt/.local/share/nvim/site/pack/packer/start/impatient.nvim",
+    url = "https://github.com/lewis6991/impatient.nvim"
+  },
   ["kanagawa.nvim"] = {
     loaded = true,
     path = "/Users/momeppkt/.local/share/nvim/site/pack/packer/start/kanagawa.nvim",
