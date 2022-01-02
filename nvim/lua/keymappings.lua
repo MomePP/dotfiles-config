@@ -37,6 +37,9 @@ utils.map('i', '?', '?<C-g>u')
 utils.map('n', 'k', '(v:count > 5 ? "m\'" . v:count : "") . "k"', { noremap = true, expr = true })
 utils.map('n', 'j', '(v:count > 5 ? "m\'" . v:count : "") . "j"', { noremap = true, expr = true })
 
+-- Buffers config
+utils.map('n', '<leader>b', ':buffers<CR>:buffer<Space>')
+
 -- Window config
 -- split window
 utils.map('n', 'ss', '<cmd>split<cr><Space>')
