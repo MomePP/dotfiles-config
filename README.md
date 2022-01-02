@@ -2,7 +2,7 @@
 ## Neovim
 > Requires Neovim version 0.6.0 or Nightly
 
-Runs `requirement.sh` script to installs deps
+Runs `requirements.sh` script to install neovim and deps
 ``` bash
 ./requirements.sh
 ```
