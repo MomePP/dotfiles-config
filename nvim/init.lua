@@ -7,8 +7,8 @@ require('impatient')
 require('colorscheme')
 
 -- install plugins
-require('packer_compiled')
 require('plugins')
+require('packer_compiled')
 
 -- key mappings
 require('keymappings')
