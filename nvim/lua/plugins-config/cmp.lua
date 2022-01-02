@@ -7,7 +7,8 @@ if not snip_loadded then return end
 local lspkind = require('lspkind')
 local utils = require('utils')
 
-utils.opt('o', 'completeopt', 'menuone,noinsert,noselect')
+-- utils.opt('o', 'completeopt', 'menuone,noinsert,noselect')
+utils.opt('o', 'completeopt', 'menu,menuone,noselect')
 
 require('luasnip/loaders/from_vscode').lazy_load()
 
@@ -51,8 +52,8 @@ cmp.setup({
     end,
   },
   mapping = {
-    ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-1), { 'i', 'c' }),
-    ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(1), { 'i', 'c' }),
+    ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(1), { 'i', 'c' }),
+    ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-1), { 'i', 'c' }),
     ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
     ['<C-e>'] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
     ['<CR>'] = cmp.mapping.confirm({
@@ -93,9 +94,9 @@ cmp.setup({
     fields = { 'abbr', 'menu', 'kind' },
     format = lspkind.cmp_format {
       with_text = true,
-      preset = 'codicons',
+      preset = 'default',
       symbol_map = lspkind_icons,
-      maxwidth = 80,
+      maxwidth = 50,
       menu = {
         buffer = "[Buffer]",
         nvim_lua = "[LUA]",

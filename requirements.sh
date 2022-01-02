@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # WARN: must have brew installed
-brew install wget neovim lazygit git-flow ripgrep neovim-remote gotop
+brew install wget neovim lazygit git-flow ripgrep neovim-remote gotop spotify-tui
 
 # NOTE: extension installers list
 # BUG: currently installer broken

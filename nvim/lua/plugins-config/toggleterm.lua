@@ -53,3 +53,10 @@ end
 -- function _PYTHON_TOGGLE()
 -- 	python:toggle()
 -- end
+--
+
+local spotify = Terminal:new({ cmd = "spt", hidden = true })
+function _SPOTIFY_TOGGLE()
+  spotify:toggle()
+end
+
