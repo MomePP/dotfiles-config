@@ -40,9 +40,9 @@ packer.init {
 
 return packer.startup({
   function(use)
-    use "wbthomason/packer.nvim" -- Have packer manage itself
-    use 'nvim-lua/popup.nvim'
+    use 'wbthomason/packer.nvim'
     use 'nvim-lua/plenary.nvim'
+    use 'nvim-lua/popup.nvim'
     use 'lewis6991/impatient.nvim'
 
     -- git plugins
@@ -51,7 +51,6 @@ return packer.startup({
     -- LSP
     use 'neovim/nvim-lspconfig'
     use 'williamboman/nvim-lsp-installer'
-    use 'onsails/lspkind-nvim'
 
     -- snippets
     use 'L3MON4D3/LuaSnip'
@@ -67,25 +66,26 @@ return packer.startup({
 
     -- telescope
     use 'nvim-telescope/telescope.nvim'
-    use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
     use 'nvim-telescope/telescope-file-browser.nvim'
+    use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make'}
 
     -- utilities
     use 'windwp/nvim-autopairs'
+    use { 'norcalli/nvim-colorizer.lua', event = 'BufRead' }
+    use { 'lukas-reineke/indent-blankline.nvim', event = 'BufRead' }
     use { 'numToStr/Comment.nvim', config = function() require('Comment').setup() end }
-    use { 'norcalli/nvim-colorizer.lua', config = function() require('colorizer').setup() end }
     use { 'ellisonleao/glow.nvim', config = function () vim.g.glow_border = "rounded" end }
     use 'akinsho/toggleterm.nvim'
 
     -- UI decoration
     use { 'kyazdani42/nvim-web-devicons', config = function() require('nvim-web-devicons').setup() end }
-    use 'alvarosevilla95/luatab.nvim'
-    use 'hoob3rt/lualine.nvim'
-    use 'folke/zen-mode.nvim'
+    use { 'alvarosevilla95/luatab.nvim', after = 'nvim-web-devicons' }
+    use { 'hoob3rt/lualine.nvim', after = 'nvim-web-devicons' }
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
     use 'p00f/nvim-ts-rainbow'
-    use { 'folke/todo-comments.nvim', requires = 'nvim-lua/plenary.nvim' }
-    use 'MomePP/plastic-nvim'
+    use 'folke/zen-mode.nvim'
+    use 'folke/todo-comments.nvim'
+    -- use 'MomePP/plastic-nvim'
     use 'rebelot/kanagawa.nvim'
 
     -- Automatically set up your configuration after cloning packer.nvim

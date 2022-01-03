@@ -58,6 +58,8 @@ telescope.setup {
     prompt_prefix = "   ",
     color_devicons = true,
     path_display = { "tail", "smart" },
+    set_env = { ["COLORTERM"] = "truecolor" },
+    file_ignore_patterns = { "node_module" },
 
     file_previewer = require("telescope.previewers").vim_buffer_cat.new,
     grep_previewer = require("telescope.previewers").vim_buffer_vimgrep.new,

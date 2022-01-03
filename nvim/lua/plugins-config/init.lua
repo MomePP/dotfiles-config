@@ -10,4 +10,6 @@ require('plugins-config.luatab')
 require('plugins-config.zenmode')
 require('plugins-config.toggleterm')
 require('plugins-config.todocomments')
+require('plugins-config.colorizer')
+require('plugins-config.indent-blankline')
 

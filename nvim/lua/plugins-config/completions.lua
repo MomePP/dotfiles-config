@@ -4,7 +4,6 @@ if not cmp_loadded then return end
 local snip_loadded, luasnip = pcall(require, 'luasnip')
 if not snip_loadded then return end
 
-local lspkind = require('lspkind')
 local utils = require('utils')
 
 -- utils.opt('o', 'completeopt', 'menuone,noinsert,noselect')
@@ -85,26 +84,25 @@ cmp.setup({
   },
   sources = {
     { name = 'nvim_lsp' },
-    { name = 'nvim_lua' },
     { name = 'luasnip' },
     { name = 'buffer', keyword_length = 3 },
+    { name = 'nvim_lua' },
     { name = 'path' },
   },
   formatting = {
     fields = { 'abbr', 'menu', 'kind' },
-    format = lspkind.cmp_format {
-      with_text = true,
-      preset = 'default',
-      symbol_map = lspkind_icons,
-      maxwidth = 50,
-      menu = {
-        buffer = "[Buffer]",
-        nvim_lua = "[LUA]",
+    format = function (entry, vim_item)
+      vim_item.kind = string.format("%s", lspkind_icons[vim_item.kind])
+      -- vim_item.kind = string.format("%s %s", lspkind_icons[vim_item.kind], vim_item.kind)
+      vim_item.menu = ({
+        nvim_lua = "[Lua]",
         nvim_lsp = "[LSP]",
+        buffer = "[Buffer]",
         path = "[Path]",
-        luasnip = "[Snippets]",
-      }
-    }
+        luasnip = "[Snippets]"
+      }) [entry.source.name]
+      return vim_item
+    end
   },
   documentation = {
     border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" }
