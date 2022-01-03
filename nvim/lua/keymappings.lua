@@ -37,8 +37,11 @@ utils.map('i', '?', '?<C-g>u')
 utils.map('n', 'k', '(v:count > 5 ? "m\'" . v:count : "") . "k"', { noremap = true, expr = true })
 utils.map('n', 'j', '(v:count > 5 ? "m\'" . v:count : "") . "j"', { noremap = true, expr = true })
 
--- Buffers config
-utils.map('n', '<leader>b', ':buffers<CR>:buffer<Space>')
+-- Bufferline config
+utils.map('n', '<Tab>', ':BufferLineCycleNext<CR>', silent_noremap)
+utils.map('n', '<S-Tab>', ':BufferLineCyclePrev<CR>', silent_noremap)
+utils.map('n', 'tp', ':BufferLinePick<CR>', silent_noremap)
+utils.map('n', 'tq', ':Bdelete!<CR>', silent_noremap)
 
 -- Window config
 -- split window
@@ -84,12 +87,6 @@ utils.map('n', '<m-up>', ':m-2<CR>')
 -- remap jump keys
 utils.map('n', '<C-j>', '<C-i>')
 utils.map('n', '<C-k>', '<C-o>')
-
--- Tab config
-utils.map('n', 'te', '<cmd>tabedit<cr>')
-utils.map('n', 'tc', '<cmd>tabclose<cr>')
-utils.map('n', '<Tab>', '<cmd>tabnext<cr>')
-utils.map('n', '<S-Tab>', '<cmd>tabprev<cr>')
 
 -- GitSign keymap
 utils.map('n', ']c', "&diff ? ']c' : '<cmd>lua require\"gitsigns.actions\".next_hunk()<CR>'", { noremap = true, expr = true })

@@ -15,5 +15,3 @@ colorizer.setup({'*'}, {
   mode = 'background',
 })
 
-vim.cmd "ColorizerReloadAllBuffers"
-

@@ -70,16 +70,16 @@ return packer.startup({
     use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make'}
 
     -- utilities
-    use 'windwp/nvim-autopairs'
-    use { 'norcalli/nvim-colorizer.lua', event = 'BufRead' }
     use { 'lukas-reineke/indent-blankline.nvim', event = 'BufRead' }
     use { 'numToStr/Comment.nvim', config = function() require('Comment').setup() end }
     use { 'ellisonleao/glow.nvim', config = function () vim.g.glow_border = "rounded" end }
+    use 'windwp/nvim-autopairs'
+    use 'norcalli/nvim-colorizer.lua'
     use 'akinsho/toggleterm.nvim'
+    use 'akinsho/bufferline.nvim'
 
     -- UI decoration
     use { 'kyazdani42/nvim-web-devicons', config = function() require('nvim-web-devicons').setup() end }
-    use { 'alvarosevilla95/luatab.nvim', after = 'nvim-web-devicons' }
     use { 'hoob3rt/lualine.nvim', after = 'nvim-web-devicons' }
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
     use 'p00f/nvim-ts-rainbow'
