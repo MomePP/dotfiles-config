@@ -32,8 +32,6 @@ set -Ux EXA_STANDARD_OPTIONS --long --group --icons
 set -Ux EXA_LA_OPTIONS --all
 set -Ux EXA_LT_OPTIONS --all --tree --level 2
 
-fish_add_path /Users/momeppkt/Documents/Dev/flutter/bin
-
 pyenv init - | source
 
 function nvm
@@ -42,8 +40,10 @@ end
 
 # config ruby
 fish_add_path /opt/homebrew/opt/ruby/bin
-
 set -gx LDFLAGS "-L/opt/homebrew/opt/ruby/lib"
 set -gx CPPFLAGS "-I/opt/homebrew/opt/ruby/include"
 set -gx PKG_CONFIG_PATH "/opt/homebrew/opt/ruby/lib/pkgconfig"
+
+# config gem path, its actually just runs once but if it exists not appended.
+fish_add_path (ruby -e 'print Gem.user_dir')/bin
 
