@@ -41,7 +41,7 @@ utils.map('n', 'j', '(v:count > 5 ? "m\'" . v:count : "") . "j"', { noremap = tr
 utils.map('n', '<Tab>', ':BufferLineCycleNext<CR>', silent_noremap)
 utils.map('n', '<S-Tab>', ':BufferLineCyclePrev<CR>', silent_noremap)
 utils.map('n', 'tp', ':BufferLinePick<CR>', silent_noremap)
-utils.map('n', 'tq', ':Bdelete!<CR>', silent_noremap)
+utils.map('n', 'tq', ':bd<CR>', silent_noremap)
 
 -- Window config
 -- split window

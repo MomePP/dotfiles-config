@@ -56,6 +56,8 @@ end
 telescope.setup {
   defaults = {
     prompt_prefix = "   ",
+    entry_prefix = "  ",
+    selection_caret = "  ",
     color_devicons = true,
     path_display = { "tail", "smart" },
     set_env = { ["COLORTERM"] = "truecolor" },
@@ -141,6 +143,7 @@ telescope.setup {
       -- theme = 'ivy'
       layout_strategy = 'bottom_pane',
       layout_config = {
+        height = 0.4,
         preview_width = 0.4,
         prompt_position = 'bottom'
       },
@@ -150,6 +153,7 @@ telescope.setup {
       -- theme = 'ivy'
       layout_strategy = 'bottom_pane',
       layout_config = {
+        height = 0.4,
         preview_width = 0.4,
         prompt_position = 'bottom'
       },
