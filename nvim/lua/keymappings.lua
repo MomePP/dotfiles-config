@@ -41,7 +41,7 @@ utils.map('n', 'j', '(v:count > 5 ? "m\'" . v:count : "") . "j"', { noremap = tr
 utils.map('n', '<Tab>', ':BufferLineCycleNext<CR>', silent_noremap)
 utils.map('n', '<S-Tab>', ':BufferLineCyclePrev<CR>', silent_noremap)
 utils.map('n', 'tp', ':BufferLinePick<CR>', silent_noremap)
-utils.map('n', 'tq', ':bd<CR>', silent_noremap)
+utils.map('n', 'tq', ':Bdelete<CR>', silent_noremap)
 
 -- Window config
 -- split window
@@ -120,16 +120,18 @@ utils.map('n', '<leader>z', "<cmd>ZenMode<CR>", silent_noremap)
 
 -- Terminal & ToggleTerm keymap
 --  toggleterm keymap, set in `toggleterm-conf` file. Currently used : <leader>t
--- function _G.set_terminal_keymaps()
---   utils.map('t', 'sh',[[<C-\><C-n><C-W>h]])
---   utils.map('t', 'sj', [[<C-\><C-n><C-W>j]])
---   utils.map('t', 'sk', [[<C-\><C-n><C-W>k]])
---   utils.map('t', 'sl', [[<C-\><C-n><C-W>l]])
--- end
--- vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
 utils.map('n', '<leader>g', "<cmd>lua _LAZYGIT_TOGGLE()<CR>", silent_noremap)
 utils.map('n', '<leader>M', "<cmd>lua _GOTOP_TOGGLE()<CR>", silent_noremap)
 -- utils.map('n', '<leader>s', "<cmd>lua _SPOTIFY_TOGGLE()<CR>", silent_noremap)
+
+-- function _G.set_terminal_keymaps()
+--   utils.map('t', '<C-q>', [[<C-\><C-n>]])
+--   utils.map('t', '<C-h>', [[<C-\><C-n><C-W>h]])
+--   utils.map('t', '<C-j>', [[<C-\><C-n><C-W>j]])
+--   utils.map('t', '<C-k>', [[<C-\><C-n><C-W>k]])
+--   utils.map('t', '<C-l>', [[<C-\><C-n><C-W>l]])
+-- end
+-- vim.cmd('autocmd! TermOpen term://*toggleterm#* lua set_terminal_keymaps()')
 
 -- Glow keymap (markdown preview)
 utils.map('n', '<leader>m', "<cmd>Glow<CR>", silent_noremap)

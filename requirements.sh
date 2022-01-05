@@ -10,7 +10,9 @@ brew install wget neovim lazygit git-flow ripgrep neovim-remote gotop
 # -- add edit and open commands for lazygit config if config not exists
 lazygit_config=~/Library/Application\ Support/lazygit/config.yml
 if [ ! -f "$lazygit_config" ]; then
-  echo -e "os:\n\teditCommand: \"nvim\"\n\topenCommand: \"nvr -cc vsplit --remote +'set bufhidden=wipe' {{filename}}\"" >> ~/Library/Application\ Support/lazygit/config.yml
-  echo "lazygit config added !"
+    echo -e "os:\n\teditCommand: \"nvim\"\n\topenCommand: \"nvr --remote-silent -cc q {{filename}}\"" >> ~/Library/Application\ Support/lazygit/config.yml
+    echo "lazygit config added !"
+else
+    echo "found lazygit config file.. skip adding new config"
 fi
 

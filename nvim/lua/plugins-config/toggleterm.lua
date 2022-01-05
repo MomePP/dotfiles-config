@@ -29,7 +29,7 @@ toggleterm.setup({
 
 local Terminal = require("toggleterm.terminal").Terminal
 
-local lazygit = Terminal:new({ cmd = "lazygit", hidden = true })
+local lazygit = Terminal:new({ cmd = "lazygit", count=20, hidden = true })
 function _LAZYGIT_TOGGLE()
 	lazygit:toggle()
 end
@@ -44,7 +44,7 @@ end
 -- 	ncdu:toggle()
 -- end
 --
-local gotop = Terminal:new({ cmd = "gotop", hidden = true })
+local gotop = Terminal:new({ cmd = "gotop", count=21, hidden = true })
 function _GOTOP_TOGGLE()
 	gotop:toggle()
 end
