@@ -2,18 +2,18 @@
 ## Neovim
 > Requires Neovim version 0.6.0 or Nightly
 
-Runs `requirements.sh` script to install neovim and deps
+Runs `neovim-installer.sh` script to install neovim and deps
 ``` bash
-./requirements.sh
+./neovim-installer.sh
 ```
-**Note** Currently, uses `impatient` plugin to cache lua config files.
+Currently, uses `impatient` plugin to cache lua config files.
 This may results first times running failed to import `packer_compiled` file.
 
 To fix this, try to install all the plugins and it will creating the missing file.
 ``` vim
 :PackerSync
 ```
-* may need to restart neovim for couple times
+**Note** may need to restart neovim for couple times
 
 ## Fish shell
 Does not have install script yet. But mainly install `fish` and `fisher`(packages manager)
