@@ -11,9 +11,10 @@ This may results first times running failed to import `packer_compiled` file.
 
 To fix this, try to install all the plugins and it will creating the missing file.
 ``` vim
+" run this in vim command mode
 :PackerSync
 ```
-**Note** may need to restart neovim for couple times
+**Note:** This may need to restart neovim for a couple of times
 
 ## Fish shell
 Does not have install script yet. But mainly install `fish` and `fisher`(packages manager)
