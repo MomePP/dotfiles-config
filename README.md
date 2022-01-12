@@ -1,15 +1,15 @@
 # MomePP's dotfiles
-## Neovim
-> Requires Neovim version 0.6.0 or Nightly
+> Requires `Homebrew` to be installed
 
-Runs `neovim-installer.sh` script to install neovim and deps
+## Neovim
+Runs `neovim-installer.sh` script to install neovim with MomePP's configuration.
 ``` bash
 ./neovim-installer.sh
 ```
 Currently, uses `impatient` plugin to cache lua config files.
-This may results first times running failed to import `packer_compiled` file.
+This may result first times running failed to import `packer_compiled` file.
 
-To fix this, try to install all the plugins and it will creating the missing file.
+To fix this, try to install all the plugins by run following command in neovim.
 ``` vim
 " run this in vim command mode
 :PackerSync
@@ -17,7 +17,7 @@ To fix this, try to install all the plugins and it will creating the missing fil
 **Note:** This may need to restart neovim for a couple of times
 
 ## Fish shell
-Does not have install script yet. But mainly install `fish` and `fisher`(packages manager)
+Does not have installing script yet. But mainly install `fish` and `fisher`(packages manager)
 
 [**`fish`**](https://fishshell.com/)
 ``` bash
