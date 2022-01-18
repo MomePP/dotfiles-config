@@ -43,7 +43,3 @@ set -gx PKG_CONFIG_PATH "/opt/homebrew/opt/ruby/lib/pkgconfig"
 # config gem path, its actually just runs once but if it exists not appended.
 fish_add_path (ruby -e 'print Gem.user_dir')/bin
 
-# config pure fish prompt
-_pure_set_default pure_show_system_time true
-_pure_set_default pure_color_system_time grey --reverse
-
