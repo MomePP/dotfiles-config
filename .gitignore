@@ -7,3 +7,5 @@ fish/fish_variables
 configstore
 spotify-tui
 nvim/lua/packer_compiled.lua
+
+tmux/plugins
