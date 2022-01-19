@@ -25,7 +25,7 @@ All the installed plugins are listed [Here](nvim/lua/plugins.lua)
 ---
 
 ## Fish shell
-Does not have installing script yet. But mainly install `fish` and `fisher`(packages manager)
+Need to install `fish` and `fisher`(packages manager)
 
 [**`fish`**](https://fishshell.com/)
 ``` bash
@@ -40,3 +40,21 @@ fisher update   # install all listed plugins in `fish_plugins`
 ```
 
 ---
+
+## tmux
+Need to install `tmux` and `tmp`(tmux plugins manager)
+
+Already configured with following keybindings
+- **Session** - follow by uppercase-letter
+- **Window** - follow by Ctrl-key to hold
+- **Pane** - follow by lowercase-letter
+
+|| Session | Window | Pane |
+|--- | --- | --- | --- |
+|new  | `<prefix>N` | `<prefix><C-n>` | `<prefix>n` |
+|next | `<prefix>L` or `<prefix>O` | `<prefix><C-l>` or `<prefix><C-o>` | `<prefix>l` or `<prefix>o` |
+|previous | `<prefix>H` | `<prefix><C-h>` | `<prefix>h` |
+|kill | `<prefix>X` | `<prefix><C-x>` | `<prefix>x` |
+
+Refs from `craftzdog` and `tmwatchanan`
+

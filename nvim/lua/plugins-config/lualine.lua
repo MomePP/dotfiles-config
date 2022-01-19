@@ -47,32 +47,75 @@ local branch = {
 	icon = "",
 }
 
+local colors = {
+  black        = 234,
+  white        = 252,
+  red          = '#e06c75',
+  green        = '#98c379',
+  blue         = '#61afef',
+  yellow       = '#e5c07b',
+  purple       = '#b57edc',
+  grey         = 236,
+  lightgrey    = 238,
+  inactivegrey = 'NONE',
+}
+
 lualine.setup({
-	options = {
-		icons_enabled = true,
-		-- theme = plastic_lualine,
-    theme = 'auto',
-    section_separators = {left = '', right = ''},
-    component_separators = {left = '', right = ''},
-		disabled_filetypes = { "alpha", "dashboard", "Outline" },
-		always_divide_middle = true,
-	},
-	sections = {
-		lualine_a = { 'mode' },
-		lualine_b = { branch },
-		lualine_c = { filename },
-		lualine_x = { diagnostics, diff },
-		lualine_y = { filetype },
-		lualine_z = { 'location' },
-	},
-	inactive_sections = {
-		lualine_a = {},
-		lualine_b = {},
-		lualine_c = { filename_path },
-		lualine_x = { 'location' },
-		lualine_y = {},
-		lualine_z = {},
-	},
-	tabline = {},
-	extensions = {'fugitive'},
+    options = {
+        icons_enabled = true,
+        -- theme = plastic_lualine,
+        theme = {
+            normal = {
+                a = { bg = colors.white, fg = colors.black, gui = 'bold' },
+                b = { bg = colors.grey, fg = colors.white },
+                c = { bg = colors.black, fg = colors.white },
+            },
+            insert = {
+                a = { bg = colors.green, fg = colors.black, gui = 'bold' },
+                b = { bg = colors.grey, fg = colors.white },
+                c = { bg = colors.black, fg = colors.white },
+            },
+            visual = {
+                a = { bg = colors.purple, fg = colors.black, gui = 'bold' },
+                b = { bg = colors.grey, fg = colors.white },
+                c = { bg = colors.black, fg = colors.white },
+            },
+            replace = {
+                a = { bg = colors.yellow, fg = colors.black, gui = 'bold' },
+                b = { bg = colors.grey, fg = colors.white },
+                c = { bg = colors.black, fg = colors.white },
+            },
+            command = {
+                a = { bg = colors.red, fg = colors.black, gui = 'bold' },
+                b = { bg = colors.grey, fg = colors.white },
+                c = { bg = colors.black, fg = colors.white },
+            },
+            inactive = {
+                a = { bg = colors.inactivegrey, fg = colors.lightgrey, gui = 'bold' },
+                b = { bg = colors.inactivegrey, fg = colors.lightgrey },
+                c = { bg = colors.inactivegrey, fg = colors.lightgrey },
+            },
+        },
+        section_separators = {left = '', right = ''},
+        component_separators = {left = '', right = ''},
+        disabled_filetypes = { "alpha", "dashboard", "Outline" },
+        always_divide_middle = true,
+    },
+    sections = {
+        lualine_a = { 'mode' },
+        lualine_b = { branch },
+        lualine_c = { filename },
+        lualine_x = { diagnostics, diff },
+        lualine_y = { filetype },
+        lualine_z = { 'location' },
+    },
+    inactive_sections = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = { filename_path },
+        lualine_x = { 'location' },
+        lualine_y = {},
+        lualine_z = {},
+    },
+    tabline = {},
 })
