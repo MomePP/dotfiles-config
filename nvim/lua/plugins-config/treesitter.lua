@@ -12,7 +12,7 @@ treesitter.setup {
     disable = { 'yaml' },
   },
   ensure_installed = "maintained",
-  sync_install = true,
+  sync_install = false,
   ignore_install = false,
   rainbow = {
     enable = true,

@@ -82,7 +82,7 @@ return packer.startup({
     -- UI decoration
     use { 'kyazdani42/nvim-web-devicons', config = function() require('nvim-web-devicons').setup() end }
     use { 'hoob3rt/lualine.nvim', after = 'nvim-web-devicons' }
-    use { 'nvim-treesitter/nvim-treesitter', commit = '668de0951a36ef17016074f1120b6aacbe6c4515', run = ':TSUpdate' } -- pinned commit, wait for bug fix https://github.com/nvim-treesitter/nvim-treesitter/issues/2295
+    use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
     use 'p00f/nvim-ts-rainbow'
     use 'folke/zen-mode.nvim'
     use 'folke/todo-comments.nvim'
