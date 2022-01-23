@@ -43,24 +43,21 @@ utils.map('n', '<S-Tab>', ':BufferLineCyclePrev<CR>', silent_noremap)
 utils.map('n', 'tp', ':BufferLinePick<CR>', silent_noremap)
 utils.map('n', 'tq', ':Bdelete<CR>', silent_noremap)
 
--- Window config
--- split window
-utils.map('n', 'ss', '<cmd>split<cr><Space>')
-utils.map('n', 'sv', '<cmd>vsplit<cr><Space>')
-
--- move window
+-- Panes config using `focus` plugin
+utils.map('n', '<Space>', ':FocusSplitCycle<CR>')
+utils.map('n', 'sm', ':FocusMaxOrEqual<CR>')
+utils.map('n', 'sn', ':FocusSplitNicely<CR>')
 utils.map('n', 'sq', '<C-w>q')
-utils.map('n', '<Space>', '<C-w>w')
 
-utils.map('n', 's<left>', '<C-w>h')
-utils.map('n', 's<right>', '<C-w>l')
-utils.map('n', 's<up>', '<C-w>k')
-utils.map('n', 's<down>', '<C-w>j')
+utils.map('n', 's<left>', ':FocusSplitLeft<CR>')
+utils.map('n', 's<right>', ':FocusSplitRight<CR>')
+utils.map('n', 's<up>', ':FocusSplitUp<CR>')
+utils.map('n', 's<down>', ':FocusSplitDown<CR>')
 
-utils.map('n', 'sh', '<C-w>h')
-utils.map('n', 'sl', '<C-w>l')
-utils.map('n', 'sk', '<C-w>k')
-utils.map('n', 'sj', '<C-w>j')
+utils.map('n', 'sh', ':FocusSplitLeft<CR>')
+utils.map('n', 'sl', ':FocusSplitRight<CR>')
+utils.map('n', 'sk', ':FocusSplitUp<CR>')
+utils.map('n', 'sj', ':FocusSplitDown<CR>')
 
 -- resize window
 utils.map('n', '<C-w><left>', '<C-w><')

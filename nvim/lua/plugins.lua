@@ -78,6 +78,7 @@ return packer.startup({
     use 'akinsho/toggleterm.nvim'
     use 'akinsho/bufferline.nvim'
     use 'moll/vim-bbye'
+    use 'beauwilliams/focus.nvim'
 
     -- UI decoration
     use { 'kyazdani42/nvim-web-devicons', config = function() require('nvim-web-devicons').setup() end }
