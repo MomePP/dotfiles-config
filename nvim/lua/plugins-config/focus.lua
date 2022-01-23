@@ -3,6 +3,6 @@ if not status_ok then return end
 
 focus.setup({
     excluded_filetypes = { 'toggleterm' },
-    relativenumber = true,
+    number = false,
 })
 

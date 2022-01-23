@@ -22,6 +22,7 @@ alias g "git"
 alias rbrew='arch -x86_64 /usr/local/bin/brew'
 alias rosetta="arch -x86_64"
 alias py="python3"
+alias tm "tmux attach-session || tmux new -s default"
 
 # config editor
 command -qv nvim && alias vi nvim
