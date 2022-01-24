@@ -8,9 +8,9 @@ autopairs.setup({
     javascript = { "string", "template_string" },
     java = false,
   },
-  disable_filetype = { "TelescopePrompt", "spectre_panel" },
+  disable_filetype = { "TelescopePrompt", "spectre_panel", "toggleterm" },
   fast_wrap = {
-    map = "<C-b>",
+    map = "<m-b>",
     chars = { "{", "[", "(", '"', "'" },
     pattern = string.gsub([[ [%'%"%)%>%]%)%}%,] ]], "%s+", ""),
     offset = 0, -- Offset from pattern match
