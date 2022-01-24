@@ -55,34 +55,35 @@ local function lsp_highlight_document(client)
   end
 end
 
-local function lsp_keymaps(bufnr)
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
-  -- Enable completion triggerd by <C-x><C-o>
-  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-  local opts = { noremap = true, silent = true }
-  buf_set_keymap("n", "<leader>ff", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-  buf_set_keymap('n', 'gd', '<cmd>Telescope lsp_definitions<CR>', opts)
-  buf_set_keymap('n', 'gt', "<cmd>Telescope lsp_type_definitions<CR>", opts)
-  buf_set_keymap('n', 'gx', "<cmd>Telescope lsp_code_actions<CR>", opts)
-  buf_set_keymap('x', 'gx', "<cmd>Telescope lsp_range_code_actions<CR>", opts)
-  buf_set_keymap('n', 'gr', "<cmd>Telescope lsp_references<CR>", opts)
-  buf_set_keymap('n', '<leader>ls', "<cmd>Telescope lsp_document_symbols<CR>", opts)
-  buf_set_keymap('n', '<leader>ld', "<cmd>Telescope diagnostics<CR>", opts)
-  buf_set_keymap('n', 'gs', "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-  buf_set_keymap('n', 'gp', "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-  -- buf_set_keymap('n', 'gh', "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-  buf_set_keymap('n', ']d', "<cmd>lua vim.diagnostic.goto_next({ border = 'rounded'})<CR>", opts)
-  buf_set_keymap('n', '[d', "<cmd>lua vim.diagnostic.goto_prev({ border = 'rounded'})<CR>", opts)
-  buf_set_keymap('n', '<leader>lr', "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-end
+-- TODO: may add custom keybinds for specific server here .. this can seperates config file per server just like the server setting files
+-- local function lsp_keymaps(bufnr)
+--   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+--   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+--
+--   -- Enable completion triggerd by <C-x><C-o>
+--   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+--
+--   local opts = { noremap = true, silent = true }
+--   buf_set_keymap("n", "<leader>ff", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+--   buf_set_keymap('n', 'gd', '<cmd>Telescope lsp_definitions<CR>', opts)
+--   buf_set_keymap('n', 'gt', "<cmd>Telescope lsp_type_definitions<CR>", opts)
+--   buf_set_keymap('n', 'gx', "<cmd>Telescope lsp_code_actions<CR>", opts)
+--   buf_set_keymap('x', 'gx', "<cmd>Telescope lsp_range_code_actions<CR>", opts)
+--   buf_set_keymap('n', 'gr', "<cmd>Telescope lsp_references<CR>", opts)
+--   buf_set_keymap('n', '<leader>ls', "<cmd>Telescope lsp_document_symbols<CR>", opts)
+--   buf_set_keymap('n', '<leader>ld', "<cmd>Telescope diagnostics<CR>", opts)
+--   buf_set_keymap('n', 'gs', "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
+--   buf_set_keymap('n', 'gp', "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+--   -- buf_set_keymap('n', 'gh', "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+--   buf_set_keymap('n', ']d', "<cmd>lua vim.diagnostic.goto_next({ border = 'rounded'})<CR>", opts)
+--   buf_set_keymap('n', '[d', "<cmd>lua vim.diagnostic.goto_prev({ border = 'rounded'})<CR>", opts)
+--   buf_set_keymap('n', '<leader>lr', "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
+-- end
 
 M.on_attach = function(client, bufnr)
   if client.name == 'tsserver' then client.resolved_capabilities.document_formatting = false end
 
-  lsp_keymaps(bufnr)
+  -- lsp_keymaps(bufnr)
   lsp_highlight_document(client)
 end
 
