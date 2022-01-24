@@ -17,7 +17,7 @@ To fix this, try to install all the plugins by run following command in neovim.
 **Note:** This may need to restart neovim for a couple of times
 
 ### Keybindings
-Most of the shortcuts can be modified in [keymappings](nvim/lua/keymappings.lua). Only LSP related shortcuts can be found in [lsp-handler](nvim/lua/lsp-config/lsp-handler.lua).
+Most of the shortcuts can be modified in [keymappings](nvim/lua/keymappings.lua). ~~LSP related shortcuts can be found in [lsp-handler](nvim/lua/lsp-config/lsp-handler.lua).~~
 
 ### Plugins
 All the installed plugins are listed [Here](nvim/lua/plugins.lua)
