@@ -13,7 +13,7 @@ local colors = {
   purple       = '#b57edc',
   grey         = 236,
   lightgrey    = 238,
-  inactivegrey = 'NONE',
+  transparent = 'NONE',
 }
 
 local hide_in_width = function()
@@ -94,35 +94,35 @@ lualine.setup({
             normal = {
                 a = { bg = colors.white, fg = colors.black, gui = 'bold' },
                 b = { bg = colors.grey, fg = colors.white },
-                c = { bg = colors.black, fg = colors.white },
+                c = { bg = colors.transparent, fg = colors.white },
             },
             insert = {
                 a = { bg = colors.green, fg = colors.black, gui = 'bold' },
                 b = { bg = colors.grey, fg = colors.white },
-                c = { bg = colors.black, fg = colors.white },
+                c = { bg = colors.transparent, fg = colors.white },
             },
             visual = {
                 a = { bg = colors.purple, fg = colors.black, gui = 'bold' },
                 b = { bg = colors.grey, fg = colors.white },
-                c = { bg = colors.black, fg = colors.white },
+                c = { bg = colors.transparent, fg = colors.white },
             },
             replace = {
                 a = { bg = colors.yellow, fg = colors.black, gui = 'bold' },
                 b = { bg = colors.grey, fg = colors.white },
-                c = { bg = colors.black, fg = colors.white },
+                c = { bg = colors.transparent, fg = colors.white },
             },
             command = {
                 a = { bg = colors.red, fg = colors.black, gui = 'bold' },
                 b = { bg = colors.grey, fg = colors.white },
-                c = { bg = colors.black, fg = colors.white },
+                c = { bg = colors.transparent, fg = colors.white },
             },
             inactive = {
-                a = { bg = colors.inactivegrey, fg = colors.lightgrey, gui = 'bold' },
-                b = { bg = colors.inactivegrey, fg = colors.lightgrey },
-                c = { bg = colors.inactivegrey, fg = colors.lightgrey },
+                a = { bg = colors.transparent, fg = colors.lightgrey},
+                b = { bg = colors.transparent, fg = colors.lightgrey },
+                c = { bg = colors.transparent, fg = colors.lightgrey },
             },
         },
-        section_separators = {left = '', right = ''},
+        section_separators = '',
         component_separators = '',
         disabled_filetypes = { "alpha", "dashboard", "Outline" },
         always_divide_middle = true,
