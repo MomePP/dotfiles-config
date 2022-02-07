@@ -45,46 +45,54 @@ return packer.startup({
     use 'nvim-lua/popup.nvim'
     use 'lewis6991/impatient.nvim'
 
-    -- git plugins
-    use 'lewis6991/gitsigns.nvim'
-
     -- LSP
     use 'neovim/nvim-lspconfig'
     use 'williamboman/nvim-lsp-installer'
 
+    -- git plugins
+    use 'lewis6991/gitsigns.nvim'
+
     -- snippets
-    use 'L3MON4D3/LuaSnip'
-    use 'rafamadriz/friendly-snippets'
+    use { 'L3MON4D3/LuaSnip',
+        requires = { 'rafamadriz/friendly-snippets' },
+    }
 
     -- cmp plugins
-    use 'hrsh7th/nvim-cmp'
-    use 'hrsh7th/cmp-nvim-lsp'
-    use 'hrsh7th/cmp-nvim-lua'
-    use 'hrsh7th/cmp-buffer'
-    use 'hrsh7th/cmp-path'
-    use 'saadparwaiz1/cmp_luasnip'
+    use { 'hrsh7th/nvim-cmp', event = 'BufRead' }
+    use {'hrsh7th/cmp-nvim-lsp', after = 'nvim-cmp' }
+    use {'hrsh7th/cmp-nvim-lua', after = 'nvim-cmp' }
+    use {'hrsh7th/cmp-buffer', after = 'nvim-cmp' }
+    use {'hrsh7th/cmp-path', after = 'nvim-cmp' }
+    use {'saadparwaiz1/cmp_luasnip', after = 'nvim-cmp' }
 
     -- telescope
     use 'nvim-telescope/telescope.nvim'
     use 'nvim-telescope/telescope-file-browser.nvim'
-    use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make'}
+    use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
 
     -- utilities
     use { 'lukas-reineke/indent-blankline.nvim', event = 'BufRead' }
-    use { 'numToStr/Comment.nvim', config = function() require('Comment').setup() end }
+    use { 'numToStr/Comment.nvim', event = 'BufRead', config = function() require('Comment').setup() end }
+    use { 'norcalli/nvim-colorizer.lua', event = 'BufRead' }
+    use { 'akinsho/bufferline.nvim', after = 'nvim-web-devicons' }
+    use { 'moll/vim-bbye', after = 'bufferline.nvim' }
     use { 'ellisonleao/glow.nvim', config = function () vim.g.glow_border = "rounded" end }
     use 'windwp/nvim-autopairs'
-    use 'norcalli/nvim-colorizer.lua'
     use 'akinsho/toggleterm.nvim'
-    use 'akinsho/bufferline.nvim'
-    use 'moll/vim-bbye'
     use 'beauwilliams/focus.nvim'
 
     -- UI decoration
     use { 'kyazdani42/nvim-web-devicons', config = function() require('nvim-web-devicons').setup() end }
-    use { 'hoob3rt/lualine.nvim', after = 'nvim-web-devicons' }
-    use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
-    use 'p00f/nvim-ts-rainbow'
+    use { 'hoob3rt/lualine.nvim', after = 'bufferline.nvim' }
+    use {
+        'nvim-treesitter/nvim-treesitter',
+        run = ':TSUpdate',
+        requires = {
+            { "p00f/nvim-ts-rainbow", after = "nvim-treesitter", },
+            { "windwp/nvim-ts-autotag", after = "nvim-treesitter", },
+            { "JoosepAlviste/nvim-ts-context-commentstring", after = "nvim-treesitter", },
+        }
+    }
     use 'folke/zen-mode.nvim'
     use 'folke/todo-comments.nvim'
     -- use 'MomePP/plastic-nvim'

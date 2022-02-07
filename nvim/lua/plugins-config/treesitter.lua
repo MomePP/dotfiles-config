@@ -13,7 +13,7 @@ treesitter.setup {
   },
   ensure_installed = "maintained",
   sync_install = false,
-  ignore_install = false,
+  ignore_install = { 'norg' },
   rainbow = {
     enable = true,
     -- disable = { "jsx", "cpp" }, list of languages you want to disable the plugin for
