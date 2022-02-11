@@ -80,6 +80,7 @@ return packer.startup({
     use 'windwp/nvim-autopairs'
     use 'akinsho/toggleterm.nvim'
     use 'beauwilliams/focus.nvim'
+    use 'chentau/marks.nvim'
 
     -- UI decoration
     use { 'kyazdani42/nvim-web-devicons', config = function() require('nvim-web-devicons').setup() end }

@@ -3,9 +3,11 @@ if not status_ok then
 	return
 end
 
+local toggleterm_keymap = require('keymappings').toggleterm
+
 toggleterm.setup({
 	size = 20,
-	open_mapping = [[<leader>t]],
+	open_mapping = toggleterm_keymap.toggle,
 	hide_numbers = true,
 	shade_filetypes = {},
 	shade_terminals = true,

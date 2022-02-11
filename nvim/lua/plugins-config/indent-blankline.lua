@@ -8,9 +8,9 @@ blankline.setup {
     'terminal',
     'packer',
     'lspinfo',
+    'lsp-installer',
     'TelescopePrompt',
     'TelescopeResults',
-    ''
   },
   buftype_exclude = { 'terminal' },
   show_tailing_blankline_indent = false,

@@ -8,7 +8,8 @@ local servers = {
     "tsserver",
     "ltex",
     "jsonls",
-    "sumneko_lua"
+    "sumneko_lua",
+    "cssls"
 }
 local lsp_setting_file_path = 'lsp-config.settings.'
 

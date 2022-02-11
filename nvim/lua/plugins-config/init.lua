@@ -13,4 +13,5 @@ require('plugins-config.colorizer')
 require('plugins-config.indent-blankline')
 require('plugins-config.bufferline')
 require('plugins-config.focus')
+require('plugins-config.marks')
 

@@ -1,6 +1,8 @@
 local status, autopairs = pcall(require, "nvim-autopairs")
 if not status then return end
 
+local autopairs_keymap = require('keymappings').autopair
+
 autopairs.setup({
   check_ts = true,
   ts_config = {
@@ -10,7 +12,7 @@ autopairs.setup({
   },
   disable_filetype = { "TelescopePrompt", "spectre_panel", "toggleterm" },
   fast_wrap = {
-    map = "<m-b>",
+    map = autopairs_keymap.wrap,
     chars = { "{", "[", "(", '"', "'" },
     pattern = string.gsub([[ [%'%"%)%>%]%)%}%,] ]], "%s+", ""),
     offset = 0, -- Offset from pattern match

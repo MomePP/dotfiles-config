@@ -6,12 +6,12 @@ require('impatient')
 -- apply colorscheme
 require('colorscheme')
 
+-- key mappings
+require('keymappings')
+
 -- install plugins
 require('plugins')
 require('packer_compiled')
-
--- key mappings
-require('keymappings')
 
 -- setup lsp server
 require('lsp-config')

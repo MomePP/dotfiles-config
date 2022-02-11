@@ -1,13 +1,11 @@
 local status_ok, telescope = pcall(require, 'telescope')
 if not status_ok then return end
 
-local actions = require('telescope.actions')
+local actions = require "telescope.actions"
+local utils = require "telescope.utils"
+local entry_display = require "telescope.pickers.entry_display"
 
 -- custom entry makers for some components
-
-local entry_display = require('telescope.pickers.entry_display')
-local utils = require('telescope.utils')
-
 local function entry_lsp_references(opts)
     opts = opts or {}
 
@@ -180,13 +178,15 @@ telescope.setup {
             layout_strategy = 'horizontal',
             layout_config = {
                 preview_width = 0.65
-            }
+            },
+            respect_gitignore = false,
         },
     }
 }
 telescope.load_extension("fzf")
 telescope.load_extension("file_browser")
 
+-- INFO: custom telescope to launch when entering nvim
 _G.open_telescope = function()
     local first_arg = vim.v.argv[2]
     -- print("path: ", first_arg)
@@ -208,3 +208,42 @@ autocmd VimEnter * lua open_telescope()
 augroup END
 ]], false)
 
+-- INFO: custom telescope pickers
+local custom_telescope = {}
+local pickers = require "telescope.pickers"
+local finders = require "telescope.finders"
+local make_entry = require "telescope.make_entry"
+local conf = require("telescope.config").values
+
+function custom_telescope.marks_picker(opts)
+    require('marks').mark_state:all_to_list() -- generate marks to loclist
+
+    local filenames = {}
+    local locations = vim.fn.getloclist(0) -- marks.nvim uses loclist 0 for store marked list
+    if locations then
+        for _, value in pairs(locations) do
+            local bufnr = value.bufnr
+            if filenames[bufnr] == nil then
+                filenames[bufnr] = vim.api.nvim_buf_get_name(bufnr)
+            end
+            value.filename = filenames[bufnr]
+        end
+    end
+
+    if vim.tbl_isempty(locations) then
+        print('There is no marked - ')
+        return
+    end
+
+    pickers.new(opts, {
+        prompt_title = "Marks",
+        finder = finders.new_table {
+            results = locations,
+            entry_maker = opts.entry_maker or make_entry.gen_from_quickfix(opts),
+        },
+        previewer = conf.qflist_previewer(opts),
+        sorter = conf.generic_sorter(opts),
+    }):find()
+end
+
+return custom_telescope

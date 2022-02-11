@@ -2,6 +2,8 @@ local utils = require('utils')
 local remap = { noremap = false }
 local silent_noremap = { noremap = true, silent = true }
 
+local keymaps = { }
+
 utils.map('n', '<C-l>', '<cmd>nohl<cr>')  -- clear highlight
 utils.map('n', 'dw', 'vb"_d')             -- delete a word backward
 utils.map('n', '<leader>d', '"_d')        -- delete without yank
@@ -33,8 +35,8 @@ utils.map('i', '!', '!<C-g>u')
 utils.map('i', '?', '?<C-g>u')
 
 -- INFO: Jumplist mutation
-utils.map('n', 'k', '(v:count > 5 ? "m\'" . v:count : "") . "k"', { noremap = true, expr = true })
-utils.map('n', 'j', '(v:count > 5 ? "m\'" . v:count : "") . "j"', { noremap = true, expr = true })
+-- utils.map('n', 'k', '(v:count > 5 ? "m\'" . v:count : "") . "k"', { noremap = true, expr = true })
+-- utils.map('n', 'j', '(v:count > 5 ? "m\'" . v:count : "") . "j"', { noremap = true, expr = true })
 
 -- INFO: Bufferline config
 utils.map('n', '<Tab>', ':BufferLineCycleNext<CR>', silent_noremap)
@@ -116,8 +118,11 @@ utils.map('n', '<leader>z', "<cmd>ZenMode<CR>", silent_noremap)
 
 -- INFO: Terminal & ToggleTerm keymap
 --  toggleterm keymap, set in `toggleterm-conf` file. Currently used : <leader>t
+keymaps.toggleterm = {
+    toggle = '<leader>t'
+}
 utils.map('n', '<leader>g', "<cmd>lua _LAZYGIT_TOGGLE()<CR>", silent_noremap)
-utils.map('n', '<leader>M', "<cmd>lua _GOTOP_TOGGLE()<CR>", silent_noremap)
+utils.map('n', '<leader>P', "<cmd>lua _GOTOP_TOGGLE()<CR>", silent_noremap)
 -- utils.map('n', '<leader>s', "<cmd>lua _SPOTIFY_TOGGLE()<CR>", silent_noremap)
 
 -- function _G.set_terminal_keymaps()
@@ -130,8 +135,7 @@ utils.map('n', '<leader>M', "<cmd>lua _GOTOP_TOGGLE()<CR>", silent_noremap)
 -- vim.cmd('autocmd! TermOpen term://*toggleterm#* lua set_terminal_keymaps()')
 
 -- INFO: Glow keymap (markdown preview)
-utils.map('n', '<leader>m', "<cmd>Glow<CR>", silent_noremap)
-
+utils.map('n', '<leader>p', '<cmd>Glow<CR>', silent_noremap)
 
 -- INFO: LSP keymap
 utils.map('n', 'gd', '<cmd>Telescope lsp_definitions<CR>', silent_noremap)
@@ -148,4 +152,21 @@ utils.map('n', 'gs', "<cmd>lua vim.lsp.buf.signature_help()<CR>", silent_noremap
 utils.map('n', 'gp', "<cmd>lua vim.lsp.buf.hover()<CR>", silent_noremap)
 utils.map('n', '<leader>lr', "<cmd>lua vim.lsp.buf.rename()<CR>", silent_noremap)
 utils.map('n', '<leader>ff', '<cmd>lua vim.lsp.buf.formatting()<CR>', silent_noremap)
+
+-- INFO: Marks keymap
+utils.map('n', ']m', "<cmd>lua require'marks'.next()<CR>", silent_noremap)
+utils.map('n', '[m', "<cmd>lua require'marks'.prev()<CR>", silent_noremap)
+utils.map('n', 'm;', "<cmd>lua require'marks'.toggle()<CR>", silent_noremap)
+utils.map('n', 'm:', "<cmd>lua require'marks'.preview()<CR>", silent_noremap)
+utils.map('n', 'md', "<cmd>lua require'marks'.delete_buf()<CR>", silent_noremap)
+
+-- using telescope to show all marks list
+utils.map('n', '<leader>m', "<cmd>lua require'plugins-config.telescope'.marks_picker({ layout_strategy = 'horizontal', layout_config = { preview_width = 0.65 }, })<CR>", silent_noremap)
+
+-- INFO: autopair keymap
+keymaps.autopair = {
+    wrap = '<m-b>'
+}
+
+return keymaps
 
