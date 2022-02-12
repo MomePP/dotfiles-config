@@ -76,7 +76,7 @@ return packer.startup({
     use { 'norcalli/nvim-colorizer.lua', event = 'BufRead' }
     use { 'akinsho/bufferline.nvim', after = 'nvim-web-devicons' }
     use { 'moll/vim-bbye', after = 'bufferline.nvim' }
-    use { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install', cmd = { 'MarkdownPreview', 'MarkdownPreviewStop', 'MarkdownPreviewToggle' } }
+    use { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install' }
     use 'windwp/nvim-autopairs'
     use 'akinsho/toggleterm.nvim'
     use 'beauwilliams/focus.nvim'
