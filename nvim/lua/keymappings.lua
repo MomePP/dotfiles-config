@@ -135,7 +135,8 @@ utils.map('n', '<leader>P', "<cmd>lua _GOTOP_TOGGLE()<CR>", silent_noremap)
 -- vim.cmd('autocmd! TermOpen term://*toggleterm#* lua set_terminal_keymaps()')
 
 -- INFO: Glow keymap (markdown preview)
-utils.map('n', '<leader>p', '<cmd>Glow<CR>', silent_noremap)
+-- utils.map('n', '<leader>p', '<cmd>Glow<CR>', silent_noremap)
+utils.map('n', '<leader>p', ':MarkdownPreviewToggle<CR>', silent_noremap)
 
 -- INFO: LSP keymap
 utils.map('n', 'gd', '<cmd>Telescope lsp_definitions<CR>', silent_noremap)
