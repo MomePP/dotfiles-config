@@ -73,10 +73,10 @@ return packer.startup({
     -- utilities
     use { 'lukas-reineke/indent-blankline.nvim', event = 'BufRead' }
     use { 'numToStr/Comment.nvim', event = 'BufRead', config = function() require('Comment').setup() end }
-    use { 'norcalli/nvim-colorizer.lua', event = 'BufRead' }
     use { 'akinsho/bufferline.nvim', after = 'nvim-web-devicons' }
     use { 'moll/vim-bbye', after = 'bufferline.nvim' }
     use { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install' }
+    use 'norcalli/nvim-colorizer.lua'
     use 'windwp/nvim-autopairs'
     use 'akinsho/toggleterm.nvim'
     use 'beauwilliams/focus.nvim'
@@ -85,15 +85,10 @@ return packer.startup({
     -- UI decoration
     use { 'kyazdani42/nvim-web-devicons', config = function() require('nvim-web-devicons').setup() end }
     use { 'hoob3rt/lualine.nvim', after = 'bufferline.nvim' }
-    use {
-        'nvim-treesitter/nvim-treesitter',
-        run = ':TSUpdate',
-        requires = {
-            { "p00f/nvim-ts-rainbow", after = "nvim-treesitter", },
-            { "windwp/nvim-ts-autotag", after = "nvim-treesitter", },
-            { "JoosepAlviste/nvim-ts-context-commentstring", after = "nvim-treesitter", },
-        }
-    }
+    use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+    use 'p00f/nvim-ts-rainbow'
+    use 'windwp/nvim-ts-autotag'
+    use 'JoosepAlviste/nvim-ts-context-commentstring'
     use 'folke/zen-mode.nvim'
     use 'folke/todo-comments.nvim'
     -- use 'MomePP/plastic-nvim'

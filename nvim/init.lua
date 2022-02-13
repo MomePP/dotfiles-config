@@ -1,17 +1,17 @@
 -- nvim setting configs
 require('settings')
-require('impatient')
--- require('impatient').enable_profile()
+local impatient_status, impatient = pcall(require, 'impatient')
+-- if impatient_status then impatient.enable_profile() end
+
+-- install plugins
+require('plugins')
+require('packer_compiled')
 
 -- apply colorscheme
 require('colorscheme')
 
 -- key mappings
 require('keymappings')
-
--- install plugins
-require('plugins')
-require('packer_compiled')
 
 -- setup lsp server
 require('lsp-config')
