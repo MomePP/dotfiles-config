@@ -102,9 +102,6 @@ return packer.startup({
     if PACKER_BOOTSTRAP then
       require("packer").sync()
     end
-  end,
-  config = {
-    compile_path = vim.fn.stdpath('config')..'/lua/packer_compiled.lua'
-  }
+  end
 })
 

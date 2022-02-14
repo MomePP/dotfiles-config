@@ -5,5 +5,5 @@ fish/completions
 fish/functions
 fish/fish_variables
 configstore
-nvim/lua/packer_compiled.lua
+nvim/plugin/packer_compiled.lua
 tmux/plugins
