@@ -83,8 +83,8 @@ utils.map('n', '<m-down>', ':m+<CR>')
 utils.map('n', '<m-up>', ':m-2<CR>')
 
 -- INFO: remap jump keys
-utils.map('n', '<C-j>', '<C-i>')
-utils.map('n', '<C-k>', '<C-o>')
+utils.map('n', '<C-j>', '<C-i>', silent_noremap)
+utils.map('n', '<C-k>', '<C-o>', silent_noremap)
 
 -- INFO: GitSign keymap
 utils.map('n', ']c', "&diff ? ']c' : '<cmd>lua require\"gitsigns.actions\".next_hunk()<CR>'", { noremap = true, expr = true })
@@ -109,6 +109,7 @@ utils.map('n', '<leader>fs', "<cmd>lua require('telescope.builtin').live_grep()<
 utils.map('n', '<leader>fb', "<cmd>lua require('telescope').extensions.file_browser.file_browser({path =  vim.fn.expand('%:p:h')})<CR>", silent_noremap)
 utils.map('n', '<leader>\\', "<cmd>Telescope buffers<CR>", silent_noremap)
 utils.map('n', '<leader>;', "<cmd>Telescope help_tags<CR>", silent_noremap)
+utils.map('n', '<leader>j', "<cmd>Telescope jumplist<CR>", silent_noremap)
 
 -- INFO: Todo comments keymap
 utils.map('n', '<leader>c', "<cmd>TodoTelescope<CR>", silent_noremap)

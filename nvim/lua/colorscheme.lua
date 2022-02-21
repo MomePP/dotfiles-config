@@ -6,19 +6,15 @@ utils.opt('o', 'termguicolors', true)
 -- vim.g.plastic_nvim_transparent_bg = true
 -- cmd 'colorscheme plastic-nvim'
 
+local kanagawa_colors = require('kanagawa.colors').setup()
+local overrided_hlgroup = {
+    VertSplit = { fg = kanagawa_colors.sumiInk4, bg = 'NONE' },
+}
+
 require('kanagawa').setup({
     undercurl = true,           -- enable undercurls
-    commentStyle = "italic",
-    functionStyle = "NONE",
-    keywordStyle = "italic",
-    statementStyle = "bold",
-    typeStyle = "NONE",
-    variablebuiltinStyle = "italic",
-    specialReturn = true,       -- special highlight for the return keyword
-    specialException = true,    -- special highlight for exception handling keywords
     transparent = true,        -- do not set background color
-    colors = {},
-    overrides = {},
+    overrides = overrided_hlgroup,
 })
 cmd 'colorscheme kanagawa'
 
