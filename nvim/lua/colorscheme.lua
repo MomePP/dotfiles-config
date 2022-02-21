@@ -8,7 +8,7 @@ utils.opt('o', 'termguicolors', true)
 
 local kanagawa_colors = require('kanagawa.colors').setup()
 local overrided_hlgroup = {
-    VertSplit = { fg = kanagawa_colors.sumiInk4, bg = 'NONE' },
+    VertSplit = { fg = kanagawa_colors.sumiInk2, bg = 'NONE' },
 }
 
 require('kanagawa').setup({
