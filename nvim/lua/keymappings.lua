@@ -104,12 +104,13 @@ utils.map('o', 'ih', ':<C-U>lua require"gitsigns.actions".select_hunk()<CR>')
 utils.map('x', 'ih', ':<C-U>lua require"gitsigns.actions".select_hunk()<CR>')
 
 -- INFO: Telescope keymap
-utils.map('n', 'gw', "<cmd>lua require('telescope.builtin').grep_string()<CR>", silent_noremap)
-utils.map('n', '<leader>fs', "<cmd>lua require('telescope.builtin').live_grep()<CR>", silent_noremap)
+utils.map('n', 'gw', "<cmd>Telescope grep_string<CR>", silent_noremap)
+utils.map('n', '<leader>fs', "<cmd>Telescope live_grep<CR>", silent_noremap)
 utils.map('n', '<leader>fb', "<cmd>lua require('telescope').extensions.file_browser.file_browser({path =  vim.fn.expand('%:p:h')})<CR>", silent_noremap)
 utils.map('n', '<leader>\\', "<cmd>Telescope buffers<CR>", silent_noremap)
 utils.map('n', '<leader>;', "<cmd>Telescope help_tags<CR>", silent_noremap)
 utils.map('n', '<leader>j', "<cmd>Telescope jumplist<CR>", silent_noremap)
+utils.map('n', '<leader>/', "<cmd>Telescope current_buffer_fuzzy_find<CR>", silent_noremap)
 
 -- INFO: Todo comments keymap
 utils.map('n', '<leader>c', "<cmd>TodoTelescope<CR>", silent_noremap)
@@ -141,6 +142,7 @@ utils.map('n', '<leader>p', ':MarkdownPreviewToggle<CR>', silent_noremap)
 
 -- INFO: LSP keymap
 utils.map('n', 'gd', '<cmd>Telescope lsp_definitions<CR>', silent_noremap)
+utils.map('n', 'gi', '<cmd>Telescope lsp_implementations<CR>', silent_noremap)
 utils.map('n', 'gt', "<cmd>Telescope lsp_type_definitions<CR>", silent_noremap)
 utils.map('n', 'gx', "<cmd>Telescope lsp_code_actions<CR>", silent_noremap)
 utils.map('x', 'gx', "<cmd>Telescope lsp_range_code_actions<CR>", silent_noremap)

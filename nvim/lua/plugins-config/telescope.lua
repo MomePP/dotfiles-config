@@ -164,6 +164,9 @@ telescope.setup {
         },
         grep_string = {
             layout_strategy = 'horizontal',
+        },
+        current_buffer_fuzzy_find = {
+            layout_strategy = 'vertical',
         }
     },
     extensions = {
