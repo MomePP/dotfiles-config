@@ -2,24 +2,22 @@
 if not vim.g.vscode then
     print('start from native neovim !!')
     -- nvim setting configs
-    pcall(require, 'settings')
+    require 'settings'
     local impatient_status, impatient = pcall(require, 'impatient')
     -- if impatient_status then impatient.enable_profile() end
 
     -- install plugins
-    pcall(require, 'plugins')
+    require 'plugins'
+    require 'plugins-config'
 
     -- apply colorscheme
-    pcall(require, 'colorscheme')
+    require 'colorscheme'
 
     -- key mappings
-    pcall(require, 'keymappings')
+    require 'keymappings'
 
     -- setup lsp server
-    pcall(require, 'lsp-config')
-
-    -- plugin configs
-    pcall(require, 'plugins-config')
+    require 'lsp-config'
 else
     print('start from vscode !!')
     vim.cmd("source ~/.config/nvim/vscode/keymappings.vim")

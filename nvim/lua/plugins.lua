@@ -53,17 +53,16 @@ return packer.startup({
     use 'lewis6991/gitsigns.nvim'
 
     -- snippets
-    use { 'L3MON4D3/LuaSnip',
-        requires = { 'rafamadriz/friendly-snippets' },
-    }
+    use 'L3MON4D3/LuaSnip'
+    use 'rafamadriz/friendly-snippets'
 
     -- cmp plugins
-    use { 'hrsh7th/nvim-cmp', event = 'BufRead' }
-    use {'hrsh7th/cmp-nvim-lsp', after = 'nvim-cmp' }
-    use {'hrsh7th/cmp-nvim-lua', after = 'nvim-cmp' }
-    use {'hrsh7th/cmp-buffer', after = 'nvim-cmp' }
-    use {'hrsh7th/cmp-path', after = 'nvim-cmp' }
-    use {'saadparwaiz1/cmp_luasnip', after = 'nvim-cmp' }
+    use 'hrsh7th/nvim-cmp'
+    use 'hrsh7th/cmp-nvim-lsp'
+    use 'hrsh7th/cmp-nvim-lua'
+    use 'hrsh7th/cmp-buffer'
+    use 'hrsh7th/cmp-path'
+    use 'saadparwaiz1/cmp_luasnip'
 
     -- telescope
     use 'nvim-telescope/telescope.nvim'
@@ -71,11 +70,11 @@ return packer.startup({
     use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
 
     -- utilities
-    use { 'lukas-reineke/indent-blankline.nvim', event = 'BufRead' }
-    use { 'numToStr/Comment.nvim', event = 'BufRead', config = function() require('Comment').setup() end }
-    use { 'akinsho/bufferline.nvim', after = 'nvim-web-devicons' }
-    use { 'moll/vim-bbye', after = 'bufferline.nvim' }
     use { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install' }
+    use { 'numToStr/Comment.nvim', config = function() require('Comment').setup() end }
+    use 'lukas-reineke/indent-blankline.nvim'
+    use 'akinsho/bufferline.nvim'
+    use 'moll/vim-bbye'
     use 'norcalli/nvim-colorizer.lua'
     use 'windwp/nvim-autopairs'
     use 'akinsho/toggleterm.nvim'
@@ -83,10 +82,10 @@ return packer.startup({
     use 'chentau/marks.nvim'
 
     -- UI decoration
-    use { 'kyazdani42/nvim-web-devicons', config = function() require('nvim-web-devicons').setup() end }
-    use { 'hoob3rt/lualine.nvim', after = 'bufferline.nvim' }
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
-    use 'p00f/nvim-ts-rainbow'
+    use { 'p00f/nvim-ts-rainbow', commit = 'c6c26c4def0e9cd82f371ba677d6fc9baa0038af' }
+    use 'hoob3rt/lualine.nvim'
+    use 'kyazdani42/nvim-web-devicons'
     use 'windwp/nvim-ts-autotag'
     use 'JoosepAlviste/nvim-ts-context-commentstring'
     use 'folke/zen-mode.nvim'

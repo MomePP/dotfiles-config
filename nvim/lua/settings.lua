@@ -33,6 +33,7 @@ utils.opt('o', 'inccommand', 'nosplit')
 utils.opt('o', 'lazyredraw', true)
 utils.opt('w', 'wrap', false)
 utils.opt('w', 'signcolumn', 'yes')
+utils.opt('o', 'termguicolors', true)
 
 -- set files search recursive sub-folder except following ...
 utils.opt('o', 'wildignore', '**/node_module/*, **/.pio/*, **/.git/*')
