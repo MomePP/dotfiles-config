@@ -71,7 +71,7 @@ return packer.startup({
 
     -- utilities
     use { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install' }
-    use { 'numToStr/Comment.nvim', config = function() require('Comment').setup() end }
+    use 'numToStr/Comment.nvim'
     use 'lukas-reineke/indent-blankline.nvim'
     use 'akinsho/bufferline.nvim'
     use 'moll/vim-bbye'
@@ -83,11 +83,11 @@ return packer.startup({
 
     -- UI decoration
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
-    use { 'p00f/nvim-ts-rainbow', commit = 'c6c26c4def0e9cd82f371ba677d6fc9baa0038af' }
-    use 'hoob3rt/lualine.nvim'
-    use 'kyazdani42/nvim-web-devicons'
+    use 'p00f/nvim-ts-rainbow'
     use 'windwp/nvim-ts-autotag'
     use 'JoosepAlviste/nvim-ts-context-commentstring'
+    use 'hoob3rt/lualine.nvim'
+    use 'kyazdani42/nvim-web-devicons'
     use 'folke/zen-mode.nvim'
     use 'folke/todo-comments.nvim'
     -- use 'MomePP/plastic-nvim'

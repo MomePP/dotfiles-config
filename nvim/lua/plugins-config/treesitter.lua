@@ -28,6 +28,13 @@ treesitter.setup {
             "#87cefa"
         }, -- table of hex strings
         -- termcolors = {} -- table of colour name strings
+    },
+    autotag = {
+        enable = true,
+    },
+    context_commentstring = {
+        enable = true,
+        enable_autocmd = false,
     }
 }
 
