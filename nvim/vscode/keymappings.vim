@@ -18,12 +18,10 @@ nnoremap tq <Cmd>Tabclose<CR>
 
 " INFO: Pane management keymap
 nnoremap <Space> <Cmd>call VSCodeNotify('workbench.action.focusNextGroup')<CR>
-nnoremap ss <Cmd>Split<CR>
-nnoremap sv <Cmd>Vsplit<CR>
-nnoremap sj <Cmd>call VSCodeNotify('workbench.action.focusBelowGroup')<CR>
-nnoremap sk <Cmd>call VSCodeNotify('workbench.action.focusAboveGroup')<CR>
-nnoremap sh <Cmd>call VSCodeNotify('workbench.action.focusLeftGroup')<CR>
-nnoremap sl <Cmd>call VSCodeNotify('workbench.action.focusRightGroup')<CR>
+nnoremap sj <Cmd>Split<CR>
+nnoremap sk <Cmd>Split<CR>
+nnoremap sh <Cmd>Vsplit<CR>
+nnoremap sl <Cmd>Vsplit<CR>
 nnoremap sq <Cmd>call VSCodeNotify('workbench.action.closeActiveEditor')<CR>
 
 " INFO: Navigate keymap
@@ -70,4 +68,8 @@ nnoremap <leader>t <Cmd>call VSCodeNotify('workbench.action.terminal.toggleTermi
 
 " INFO: zenmode keymap
 nnoremap <leader>z <Cmd>call VSCodeNotify('workbench.action.toggleZenMode')<CR>
+
+" INFO: comment keymap
+xmap gc  <Cmd>call VSCodeNotifyVisual('editor.action.commentLine', 1)<CR>
+nmap gcc <Cmd>call VSCodeNotify('editor.action.commentLine')<CR>
 
