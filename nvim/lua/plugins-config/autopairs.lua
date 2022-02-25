@@ -10,7 +10,7 @@ autopairs.setup({
     javascript = { "string", "template_string" },
     java = false,
   },
-  disable_filetype = { "TelescopePrompt", "spectre_panel", "toggleterm" },
+  disable_filetype = { "TelescopePrompt", "toggleterm" },
   fast_wrap = {
     map = autopairs_keymap.wrap,
     chars = { "{", "[", "(", '"', "'" },

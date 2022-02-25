@@ -169,7 +169,7 @@ utils.map('n', '<leader>m', "<cmd>lua require'plugins-config.telescope'.marks_pi
 
 -- INFO: autopair keymap
 keymaps.autopair = {
-    wrap = '<m-b>'
+    wrap = '<M-e>'
 }
 
 return keymaps
