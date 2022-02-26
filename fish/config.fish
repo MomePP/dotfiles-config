@@ -45,3 +45,14 @@ set -gx PKG_CONFIG_PATH "/opt/homebrew/opt/ruby/lib/pkgconfig"
 # config gem path, its actually just runs once but if it exists not appended.
 fish_add_path (ruby -e 'print Gem.user_dir')/bin
 
+# config rust tools for esp32
+fish_add_path $HOME/.cargo/bin
+fish_add_path $HOME/.espressif/tools/xtensa-esp32-elf-clang/esp-13.0.0-20211203-aarch64-apple-darwin/bin/
+set -x LIBCLANG_PATH "/Users/momeppkt/.espressif/tools/xtensa-esp32-elf-clang/esp-13.0.0-20211203-aarch64-apple-darwin/lib/"
+set -x PIP_USER no
+set -x IDF_PATH "$HOME/Developments/esp-idf"
+set -x MENUCONFIG_STYLE "monochrome"
+# set -x LC_ALL "en_US.UTF-8"
+# set -x LC_CTYPE "en_US.UTF-8"
+alias get-idf ". $HOME/Developments/esp-idf/export.fish"
+

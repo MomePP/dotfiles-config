@@ -7,3 +7,5 @@ fish/fish_variables
 configstore
 nvim/plugin/packer_compiled.lua
 tmux/plugins
+
+containers
