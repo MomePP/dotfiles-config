@@ -9,7 +9,8 @@ local servers = {
     "ltex",
     "jsonls",
     "sumneko_lua",
-    "cssls"
+    "cssls",
+    "rust_analyzer"
 }
 local lsp_setting_file_path = 'lsp-config.settings.'
 
