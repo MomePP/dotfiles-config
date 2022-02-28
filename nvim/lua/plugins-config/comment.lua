@@ -1,7 +1,6 @@
 local status_ok, comment = pcall(require, 'Comment')
 if not status_ok then return end
 
-
 comment.setup {
     pre_hook = function(ctx)
         local U = require 'Comment.utils'
@@ -19,4 +18,13 @@ comment.setup {
         }
     end,
 }
+
+-- fallback comment string if not found by plugin
+vim.bo.commentstring = '//%s'
+
+local ft = require('Comment.ft')
+
+-- Multiple filetypes
+ft({'json', 'rust'}, {'//%s', '/*%s*/'})
+ft({'toml', 'graphql'}, '#%s')
 

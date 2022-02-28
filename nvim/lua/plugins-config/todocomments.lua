@@ -11,7 +11,7 @@ todocomments.setup {
     HACK = { icon = " ", color = "hack" },
     WARN = { icon = " ", color = "warn", alt = { "WARNING" } },
     INFO = { icon = " ", color = "info", alt = { "HINT" } },
-    PERF = { icon = " ", color = "hint", alt = { "OPTIMIZE" } },
+    PERF = { icon = " ", color = "perf", alt = { "OPTIMIZE" } },
     FIX = { icon = " ", color = "error", alt = { "ERROR", "BUG", "ISSUE" } },
   },
   merge_keywords = true, -- when true, custom keywords will be merged with the defaults
@@ -34,7 +34,7 @@ todocomments.setup {
     error = { "#D74E42" },
     warn = { "#E9D16C" },
     note = { "#98C379" },
-    hint = { "#1085FF" },
+    perf = { "#1085FF" },
     info = { "#61AFEF" },
     todo = { "#B57EDC" },
     hack = { "#D19A66" },
