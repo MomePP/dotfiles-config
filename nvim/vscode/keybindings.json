@@ -5,6 +5,11 @@
         "when": "sideBarFocus"
     },
     {
+        "key": "Escape",
+        "command": "workbench.action.blur",
+        "when": "inputFocus && !sideBarFocus && neovim.mode != insert"
+    },
+    {
         "key": "/",
         "command": "actions.find",
         "when": "editorTextFocus && neovim.mode != insert"
@@ -18,10 +23,5 @@
         "key": "\\ t",
         "command": "workbench.action.terminal.toggleTerminal",
         "when": "terminalFocus"
-    },
-    {
-        "key": "Escape",
-        "command": "workbench.action.blur",
-        "when": "inputFocus"
     }
 ]

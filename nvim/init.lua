@@ -20,5 +20,5 @@ if not vim.g.vscode then
     require 'lsp-config'
 else
     print('start from vscode !!')
-    vim.cmd("source ~/.config/nvim/vscode/keymappings.vim")
+    vim.cmd("source $HOME/.config/nvim/vscode/init.vim")
 end
