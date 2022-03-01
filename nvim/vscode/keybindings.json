@@ -7,7 +7,7 @@
     {
         "key": "Escape",
         "command": "workbench.action.blur",
-        "when": "inputFocus && !sideBarFocus && neovim.mode != insert"
+        "when": "inputFocus && !sideBarFocus && !editorTextFocus && !findWidgetVisible"
     },
     {
         "key": "/",
