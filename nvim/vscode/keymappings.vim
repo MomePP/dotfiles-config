@@ -61,7 +61,7 @@ nnoremap m; <Cmd>call VSCodeNotify('bookmarks.toggle')<CR>
 nnoremap md <Cmd>call VSCodeNotify('bookmarks.clear')<CR>
 nnoremap ]m <Cmd>call VSCodeNotify('bookmarks.jumpToNext')<CR>
 nnoremap [m <Cmd>call VSCodeNotify('bookmarks.jumpToPrevious')<CR>
-nnoremap <leader>m <Cmd>call VSCodeNotify('bookmarks.list')<CR>
+nnoremap <leader>m <Cmd>call VSCodeNotify('bookmarks.listFromAllFiles')<CR>
 
 " INFO: terminal keymap
 nnoremap <leader>t <Cmd>call VSCodeNotify('workbench.action.terminal.toggleTerminal')<CR>
