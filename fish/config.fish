@@ -10,6 +10,11 @@ if status is-interactive
   # <<< conda initialize <<<
 end
 
+# set locale terminal
+set -x LC_CTYPE "en_US.UTF-8"
+set -x LC_ALL "en_US.UTF-8"
+set -x LC_TERMINAL "iTerm2"
+
 # theme
 set -g fish_prompt_pwd_dir_length 1
 set -g theme_display_user yes
@@ -19,6 +24,7 @@ set -g theme_hostname always
 # aliases
 alias ls "l"
 alias g "git"
+alias brew="env PATH=(string replace (pyenv root)/shims '' \"\$PATH\") brew"
 alias rbrew='arch -x86_64 /usr/local/bin/brew'
 alias rosetta="arch -x86_64"
 alias py="python3"
@@ -34,7 +40,11 @@ set -Ux EXA_STANDARD_OPTIONS --long --group --icons
 set -Ux EXA_LA_OPTIONS --all
 set -Ux EXA_LT_OPTIONS --all --tree --level 2
 
-pyenv init - | source
+# start pyenv
+set -Ux PYENV_ROOT $HOME/.pyenv
+set -U fish_user_paths $PYENV_ROOT/bin $fish_user_paths
+status is-login; and pyenv init --path | source
+status is-interactive; and pyenv init - | source
 
 # config ruby
 fish_add_path /opt/homebrew/opt/ruby/bin
@@ -52,7 +62,14 @@ set -x LIBCLANG_PATH "/Users/momeppkt/.espressif/tools/xtensa-esp32-elf-clang/es
 set -x PIP_USER no
 set -x IDF_PATH "$HOME/Developments/toolchains/esp-idf"
 set -x MENUCONFIG_STYLE "monochrome"
-# set -x LC_ALL "en_US.UTF-8"
-# set -x LC_CTYPE "en_US.UTF-8"
 alias get-idf ". $HOME/Developments/toolchains/esp-idf/export.fish"
+
+# config llvm
+fish_add_path /opt/homebrew/opt/llvm/bin
+set -gx LDFLAGS "-L/opt/homebrew/opt/llvm/lib"
+set -gx CPPFLAGS "-I/opt/homebrew/opt/llvm/include"
+
+# set path for commandline tools
+fish_add_path /Library/Developer/CommandLineTools/usr/bin
+set -Ux SDKROOT /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
 
