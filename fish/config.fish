@@ -10,6 +10,9 @@ if status is-interactive
   # <<< conda initialize <<<
 end
 
+# config homebrew path
+fish_add_path /opt/homebrew/bin
+
 # set locale terminal
 set -x LC_CTYPE "en_US.UTF-8"
 set -x LC_ALL "en_US.UTF-8"
@@ -40,12 +43,6 @@ set -Ux EXA_STANDARD_OPTIONS --long --group --icons
 set -Ux EXA_LA_OPTIONS --all
 set -Ux EXA_LT_OPTIONS --all --tree --level 2
 
-# start pyenv
-set -Ux PYENV_ROOT $HOME/.pyenv
-set -U fish_user_paths $PYENV_ROOT/bin $fish_user_paths
-status is-login; and pyenv init --path | source
-status is-interactive; and pyenv init - | source
-
 # config ruby
 fish_add_path /opt/homebrew/opt/ruby/bin
 set -gx LDFLAGS "-L/opt/homebrew/opt/ruby/lib"
@@ -72,4 +69,12 @@ set -gx CPPFLAGS "-I/opt/homebrew/opt/llvm/include"
 # set path for commandline tools
 fish_add_path /Library/Developer/CommandLineTools/usr/bin
 set -Ux SDKROOT /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+
+# start pyenv
+if status is-interactive
+    set -Ux PYENV_ROOT $HOME/.pyenv
+    fish_add_path $PYENV_ROOT/bin
+end
+status is-interactive; and pyenv init - | source
+status is-login; and pyenv init --path | source
 
