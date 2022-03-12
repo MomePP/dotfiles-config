@@ -4,7 +4,7 @@ if not cmp_loadded then return end
 local snip_loadded, luasnip = pcall(require, 'luasnip')
 if not snip_loadded then return end
 
-require('luasnip/loaders/from_vscode').lazy_load()
+require('luasnip.loaders.from_vscode').lazy_load()
 
 local check_backspace = function()
     local col = vim.fn.col "." - 1

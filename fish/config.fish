@@ -27,7 +27,6 @@ set -g theme_hostname always
 # aliases
 alias ls "l"
 alias g "git"
-alias brew="env PATH=(string replace (pyenv root)/shims '' \"\$PATH\") brew"
 alias rbrew='arch -x86_64 /usr/local/bin/brew'
 alias rosetta="arch -x86_64"
 alias py="python3"
@@ -61,10 +60,15 @@ set -x IDF_PATH "$HOME/Developments/toolchains/esp-idf"
 set -x MENUCONFIG_STYLE "monochrome"
 alias get-idf ". $HOME/Developments/toolchains/esp-idf/export.fish"
 
-# config llvm
+# config llvm arm64
 fish_add_path /opt/homebrew/opt/llvm/bin
 set -gx LDFLAGS "-L/opt/homebrew/opt/llvm/lib"
 set -gx CPPFLAGS "-I/opt/homebrew/opt/llvm/include"
+
+#config llvm x86_64
+# fish_add_path /usr/local/opt/llvm/bin
+# set -gx LDFLAGS "-L/usr/local/opt/llvm/lib"
+# set -gx CPPFLAGS "-I/usr/local/opt/llvm/include"
 
 # set path for commandline tools
 fish_add_path /Library/Developer/CommandLineTools/usr/bin
