@@ -36,6 +36,8 @@ utils.opt('w', 'signcolumn', 'yes')
 utils.opt('o', 'termguicolors', true)
 utils.opt('o', 'completeopt', 'menu,menuone,noselect')
 
+cmd 'set sessionoptions+=globals'
+
 -- set files search recursive sub-folder except following ...
 utils.opt('o', 'wildignore', '**/node_module/*, **/.pio/*, **/.git/*')
 
