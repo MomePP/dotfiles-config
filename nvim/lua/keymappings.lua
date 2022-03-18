@@ -41,8 +41,8 @@ utils.map('i', '?', '?<C-g>u')
 -- INFO: Bufferline config
 utils.map('n', '<Tab>', ':BufferLineCycleNext<CR>', silent_noremap)
 utils.map('n', '<S-Tab>', ':BufferLineCyclePrev<CR>', silent_noremap)
-utils.map('n', 'tl', ':BufferLineMoveNext<CR>', silent_noremap)
-utils.map('n', 'th', ':BufferLineMovePrev<CR>', silent_noremap)
+utils.map('n', 't]', ':BufferLineMoveNext<CR>', silent_noremap)
+utils.map('n', 't[', ':BufferLineMovePrev<CR>', silent_noremap)
 utils.map('n', 'tp', ':BufferLinePick<CR>', silent_noremap)
 utils.map('n', 'tq', ':Bdelete<CR>', silent_noremap)
 
