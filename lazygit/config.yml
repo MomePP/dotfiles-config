@@ -1,0 +1,4 @@
+os:
+  editCommand: "nvim"
+  openCommand: "nvr --remote-silent -cc q {{filename}}"
+promptToReturnFromSubprocess: false
