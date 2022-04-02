@@ -4,7 +4,7 @@ local silent_noremap = { noremap = true, silent = true }
 
 local keymaps = { }
 
-utils.map('n', '<C-l>', '<cmd>nohl<cr>')  -- clear highlight
+utils.map('n', '<C-l>', ':nohl<CR>')  -- clear highlight
 utils.map('n', 'dw', 'vb"_d')             -- delete a word backward
 utils.map('n', '<leader>d', '"_d')        -- delete without yank
 utils.map('n', 'x', '"_x')
@@ -173,6 +173,14 @@ utils.map('n', '<leader>m', "<cmd>lua require'plugins-config.telescope'.marks_pi
 keymaps.autopair = {
     wrap = '<C-e>'
 }
+
+-- INFO: hlslens keymap
+utils.map('n', 'n', [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]], silent_noremap)
+utils.map('n', 'N', [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]], silent_noremap)
+utils.map('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]], silent_noremap)
+utils.map('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]], silent_noremap)
+utils.map('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]], silent_noremap)
+utils.map('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]], silent_noremap)
 
 return keymaps
 

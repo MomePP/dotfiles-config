@@ -15,4 +15,5 @@ require('plugins-config.bufferline')
 require('plugins-config.focus')
 require('plugins-config.marks')
 require('plugins-config.comment')
+require('plugins-config.hlslens')
 

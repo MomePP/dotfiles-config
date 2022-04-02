@@ -93,6 +93,7 @@ return packer.startup({
     use 'folke/todo-comments.nvim'
     -- use 'MomePP/plastic-nvim'
     use 'rebelot/kanagawa.nvim'
+    use 'kevinhwang91/nvim-hlslens'
 
     -- misc. cool stuff
     use 'andweeb/presence.nvim' -- discord activity status
