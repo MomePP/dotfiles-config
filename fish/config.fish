@@ -13,6 +13,9 @@ end
 # config homebrew path
 fish_add_path /opt/homebrew/bin
 
+# add platformio env path
+fish_add_path /Users/momeppkt/.platformio/penv/bin
+
 # set locale terminal
 set -x LC_CTYPE "en_US.UTF-8"
 set -x LC_ALL "en_US.UTF-8"
@@ -24,14 +27,13 @@ set -g theme_display_user yes
 set -g theme_hide_hostname no
 set -g theme_hostname always
 
-# aliases
-alias ls "l"
-alias g "git"
-alias rbrew='arch -x86_64 /usr/local/bin/brew'
-alias rosetta="arch -x86_64"
-alias py="python3"
-alias tma "tmux attach-session || tmux new -s default"
-alias tmd "tmux detach"
+# start pyenv
+if status is-interactive
+    set -Ux PYENV_ROOT $HOME/.pyenv
+    fish_add_path $PYENV_ROOT/bin
+end
+status is-interactive; and pyenv init - | source
+status is-login; and pyenv init --path | source
 
 # config editor
 command -qv nvim && alias vi nvim
@@ -74,11 +76,14 @@ set -gx CPPFLAGS "-I/opt/homebrew/opt/llvm/include"
 fish_add_path /Library/Developer/CommandLineTools/usr/bin
 set -Ux SDKROOT /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
 
-# start pyenv
-if status is-interactive
-    set -Ux PYENV_ROOT $HOME/.pyenv
-    fish_add_path $PYENV_ROOT/bin
-end
-status is-interactive; and pyenv init - | source
-status is-login; and pyenv init --path | source
+# aliases
+alias ls "l"
+alias g "git"
+alias rbrew='arch -x86_64 /usr/local/bin/brew'
+alias rosetta="arch -x86_64"
+alias py="python3"
+alias tma "tmux attach-session || tmux new -s default"
+alias tmd "tmux detach"
+alias python "$(pyenv which python)"
+alias pip "$(pyenv which pip)"
 
