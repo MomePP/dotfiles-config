@@ -1,5 +1,4 @@
 set fish_greeting ""
-
 set -gx TERM xterm-256color
 
 if status is-interactive
@@ -37,7 +36,8 @@ status is-login; and pyenv init --path | source
 
 # config editor
 command -qv nvim && alias vi nvim
-set -gx EDITOR nvim
+set -gx EDITOR code
+set -gx VISUAL EDITOR
 
 # config fish-exa
 set -Ux EXA_STANDARD_OPTIONS --long --group --icons

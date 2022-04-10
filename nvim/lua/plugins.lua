@@ -75,7 +75,7 @@ return packer.startup({
     use 'numToStr/Comment.nvim'
     use 'lukas-reineke/indent-blankline.nvim'
     use 'akinsho/bufferline.nvim'
-    use 'moll/vim-bbye'
+    use 'famiu/bufdelete.nvim'
     use 'norcalli/nvim-colorizer.lua'
     use 'windwp/nvim-autopairs'
     use 'akinsho/toggleterm.nvim'

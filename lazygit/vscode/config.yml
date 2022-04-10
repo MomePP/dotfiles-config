@@ -1,0 +1,4 @@
+os:
+  editCommand: "code"
+  openCommand: "code {{filename}}"
+promptToReturnFromSubprocess: false
