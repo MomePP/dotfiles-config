@@ -104,8 +104,10 @@ cmp.setup({
             return vim_item
         end
     },
-    documentation = {
-        border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" }
+    window = {
+        documentation = {
+            border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" }
+        }
     },
     view = {
         native_menu = false,

@@ -91,9 +91,9 @@ return packer.startup({
     use 'kyazdani42/nvim-web-devicons'
     use 'folke/zen-mode.nvim'
     use 'folke/todo-comments.nvim'
+    use 'kevinhwang91/nvim-hlslens'
     -- use 'MomePP/plastic-nvim'
     use 'rebelot/kanagawa.nvim'
-    use 'kevinhwang91/nvim-hlslens'
 
     -- misc. cool stuff
     use 'andweeb/presence.nvim' -- discord activity status

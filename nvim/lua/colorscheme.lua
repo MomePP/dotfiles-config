@@ -6,6 +6,7 @@ local cmd = vim.cmd
 local kanagawa_colors = require('kanagawa.colors').setup()
 local overrided_hlgroup = {
     VertSplit = { fg = kanagawa_colors.sumiInk2, bg = 'NONE' },
+    StatusLineNC = { bg = 'NONE' },
 }
 
 require('kanagawa').setup({

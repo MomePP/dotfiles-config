@@ -82,7 +82,7 @@ local lsp_status = {
         end
         return msg
     end,
-    icon = ' LSP:',
+    icon = ' ',
     color = { fg = colors.white , gui = 'bold' },
 }
 
