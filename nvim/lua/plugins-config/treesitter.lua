@@ -11,7 +11,6 @@ treesitter.setup {
         enable = false,
         disable = { 'yaml' },
     },
-    ensure_installed = "maintained",
     sync_install = false,
     ignore_install = {
         'norg',
