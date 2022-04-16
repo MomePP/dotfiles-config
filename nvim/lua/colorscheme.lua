@@ -18,3 +18,4 @@ cmd 'colorscheme kanagawa'
 
 -- override signcolumn fg to be transparent
 cmd 'hi SignColumn guifg=NONE guibg=NONE'
+cmd 'hi Pmenu guifg=NONE guibg=NONE'
