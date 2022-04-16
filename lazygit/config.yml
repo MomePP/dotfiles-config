@@ -1,4 +1,4 @@
 os:
   editCommand: "nvim"
-  openCommand: "nvr --remote-silent -cc q {{filename}}"
+  openCommand: "nvim --server $NVIM_LISTEN_ADDRESS --remote-send 'q' && nvim --server $NVIM_LISTEN_ADDRESS --remote-tab-silent {{filename}}"
 promptToReturnFromSubprocess: false
