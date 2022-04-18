@@ -75,19 +75,25 @@ bufferline.setup {
     },
     highlights = {
         buffer_selected = {
-            -- guifg = { attribute = 'fg', highlight = '#ff0000' },
-            -- guibg = '#21252B',
             gui = 'bold'
         },
-        -- close_button_selected = {
-        --     guibg = '#21252B'
-        -- },
+        background = {
+            guifg = '#5F6672'
+        },
+        buffer_visible = {
+            guifg = '#5F6672'
+        },
+        close_button = {
+            guifg = '#5F6672'
+        },
+        close_button_visible = {
+            guifg = '#5F6672'
+        },
         separator = {
             guifg = '#5F6672'
         },
         indicator_selected = {
             guifg = '#61AFEF',
-            -- guibg = '#21252B'
         },
     },
 }

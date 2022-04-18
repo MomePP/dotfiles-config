@@ -160,10 +160,10 @@ utils.map('n', '<leader>lr', "<cmd>lua vim.lsp.buf.rename()<CR>", silent_noremap
 utils.map('n', '<leader>ff', '<cmd>lua vim.lsp.buf.formatting()<CR>', silent_noremap)
 
 -- INFO: Marks keymap
-utils.map('n', ']m', "<cmd>lua require'marks'.next()<CR>", silent_noremap)
-utils.map('n', '[m', "<cmd>lua require'marks'.prev()<CR>", silent_noremap)
-utils.map('n', 'm;', "<cmd>lua require'marks'.toggle()<CR>", silent_noremap)
-utils.map('n', 'm:', "<cmd>lua require'marks'.preview()<CR>", silent_noremap)
+utils.map('n', "'", "<cmd>lua require'marks'.next()<CR>", silent_noremap)
+utils.map('n', '"', "<cmd>lua require'marks'.prev()<CR>", silent_noremap)
+utils.map('n', "m'", "<cmd>lua require'marks'.toggle()<CR>", silent_noremap)
+utils.map('n', 'm"', "<cmd>lua require'marks'.preview()<CR>", silent_noremap)
 utils.map('n', 'md', "<cmd>lua require'marks'.delete_buf()<CR>", silent_noremap)
 
 -- using telescope to show all marks list
