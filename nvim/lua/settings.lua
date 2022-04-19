@@ -1,70 +1,78 @@
-local utils = require('utils')
-
 local cmd = vim.cmd
 local indent_size = 4
 
-cmd 'syntax enable'
-cmd 'filetype plugin indent on'
-utils.opt('w', 'number', true)
-utils.opt('w', 'relativenumber', true)
-utils.opt('o', 'title', true)
-utils.opt('o', 'backup', false)
-utils.opt('o', 'showcmd', false)
-utils.opt('o', 'ruler', false)
-utils.opt('o', 'showmatch', true)
-utils.opt('b', 'expandtab', true)
-utils.opt('b', 'shiftwidth', indent_size)
-utils.opt('b', 'autoindent', true)
-utils.opt('b', 'smartindent', true)
-utils.opt('b', 'tabstop', indent_size)
-utils.opt('o', 'hidden', true)
-utils.opt('o', 'ignorecase', true)
-utils.opt('o', 'scrolloff', 8)
-utils.opt('o', 'sidescrolloff', 8)
-utils.opt('o', 'shiftround', true)
-utils.opt('o', 'smartcase', true)
-utils.opt('o', 'splitbelow', true)
-utils.opt('o', 'splitright', true)
-utils.opt('o', 'wildmode', 'list:longest')
-utils.opt('o', 'clipboard','unnamed,unnamedplus')
-utils.opt('o', 'mouse', 'a')
-utils.opt('o', 'shell', 'fish')
-utils.opt('o', 'inccommand', 'nosplit')
-utils.opt('o', 'lazyredraw', true)
-utils.opt('w', 'wrap', false)
-utils.opt('w', 'signcolumn', 'yes')
-utils.opt('o', 'termguicolors', true)
-utils.opt('o', 'completeopt', 'menu,menuone,noselect')
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.title = true
+vim.opt.backup = false
+vim.opt.showcmd = false
+vim.opt.ruler = false
+vim.opt.showmatch = true
+vim.opt.expandtab = true
+vim.opt.shiftwidth = indent_size
+vim.opt.autoindent = true
+vim.opt.smartindent = true
+vim.opt.tabstop = indent_size
+vim.opt.hidden = true
+vim.opt.ignorecase = true
+vim.opt.scrolloff = 8
+vim.opt.sidescrolloff = 8
+vim.opt.shiftround = true
+vim.opt.smartcase = true
+vim.opt.splitbelow = true
+vim.opt.splitright = true
+vim.opt.wildmode = 'list:longest'
+vim.opt.clipboard = 'unnamed,unnamedplus'
+vim.opt.mouse = 'a'
+vim.opt.shell = 'fish'
+vim.opt.inccommand = 'nosplit'
+vim.opt.lazyredraw = true
+vim.opt.wrap = false
+vim.opt.signcolumn = 'yes'
+vim.opt.termguicolors = true
+vim.opt.completeopt = 'menu,menuone,noselect'
+vim.opt.wildignore = '**/node_module/*, **/.pio/*, **/.git/*'
+vim.opt.sessionoptions:append('globals')
+vim.opt.formatoptions:append('r')
 
-cmd 'set sessionoptions+=globals'
+vim.api.nvim_create_autocmd('InsertLeave', {
+    desc = 'turn off paste mode when leaving insert',
+    pattern = '*',
+    command = 'set nopaste'
+})
 
--- set files search recursive sub-folder except following ...
-utils.opt('o', 'wildignore', '**/node_module/*, **/.pio/*, **/.git/*')
+vim.api.nvim_create_autocmd('FileType', {
+    desc = 'open help docs in vertical split',
+    pattern = 'help',
+    command = ':wincmd L | :vert'
+})
 
--- turn off paste mode when leaving insert
-cmd 'autocmd InsertLeave * set nopaste'
+vim.api.nvim_create_augroup('BgHighlight', {})
+vim.api.nvim_create_autocmd('WinEnter', {
+    desc = 'set cursorline bg highlight when enter window',
+    group = 'BgHighlight',
+    pattern = '*',
+    command = 'set cursorline'
+})
+vim.api.nvim_create_autocmd('WinLeave', {
+    desc = 'remove cursorline bg highlight when leave window',
+    group = 'BgHighlight',
+    pattern = '*',
+    command = 'set nocursorline'
+})
 
--- open help in vertical
-cmd([[autocmd! FileType help :wincmd L | :vert]])
-
--- add asterisks in block comments
-utils.opt('b', 'formatoptions', 'r', true)
-
--- set bg highlights
-cmd([[
-augroup BgHighlight
-autocmd!
-autocmd WinEnter * set cul
-autocmd WinLeave * set nocul
-augroup END
-]])
-
--- Highlight on yank
-cmd 'au TextYankPost * lua vim.highlight.on_yank {on_visual = false}'
+vim.api.nvim_create_autocmd('TextYankPost', {
+    desc = 'highlight text on yank',
+    pattern = '*',
+    callback = function () vim.highlight.on_yank({on_visual = false}) end
+})
 
 -- Disable netrw -> use telescope to browse directory at first
 vim.g.loaded_netrw       = 1
 vim.g.loaded_netrwPlugin = 1
+
+cmd 'syntax on'
+cmd 'filetype plugin indent on'
 
 -- Command-line abbreviations
 -- cnoreabbrev g Git
