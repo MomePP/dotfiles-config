@@ -1,4 +1,3 @@
-local remap = { noremap = false }
 local silent = { silent = true }
 local expr = { expr = true }
 
@@ -11,7 +10,7 @@ vim.keymap.set('n', 'x', '"_x')
 vim.keymap.set('v', 'p', '"_dP')               -- replace-paste without yank
 vim.keymap.set('i', '<S-Tab>', '<C-d>')        -- de-tab while in insert mode
 vim.keymap.set('n', 'Y', 'y$')                 -- Yank line after cursor
-vim.keymap.set('n', 'P', '<cmd>pu<cr>', remap) -- Paste on new line
+vim.keymap.set('n', 'P', '<cmd>pu<CR>') -- Paste on new line
 
 -- INFO: map shift scroll wheel to scroll horizontal
 vim.keymap.set('', '<S-ScrollWheelUp>', 'zh')
@@ -92,15 +91,15 @@ vim.keymap.set('n', '<C-k>', '<C-o>', silent)
 vim.keymap.set('n', ']c', function() if vim.wo.diff then return ']c' end vim.schedule(function() require 'gitsigns.actions'.next_hunk() end) return '<Ignore>' end, expr)
 vim.keymap.set('n', '[c', function() if vim.wo.diff then return '[c' end vim.schedule(function() require 'gitsigns.actions'.prev_hunk() end) return '<Ignore>' end, expr)
 
-vim.keymap.set({'n', 'v'}, '<leader>hs', ':GitSigns stage_hunk<CR>')
-vim.keymap.set({'n', 'v'}, '<leader>hr', ':GitSigns reset_hunk<CR>')
-vim.keymap.set('n', '<leader>hu', ':GitSigns undo_stage_hunk()<CR>')
-vim.keymap.set('n', '<leader>hR', ':GitSigns reset_buffer()<CR>')
-vim.keymap.set('n', '<leader>hp', ':GitSigns preview_hunk()<CR>')
-vim.keymap.set('n', '<leader>hb', ':GitSigns blame_line<CR>')
-vim.keymap.set('n', '<leader>hS', ':GitSigns stage_buffer()<CR>')
-vim.keymap.set('n', '<leader>hU', ':GitSigns reset_buffer_index()<CR>')
-vim.keymap.set({'o', 'x'}, 'ih', ':<C-U>GitSigns select_hunk<CR>')
+vim.keymap.set({'n', 'v'}, '<leader>hs', '<cmd>Gitsigns stage_hunk<CR>')
+vim.keymap.set({'n', 'v'}, '<leader>hr', '<cmd>Gitsigns reset_hunk<CR>')
+vim.keymap.set('n', '<leader>hu', ':Gitsigns undo_stage_hunk<CR>')
+vim.keymap.set('n', '<leader>hR', ':Gitsigns reset_buffer<CR>')
+vim.keymap.set('n', '<leader>hp', ':Gitsigns preview_hunk<CR>')
+vim.keymap.set('n', '<leader>hb', ':Gitsigns blame_line<CR>')
+vim.keymap.set('n', '<leader>hS', ':Gitsigns stage_buffer<CR>')
+vim.keymap.set('n', '<leader>hU', ':Gitsigns reset_buffer_index<CR>')
+vim.keymap.set({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
 
 -- INFO: Telescope keymap
 vim.keymap.set('n', 'gw', ":Telescope grep_string<CR>", silent)
@@ -124,19 +123,9 @@ keymaps.toggleterm = {
 }
 vim.keymap.set('n', '<leader>g', function() _LAZYGIT_TOGGLE() end, silent)
 vim.keymap.set('n', '<leader>P', function() _GOTOP_TOGGLE() end, silent)
--- vim.keymap.set('n', '<leader>s', "<cmd>lua _SPOTIFY_TOGGLE()<CR>", silent_noremap)
+-- vim.keymap.set('n', '<leader>s', function() _SPOTIFY_TOGGLE() end, silent)
 
--- function _G.set_terminal_keymaps()
---   vim.keymap.set('t', '<C-q>', [[<C-\><C-n>]])
---   vim.keymap.set('t', '<C-h>', [[<C-\><C-n><C-W>h]])
---   vim.keymap.set('t', '<C-j>', [[<C-\><C-n><C-W>j]])
---   vim.keymap.set('t', '<C-k>', [[<C-\><C-n><C-W>k]])
---   vim.keymap.set('t', '<C-l>', [[<C-\><C-n><C-W>l]])
--- end
--- vim.cmd('autocmd! TermOpen term://*toggleterm#* lua set_terminal_keymaps()')
-
--- INFO: Glow keymap (markdown preview)
--- vim.keymap.set('n', '<leader>p', '<cmd>Glow<CR>', silent_noremap)
+-- INFO: markdown preview keymap
 vim.keymap.set('n', '<leader>p', ':MarkdownPreviewToggle<CR>', silent)
 
 -- INFO: LSP keymap
