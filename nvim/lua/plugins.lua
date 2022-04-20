@@ -91,7 +91,6 @@ return packer.startup({
     use 'JoosepAlviste/nvim-ts-context-commentstring'
     use 'hoob3rt/lualine.nvim'
     use 'kyazdani42/nvim-web-devicons'
-    use 'folke/zen-mode.nvim'
     use 'folke/todo-comments.nvim'
     use 'kevinhwang91/nvim-hlslens'
     -- use 'MomePP/plastic-nvim'
