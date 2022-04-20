@@ -1,3 +1,7 @@
+git:
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never
 os:
   editCommand: "nvim"
   openCommand: "nvim --server $NVIM_LISTEN_ADDRESS --remote-send 'q' && nvim --server $NVIM_LISTEN_ADDRESS --remote-silent {{filename}}"

@@ -9,10 +9,9 @@ Runs `neovim-installer.sh` script to install neovim with MomePP's configuration.
 Currently, uses `impatient` plugin to cache lua config files.
 This may result first times running failed to import `packer_compiled` file.
 
-To fix this, try to install all the plugins by run following command in neovim.
-``` vim
-" run this in vim command mode
-:PackerSync
+To fix this, try to run neovim for first time with initial command.
+``` bash
+nvim +PackerSync
 ```
 **Note:** This may need to restart neovim for a couple of times
 
