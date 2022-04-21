@@ -47,19 +47,12 @@ vim.keymap.set('n', 'tq', ':Bdelete<CR>', silent)
 
 -- INFO: Panes config using `focus` plugin
 vim.keymap.set('n', '<Space>', ':FocusSplitCycle<CR>')
-vim.keymap.set('n', 'sm', ':FocusMaxOrEqual<CR>')
-vim.keymap.set('n', 'sn', ':FocusSplitNicely<CR>')
-vim.keymap.set('n', 'sq', '<C-w>q')
-
-vim.keymap.set('n', 's<left>', ':FocusSplitLeft<CR>')
-vim.keymap.set('n', 's<right>', ':FocusSplitRight<CR>')
-vim.keymap.set('n', 's<up>', ':FocusSplitUp<CR>')
-vim.keymap.set('n', 's<down>', ':FocusSplitDown<CR>')
-
-vim.keymap.set('n', 'sh', ':FocusSplitLeft<CR>')
-vim.keymap.set('n', 'sl', ':FocusSplitRight<CR>')
-vim.keymap.set('n', 'sk', ':FocusSplitUp<CR>')
-vim.keymap.set('n', 'sj', ':FocusSplitDown<CR>')
+vim.keymap.set('n', 'wt', ':FocusMaxOrEqual<CR>')
+vim.keymap.set('n', 'wh', ':FocusSplitLeft<CR>')
+vim.keymap.set('n', 'wl', ':FocusSplitRight<CR>')
+vim.keymap.set('n', 'wk', ':FocusSplitUp<CR>')
+vim.keymap.set('n', 'wj', ':FocusSplitDown<CR>')
+vim.keymap.set('n', 'wq', '<C-w>q')
 
 -- INFO: resize window
 vim.keymap.set('n', '<C-w><left>', '<C-w><')
@@ -113,9 +106,6 @@ vim.keymap.set('n', '<leader>fb', function() require('telescope').extensions.fil
 -- INFO: Todo comments keymap
 vim.keymap.set('n', '<leader>c', ":TodoTelescope<CR>", silent)
 
--- INFO: Zen mode keymap
-vim.keymap.set('n', '<leader>z', ":ZenMode<CR>", silent)
-
 -- INFO: Terminal & ToggleTerm keymap
 --  toggleterm keymap, set in `toggleterm-conf` file. Currently used : <leader>t
 keymaps.toggleterm = {
@@ -154,7 +144,7 @@ vim.keymap.set('n', 'md', function() require'marks'.delete_buf() end, silent)
 
 -- using telescope to show all marks list
 vim.keymap.set('n', '<leader>m', function()
-    require'plugins-config.telescope'.marks_picker({
+    require('plugins-config.telescope').marks_picker({
         layout_strategy = 'horizontal',
         layout_config = { preview_width = 0.65 },
     }) end, silent)
