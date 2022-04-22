@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # WARN: must have brew installed
-brew install wget neovim lazygit git-flow git-delta ripgrep gotop fd
+brew install wget neovim lazygit git-flow git-delta ripgrep gotop fd neovim-remote
 
 # NOTE: add neovim-remote config to default shell config (currently using fish)
 # currently handles by using lazygit config -> the downside, it cannot use lazygit outside nvim

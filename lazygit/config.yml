@@ -4,5 +4,8 @@ git:
     pager: delta --dark --paging=never
 os:
   editCommand: "nvim"
-  openCommand: "nvim --server $NVIM_LISTEN_ADDRESS --remote-send 'q' && nvim --server $NVIM_LISTEN_ADDRESS --remote-silent {{filename}}"
+  openCommand: "nvr --remote-silent -cc q {{filename}}"
+  # openCommand: "nvim --server $NVIM_LISTEN_ADDRESS --remote-send '<s-q><c-\\><c-n>:lua _OpenFile({{filename}})<CR>'"
+  # openCommand: "nvim --server $NVIM_LISTEN_ADDRESS --remote-send '<S-q><C-\\><C-N>:n filename<CR>'"
+  # openCommand: "nvim --server $NVIM_LISTEN_ADDRESS --remote-send 'q' && nvim --server $NVIM_LISTEN_ADDRESS --remote-silent {{filename}}"
 promptToReturnFromSubprocess: false

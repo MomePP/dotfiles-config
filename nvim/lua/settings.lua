@@ -89,3 +89,12 @@ cnoreabbrev W w
 cnoreabbrev Q q
 cnoreabbrev Qall qall
 ]])
+
+
+-- INFO: global lua func for lazygit remoted to open file
+-- function _OpenFile(filePath)
+--     local exec_cmd = "edit " .. filePath
+--     print(exec_cmd)
+--     cmd(exec_cmd)
+-- end
+
