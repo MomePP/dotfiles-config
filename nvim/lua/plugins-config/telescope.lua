@@ -122,26 +122,29 @@ telescope.load_extension("fzf")
 telescope.load_extension("file_browser")
 
 -- INFO: custom telescope to launch when entering nvim
-_G.open_telescope = function()
-    local first_arg = vim.v.argv[2]
-    -- print("path: ", first_arg)
-    if first_arg then
-        if vim.fn.isdirectory(first_arg) == 1 then
-            if first_arg == "." then
-                first_arg = vim.fn.expand('%:p')
-            end
+vim.api.nvim_create_augroup('TelescopeOnEnter', { clear = true })
+vim.api.nvim_create_autocmd('VimEnter', {
+    desc = 'launch telescope as file explorer when enter nvim',
+    group = 'TelescopeOnEnter',
+    pattern = '*',
+    callback = function ()
+        local first_arg = vim.v.argv[2]
+        -- print("path: ", first_arg)
+        if first_arg and vim.fn.isdirectory(first_arg) then
+            -- local pathList = vim.split(first_arg, '/')
+            -- for _, value in pairs(pathList) do
+            --     if value == "." then
+            --         print('found dir.. ' .. first_arg)
+            --         break
+            --     end
+            -- end
+            first_arg = vim.fn.expand('%:p')
             vim.api.nvim_set_current_dir(first_arg)
             telescope.extensions.file_browser.file_browser({cwd = first_arg})
         end
     end
-end
+})
 
-vim.api.nvim_exec([[
-augroup TelescopeOnEnter
-autocmd!
-autocmd VimEnter * lua open_telescope()
-augroup END
-]], false)
 
 -- INFO: custom telescope pickers
 local custom_telescope = {}

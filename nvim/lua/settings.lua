@@ -22,7 +22,7 @@ vim.opt.smartcase = true
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.wildmode = 'list:longest'
-vim.opt.clipboard = 'unnamed,unnamedplus'
+vim.opt.clipboard = 'unnamedplus'
 vim.opt.mouse = 'a'
 vim.opt.shell = 'fish'
 vim.opt.inccommand = 'nosplit'
@@ -34,6 +34,7 @@ vim.opt.completeopt = 'menu,menuone,noselect'
 vim.opt.wildignore = '**/node_module/*, **/.pio/*, **/.git/*'
 vim.opt.sessionoptions:append('globals')
 vim.opt.formatoptions:append('r')
+vim.opt.swapfile = false
 
 vim.api.nvim_create_autocmd('InsertLeave', {
     desc = 'turn off paste mode when leaving insert',
