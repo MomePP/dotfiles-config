@@ -1,0 +1,16 @@
+# User configs
+theme = "monokai_pro"
+
+[editor]
+line-number = "relative"
+scrolloff = 8
+true-color = true
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.file-picker]
+hidden = false
+

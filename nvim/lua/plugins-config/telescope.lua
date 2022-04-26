@@ -1,7 +1,7 @@
 local status_ok, telescope = pcall(require, 'telescope')
 if not status_ok then return end
 
-local actions = require "telescope.actions"
+-- local actions = require "telescope.actions"
 local utils = require "telescope.utils"
 local entry_display = require "telescope.pickers.entry_display"
 
@@ -102,24 +102,28 @@ telescope.setup {
         }
     },
     extensions = {
-        fzf = {
+        ['fzf'] = {
             fuzzy = true,                    -- false will only do exact matching
             override_generic_sorter = true,  -- override the generic sorter
             override_file_sorter = true,     -- override the file sorter
             case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
             -- the default case_mode is "smart_case"
         },
-        file_browser = {
+        ['file_browser'] = {
             layout_strategy = 'horizontal',
             layout_config = {
                 preview_width = 0.65
             },
             respect_gitignore = false,
         },
+        ['ui-select'] = {
+            require('telescope.themes').get_cursor()
+        }
     }
 }
 telescope.load_extension("fzf")
 telescope.load_extension("file_browser")
+telescope.load_extension("ui-select")
 
 -- INFO: custom telescope to launch when entering nvim
 vim.api.nvim_create_augroup('TelescopeOnEnter', { clear = true })
@@ -130,7 +134,7 @@ vim.api.nvim_create_autocmd('VimEnter', {
     callback = function ()
         local first_arg = vim.v.argv[2]
         -- print("path: ", first_arg)
-        if first_arg and vim.fn.isdirectory(first_arg) then
+        if first_arg and vim.fn.isdirectory(first_arg) ~= 0 then
             -- local pathList = vim.split(first_arg, '/')
             -- for _, value in pairs(pathList) do
             --     if value == "." then
