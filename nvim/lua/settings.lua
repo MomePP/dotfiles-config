@@ -1,6 +1,7 @@
 local cmd = vim.cmd
 local indent_size = 4
 
+vim.opt.syntax = 'on'
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.title = true
@@ -35,6 +36,11 @@ vim.opt.wildignore = '**/node_module/*, **/.pio/*, **/.git/*'
 vim.opt.sessionoptions:append('globals')
 vim.opt.formatoptions:append('r')
 vim.opt.swapfile = false
+vim.opt.showmode = false
+vim.opt.showcmd = false
+vim.opt.laststatus = 3
+vim.opt.showtabline = 2
+
 
 vim.api.nvim_create_autocmd('InsertLeave', {
     desc = 'turn off paste mode when leaving insert',
@@ -72,7 +78,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 vim.g.loaded_netrw       = 1
 vim.g.loaded_netrwPlugin = 1
 
-cmd 'syntax on'
 cmd 'filetype plugin indent on'
 
 -- Command-line abbreviations

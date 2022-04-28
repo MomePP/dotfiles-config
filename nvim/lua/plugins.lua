@@ -91,7 +91,7 @@ return packer.startup({
     use 'p00f/nvim-ts-rainbow'
     use 'windwp/nvim-ts-autotag'
     use 'JoosepAlviste/nvim-ts-context-commentstring'
-    use 'hoob3rt/lualine.nvim'
+    use 'tamton-aquib/staline.nvim'
     use 'kyazdani42/nvim-web-devicons'
     use 'folke/todo-comments.nvim'
     use 'kevinhwang91/nvim-hlslens'
