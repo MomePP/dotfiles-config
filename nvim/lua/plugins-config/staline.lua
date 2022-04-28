@@ -3,22 +3,18 @@ if not status_sta then return end
 
 local colors = {
     white        = '#eeeeee',
-    red          = '#D74E42',
+    red          = '#E06C75',
     green        = '#8fbf7f',
     olive        = '#84a598',
-    blue         = '#61afef',
-    cream        = '#d4be98',
+    blue         = '#6FDFDF',
+    cream        = '#E6CCA9',
     yellow       = '#E9D16C',
-    purple       = '#b57edc',
+    purple       = '#af5fff',
     orange       = '#fc802d',
     gray         = '#5f6672',
     darkgray     = '#21252b',
     transparent  = 'NONE',
 }
-
-local time = function()
-  return os.date("%a │ %H:%M %x")
-end
 
 staline.setup {
     sections = {
@@ -28,10 +24,10 @@ staline.setup {
 	},
 	mode_colors = {
 		i = colors.green,
-		n = colors.white,
+		n = colors.cream,
 		c = colors.red,
-        v = colors.yellow,
-		V = colors.orange,
+		v = colors.purple,
+        V = colors.orange,
 	},
 	defaults = {
 		true_colors = true,
