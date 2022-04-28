@@ -6,7 +6,7 @@ local colors = {
     red          = '#E06C75',
     green        = '#8fbf7f',
     olive        = '#84a598',
-    blue         = '#6FDFDF',
+    blue         = '#0087ff',
     cream        = '#E6CCA9',
     yellow       = '#E9D16C',
     purple       = '#af5fff',
@@ -28,12 +28,16 @@ staline.setup {
 		c = colors.red,
 		v = colors.purple,
         V = colors.orange,
+        t = colors.blue,
 	},
 	defaults = {
 		true_colors = true,
 		line_column = " [%l/%L] :%c",
 		branch_symbol = " ",
-	}
+	},
+    special_table = {
+        toggleterm = { 'ToggleTerm', ' ' }
+    }
 }
 
 -- require'stabline'.setup {
