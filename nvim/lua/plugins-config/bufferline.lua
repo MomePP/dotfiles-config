@@ -1,6 +1,11 @@
 local status_ok, bufferline = pcall(require, 'bufferline')
 if not status_ok then return end
 
+local colors = {
+    purple = '#6100e0',
+    gray = '#5F6672'
+}
+
 bufferline.setup {
     options = {
         mode = 'buffers',
@@ -12,11 +17,11 @@ bufferline.setup {
         -- NOTE: this plugin is designed with this icon in mind,
         -- and so changing this is NOT recommended, this is intended
         -- as an escape hatch for people who cannot bear it for whatever reason
-        indicator_icon = '',
-        -- indicator_icon = '▎',
-        buffer_close_icon = '',
+        -- indicator_icon = '',
+        indicator_icon = ' ',
+        -- buffer_close_icon = ' ',
         modified_icon = '●',
-        close_icon = '',
+        -- close_icon = '',
         left_trunc_marker = '',
         right_trunc_marker = '',
         --- name_formatter can be used to change the buffer's label in the bufferline.
@@ -31,7 +36,7 @@ bufferline.setup {
         -- end,
         max_name_length = 20,
         max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
-        tab_size = 25,
+        tab_size = 23,
         diagnostics = false, -- false | "nvim_lsp" | "coc",
         diagnostics_update_in_insert = false,
         -- diagnostics_indicator = function(count, level, diagnostics_dict, context)
@@ -59,9 +64,9 @@ bufferline.setup {
         end,
         -- offsets = {{filetype = "NvimTree", text = "File Explorer" | function , text_align = "left" | "center" | "right"}},
         show_buffer_icons = true, -- disable filetype icons for buffers
-        show_buffer_close_icons = true,
+        show_buffer_close_icons = false,
         show_close_icon = false,
-        show_tab_indicators = true,
+        show_tab_indicators = false,
         persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
         -- can also be a table containing 2 custom separators
         -- [focused and unfocused]. eg: { '|', '|' }
@@ -76,25 +81,17 @@ bufferline.setup {
     },
     highlights = {
         buffer_selected = {
-            gui = 'bold'
+            gui = 'bold',
+            guibg = colors.purple
         },
         background = {
-            guifg = '#5F6672'
+            guifg = colors.gray
+        },
+        modified_selected = {
+            guibg = colors.purple
         },
         buffer_visible = {
-            guifg = '#5F6672'
-        },
-        close_button = {
-            guifg = '#5F6672'
-        },
-        close_button_visible = {
-            guifg = '#5F6672'
-        },
-        separator = {
-            guifg = '#5F6672'
-        },
-        indicator_selected = {
-            guifg = '#61AFEF',
+            guifg = colors.gray
         },
     },
 }
