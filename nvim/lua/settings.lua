@@ -54,7 +54,7 @@ vim.api.nvim_create_autocmd('FileType', {
     command = ':wincmd L | :vert'
 })
 
-vim.api.nvim_create_augroup('BgHighlight', {})
+vim.api.nvim_create_augroup('BgHighlight', { clear = true })
 vim.api.nvim_create_autocmd('WinEnter', {
     desc = 'set cursorline bg highlight when enter window',
     group = 'BgHighlight',
@@ -72,6 +72,11 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     desc = 'highlight text on yank',
     pattern = '*',
     callback = function () vim.highlight.on_yank({on_visual = false}) end
+})
+
+-- check if we need to reload file when it changed
+vim.api.nvim_create_autocmd('FocusGained', {
+    command = ':checktime'
 })
 
 -- Disable netrw -> use telescope to browse directory at first

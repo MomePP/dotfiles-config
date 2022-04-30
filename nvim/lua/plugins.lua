@@ -16,7 +16,7 @@ if fn.empty(fn.glob(install_path)) > 0 then
 end
 
 -- Autocommand that reloads neovim whenever you save the plugins.lua file
-vim.api.nvim_create_augroup("packer_user_config", {})
+vim.api.nvim_create_augroup("packer_user_config", { clear = true })
 vim.api.nvim_create_autocmd("BufWritePost", {
     desc = "Sync packer after modifying plugins.lua",
     group = "packer_user_config",
@@ -47,8 +47,13 @@ return packer.startup({
     use 'lewis6991/impatient.nvim'
 
     -- LSP
-    use 'neovim/nvim-lspconfig'
-    use 'williamboman/nvim-lsp-installer'
+    use {
+        'junnplus/nvim-lsp-setup',
+        requires = {
+            'neovim/nvim-lspconfig',
+            'williamboman/nvim-lsp-installer',
+        }
+    }
 
     -- git plugins
     use 'lewis6991/gitsigns.nvim'

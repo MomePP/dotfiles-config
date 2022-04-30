@@ -119,21 +119,22 @@ vim.keymap.set('n', '<leader>P', function() _GOTOP_TOGGLE() end, silent)
 vim.keymap.set('n', '<leader>p', ':MarkdownPreviewToggle<CR>', silent)
 
 -- INFO: LSP keymap
-vim.keymap.set('n', 'gd', ':Telescope lsp_definitions<CR>', silent)
-vim.keymap.set('n', 'gi', ':Telescope lsp_implementations<CR>', silent)
-vim.keymap.set('n', 'gt', ":Telescope lsp_type_definitions<CR>", silent)
-vim.keymap.set('n', 'gx', vim.lsp.buf.code_action, silent)
-vim.keymap.set('x', 'gx', vim.lsp.buf.range_code_action, silent)
-vim.keymap.set('n', 'gr', ":Telescope lsp_references<CR>", silent)
-vim.keymap.set('n', '<leader>ls', ":Telescope lsp_document_symbols<CR>", silent)
-vim.keymap.set('n', '<leader>ld', ":Telescope diagnostics<CR>", silent)
-vim.keymap.set('n', ']d', function() vim.diagnostic.goto_next({ border = 'rounded'}) end, silent)
-vim.keymap.set('n', '[d', function() vim.diagnostic.goto_prev({ border = 'rounded'}) end, silent)
-vim.keymap.set('n', 'gh', function() vim.diagnostic.open_float({ border = 'rounded' }) end, silent)
-vim.keymap.set('n', 'gs', vim.lsp.buf.signature_help, silent)
-vim.keymap.set('n', 'gp', vim.lsp.buf.hover, silent)
-vim.keymap.set('n', '<leader>lr', vim.lsp.buf.rename, silent)
-vim.keymap.set('n', '<leader>ff', vim.lsp.buf.formatting, silent)
+keymaps.lsp = {
+    gd = 'lua require"telescope.builtin".lsp_definitions()',
+    gi = 'lua require"telescope.builtin".lsp_implementations()',
+    gt = 'lua require"telescope.builtin".lsp_type_definitions()',
+    gr = 'lua require"telescope.builtin".lsp_references()',
+    gx = 'lua vim.lsp.buf.code_action()',
+    gs = 'lua vim.lsp.buf.signature_help()',
+    gp = 'lua vim.lsp.buf.hover()',
+    K = 'lua vim.lsp.buf.hover()',
+    [']d'] = 'lua vim.diagnostic.goto_next({ border = "rounded" })',
+    ['[d'] = 'lua vim.diagnostic.goto_prev({ border = "rounded" })',
+    ['<leader>ls'] = 'lua require"telescope.builtin".lsp_document_symbols()',
+    ['<leader>ld'] = 'lua require"telescope.builtin".diagnostics()',
+    ['<leader>lr'] = 'lua vim.lsp.buf.rename()',
+    ['<leader>ff'] = 'lua vim.lsp.bug.formatting()',
+}
 
 -- INFO: Marks keymap
 vim.keymap.set('n', "'", function() require'marks'.next() end, silent)
