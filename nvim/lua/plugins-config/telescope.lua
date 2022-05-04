@@ -69,7 +69,6 @@ telescope.setup {
             }
         },
         lsp_references = {
-            -- theme = 'ivy'
             layout_strategy = 'bottom_pane',
             layout_config = {
                 height = 0.4,
@@ -79,7 +78,6 @@ telescope.setup {
             entry_maker = entry_lsp_references()
         },
         diagnostics = {
-            -- theme = 'ivy'
             layout_strategy = 'bottom_pane',
             layout_config = {
                 height = 0.4,
@@ -90,9 +88,6 @@ telescope.setup {
         },
         lsp_code_actions = {
             theme = 'cursor'
-        },
-        lsp_range_code_actions = {
-            layout_strategy = 'center'
         },
         grep_string = {
             layout_strategy = 'horizontal',
@@ -107,14 +102,15 @@ telescope.setup {
             override_generic_sorter = true,  -- override the generic sorter
             override_file_sorter = true,     -- override the file sorter
             case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
-            -- the default case_mode is "smart_case"
         },
         ['file_browser'] = {
             layout_strategy = 'horizontal',
             layout_config = {
-                preview_width = 0.65
+                preview_width = 0.65,
             },
             respect_gitignore = false,
+            hidden = true,
+            grouped = true,
         },
         ['ui-select'] = {
             require('telescope.themes').get_cursor()

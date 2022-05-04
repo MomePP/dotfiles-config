@@ -81,7 +81,7 @@ return packer.startup({
     use { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install' }
     use 'numToStr/Comment.nvim'
     use 'lukas-reineke/indent-blankline.nvim'
-    use 'akinsho/bufferline.nvim'
+    use { 'akinsho/bufferline.nvim', tag = 'v2.*' }
     use 'moll/vim-bbye'
     use 'norcalli/nvim-colorizer.lua'
     use 'windwp/nvim-autopairs'
@@ -104,7 +104,7 @@ return packer.startup({
     use 'rebelot/kanagawa.nvim'
 
     -- misc. cool stuff
-    use 'andweeb/presence.nvim' -- discord activity status
+    -- use 'andweeb/presence.nvim' -- discord activity status
 
     -- Automatically set up your configuration after cloning packer.nvim
     -- Put this at the end after all plugins
