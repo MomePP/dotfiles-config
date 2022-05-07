@@ -26,18 +26,9 @@ set -g theme_display_user yes
 set -g theme_hide_hostname no
 set -g theme_hostname always
 
-# start pyenv
-if status is-interactive
-    set -Ux PYENV_ROOT $HOME/.pyenv
-    fish_add_path $PYENV_ROOT/bin
-end
-status is-interactive; and pyenv init - | source
-status is-login; and pyenv init --path | source
-
 # config editor
 command -qv nvim && alias vi nvim
-set -gx EDITOR code
-set -gx VISUAL EDITOR
+set -gx EDITOR nvim
 
 # config fish-exa
 set -Ux EXA_STANDARD_OPTIONS --long --group --icons
@@ -63,14 +54,14 @@ set -x MENUCONFIG_STYLE "monochrome"
 alias get-idf ". $HOME/Developments/toolchains/esp-idf/export.fish"
 
 # config llvm arm64
-fish_add_path /opt/homebrew/opt/llvm/bin
-set -gx LDFLAGS "-L/opt/homebrew/opt/llvm/lib"
-set -gx CPPFLAGS "-I/opt/homebrew/opt/llvm/include"
+# fish_add_path /opt/homebrew/opt/llvm/bin
+# set -gx LDFLAGS "-L/opt/homebrew/opt/llvm/lib"
+# set -gx CPPFLAGS "-I/opt/homebrew/opt/llvm/include"
 
-#config llvm x86_64
-# fish_add_path /usr/local/opt/llvm/bin
-# set -gx LDFLAGS "-L/usr/local/opt/llvm/lib"
-# set -gx CPPFLAGS "-I/usr/local/opt/llvm/include"
+# config llvm x86_64
+fish_add_path /usr/local/opt/llvm/bin
+set -gx LDFLAGS "-L/usr/local/opt/llvm/lib"
+set -gx CPPFLAGS "-I/usr/local/opt/llvm/include"
 
 # set path for commandline tools
 fish_add_path /Library/Developer/CommandLineTools/usr/bin
@@ -82,8 +73,8 @@ alias g "git"
 alias rbrew='arch -x86_64 /usr/local/bin/brew'
 alias rosetta="arch -x86_64"
 alias py="python3"
+alias python="python3"
+alias pip="python3 -m pip"
 alias tma "tmux attach-session || tmux new -s default"
 alias tmd "tmux detach"
-alias python "$(pyenv which python)"
-alias pip "$(pyenv which pip)"
 
