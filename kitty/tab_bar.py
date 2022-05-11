@@ -35,12 +35,12 @@ def _draw_prefix(screen: Screen, index: int, prefix_word: str = "") -> int:
     if index != 1:
         return 0
 
-    fg, bg = screen.cursor.fg, screen.cursor.bg
+    fg, bg, bold, italic = screen.cursor.fg, screen.cursor.bg, screen.cursor.bold, screen.cursor.italic
     screen.cursor.bold = screen.cursor.italic = False
     screen.cursor.fg = as_rgb(color_as_int(Color(238, 238, 238)))
     screen.cursor.bg = 0
     screen.draw(prefix_word)
-    screen.cursor.fg, screen.cursor.bg = fg, bg
+    screen.cursor.fg, screen.cursor.bg, screen.cursor.bold, screen.cursor.italic = fg, bg, bold, italic
     screen.cursor.x = len(prefix_word)
 
     return screen.cursor.x
@@ -142,7 +142,7 @@ def draw_tab(
     is_last: bool,
     extra_data: ExtraData,
 ) -> int:
-    _draw_prefix(screen, index, "working on ")
+    _draw_prefix(screen, index, "working on")
     _draw_left_status(
         draw_data,
         screen,
