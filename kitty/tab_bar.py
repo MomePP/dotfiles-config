@@ -106,11 +106,17 @@ def _draw_right_status(screen: Screen, is_last: bool) -> int:
         screen.draw(" " * draw_spaces)
 
     cells = [
-        (Color(175, 95, 255), dow),
-        (Color(175, 95, 255), " │ "),
+        # (Color(175, 95, 255), dow),
+        # (Color(175, 95, 255), " │ "),
+        # (Color(238, 238, 238), hm),
+        # (Color(238, 238, 238), "  "),
+        # (Color(175, 95, 255), date),
+
+        (Color(108, 113, 196), dow),
+        (Color(108, 113, 196), " │ "),
         (Color(238, 238, 238), hm),
         (Color(238, 238, 238), "  "),
-        (Color(175, 95, 255), date),
+        (Color(108, 113, 196), date),
     ]
 
     screen.cursor.fg = 0
