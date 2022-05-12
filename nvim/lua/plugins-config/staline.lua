@@ -18,9 +18,32 @@ local colors = {
 
 staline.setup {
     sections = {
-		left = { ' ', 'mode', ' ', 'branch', '  ', function () return "神" .. require('auto-session-library').current_session_name() end },
-		mid = { 'file_name', '', 'file_size' },
-		right = { '-lsp', ' ', 'lsp_name', ' ', 'line_column' }
+        left = {
+            ' ',
+            'mode',
+            ' ',
+            'branch',
+            '  ',
+            function ()
+                local session_name = 'none'
+                if vim.v.argv[2] == nil then
+                    session_name = require('auto-session-library').current_session_name()
+                end
+                return "神" .. session_name
+            end,
+        },
+        mid = {
+            'file_name',
+            '',
+            'file_size'
+        },
+        right = {
+            '-lsp',
+            ' ',
+            'lsp_name',
+            ' ',
+            'line_column'
+        }
 	},
 	mode_colors = {
 		i = colors.green,
