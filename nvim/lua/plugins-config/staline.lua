@@ -26,7 +26,8 @@ staline.setup {
             '  ',
             function ()
                 local session_name = 'none'
-                if vim.v.argv[2] == nil then
+                local session_path = vim.v.this_session
+                if session_path ~= '' then
                     session_name = require('auto-session-library').current_session_name()
                 end
                 return "神" .. session_name
