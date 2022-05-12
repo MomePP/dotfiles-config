@@ -18,9 +18,9 @@ local colors = {
 
 staline.setup {
     sections = {
-		left = { ' ', 'mode', ' ', 'branch' },
-		mid = { '-lsp' },
-		right = { 'file_name', ' ', 'line_column' }
+		left = { ' ', 'mode', ' ', 'branch', '  ', function () return "神" .. require('auto-session-library').current_session_name() end },
+		mid = { 'file_name', '', 'file_size' },
+		right = { '-lsp', ' ', 'lsp_name', ' ', 'line_column' }
 	},
 	mode_colors = {
 		i = colors.green,
@@ -29,6 +29,10 @@ staline.setup {
 		v = colors.purple,
         V = colors.orange,
         t = colors.blue,
+	},
+    mode_icons = {
+		n = " ",
+		v = " ",   -- etc..
 	},
 	defaults = {
 		true_colors = true,

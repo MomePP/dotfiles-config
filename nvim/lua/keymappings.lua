@@ -162,5 +162,10 @@ vim.keymap.set('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]], silent)
 vim.keymap.set('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]], silent)
 vim.keymap.set('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]], silent)
 
+-- INFO: auto-session keymaps
+vim.keymap.set('n', '<leader>ss', ':SaveSession<CR>', silent)
+vim.keymap.set('n', '<leader>sr', ':RestoreSession<CR>', silent)
+vim.keymap.set('n', '<leader>sd', ':DeleteSession<CR>', silent)
+
 return keymaps
 

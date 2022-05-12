@@ -89,6 +89,7 @@ return packer.startup({
     use 'beauwilliams/focus.nvim'
     use 'chentau/marks.nvim'
     use { 'ggandor/leap.nvim', config = function() require('leap').set_default_keymaps() end }
+    use 'rmagatti/auto-session'
 
     -- UI decoration
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
