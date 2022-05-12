@@ -61,17 +61,16 @@ staline.setup {
 		true_colors = true,
 		line_column = " [%l/%L] :%c",
 		branch_symbol = " ",
-        bg = colors.darkgray,
 	},
     special_table = {
         toggleterm = { 'ToggleTerm', ' ' }
     }
 }
 
-vim.cmd("hi StalineMode guifg=" .. colors.purple .. " guibg=" .. colors.darkgray)
-vim.cmd("hi StalineSession guifg=" .. colors.purple .. " guibg=" .. colors.darkgray)
-vim.cmd("hi StalineFileSize guifg=" .. colors.purple .. " guibg=" .. colors.darkgray)
-vim.cmd("hi StalineLSP guifg=" .. colors.purple .. " guibg=" .. colors.darkgray)
+vim.cmd("hi StalineMode guifg=" .. colors.purple)
+vim.cmd("hi StalineSession guifg=" .. colors.purple)
+vim.cmd("hi StalineFileSize guifg=" .. colors.purple)
+vim.cmd("hi StalineLSP guifg=" .. colors.purple)
 
 -- require'stabline'.setup {
 --     style       = "bar", -- others: arrow, slant, bubble
