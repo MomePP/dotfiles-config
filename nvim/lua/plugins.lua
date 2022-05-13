@@ -87,7 +87,7 @@ return packer.startup({
     use 'windwp/nvim-autopairs'
     use 'akinsho/toggleterm.nvim'
     use 'beauwilliams/focus.nvim'
-    use 'chentau/marks.nvim'
+    use 'chentoast/marks.nvim'
     use { 'ggandor/leap.nvim', config = function() require('leap').set_default_keymaps() end }
     use 'rmagatti/auto-session'
 
