@@ -1,11 +1,9 @@
-pip
 flutter
-iTerm2
 fish/completions
 fish/functions
 fish/fish_variables
 configstore
 nvim/plugin/packer_compiled.lua
 tmux/plugins
-
 containers
+

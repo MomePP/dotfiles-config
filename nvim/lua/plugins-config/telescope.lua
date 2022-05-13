@@ -65,7 +65,7 @@ telescope.setup {
         help_tags = {
             layout_strategy = 'horizontal',
             layout_config = {
-                preview_width = 0.65
+                preview_width = 0.6
             }
         },
         lsp_references = {
@@ -84,7 +84,7 @@ telescope.setup {
                 preview_width = 0.4,
                 prompt_position = 'bottom'
             },
-            line_width = 0.65
+            line_width = 0.7
         },
         lsp_code_actions = {
             theme = 'cursor'
@@ -106,7 +106,7 @@ telescope.setup {
         ['file_browser'] = {
             layout_strategy = 'horizontal',
             layout_config = {
-                preview_width = 0.65,
+                preview_width = 0.6,
             },
             respect_gitignore = false,
             hidden = true,
