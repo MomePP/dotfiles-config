@@ -18,7 +18,6 @@ fish_add_path /Users/momeppkt/.platformio/penv/bin
 # set locale terminal
 set -x LC_CTYPE "en_US.UTF-8"
 set -x LC_ALL "en_US.UTF-8"
-set -x LC_TERMINAL "iTerm2"
 
 # theme
 set -g fish_prompt_pwd_dir_length 1
@@ -69,7 +68,7 @@ set -Ux SDKROOT /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.plat
 
 # aliases
 alias ls "l"
-alias g "git"
+alias lg "lazygit"
 alias rbrew='arch -x86_64 /usr/local/bin/brew'
 alias rosetta="arch -x86_64"
 alias py="python3"

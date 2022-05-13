@@ -120,6 +120,7 @@ telescope.setup {
 telescope.load_extension("fzf")
 telescope.load_extension("file_browser")
 telescope.load_extension("ui-select")
+telescope.load_extension("session-lens")
 
 -- INFO: custom telescope to launch when entering nvim
 vim.api.nvim_create_augroup('TelescopeOnEnter', { clear = true })
