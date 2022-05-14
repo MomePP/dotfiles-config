@@ -1,5 +1,7 @@
 set fish_greeting ""
-set -gx TERM xterm-256color
+
+# by default, this var was set by terminal program itself
+# set -gx TERM xterm-256color
 
 if status is-interactive
   # Commands to run in interactive sessions can go here
