@@ -79,3 +79,5 @@ alias pip="python3 -m pip"
 alias tma "tmux attach-session || tmux new -s default"
 alias tmd "tmux detach"
 
+starship init fish | source
+
