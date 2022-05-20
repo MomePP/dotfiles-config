@@ -101,7 +101,7 @@ vim.keymap.set('n', '<leader>;', ":Telescope help_tags<CR>", silent)
 vim.keymap.set('n', '<leader>j', ":Telescope jumplist<CR>", silent)
 vim.keymap.set('n', '<leader>/', ":Telescope current_buffer_fuzzy_find<CR>", silent)
 vim.keymap.set('n', '<leader>fs', ":Telescope live_grep<CR>", silent)
-vim.keymap.set('n', '<leader>fb', function() require('telescope').extensions.file_browser.file_browser({path = vim.fn.expand('%:p:h')}) end, silent)
+vim.keymap.set('n', '<leader>fb', ":Telescope file_browser<CR>", silent)
 
 -- INFO: Todo comments keymap
 vim.keymap.set('n', '<leader>c', ":TodoTelescope<CR>", silent)

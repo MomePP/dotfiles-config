@@ -108,6 +108,8 @@ telescope.setup {
             layout_config = {
                 preview_width = 0.6,
             },
+            path = "%:p:h",
+            cwd_to_path = true,
             respect_gitignore = false,
             hidden = true,
             grouped = true,
@@ -139,9 +141,9 @@ vim.api.nvim_create_autocmd('VimEnter', {
             --         break
             --     end
             -- end
-            first_arg = vim.fn.expand('%:p')
+            first_arg = vim.fn.expand('%:p:h')
             vim.api.nvim_set_current_dir(first_arg)
-            telescope.extensions.file_browser.file_browser({cwd = first_arg})
+            telescope.extensions.file_browser.file_browser()
         end
     end
 })
