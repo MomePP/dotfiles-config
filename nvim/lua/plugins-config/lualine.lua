@@ -16,18 +16,19 @@ local colors = {
     transparent = 'NONE',
 }
 
--- local hide_in_width = function()
---     return vim.fn.winwidth(0) > 80
--- end
-
--- local buffer = {
---     "buffers",
---     filetype_names = {
---         TelescopePrompt = 'Telescope',
---         packer = 'Packer',
---         toggleterm = 'ToggleTerm'
---     },
--- }
+local conditions = {
+    buffer_not_empty = function()
+        return vim.fn.empty(vim.fn.expand('%:t')) ~= 1
+    end,
+    hide_in_width = function()
+        return vim.fn.winwidth(0) > 80
+    end,
+    check_git_workspace = function()
+        local filepath = vim.fn.expand('%:p:h')
+        local gitdir = vim.fn.finddir('.git', filepath .. ';')
+        return gitdir and #gitdir > 0 and #gitdir < #filepath
+    end,
+}
 
 local mode = {
     "mode",
@@ -53,12 +54,14 @@ local diagnostics = {
 local filesize = {
     "filesize",
     color = { fg = colors.purple },
+    cond = conditions.buffer_not_empty
 }
 
 local filename = {
     "filename",
     file_status = false, -- displays file status (readonly status, modified status)
-    path = 0            -- 0 = just filename, 1 = relative path, 2 = absolute path
+    path = 0, -- 0 = just filename, 1 = relative path, 2 = absolute path
+    cond = conditions.buffer_not_empty
 }
 
 local filename_path = {
@@ -106,7 +109,7 @@ local session_status = {
 }
 
 local location = {
-    function ()
+    function()
         return "[%3l/%3L] :%-2v"
     end
 }
@@ -120,7 +123,8 @@ local spacing = {
 local separator_dash = {
     function()
         return ''
-    end
+    end,
+    cond = conditions.buffer_not_empty
 }
 
 lualine.setup({
@@ -180,4 +184,5 @@ lualine.setup({
         lualine_z = {},
     },
     tabline = {},
+    extensions = { 'toggleterm' }
 })
