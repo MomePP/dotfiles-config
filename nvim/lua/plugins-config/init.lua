@@ -14,5 +14,6 @@ require('plugins-config.focus')
 require('plugins-config.marks')
 require('plugins-config.comment')
 require('plugins-config.hlslens')
-require('plugins-config.staline')
+-- require('plugins-config.staline')
+require('plugins-config.lualine')
 
