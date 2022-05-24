@@ -79,7 +79,6 @@ vim.api.nvim_create_autocmd('FocusGained', {
     command = ':checktime'
 })
 
-cmd 'filetype plugin indent on'
 
 -- Command-line abbreviations
 -- cnoreabbrev g Git
