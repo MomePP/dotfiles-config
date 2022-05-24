@@ -113,6 +113,7 @@ telescope.setup {
             respect_gitignore = false,
             hidden = true,
             grouped = true,
+            hijack_netrw = true,
         },
         ['ui-select'] = {
             require('telescope.themes').get_cursor()
@@ -123,30 +124,6 @@ telescope.load_extension("fzf")
 telescope.load_extension("file_browser")
 telescope.load_extension("ui-select")
 telescope.load_extension("session-lens")
-
--- INFO: custom telescope to launch when entering nvim
-vim.api.nvim_create_augroup('TelescopeOnEnter', { clear = true })
-vim.api.nvim_create_autocmd('VimEnter', {
-    desc = 'launch telescope as file explorer when enter nvim',
-    group = 'TelescopeOnEnter',
-    pattern = '*',
-    callback = function ()
-        local first_arg = vim.v.argv[2]
-        -- print("path: ", first_arg)
-        if first_arg and vim.fn.isdirectory(first_arg) ~= 0 then
-            -- local pathList = vim.split(first_arg, '/')
-            -- for _, value in pairs(pathList) do
-            --     if value == "." then
-            --         print('found dir.. ' .. first_arg)
-            --         break
-            --     end
-            -- end
-            first_arg = vim.fn.expand('%:p:h')
-            vim.api.nvim_set_current_dir(first_arg)
-            telescope.extensions.file_browser.file_browser()
-        end
-    end
-})
 
 
 -- INFO: custom telescope pickers

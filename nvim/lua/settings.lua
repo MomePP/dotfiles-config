@@ -79,10 +79,6 @@ vim.api.nvim_create_autocmd('FocusGained', {
     command = ':checktime'
 })
 
--- Disable netrw -> use telescope to browse directory at first
-vim.g.loaded_netrw       = 1
-vim.g.loaded_netrwPlugin = 1
-
 cmd 'filetype plugin indent on'
 
 -- Command-line abbreviations
