@@ -53,7 +53,7 @@ local function lsp_highlight_document(client, bufnr)
             buffer = bufnr,
             callback = vim.lsp.buf.clear_references,
         })
-  end
+    end
 end
 
 M.on_attach = function(client, bufnr)
