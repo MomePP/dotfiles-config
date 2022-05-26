@@ -3,6 +3,8 @@ if not lualine_loadded then return end
 -- local theme_loadded, plastic_lualine = pcall(require, "lualine.plastic")
 -- if not theme_loadded then plastic_lualine = 'auto' end -- set fallback theme
 
+local gps = require('nvim-gps')
+
 local colors = {
     black       = 234,
     white       = 254,
@@ -51,16 +53,38 @@ local diagnostics = {
 --     cond = hide_in_width
 -- }
 
-local filesize = {
-    "filesize",
+local gps_location = {
+    function()
+        local gps_text = gps.get_location()
+        if #gps_text ~= 0 then
+            return '> ' .. gps_text
+        else
+            return ''
+        end
+    end,
     color = { fg = colors.purple },
-    cond = conditions.buffer_not_empty
+    cond = gps.is_available
+}
+
+-- local filesize = {
+--     "filesize",
+--     color = { fg = colors.purple },
+--     cond = conditions.buffer_not_empty
+-- }
+
+local filetype = {
+    'filetype',
+    icon_only = true,
+    separator = '',
+    padding = { right = 0, left = 1 }
 }
 
 local filename = {
     "filename",
     file_status = false, -- displays file status (readonly status, modified status)
     path = 0, -- 0 = just filename, 1 = relative path, 2 = absolute path
+    color = { gui = 'bold' },
+    padding = { right = 0, left = 1 },
     cond = conditions.buffer_not_empty
 }
 
@@ -120,13 +144,6 @@ local spacing = {
     end,
 }
 
-local separator_dash = {
-    function()
-        return ''
-    end,
-    cond = conditions.buffer_not_empty
-}
-
 lualine.setup({
     options = {
         icons_enabled = true,
@@ -170,7 +187,7 @@ lualine.setup({
     sections = {
         lualine_a = { mode },
         lualine_b = { branch },
-        lualine_c = { session_status, spacing, filename, separator_dash, filesize },
+        lualine_c = { session_status, spacing, filetype, filename, gps_location },
         lualine_x = { diagnostics },
         lualine_y = { lsp_status },
         lualine_z = { location },
