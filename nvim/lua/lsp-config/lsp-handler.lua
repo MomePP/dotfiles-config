@@ -39,7 +39,7 @@ M.setup = function()
 end
 
 local function lsp_highlight_document(client, bufnr)
-    if client.resolved_capabilities.document_highlight then
+    if client.server_capabilities.document_highlight then
         vim.api.nvim_create_augroup('lsp_document_highlight', { clear = true })
         vim.api.nvim_create_autocmd('CursorHold', {
             desc = 'lsp highlight when holding cursor on a word',
@@ -57,7 +57,7 @@ local function lsp_highlight_document(client, bufnr)
 end
 
 M.on_attach = function(client, bufnr)
-    if client.name == 'tsserver' then client.resolved_capabilities.document_formatting = false end
+    if client.name == 'tsserver' then client.server_capabilities.document_formatting = false end
 
     lsp_highlight_document(client, bufnr)
 end

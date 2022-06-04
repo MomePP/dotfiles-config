@@ -38,12 +38,14 @@ vim.keymap.set('i', '?', '?<C-g>u')
 -- vim.keymap.set('n', 'j', '(v:count > 5 ? "m\'" . v:count : "") . "j"', expr)
 
 -- INFO: Bufferline config
-vim.keymap.set('n', '<Tab>', ':BufferLineCycleNext<CR>', silent)
-vim.keymap.set('n', '<S-Tab>', ':BufferLineCyclePrev<CR>', silent)
-vim.keymap.set('n', 't]', ':BufferLineMoveNext<CR>', silent)
-vim.keymap.set('n', 't[', ':BufferLineMovePrev<CR>', silent)
-vim.keymap.set('n', 'tp', ':BufferLinePick<CR>', silent)
+-- vim.keymap.set('n', '<Tab>', ':BufferLineCycleNext<CR>', silent)
+-- vim.keymap.set('n', '<S-Tab>', ':BufferLineCyclePrev<CR>', silent)
+-- vim.keymap.set('n', 't]', ':BufferLineMoveNext<CR>', silent)
+-- vim.keymap.set('n', 't[', ':BufferLineMovePrev<CR>', silent)
+-- vim.keymap.set('n', 'tp', ':BufferLinePick<CR>', silent)
 vim.keymap.set('n', 'tq', ':Bdelete<CR>', silent)
+vim.keymap.set('n', '<Tab>', ':bnext<CR>', silent)
+vim.keymap.set('n', '<S-Tab>', ':bprev<CR>', silent)
 
 -- INFO: Panes config using `focus` plugin
 vim.keymap.set('n', '<Space>', ':FocusSplitCycle<CR>', silent)
@@ -133,7 +135,7 @@ keymaps.lsp = {
     ['<leader>ls'] = 'lua require"telescope.builtin".lsp_document_symbols()',
     ['<leader>ld'] = 'lua require"telescope.builtin".diagnostics()',
     ['<leader>lr'] = 'lua vim.lsp.buf.rename()',
-    ['<leader>ff'] = 'lua vim.lsp.buf.formatting()',
+    ['<leader>ff'] = 'lua vim.lsp.buf.format(async = true)',
 }
 
 -- INFO: Marks keymap

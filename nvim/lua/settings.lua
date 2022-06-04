@@ -39,7 +39,7 @@ vim.opt.swapfile = false
 vim.opt.showmode = false
 vim.opt.showcmd = false
 vim.opt.laststatus = 3
-vim.opt.showtabline = 2
+vim.opt.showtabline = 0
 
 
 vim.api.nvim_create_autocmd('InsertLeave', {
@@ -71,7 +71,7 @@ vim.api.nvim_create_autocmd('WinLeave', {
 vim.api.nvim_create_autocmd('TextYankPost', {
     desc = 'highlight text on yank',
     pattern = '*',
-    callback = function () vim.highlight.on_yank({on_visual = false}) end
+    callback = function() vim.highlight.on_yank({ on_visual = false }) end
 })
 
 -- check if we need to reload file when it changed
@@ -104,4 +104,3 @@ cnoreabbrev Qall qall
 --     print(exec_cmd)
 --     cmd(exec_cmd)
 -- end
-

@@ -81,7 +81,7 @@ return packer.startup({
         use { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install' }
         use 'numToStr/Comment.nvim'
         use 'lukas-reineke/indent-blankline.nvim'
-        use { 'akinsho/bufferline.nvim', tag = 'v2.*' }
+        -- use { 'akinsho/bufferline.nvim', tag = 'v2.*' }
         use 'moll/vim-bbye'
         use 'norcalli/nvim-colorizer.lua'
         use 'windwp/nvim-autopairs'
@@ -106,6 +106,7 @@ return packer.startup({
         -- use 'MomePP/plastic-nvim'
         use 'rebelot/kanagawa.nvim'
         use { 'SmiteshP/nvim-gps', config = function () require('nvim-gps').setup() end }
+        use 'b0o/incline.nvim'
 
         -- misc. cool stuff
         -- use 'andweeb/presence.nvim' -- discord activity status
