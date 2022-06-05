@@ -10,18 +10,19 @@ incline.setup {
                 gui = 'bold'
             },
             InclineNormalNC = {
-                guifg = '#5F6672',
-                guibg = 'None',
+                guifg = '#a8a8a8',
+                -- guibg = '#2A2A37',
+                guibg = 'NONE',
             }
         }
     },
     render = function(props)
 		local bufname = vim.api.nvim_buf_get_name(props.buf)
-		if bufname == "" then
-			return "[No name]"
-		else
-			return vim.fn.fnamemodify(bufname, ":.")
-		end
+        local res = bufname ~= '' and vim.fn.fnamemodify(bufname, ':.') or '[No Name]'
+        if vim.api.nvim_buf_get_option(props.buf, 'modified') then
+            res = ' ' .. res
+        end
+        return res
 	end,
     window = {
         margin = {
