@@ -55,5 +55,4 @@ Already configured with following keybindings
 |previous | `<prefix>H` | `<prefix><C-h>` | `<prefix>h` |
 |kill | `<prefix>X` | `<prefix><C-x>` | `<prefix>x` |
 
-Refs from `craftzdog` and `tmwatchanan`
-
+---
