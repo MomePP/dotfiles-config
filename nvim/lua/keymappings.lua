@@ -135,7 +135,7 @@ keymaps.lsp = {
     ['<leader>ls'] = 'lua require"telescope.builtin".lsp_document_symbols()',
     ['<leader>ld'] = 'lua require"telescope.builtin".diagnostics()',
     ['<leader>lr'] = 'lua vim.lsp.buf.rename()',
-    ['<leader>ff'] = 'lua vim.lsp.buf.format(async = true)',
+    ['<leader>ff'] = 'lua vim.lsp.buf.format({ async = true })',
 }
 
 -- INFO: Marks keymap
