@@ -38,28 +38,18 @@ M.setup = function()
     })
 end
 
-local function lsp_highlight_document(client, bufnr)
-    if client.server_capabilities.document_highlight then
-        vim.api.nvim_create_augroup('lsp_document_highlight', { clear = true })
-        vim.api.nvim_create_autocmd('CursorHold', {
-            desc = 'lsp highlight when holding cursor on a word',
-            group = 'lsp_document_highlight',
-            buffer = bufnr,
-            callback = vim.lsp.buf.document_highlight,
-        })
-        vim.api.nvim_create_autocmd('CursorMoved', {
-            desc = 'clear lsp highlight when leaving cursor on a word',
-            group = 'lsp_document_highlight',
-            buffer = bufnr,
-            callback = vim.lsp.buf.clear_references,
-        })
+local function lsp_highlight_document(client)
+    local status_ok, illuminate = pcall(require, 'illuminate')
+    if not status_ok then
+      return
     end
+    illuminate.on_attach(client)
 end
 
 M.on_attach = function(client, bufnr)
     if client.name == 'tsserver' then client.server_capabilities.document_formatting = false end
 
-    lsp_highlight_document(client, bufnr)
+    lsp_highlight_document(client)
 end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()

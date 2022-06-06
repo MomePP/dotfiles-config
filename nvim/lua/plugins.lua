@@ -54,6 +54,8 @@ return packer.startup({
                 'williamboman/nvim-lsp-installer',
             }
         }
+        use 'RRethy/vim-illuminate'
+        use 'antoinemadec/FixCursorHold.nvim'
 
         -- git plugins
         use 'lewis6991/gitsigns.nvim'
