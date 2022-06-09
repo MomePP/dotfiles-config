@@ -94,6 +94,12 @@ telescope.setup {
         },
         current_buffer_fuzzy_find = {
             layout_strategy = 'vertical',
+        },
+        buffers = {
+            layout_strategy = 'horizontal',
+            layout_config = {
+                preview_width = 0.6
+            }
         }
     },
     extensions = {
