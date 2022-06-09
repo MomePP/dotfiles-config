@@ -1,15 +1,15 @@
 local silent = { silent = true }
 local expr = { expr = true }
 
-local keymaps = { }
+local keymaps = {}
 
-vim.keymap.set('n', '<C-l>', ':nohl<CR>')      -- clear highlight
-vim.keymap.set('n', 'dw', 'vb"_d')             -- delete a word backward
-vim.keymap.set('n', '<leader>d', '"_d')        -- delete without yank
+vim.keymap.set('n', '<C-l>', ':nohl<CR>') -- clear highlight
+vim.keymap.set('n', 'dw', 'vb"_d') -- delete a word backward
+vim.keymap.set('n', '<leader>d', '"_d') -- delete without yank
 vim.keymap.set('n', 'x', '"_x')
-vim.keymap.set('v', 'p', '"_dP')               -- replace-paste without yank
-vim.keymap.set('i', '<S-Tab>', '<C-d>')        -- de-tab while in insert mode
-vim.keymap.set('n', 'Y', 'y$')                 -- Yank line after cursor
+vim.keymap.set('v', 'p', '"_dP') -- replace-paste without yank
+vim.keymap.set('i', '<S-Tab>', '<C-d>') -- de-tab while in insert mode
+vim.keymap.set('n', 'Y', 'y$') -- Yank line after cursor
 vim.keymap.set('n', 'P', '<cmd>pu<CR>') -- Paste on new line
 
 -- INFO: map shift scroll wheel to scroll horizontal
@@ -86,15 +86,15 @@ vim.keymap.set('n', '<C-k>', '<C-o>', silent)
 vim.keymap.set('n', ']c', function() if vim.wo.diff then return ']c' end vim.schedule(function() require 'gitsigns.actions'.next_hunk() end) return '<Ignore>' end, expr)
 vim.keymap.set('n', '[c', function() if vim.wo.diff then return '[c' end vim.schedule(function() require 'gitsigns.actions'.prev_hunk() end) return '<Ignore>' end, expr)
 
-vim.keymap.set({'n', 'v'}, '<leader>hs', ':Gitsigns stage_hunk<CR>', silent)
-vim.keymap.set({'n', 'v'}, '<leader>hr', ':Gitsigns reset_hunk<CR>', silent)
+vim.keymap.set({ 'n', 'v' }, '<leader>hs', ':Gitsigns stage_hunk<CR>', silent)
+vim.keymap.set({ 'n', 'v' }, '<leader>hr', ':Gitsigns reset_hunk<CR>', silent)
 vim.keymap.set('n', '<leader>hu', ':Gitsigns undo_stage_hunk<CR>', silent)
 vim.keymap.set('n', '<leader>hR', ':Gitsigns reset_buffer<CR>', silent)
 vim.keymap.set('n', '<leader>hp', ':Gitsigns preview_hunk<CR>', silent)
 vim.keymap.set('n', '<leader>hb', ':Gitsigns blame_line<CR>', silent)
 vim.keymap.set('n', '<leader>hS', ':Gitsigns stage_buffer<CR>', silent)
 vim.keymap.set('n', '<leader>hU', ':Gitsigns reset_buffer_index<CR>', silent)
-vim.keymap.set({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>', silent)
+vim.keymap.set({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', silent)
 
 -- INFO: Telescope keymap
 vim.keymap.set('n', 'gw', ":Telescope grep_string<CR>", silent)
@@ -135,21 +135,22 @@ keymaps.lsp = {
     ['<leader>ls'] = 'lua require"telescope.builtin".lsp_document_symbols()',
     ['<leader>ld'] = 'lua require"telescope.builtin".diagnostics()',
     ['<leader>lr'] = 'lua vim.lsp.buf.rename()',
-    ['<leader>ff'] = 'lua vim.lsp.buf.format({ async = true })',
+    ['<leader>ff'] = 'lua vim.lsp.buf.formatting()',
 }
 
 -- INFO: Marks keymap
-vim.keymap.set('n', "'", function() require'marks'.next() end, silent)
-vim.keymap.set('n', '"', function() require'marks'.prev() end, silent)
-vim.keymap.set('n', "m'", function() require'marks'.toggle() end, silent)
-vim.keymap.set('n', 'm"', function() require'marks'.preview() end, silent)
-vim.keymap.set('n', 'md', function() require'marks'.delete_buf() end, silent)
+vim.keymap.set('n', "'", function() require 'marks'.next() end, silent)
+vim.keymap.set('n', '"', function() require 'marks'.prev() end, silent)
+vim.keymap.set('n', "m'", function() require 'marks'.toggle() end, silent)
+vim.keymap.set('n', 'm"', function() require 'marks'.preview() end, silent)
+vim.keymap.set('n', 'md', function() require 'marks'.delete_buf() end, silent)
 -- using telescope to show all marks list
 vim.keymap.set('n', '<leader>m', function()
     require('plugins-config.telescope').marks_picker({
         layout_strategy = 'horizontal',
         layout_config = { preview_width = 0.65 },
-    }) end, silent)
+    })
+end, silent)
 
 -- INFO: autopair keymap
 keymaps.autopair = {
@@ -164,11 +165,9 @@ vim.keymap.set('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]], silent)
 vim.keymap.set('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]], silent)
 vim.keymap.set('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]], silent)
 
--- INFO: auto-session keymaps
-vim.keymap.set('n', '<leader>sl', ':SearchSession<CR>', silent)
-vim.keymap.set('n', '<leader>ss', ':SaveSession<CR>', silent)
-vim.keymap.set('n', '<leader>sr', ':RestoreSession<CR>', silent)
-vim.keymap.set('n', '<leader>sd', ':DeleteSession<CR>', silent)
+-- INFO: session-manager keymaps
+vim.keymap.set('n', '<leader>sr', ':SessionManager load_session<CR>', silent)
+vim.keymap.set('n', '<leader>ss', ':SessionManager save_current_session<CR>', silent)
+vim.keymap.set('n', '<leader>sd', ':SessionManager delete_session<CR>', silent)
 
 return keymaps
-

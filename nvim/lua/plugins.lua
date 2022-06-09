@@ -83,7 +83,6 @@ return packer.startup({
         use { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install' }
         use 'numToStr/Comment.nvim'
         use 'lukas-reineke/indent-blankline.nvim'
-        -- use { 'akinsho/bufferline.nvim', tag = 'v2.*' }
         use 'moll/vim-bbye'
         use 'norcalli/nvim-colorizer.lua'
         use 'windwp/nvim-autopairs'
@@ -91,8 +90,7 @@ return packer.startup({
         use 'beauwilliams/focus.nvim'
         use 'chentoast/marks.nvim'
         use { 'ggandor/leap.nvim', config = function() require('leap').set_default_keymaps() end }
-        use 'rmagatti/auto-session'
-        use 'rmagatti/session-lens'
+        use 'Shatur/neovim-session-manager'
 
         -- UI decoration
         use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
@@ -100,14 +98,13 @@ return packer.startup({
         use 'p00f/nvim-ts-rainbow'
         use 'windwp/nvim-ts-autotag'
         use 'JoosepAlviste/nvim-ts-context-commentstring'
-        -- use 'tamton-aquib/staline.nvim'
         use 'nvim-lualine/lualine.nvim'
         use 'kyazdani42/nvim-web-devicons'
         use 'folke/todo-comments.nvim'
         use 'kevinhwang91/nvim-hlslens'
         -- use 'MomePP/plastic-nvim'
         use 'rebelot/kanagawa.nvim'
-        use { 'SmiteshP/nvim-gps', config = function () require('nvim-gps').setup() end }
+        use { 'SmiteshP/nvim-gps', config = function() require('nvim-gps').setup() end }
         use 'b0o/incline.nvim'
 
         -- misc. cool stuff

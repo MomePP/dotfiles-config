@@ -33,7 +33,6 @@ vim.opt.signcolumn = 'yes'
 vim.opt.termguicolors = true
 vim.opt.completeopt = 'menu,menuone,noselect'
 vim.opt.wildignore = '**/node_module/*, **/.pio/*, **/.git/*'
-vim.opt.sessionoptions:append('winpos,terminal')
 vim.opt.formatoptions:append('r')
 vim.opt.swapfile = false
 vim.opt.showmode = false

@@ -124,7 +124,9 @@ local session_status = {
     function()
         local session_name = 'none'
         if vim.v.this_session ~= '' then
-            session_name = require('auto-session-library').current_session_name()
+            local fname = vim.fn.fnamemodify(vim.v.this_session, ':t')
+            local fname_split = vim.split(fname, '__')
+            session_name = fname_split[#fname_split]
         end
         return session_name
     end,
