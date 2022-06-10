@@ -16,7 +16,12 @@ M.setup = function()
         virtual_text = false,
         signs = true,
         update_in_insert = false,
-        underline = true,
+        underline = {
+            severity = {
+                vim.diagnostic.severity.ERROR,
+                vim.diagnostic.severity.WARN
+            }
+        },
         severity_sort = true,
         float = {
             focusable = false,
@@ -41,7 +46,7 @@ end
 local function lsp_highlight_document(client)
     local status_ok, illuminate = pcall(require, 'illuminate')
     if not status_ok then
-      return
+        return
     end
     illuminate.on_attach(client)
 end
