@@ -1,7 +1,6 @@
 -- load plugin configs
 
 require('plugins-config.autopairs')
-require('plugins-config.completions')
 require('plugins-config.gitsigns')
 require('plugins-config.telescope')
 require('plugins-config.treesitter')

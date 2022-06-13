@@ -122,20 +122,22 @@ vim.keymap.set('n', '<leader>p', ':MarkdownPreviewToggle<CR>', silent)
 
 -- INFO: LSP keymap
 keymaps.lsp = {
-    gd = 'lua require"telescope.builtin".lsp_definitions()',
-    gi = 'lua require"telescope.builtin".lsp_implementations()',
-    gt = 'lua require"telescope.builtin".lsp_type_definitions()',
-    gr = 'lua require"telescope.builtin".lsp_references()',
-    gx = 'lua vim.lsp.buf.code_action()',
-    gs = 'lua vim.lsp.buf.signature_help()',
-    gp = 'lua vim.lsp.buf.hover()',
-    K = 'lua vim.lsp.buf.hover()',
-    [']d'] = 'lua vim.diagnostic.goto_next({ border = "rounded" })',
-    ['[d'] = 'lua vim.diagnostic.goto_prev({ border = "rounded" })',
-    ['<leader>ls'] = 'lua require"telescope.builtin".lsp_document_symbols()',
-    ['<leader>ld'] = 'lua require"telescope.builtin".diagnostics()',
-    ['<leader>lr'] = 'lua vim.lsp.buf.rename()',
-    ['<leader>ff'] = 'lua vim.lsp.buf.formatting()',
+    ['gd'] = function() require "telescope.builtin".lsp_definitions() end,
+    ['gD'] = function() vim.lsp.buf.declaration() end,
+    ['gi'] = function() require "telescope.builtin".lsp_implementations() end,
+    ['gt'] = function() require "telescope.builtin".lsp_type_definitions() end,
+    ['gr'] = function() require "telescope.builtin".lsp_references() end,
+    ['gx'] = function() vim.lsp.buf.code_action() end,
+    ['gs'] = function() vim.lsp.buf.signature_help() end,
+    ['gp'] = function() vim.lsp.buf.hover() end,
+    ['K'] = function() vim.lsp.buf.hover() end,
+    ['gl'] = function() vim.diagnostic.open_float() end,
+    [']d'] = function() vim.diagnostic.goto_next() end,
+    ['[d'] = function() vim.diagnostic.goto_prev() end,
+    ['<leader>ls'] = function() require "telescope.builtin".lsp_document_symbols() end,
+    ['<leader>ld'] = function() require "telescope.builtin".diagnostics() end,
+    ['<leader>lr'] = function() vim.lsp.buf.rename() end,
+    ['<leader>ff'] = function() vim.lsp.buf.formatting() end,
 }
 
 -- INFO: Marks keymap

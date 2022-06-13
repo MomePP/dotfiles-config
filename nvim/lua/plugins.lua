@@ -48,10 +48,24 @@ return packer.startup({
 
         -- LSP
         use {
-            'junnplus/nvim-lsp-setup',
+            'VonHeikemen/lsp-zero.nvim',
             requires = {
-                'neovim/nvim-lspconfig',
-                'williamboman/nvim-lsp-installer',
+                -- LSP Support
+                { 'neovim/nvim-lspconfig' },
+                { 'williamboman/nvim-lsp-installer' },
+
+                -- Autocompletion
+                { 'hrsh7th/nvim-cmp' },
+                { 'hrsh7th/cmp-nvim-lsp' },
+                { 'hrsh7th/cmp-nvim-lua' },
+                { 'hrsh7th/cmp-buffer' },
+                { 'hrsh7th/cmp-path' },
+                { 'hrsh7th/cmp-cmdline' },
+                { 'saadparwaiz1/cmp_luasnip' },
+
+                -- Snippets
+                { 'L3MON4D3/LuaSnip' },
+                { 'rafamadriz/friendly-snippets' },
             }
         }
         use 'RRethy/vim-illuminate'
@@ -59,19 +73,6 @@ return packer.startup({
 
         -- git plugins
         use 'lewis6991/gitsigns.nvim'
-
-        -- snippets
-        use 'L3MON4D3/LuaSnip'
-        use 'rafamadriz/friendly-snippets'
-
-        -- cmp plugins
-        use 'hrsh7th/nvim-cmp'
-        use 'hrsh7th/cmp-nvim-lsp'
-        use 'hrsh7th/cmp-nvim-lua'
-        use 'hrsh7th/cmp-buffer'
-        use 'hrsh7th/cmp-path'
-        use 'hrsh7th/cmp-cmdline'
-        use 'saadparwaiz1/cmp_luasnip'
 
         -- telescope
         use 'nvim-telescope/telescope.nvim'
