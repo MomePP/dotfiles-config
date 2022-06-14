@@ -122,7 +122,7 @@ local cmp_configs = {
         ghost_text = true
     },
     completion = {
-        completeopt = 'menu,menuone,noinsert'
+        completeopt = 'menu,menuone,noselect'
     }
 }
 

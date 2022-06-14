@@ -63,20 +63,20 @@ vim.keymap.set('n', '<C-w><up>', '<C-w>+')
 vim.keymap.set('n', '<C-w><down>', '<C-w>-')
 
 -- INFO: move line or visually selected block - opt+j/k - must set iterm to esc+
-vim.keymap.set('i', '<m-j>', '<Esc>:m .+1<CR>==gi')
-vim.keymap.set('i', '<m-k>', '<Esc>:m .-2<CR>==gi')
-vim.keymap.set('i', '<m-down>', '<Esc>:m .+1<CR>==gi')
-vim.keymap.set('i', '<m-up>', '<Esc>:m .-2<CR>==gi')
+vim.keymap.set('i', '<m-j>', '<Esc>:m .+1<CR>==gi', silent)
+vim.keymap.set('i', '<m-k>', '<Esc>:m .-2<CR>==gi', silent)
+vim.keymap.set('i', '<m-down>', '<Esc>:m .+1<CR>==gi', silent)
+vim.keymap.set('i', '<m-up>', '<Esc>:m .-2<CR>==gi', silent)
 
-vim.keymap.set('v', '<m-k>', ':m \'<-2<CR>gv=gv')
-vim.keymap.set('v', '<m-j>', ':m \'>+1<CR>gv=gv')
-vim.keymap.set('v', '<m-down>', ':m \'>+1<CR>gv=gv')
-vim.keymap.set('v', '<m-up>', ':m \'<-2<CR>gv=gv')
+vim.keymap.set('v', '<m-k>', ':m \'<-2<CR>gv=gv', silent)
+vim.keymap.set('v', '<m-j>', ':m \'>+1<CR>gv=gv', silent)
+vim.keymap.set('v', '<m-down>', ':m \'>+1<CR>gv=gv', silent)
+vim.keymap.set('v', '<m-up>', ':m \'<-2<CR>gv=gv', silent)
 
-vim.keymap.set('n', '<m-j>', ':m+<CR>')
-vim.keymap.set('n', '<m-k>', ':m-2<CR>')
-vim.keymap.set('n', '<m-down>', ':m+<CR>')
-vim.keymap.set('n', '<m-up>', ':m-2<CR>')
+vim.keymap.set('n', '<m-j>', ':m+<CR>', silent)
+vim.keymap.set('n', '<m-k>', ':m-2<CR>', silent)
+vim.keymap.set('n', '<m-down>', ':m+<CR>', silent)
+vim.keymap.set('n', '<m-up>', ':m-2<CR>', silent)
 
 -- INFO: remap jump keys
 vim.keymap.set('n', '<C-j>', '<C-i>', silent)
