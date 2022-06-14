@@ -148,7 +148,7 @@ vim.keymap.set('n', 'm"', function() require 'marks'.preview() end, silent)
 vim.keymap.set('n', 'md', function() require 'marks'.delete_buf() end, silent)
 -- using telescope to show all marks list
 vim.keymap.set('n', '<leader>m', function()
-    require('plugins-config.telescope').marks_picker({
+    require('plugins-config.telescope-config').marks_picker({
         layout_strategy = 'horizontal',
         layout_config = { preview_width = 0.65 },
     })
