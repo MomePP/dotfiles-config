@@ -48,7 +48,7 @@ vim.keymap.set('n', '<Tab>', ':bnext<CR>', silent)
 vim.keymap.set('n', '<S-Tab>', ':bprev<CR>', silent)
 
 -- INFO: Panes config using `focus` plugin
-vim.keymap.set('n', '<Space>', ':doautocmd BufWinEnter | FocusSplitCycle<CR>', silent)
+vim.keymap.set('n', '<Space>', ':doautocmd BufWinLeave | FocusSplitCycle<CR>', silent)
 vim.keymap.set('n', 'wt', ':FocusMaxOrEqual<CR>', silent)
 vim.keymap.set('n', 'wh', ':FocusSplitLeft<CR>', silent)
 vim.keymap.set('n', 'wl', ':FocusSplitRight<CR>', silent)
