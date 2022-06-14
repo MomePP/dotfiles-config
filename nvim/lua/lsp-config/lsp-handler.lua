@@ -32,7 +32,7 @@ lsp.set_preferences({
         error = '',
         warn = '▲',
         hint = '',
-        info = ''
+        info = ''
     }
 })
 
