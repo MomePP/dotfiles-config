@@ -42,11 +42,18 @@ lsp.on_attach(function(client, bufnr)
 end)
 
 -- config lsp per language
+
+-- disable tsserver to overrided volar lsp
+lsp.configure('tsserver', {
+    on_attach = function(client, bufnr)
+        client.resolved_capabilities.document_formatting = false
+    end
+})
+
 lsp.use('pyright', require('lsp-config.settings.pyright'), true)
 lsp.use('sumneko_lua', require('lsp-config.settings.sumneko_lua'), true)
 lsp.use('tsserver', require('lsp-config.settings.tsserver'), true)
 lsp.use('ccls', require('lsp-config.settings.ccls'), true)
-lsp.use('vuels', require('lsp-config.settings.vuels'), true)
 lsp.use('jsonls', require('lsp-config.settings.jsonls'), true)
 
 -- start the LSP plugin ...
