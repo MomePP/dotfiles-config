@@ -107,6 +107,7 @@ return packer.startup({
         use 'rebelot/kanagawa.nvim'
         use { 'SmiteshP/nvim-gps', config = function() require('nvim-gps').setup() end }
         use 'b0o/incline.nvim'
+        use 'folke/lsp-colors.nvim'
 
         -- misc. cool stuff
         -- use 'andweeb/presence.nvim' -- discord activity status
