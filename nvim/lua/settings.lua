@@ -31,7 +31,7 @@ vim.opt.lazyredraw = true
 vim.opt.wrap = false
 vim.opt.signcolumn = 'yes'
 vim.opt.termguicolors = true
-vim.opt.completeopt = 'menu,menuone,noselect'
+vim.opt.completeopt:append('menuone,noselect')
 vim.opt.wildignore = '**/node_module/*, **/.pio/*, **/.git/*'
 vim.opt.formatoptions:append('r')
 vim.opt.swapfile = false
