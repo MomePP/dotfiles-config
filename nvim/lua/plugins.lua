@@ -92,7 +92,7 @@ return packer.startup({
         use 'chentoast/marks.nvim'
         use { 'ggandor/leap.nvim', config = function() require('leap').set_default_keymaps() end }
         use 'Shatur/neovim-session-manager'
-        use { 'Darazaki/indent-o-matic', config = function () require('indent-o-matic').setup {} end}
+        use { 'Darazaki/indent-o-matic', config = function() require('indent-o-matic').setup {} end }
 
         -- UI decoration
         use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
