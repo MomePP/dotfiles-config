@@ -1,5 +1,17 @@
-local status_ok, lsp = pcall(require, 'lsp-zero')
-if not status_ok then return end
+local lsp_status_ok, lsp = pcall(require, 'lsp-zero')
+if not lsp_status_ok then return end
+
+-- ----------------------------------------------------------------------
+--  lsp installer configs
+--
+local lsp_installer_status_ok, lsp_installer = pcall(require, 'nvim-lsp-installer')
+if not lsp_installer_status_ok then return end
+
+lsp_installer.settings({
+    ui = {
+        border = 'rounded'
+    }
+})
 
 -- ----------------------------------------------------------------------
 --  lsp configs
