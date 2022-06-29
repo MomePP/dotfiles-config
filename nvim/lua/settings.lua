@@ -1,4 +1,3 @@
-local cmd = vim.cmd
 local indent_size = 4
 
 vim.opt.syntax = 'on'
@@ -78,12 +77,12 @@ vim.api.nvim_create_autocmd('FocusGained', {
     command = ':checktime'
 })
 
-cmd [[filetype plugin indent on]]
+vim.cmd [[filetype plugin indent on]]
 
 -- Command-line abbreviations
 -- cnoreabbrev g Git
 -- cnoreabbrev gopen GBrowse
-cmd([[
+vim.cmd([[
 cnoreabbrev W! w!
 cnoreabbrev Q! q!
 cnoreabbrev Qall! qall!
@@ -100,5 +99,5 @@ cnoreabbrev Qall qall
 -- INFO: global lua func for lazygit remoted to open file
 function _OpenFile(filePath)
     local exec_cmd = "edit " .. filePath
-    vim.defer_fn(function () cmd(exec_cmd) end, 100)
+    vim.defer_fn(function () vim.cmd(exec_cmd) end, 100)
 end

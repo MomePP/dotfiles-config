@@ -70,45 +70,55 @@ return packer.startup({
         }
         use 'RRethy/vim-illuminate'
         use 'antoinemadec/FixCursorHold.nvim'
+        use 'folke/lsp-colors.nvim'
 
-        -- git plugins
+        -- Git plugins
         use 'lewis6991/gitsigns.nvim'
 
-        -- telescope
+        -- Telescope
         use 'nvim-telescope/telescope.nvim'
         use 'nvim-telescope/telescope-file-browser.nvim'
         use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
         use 'nvim-telescope/telescope-ui-select.nvim'
 
-        -- utilities
-        use { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install' }
-        use 'numToStr/Comment.nvim'
-        use 'lukas-reineke/indent-blankline.nvim'
-        use 'moll/vim-bbye'
-        use 'norcalli/nvim-colorizer.lua'
-        use 'windwp/nvim-autopairs'
-        use 'akinsho/toggleterm.nvim'
-        use 'beauwilliams/focus.nvim'
-        use 'chentoast/marks.nvim'
-        use { 'ggandor/leap.nvim', config = function() require('leap').set_default_keymaps() end }
-        use 'Shatur/neovim-session-manager'
-        use { 'Darazaki/indent-o-matic', config = function() require('indent-o-matic').setup {} end }
-
-        -- UI decoration
+        -- Treesitter
         use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
         use 'nvim-treesitter/nvim-treesitter-textobjects'
         use 'p00f/nvim-ts-rainbow'
         use 'windwp/nvim-ts-autotag'
         use 'JoosepAlviste/nvim-ts-context-commentstring'
-        use 'nvim-lualine/lualine.nvim'
+
+        -- Terminal
+        use 'akinsho/toggleterm.nvim'
+
+        -- Window management
+        use 'beauwilliams/focus.nvim'
+
+        -- Session management
+        use 'Shatur/neovim-session-manager'
+
+        -- Utilities
+        use { 'moll/vim-bbye', ptp = 'viml' }
+        use 'numToStr/Comment.nvim'
+        use 'norcalli/nvim-colorizer.lua'
+        use 'windwp/nvim-autopairs'
+        use 'chentoast/marks.nvim'
+        use { 'ggandor/leap.nvim', config = function() require('leap').set_default_keymaps() end }
+        use { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install' }
+
+        -- UI decoration
         use 'kyazdani42/nvim-web-devicons'
+        use 'nvim-lualine/lualine.nvim'
         use 'folke/todo-comments.nvim'
         use 'kevinhwang91/nvim-hlslens'
-        -- use 'MomePP/plastic-nvim'
-        use 'rebelot/kanagawa.nvim'
         use { 'SmiteshP/nvim-gps', config = function() require('nvim-gps').setup() end }
         use 'b0o/incline.nvim'
-        use 'folke/lsp-colors.nvim'
+        use 'lukas-reineke/indent-blankline.nvim'
+        use { 'Darazaki/indent-o-matic', config = function() require('indent-o-matic').setup {} end }
+
+        -- Color Schemes
+        -- use 'MomePP/plastic-nvim'
+        use 'rebelot/kanagawa.nvim'
 
         -- misc. cool stuff
         -- use 'andweeb/presence.nvim' -- discord activity status
