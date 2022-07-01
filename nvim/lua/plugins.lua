@@ -68,7 +68,7 @@ return packer.startup({
                 { 'rafamadriz/friendly-snippets' },
             }
         }
-        use 'RRethy/vim-illuminate'
+        use { 'RRethy/vim-illuminate', ptp = 'viml' }
         use 'antoinemadec/FixCursorHold.nvim'
         use 'folke/lsp-colors.nvim'
 

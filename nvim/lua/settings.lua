@@ -52,20 +52,6 @@ vim.api.nvim_create_autocmd('FileType', {
     command = ':wincmd L | :vert'
 })
 
-vim.api.nvim_create_augroup('BgHighlight', { clear = true })
-vim.api.nvim_create_autocmd('WinEnter', {
-    desc = 'set cursorline bg highlight when enter window',
-    group = 'BgHighlight',
-    pattern = '*',
-    command = 'set cursorline'
-})
-vim.api.nvim_create_autocmd('WinLeave', {
-    desc = 'remove cursorline bg highlight when leave window',
-    group = 'BgHighlight',
-    pattern = '*',
-    command = 'set nocursorline'
-})
-
 vim.api.nvim_create_autocmd('TextYankPost', {
     desc = 'highlight text on yank',
     pattern = '*',
@@ -75,6 +61,19 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- check if we need to reload file when it changed
 vim.api.nvim_create_autocmd('FocusGained', {
     command = ':checktime'
+})
+
+-- disable search highlight when enter terminal mode and re-enable when leave
+vim.api.nvim_create_augroup('TermHLSearch', { clear = true })
+vim.api.nvim_create_autocmd('TermEnter', {
+    desc = 'disable hlsearch when enter terminal mode',
+    group = 'TermHLSearch',
+    command = ':setlocal nohlsearch'
+})
+vim.api.nvim_create_autocmd('TermLeave', {
+    desc = 'enable hlsearch when leave terminal mode',
+    group = 'TermHLSearch',
+    command = ':setlocal hlsearch'
 })
 
 vim.cmd [[filetype plugin indent on]]
