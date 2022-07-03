@@ -17,13 +17,13 @@ incline.setup {
         }
     },
     render = function(props)
-		local bufname = vim.api.nvim_buf_get_name(props.buf)
+        local bufname = vim.api.nvim_buf_get_name(props.buf)
         local res = bufname ~= '' and vim.fn.fnamemodify(bufname, ':.') or '[No Name]'
         if vim.api.nvim_buf_get_option(props.buf, 'modified') then
             res = ' ' .. res
         end
         return res
-	end,
+    end,
     window = {
         margin = {
             horizontal = 0,
@@ -31,4 +31,10 @@ incline.setup {
         }
     }
 }
+
+-- PERF: remove some of events triggered by incline that not being used in my config
+vim.api.nvim_clear_autocmds({
+    group = 'incline',
+    event = { 'CursorMoved', 'CursorMovedI', 'CursorHold', 'CursorHoldI' }
+})
 

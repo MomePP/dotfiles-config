@@ -1,7 +1,5 @@
-local cmd = vim.cmd
-
 -- vim.g.plastic_nvim_transparent_bg = true
--- cmd 'colorscheme plastic-nvim'
+-- vim.cmd('colorscheme plastic-nvim')
 
 local kanagawa_colors = require('kanagawa.colors').setup()
 local overrided_hlgroup = {
@@ -10,11 +8,11 @@ local overrided_hlgroup = {
 }
 
 require('kanagawa').setup({
-    undercurl = true,           -- enable undercurls
-    transparent = true,        -- do not set background color
+    undercurl = true, -- enable undercurls
+    transparent = true, -- do not set background color
     overrides = overrided_hlgroup,
 })
-cmd 'colorscheme kanagawa'
+vim.cmd('colorscheme kanagawa')
 
 -- override signcolumn fg to be transparent
 vim.highlight.create('SignColumn', { guifg = 'NONE', guibg = 'NONE' }, false)

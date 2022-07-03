@@ -2,7 +2,7 @@ local status_ok, blankline = pcall(require, 'indent_blankline')
 if not status_ok then return end
 
 blankline.setup {
-    -- use_treesitter = true,
+    use_treesitter = true,
     -- use_treesitter_scope = true,
     filetype_exclude = {
         'man',

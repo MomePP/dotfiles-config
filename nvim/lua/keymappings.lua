@@ -12,6 +12,17 @@ vim.keymap.set('i', '<S-Tab>', '<C-d>') -- de-tab while in insert mode
 vim.keymap.set('n', 'Y', 'y$') -- Yank line after cursor
 vim.keymap.set('n', 'P', '<cmd>pu<CR>') -- Paste on new line
 
+-- INFO: command-line abbreviations
+vim.keymap.set('c', 'W', 'w')
+vim.keymap.set('c', 'W!', 'w!')
+vim.keymap.set('c', 'Wq', 'wq')
+vim.keymap.set('c', 'WQ', 'wq')
+vim.keymap.set('c', 'Wa', 'wa')
+vim.keymap.set('c', 'Q', 'q')
+vim.keymap.set('c', 'Q!', 'q!')
+vim.keymap.set('c', 'Qa', 'qa')
+vim.keymap.set('c', 'QA', 'qa')
+
 -- INFO: map shift scroll wheel to scroll horizontal
 vim.keymap.set('', '<S-ScrollWheelUp>', 'zh')
 vim.keymap.set('', '<S-2-ScrollWheelUp>', '2zh')
