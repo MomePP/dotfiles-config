@@ -1,11 +1,7 @@
 #!/bin/bash
 
 # WARN: must have brew installed
-brew install wget neovim lazygit git-flow git-delta ripgrep gotop fd neovim-remote
-
-# NOTE: add neovim-remote config to default shell config (currently using fish)
-# currently handles by using lazygit config -> the downside, it cannot use lazygit outside nvim
-# echo -e "export VISUAL=\"nvr --remote-wait + 'set bufhidden=wipe'\"\n" >> ~/.config/fish/config.fish
+brew install wget neovim lazygit git-flow git-delta ripgrep gotop fd
 
 # -- move nvim config files to local config directory
 config_path=~/.config
