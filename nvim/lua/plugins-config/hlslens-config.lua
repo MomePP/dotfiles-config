@@ -17,11 +17,7 @@ hlslens.setup({
         local lnum, col = unpack(plist[idx])
         if nearest then
             local cnt = #plist
-            if indicator ~= '' then
-                text = ('[%s %d/%d]'):format(indicator, idx, cnt)
-            else
-                text = ('[%d/%d]'):format(idx, cnt)
-            end
+            text = ('[%d/%d]'):format(idx, cnt)
             chunks = {{' ', 'Ignore'}, {text, 'HlSearchLensNear'}}
         else
             text = ('[%s %d]'):format(indicator, idx)

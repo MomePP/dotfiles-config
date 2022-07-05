@@ -15,5 +15,5 @@ require('kanagawa').setup({
 vim.cmd('colorscheme kanagawa')
 
 -- override signcolumn fg to be transparent
-vim.highlight.create('SignColumn', { guifg = 'NONE', guibg = 'NONE' }, false)
-vim.highlight.create('Pmenu', { guifg = 'NONE', guibg = 'NONE' }, false)
+vim.api.nvim_set_hl(0, 'SignColumn', { fg = 'NONE', bg = 'NONE' })
+vim.api.nvim_set_hl(0, 'Pmenu', { fg = 'NONE', bg = 'NONE' })
