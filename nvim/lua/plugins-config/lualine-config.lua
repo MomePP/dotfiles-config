@@ -3,7 +3,7 @@ if not lualine_loadded then return end
 -- local theme_loadded, plastic_lualine = pcall(require, "lualine.plastic")
 -- if not theme_loadded then plastic_lualine = 'auto' end -- set fallback theme
 
-local gps = require('nvim-gps')
+local navic = require('nvim-navic')
 
 local colors = {
     black       = 234,
@@ -55,15 +55,15 @@ local diagnostics = {
 
 local gps_location = {
     function()
-        local gps_text = gps.get_location()
+        local gps_text = navic.get_location()
         if #gps_text ~= 0 then
-            return '> ' .. gps_text
+            return ' ' .. gps_text
         else
             return ''
         end
     end,
     color = { fg = colors.purple },
-    cond = gps.is_available
+    cond = navic.is_available
 }
 
 -- local filesize = {

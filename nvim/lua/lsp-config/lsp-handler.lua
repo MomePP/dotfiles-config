@@ -32,6 +32,13 @@ local function lsp_keymaps(bufnr, mapping)
     end
 end
 
+local function lsp_navic(client, bufnr)
+    local loaded_plugin, navic = pcall(require, 'nvim-navic')
+    if not loaded_plugin then return end
+
+    navic.attach(client, bufnr)
+end
+
 lsp.set_preferences({
     suggest_lsp_servers = true,
     setup_servers_on_start = true,
@@ -51,6 +58,7 @@ lsp.set_preferences({
 lsp.on_attach(function(client, bufnr)
     lsp_keymaps(bufnr, lsp_keys_mapping)
     lsp_highlight_document(client)
+    lsp_navic(client, bufnr)
 end)
 
 -- config lsp per language
