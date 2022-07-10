@@ -18,6 +18,7 @@ local colors = {
 
 -- INFO: winbar colorscheme
 -- New winbar colorscheme
+vim.api.nvim_set_hl(0, 'WinBar', { fg = colors.white, bold = true })
 vim.api.nvim_set_hl(0, 'WinBarPath', { fg = colors.white, bg = colors.purple })
 vim.api.nvim_set_hl(0, 'WinBarModified', { fg = colors.red, bg = colors.transparent })
 vim.api.nvim_set_hl(0, 'WinBarNC', { fg = colors.gray, bg = colors.transparent, bold = false })

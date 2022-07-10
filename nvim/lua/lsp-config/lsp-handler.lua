@@ -1,17 +1,40 @@
-local lsp_status_ok, lsp = pcall(require, 'lsp-zero')
+local lsp_status_ok, lsp_setup = pcall(require, 'nvim-lsp-setup')
 if not lsp_status_ok then return end
 
 -- ----------------------------------------------------------------------
---  lsp installer configs
+--  diagnostics configs
 --
-local lsp_installer_status_ok, lsp_installer = pcall(require, 'nvim-lsp-installer')
-if not lsp_installer_status_ok then return end
+local diagnostic_signs = {
+    { name = 'DiagnosticSignError', text = '' },
+    { name = 'DiagnosticSignWarn', text = '▲' },
+    { name = 'DiagnosticSignHint', text = '' },
+    { name = 'DiagnosticSignInfo', text = '' },
+}
 
-lsp_installer.settings({
-    ui = {
-        border = 'rounded'
-    }
-})
+local diagnostic_config = {
+    virtual_text = false,
+    severity_sort = true,
+    float = {
+        focusable = false,
+        style = 'minimal',
+        border = 'rounded',
+        source = 'always',
+        header = '',
+        prefix = '',
+    },
+}
+
+-- setup diagnostic signs
+for _, sign in ipairs(diagnostic_signs) do
+    vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text })
+end
+
+-- setup diagnostic configs
+vim.diagnostic.config(diagnostic_config)
+
+-- setup round bordered floating window for cursor hover and signature help
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
 
 -- ----------------------------------------------------------------------
 --  lsp configs
@@ -39,34 +62,28 @@ local function lsp_navic(client, bufnr)
     navic.attach(client, bufnr)
 end
 
-lsp.set_preferences({
-    suggest_lsp_servers = true,
-    setup_servers_on_start = true,
-    set_lsp_keymaps = false,
-    configure_diagnostics = true,
-    cmp_capabilities = true,
-    manage_nvim_cmp = false,
-    call_servers = 'local',
-    sign_icons = {
-        error = '',
-        warn = '▲',
-        hint = '',
-        info = ''
+lsp_setup.setup({
+    installer = {
+        ui = {
+            border = 'rounded'
+        }
+    },
+    default_mappings = false,
+    on_attach = function(client, bufnr)
+        lsp_keymaps(bufnr, lsp_keys_mapping)
+        lsp_highlight_document(client)
+        lsp_navic(client, bufnr)
+    end,
+    servers = {
+        pyright = require('lsp-config.settings.pyright'),
+        ccls = require('lsp-config.settings.ccls'),
+        tsserver = require('lsp-config.settings.tsserver'),
+        jsonls = require('lsp-config.settings.jsonls'),
+        sumneko_lua = require('lsp-config.settings.sumneko_lua'),
+        ltex = {},
+        cssls = {},
+        rust_analyzer = {},
+        volar = {},
+        html = {},
     }
 })
-
-lsp.on_attach(function(client, bufnr)
-    lsp_keymaps(bufnr, lsp_keys_mapping)
-    lsp_highlight_document(client)
-    lsp_navic(client, bufnr)
-end)
-
--- config lsp per language
-lsp.use('pyright', require('lsp-config.settings.pyright'), true)
-lsp.use('sumneko_lua', require('lsp-config.settings.sumneko_lua'), true)
-lsp.use('tsserver', require('lsp-config.settings.tsserver'), true)
-lsp.use('ccls', require('lsp-config.settings.ccls'), true)
-lsp.use('jsonls', require('lsp-config.settings.jsonls'), true)
-
--- start the LSP plugin ...
-lsp.setup()

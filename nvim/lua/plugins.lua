@@ -48,14 +48,17 @@ return packer.startup({
 
         -- LSP
         use {
-            'VonHeikemen/lsp-zero.nvim',
+            'junnplus/nvim-lsp-setup',
             requires = {
                 -- LSP Support
                 { 'neovim/nvim-lspconfig' },
                 { 'williamboman/nvim-lsp-installer' },
-
+            }
+        }
+        use {
+            'hrsh7th/nvim-cmp',
+            requires = {
                 -- Autocompletion
-                { 'hrsh7th/nvim-cmp' },
                 { 'hrsh7th/cmp-nvim-lsp' },
                 { 'hrsh7th/cmp-nvim-lua' },
                 { 'hrsh7th/cmp-buffer' },
@@ -70,7 +73,7 @@ return packer.startup({
         }
         use { 'RRethy/vim-illuminate', ptp = 'viml' }
         use 'antoinemadec/FixCursorHold.nvim'
-        use 'folke/lsp-colors.nvim'
+        use { 'Maan2003/lsp_lines.nvim', config = function() require("lsp_lines").register_lsp_virtual_lines() end }
 
         -- Git plugins
         use 'lewis6991/gitsigns.nvim'
