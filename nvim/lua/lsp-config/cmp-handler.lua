@@ -141,6 +141,3 @@ cmp.setup.cmdline(':', {
         { name = 'cmdline' }
     })
 })
-
--- link cmp icons highlighting
-vim.highlight.link('CmpItemKind', 'CmpItemMenuDefault')
