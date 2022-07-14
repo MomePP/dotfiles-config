@@ -48,18 +48,12 @@ vim.keymap.set('i', '?', '?<C-g>u')
 -- vim.keymap.set('n', 'k', '(v:count > 5 ? "m\'" . v:count : "") . "k"', expr)
 -- vim.keymap.set('n', 'j', '(v:count > 5 ? "m\'" . v:count : "") . "j"', expr)
 
--- INFO: Bufferline config
--- vim.keymap.set('n', '<Tab>', ':BufferLineCycleNext<CR>', silent)
--- vim.keymap.set('n', '<S-Tab>', ':BufferLineCyclePrev<CR>', silent)
--- vim.keymap.set('n', 't]', ':BufferLineMoveNext<CR>', silent)
--- vim.keymap.set('n', 't[', ':BufferLineMovePrev<CR>', silent)
--- vim.keymap.set('n', 'tp', ':BufferLinePick<CR>', silent)
+-- INFO: Buffers navigated keys
 vim.keymap.set('n', 'tq', ':Bdelete<CR>', silent)
 vim.keymap.set('n', '<Tab>', ':bnext<CR>', silent)
 vim.keymap.set('n', '<S-Tab>', ':bprev<CR>', silent)
 
 -- INFO: Panes config using `focus` plugin
--- vim.keymap.set('n', '<Space>', ':doautocmd BufWinLeave | FocusSplitCycle<CR>', silent)
 vim.keymap.set('n', '<Space>', ':FocusSplitCycle<CR>', silent)
 vim.keymap.set('n', 'wt', ':FocusMaxOrEqual<CR>', silent)
 vim.keymap.set('n', 'wh', ':FocusSplitLeft<CR>', silent)
@@ -127,7 +121,6 @@ keymaps.toggleterm = {
 }
 vim.keymap.set('n', '<leader>g', function() _LAZYGIT_TOGGLE() end, silent)
 vim.keymap.set('n', '<leader>P', function() _GOTOP_TOGGLE() end, silent)
--- vim.keymap.set('n', '<leader>s', function() _SPOTIFY_TOGGLE() end, silent)
 
 -- INFO: markdown preview keymap
 vim.keymap.set('n', '<leader>p', ':MarkdownPreviewToggle<CR>', silent)
@@ -158,6 +151,7 @@ vim.keymap.set('n', '"', function() require 'marks'.prev() end, silent)
 vim.keymap.set('n', "m'", function() require 'marks'.toggle() end, silent)
 vim.keymap.set('n', 'm"', function() require 'marks'.preview() end, silent)
 vim.keymap.set('n', 'md', function() require 'marks'.delete_buf() end, silent)
+
 -- using telescope to show all marks list
 vim.keymap.set('n', '<leader>m', function()
     require('plugins-config.telescope-config').marks_picker({

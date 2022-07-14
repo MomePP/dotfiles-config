@@ -114,10 +114,9 @@ return packer.startup({
         use 'nvim-lualine/lualine.nvim'
         use 'folke/todo-comments.nvim'
         use 'kevinhwang91/nvim-hlslens'
-        -- use 'b0o/incline.nvim'
         use 'lukas-reineke/indent-blankline.nvim'
         use { 'Darazaki/indent-o-matic', config = function() require('indent-o-matic').setup {} end }
-        use { 'SmiteshP/nvim-navic', config = function() require('nvim-navic').setup { separator = '  ', depth_limit = 6, } end }
+        use 'SmiteshP/nvim-navic'
 
         -- Color Schemes
         -- use 'MomePP/plastic-nvim'
