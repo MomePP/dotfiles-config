@@ -1,4 +1,4 @@
-local status_ok, toggleterm = pcall(require, "toggleterm")
+local status_ok, toggleterm = pcall(require, 'toggleterm')
 if not status_ok then return end
 
 local toggleterm_keymap = require('keymappings').toggleterm
@@ -6,56 +6,45 @@ local toggleterm_keymap = require('keymappings').toggleterm
 toggleterm.setup({
 	size = 20,
 	open_mapping = toggleterm_keymap.toggle,
-	hide_numbers = true,
-	shade_filetypes = {},
 	shade_terminals = true,
 	shading_factor = 2,
-	start_in_insert = true,
-	insert_mappings = true,
-	persist_size = true,
-	direction = "float",
-	close_on_exit = true,
-	shell = vim.o.shell,
+	direction = 'float',
 	float_opts = {
-		border = "curved",
-		winblend = 0,
-		highlights = {
-			border = "Normal",
-			background = "Normal",
-		},
+		border = 'curved',
 	},
 })
 
 
-local Terminal = require("toggleterm.terminal").Terminal
+local Terminal = require('toggleterm.terminal').Terminal
 
-local lazygit = Terminal:new({ cmd = "lazygit", count=20, hidden = true })
+local lazygit = Terminal:new({ cmd = 'lazygit', count = 20, hidden = true })
 function _LAZYGIT_TOGGLE()
 	lazygit:toggle()
 end
 
--- local node = Terminal:new({ cmd = "node", hidden = true })
+-- local node = Terminal:new({ cmd = 'node', hidden = true })
 -- function _NODE_TOGGLE()
 -- 	node:toggle()
 -- end
 --
--- local ncdu = Terminal:new({ cmd = "ncdu", hidden = true })
+-- local ncdu = Terminal:new({ cmd = 'ncdu', hidden = true })
 -- function _NCDU_TOGGLE()
 -- 	ncdu:toggle()
 -- end
 --
-local gotop = Terminal:new({ cmd = "gotop", count=21, hidden = true })
+local gotop = Terminal:new({ cmd = 'gotop', count = 21, hidden = true })
 function _GOTOP_TOGGLE()
 	gotop:toggle()
 end
+
 --
--- local python = Terminal:new({ cmd = "python", hidden = true })
+-- local python = Terminal:new({ cmd = 'python', hidden = true })
 -- function _PYTHON_TOGGLE()
 -- 	python:toggle()
 -- end
 --
 
--- local spotify = Terminal:new({ cmd = "spt", hidden = true })
+-- local spotify = Terminal:new({ cmd = 'spt', hidden = true })
 -- function _SPOTIFY_TOGGLE()
 --   spotify:toggle()
 -- end
