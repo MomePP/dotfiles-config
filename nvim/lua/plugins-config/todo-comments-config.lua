@@ -1,6 +1,13 @@
 local status_ok, todocomments = pcall(require, 'todo-comments')
 if not status_ok then return end
 
+-- HACK: #104 Invalid in command-line window
+local hl = require("todo-comments.highlight")
+local highlight_win = hl.highlight_win
+hl.highlight_win = function(win, force)
+	pcall(highlight_win, win, force)
+end
+
 todocomments.setup {
     signs = false, -- show icons in the signs column
     sign_priority = 8, -- sign priority
