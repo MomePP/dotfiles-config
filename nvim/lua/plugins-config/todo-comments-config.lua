@@ -9,15 +9,15 @@ hl.highlight_win = function(win, force)
 end
 
 todocomments.setup {
-    signs = false, -- show icons in the signs column
+    signs = true, -- show icons in the signs column
     sign_priority = 8, -- sign priority
     -- keywords recognized as todo comments
     keywords = {
-        NOTE = { icon = " ", color = "note" },
+        INFO = { icon = " ", color = "info" },
         TODO = { icon = " ", color = "todo" },
         HACK = { icon = " ", color = "hack" },
         WARN = { icon = " ", color = "warn", alt = { "WARNING" } },
-        INFO = { icon = " ", color = "info", alt = { "HINT" } },
+        NOTE = { icon = " ", color = "hint", alt = { "HINT" } },
         PERF = { icon = " ", color = "perf", alt = { "OPTIMIZE" } },
         FIX = { icon = " ", color = "error", alt = { "ERROR", "BUG", "ISSUE" } },
     },
@@ -40,7 +40,7 @@ todocomments.setup {
     colors = {
         error = { "#D74E42" },
         warn = { "#E9D16C" },
-        note = { "#98C379" },
+        hint = { "#98C379" },
         perf = { "#1085FF" },
         info = { "#61AFEF" },
         todo = { "#B57EDC" },
