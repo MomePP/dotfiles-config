@@ -87,9 +87,9 @@ return packer.startup({
         -- Treesitter
         use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
         use 'nvim-treesitter/nvim-treesitter-textobjects'
-        use 'p00f/nvim-ts-rainbow'
-        use 'windwp/nvim-ts-autotag'
         use 'JoosepAlviste/nvim-ts-context-commentstring'
+        use 'windwp/nvim-ts-autotag'
+        use 'p00f/nvim-ts-rainbow'
 
         -- Terminal
         use 'akinsho/toggleterm.nvim'
@@ -124,6 +124,7 @@ return packer.startup({
 
         -- misc. cool stuff
         -- use 'andweeb/presence.nvim' -- discord activity status
+        -- use { 'dstein64/vim-startuptime', ptp = 'viml' }
         use { 'wakatime/vim-wakatime', ptp = 'viml' }
 
         -- Automatically set up your configuration after cloning packer.nvim
