@@ -73,7 +73,7 @@ return packer.startup({
         }
         use { 'RRethy/vim-illuminate', ptp = 'viml' }
         use 'antoinemadec/FixCursorHold.nvim'
-        use { 'Maan2003/lsp_lines.nvim', config = function() require("lsp_lines").register_lsp_virtual_lines() end }
+        use { 'Maan2003/lsp_lines.nvim', config = function() require("lsp_lines").setup() end }
 
         -- Git plugins
         use 'lewis6991/gitsigns.nvim'
