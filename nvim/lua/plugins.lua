@@ -71,7 +71,7 @@ return packer.startup({
                 { 'rafamadriz/friendly-snippets' },
             }
         }
-        use { 'RRethy/vim-illuminate', ptp = 'viml' }
+        use 'RRethy/vim-illuminate'
         use 'antoinemadec/FixCursorHold.nvim'
         use { 'Maan2003/lsp_lines.nvim', config = function() require("lsp_lines").setup() end }
 
@@ -81,11 +81,11 @@ return packer.startup({
         -- Telescope
         use 'nvim-telescope/telescope.nvim'
         use 'nvim-telescope/telescope-file-browser.nvim'
-        use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
         use 'nvim-telescope/telescope-ui-select.nvim'
+        use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
 
         -- Treesitter
-        use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+        use { 'nvim-treesitter/nvim-treesitter', run = function() require('nvim-treesitter.install').update({ with_sync = true }) end }
         use 'nvim-treesitter/nvim-treesitter-textobjects'
         use 'JoosepAlviste/nvim-ts-context-commentstring'
         use 'windwp/nvim-ts-autotag'
@@ -101,7 +101,7 @@ return packer.startup({
         use 'Shatur/neovim-session-manager'
 
         -- Utilities
-        use { 'moll/vim-bbye', ptp = 'viml' }
+        use 'moll/vim-bbye'
         use 'numToStr/Comment.nvim'
         use 'norcalli/nvim-colorizer.lua'
         use 'windwp/nvim-autopairs'
@@ -115,8 +115,8 @@ return packer.startup({
         use 'folke/todo-comments.nvim'
         use 'kevinhwang91/nvim-hlslens'
         use 'lukas-reineke/indent-blankline.nvim'
-        use { 'Darazaki/indent-o-matic', config = function() require('indent-o-matic').setup {} end }
         use 'SmiteshP/nvim-navic'
+        use { 'Darazaki/indent-o-matic', config = function() require('indent-o-matic').setup {} end }
 
         -- Color Schemes
         -- use 'MomePP/plastic-nvim'
@@ -124,8 +124,8 @@ return packer.startup({
 
         -- misc. cool stuff
         -- use 'andweeb/presence.nvim' -- discord activity status
-        -- use { 'dstein64/vim-startuptime', ptp = 'viml' }
-        use { 'wakatime/vim-wakatime', ptp = 'viml' }
+        -- use 'dstein64/vim-startuptime'
+        use 'wakatime/vim-wakatime'
 
         -- Automatically set up your configuration after cloning packer.nvim
         -- Put this at the end after all plugins
