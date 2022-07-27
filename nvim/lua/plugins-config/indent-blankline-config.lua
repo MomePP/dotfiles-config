@@ -3,7 +3,7 @@ if not status_ok then return end
 
 blankline.setup {
     use_treesitter = true,
-    -- use_treesitter_scope = true,
+    use_treesitter_scope = true,
     filetype_exclude = {
         'man',
         'checkhealth',
