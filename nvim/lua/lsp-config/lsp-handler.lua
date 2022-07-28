@@ -1,6 +1,3 @@
-local lsp_status_ok, lsp_setup = pcall(require, 'nvim-lsp-setup')
-if not lsp_status_ok then return end
-
 -- ----------------------------------------------------------------------
 --  diagnostics configs
 --
@@ -39,6 +36,9 @@ vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.s
 -- ----------------------------------------------------------------------
 --  lsp configs
 --
+local lsp_status_ok, lsp_setup = pcall(require, 'nvim-lsp-setup')
+if not lsp_status_ok then return end
+
 local lsp_keys_mapping = require('keymappings').lsp
 
 local function lsp_highlight_document(client)
@@ -63,11 +63,6 @@ local function lsp_navic(client, bufnr)
 end
 
 lsp_setup.setup({
-    installer = {
-        ui = {
-            border = 'rounded'
-        }
-    },
     default_mappings = false,
     on_attach = function(client, bufnr)
         lsp_keymaps(bufnr, lsp_keys_mapping)
@@ -76,14 +71,21 @@ lsp_setup.setup({
     end,
     servers = {
         pyright = require('lsp-config.settings.pyright'),
-        ccls = require('lsp-config.settings.ccls'),
         tsserver = require('lsp-config.settings.tsserver'),
         jsonls = require('lsp-config.settings.jsonls'),
         sumneko_lua = require('lsp-config.settings.sumneko_lua'),
+        clangd = {},
         ltex = {},
         cssls = {},
         rust_analyzer = {},
         volar = {},
         html = {},
+    }
+})
+
+--- configure mason after lsp-setup intialized
+require('mason').setup({
+    ui = {
+        border = 'rounded'
     }
 })

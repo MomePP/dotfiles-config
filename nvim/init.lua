@@ -3,9 +3,8 @@ if not vim.g.vscode then
     -- print('start from native neovim !!')
     -- nvim setting configs
     require 'settings'
-    -- local impatient_status, impatient = pcall(require, 'impatient')
+    local impatient_status, impatient = pcall(require, 'impatient')
     -- if impatient_status then impatient.enable_profile() end
-    require 'impatient'
 
     -- install plugins
     require 'plugins'

@@ -51,24 +51,25 @@ return packer.startup({
             'junnplus/nvim-lsp-setup',
             requires = {
                 -- LSP Support
-                { 'neovim/nvim-lspconfig' },
-                { 'williamboman/nvim-lsp-installer' },
+                'neovim/nvim-lspconfig',
+                'williamboman/mason.nvim',
+                'williamboman/mason-lspconfig.nvim',
             }
         }
         use {
             'hrsh7th/nvim-cmp',
             requires = {
                 -- Autocompletion
-                { 'hrsh7th/cmp-nvim-lsp' },
-                { 'hrsh7th/cmp-nvim-lua' },
-                { 'hrsh7th/cmp-buffer' },
-                { 'hrsh7th/cmp-path' },
-                { 'hrsh7th/cmp-cmdline' },
-                { 'saadparwaiz1/cmp_luasnip' },
+                'hrsh7th/cmp-nvim-lsp',
+                'hrsh7th/cmp-nvim-lua',
+                'hrsh7th/cmp-buffer',
+                'hrsh7th/cmp-path',
+                'hrsh7th/cmp-cmdline',
+                'saadparwaiz1/cmp_luasnip',
 
                 -- Snippets
-                { 'L3MON4D3/LuaSnip' },
-                { 'rafamadriz/friendly-snippets' },
+                'L3MON4D3/LuaSnip',
+                'rafamadriz/friendly-snippets',
             }
         }
         use 'RRethy/vim-illuminate'
