@@ -17,6 +17,9 @@ fish_add_path /opt/homebrew/bin
 # add platformio env path
 fish_add_path /Users/momeppkt/.platformio/penv/bin
 
+# add default python to homebrew installed
+fish_add_path /opt/homebrew/opt/python@3.10/bin
+
 # set locale terminal
 set -x LC_CTYPE "en_US.UTF-8"
 set -x LC_ALL "en_US.UTF-8"
@@ -49,6 +52,7 @@ fish_add_path (ruby -e 'print Gem.user_dir')/bin
 fish_add_path $HOME/.cargo/bin
 fish_add_path $HOME/.espressif/tools/xtensa-esp32-elf-clang/esp-14.0.0-20220415-aarch64-apple-darwin/bin/
 fish_add_path $HOME/.espressif/tools/xtensa-esp32-elf-gcc/8_4_0-esp-2021r2-patch3-aarch64-apple-darwin/bin/
+fish_add_path $HOME/.espressif/tools/xtensa-esp32s3-elf-gcc/8_4_0-esp-2021r2-patch3-aarch64-apple-darwin/bin/
 set -x LIBCLANG_PATH "/Users/momeppkt/.espressif/tools/xtensa-esp32-elf-clang/esp-14.0.0-20220415-aarch64-apple-darwin/lib/"
 set -x PIP_USER no
 set -x IDF_PATH "$HOME/Developments/toolchains/esp-idf"

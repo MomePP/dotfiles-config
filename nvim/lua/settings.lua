@@ -40,7 +40,7 @@ vim.opt.laststatus = 3
 vim.opt.showtabline = 0
 
 -- INFO: winbar configuration
-vim.o.winbar = '%{%v:lua.require("winbar").statusline()%}'
+-- vim.o.winbar = '%{%v:lua.require("winbar").statusline()%}'
 
 vim.api.nvim_create_autocmd('InsertLeave', {
     desc = 'turn off paste mode when leaving insert',

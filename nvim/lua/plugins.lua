@@ -118,6 +118,7 @@ return packer.startup({
         use 'lukas-reineke/indent-blankline.nvim'
         use 'SmiteshP/nvim-navic'
         use { 'Darazaki/indent-o-matic', config = function() require('indent-o-matic').setup {} end }
+        use 'b0o/incline.nvim'
 
         -- Color Schemes
         -- use 'MomePP/plastic-nvim'

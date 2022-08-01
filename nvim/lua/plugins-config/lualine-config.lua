@@ -149,7 +149,6 @@ local spacing = {
 lualine.setup({
     options = {
         icons_enabled = true,
-        -- theme = plastic_lualine,
         theme = {
             normal = {
                 a = { bg = colors.transparent, fg = colors.purple, gui = 'bold' },
@@ -193,14 +192,6 @@ lualine.setup({
         lualine_x = { diagnostics },
         lualine_y = { lsp_status },
         lualine_z = { location },
-    },
-    inactive_sections = {
-        lualine_a = {},
-        lualine_b = {},
-        lualine_c = { filename_path },
-        lualine_x = { location },
-        lualine_y = {},
-        lualine_z = {},
     },
     tabline = {},
     extensions = { 'toggleterm' }
