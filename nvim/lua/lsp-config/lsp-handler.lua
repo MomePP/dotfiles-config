@@ -39,8 +39,6 @@ vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.s
 local lsp_status_ok, lsp_setup = pcall(require, 'nvim-lsp-setup')
 if not lsp_status_ok then return end
 
-local lsp_keys_mapping = require('keymappings').lsp
-
 local function lsp_highlight_document(client)
     local loaded_plugin, illuminate = pcall(require, 'illuminate')
     if not loaded_plugin then return end
@@ -62,31 +60,46 @@ local function lsp_navic(client, bufnr)
     navic.attach(client, bufnr)
 end
 
+local function lsp_on_attach(client, bufnr)
+    lsp_keymaps(bufnr, require('keymappings').lsp)
+    lsp_highlight_document(client)
+    lsp_navic(client, bufnr)
+end
+
+local lsp_capability = vim.lsp.protocol.make_client_capabilities()
+local cmp_status_ok, cmp = pcall(require, 'cmp_nvim_lsp')
+if cmp_status_ok then lsp_capability = cmp.update_capabilities(lsp_capability) end
+
 lsp_setup.setup({
     default_mappings = false,
-    on_attach = function(client, bufnr)
-        lsp_keymaps(bufnr, lsp_keys_mapping)
-        lsp_highlight_document(client)
-        lsp_navic(client, bufnr)
-    end,
+    on_attach = lsp_on_attach,
+    capabilities = lsp_capability,
     servers = {
         pyright = require('lsp-config.settings.pyright'),
         tsserver = require('lsp-config.settings.tsserver'),
         jsonls = require('lsp-config.settings.jsonls'),
         sumneko_lua = require('lsp-config.settings.sumneko_lua'),
-        ccls = require('lsp-config.settings.ccls'),
-        -- clangd = {},
         ltex = {},
         cssls = {},
         rust_analyzer = {},
         volar = {},
         html = {},
+        -- clangd = {},
     }
 })
 
---- configure mason after lsp-setup intialized
+-- configure mason after lsp-setup intialized
 require('mason').setup({
     ui = {
         border = 'rounded'
+    }
+})
+
+-- manually injects unsupported lsp by mason.nvim
+require('lspconfig')['ccls'].setup({
+    on_attach = lsp_on_attach,
+    capabilities = lsp_capability,
+    settings = {
+        ['ccls'] = require('lsp-config.settings.ccls')
     }
 })
