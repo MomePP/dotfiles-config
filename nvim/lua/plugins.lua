@@ -82,11 +82,11 @@ return packer.startup({
         -- Telescope
         use 'nvim-telescope/telescope.nvim'
         use 'nvim-telescope/telescope-file-browser.nvim'
-        use 'nvim-telescope/telescope-ui-select.nvim'
         use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
 
         -- Treesitter
-        use { 'nvim-treesitter/nvim-treesitter', run = function() require('nvim-treesitter.install').update({ with_sync = true }) end }
+        use { 'nvim-treesitter/nvim-treesitter',
+            run = function() require('nvim-treesitter.install').update({ with_sync = true }) end }
         use 'nvim-treesitter/nvim-treesitter-textobjects'
         use 'JoosepAlviste/nvim-ts-context-commentstring'
         use 'windwp/nvim-ts-autotag'
@@ -116,9 +116,11 @@ return packer.startup({
         use 'folke/todo-comments.nvim'
         use 'kevinhwang91/nvim-hlslens'
         use 'lukas-reineke/indent-blankline.nvim'
-        use 'SmiteshP/nvim-navic'
+        -- use 'SmiteshP/nvim-navic'
+        use { 'jason0x43/nvim-navic', branch = 'symbolinformation-support' }
         use 'b0o/incline.nvim'
         use { 'Darazaki/indent-o-matic', config = function() require('indent-o-matic').setup {} end }
+        use { 'stevearc/dressing.nvim', config = function() require('dressing').setup {} end }
 
         -- Color Schemes
         -- use 'MomePP/plastic-nvim'

@@ -104,10 +104,10 @@ telescope.setup {
     },
     extensions = {
         ['fzf'] = {
-            fuzzy = true,                    -- false will only do exact matching
-            override_generic_sorter = true,  -- override the generic sorter
-            override_file_sorter = true,     -- override the file sorter
-            case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
+            fuzzy = true, -- false will only do exact matching
+            override_generic_sorter = true, -- override the generic sorter
+            override_file_sorter = true, -- override the file sorter
+            case_mode = "smart_case", -- or "ignore_case" or "respect_case"
         },
         ['file_browser'] = {
             layout_strategy = 'horizontal',
@@ -121,14 +121,10 @@ telescope.setup {
             grouped = true,
             hijack_netrw = true,
         },
-        ['ui-select'] = {
-            require('telescope.themes').get_cursor()
-        }
     }
 }
 telescope.load_extension("fzf")
 telescope.load_extension("file_browser")
-telescope.load_extension("ui-select")
 
 
 -- INFO: custom telescope pickers
