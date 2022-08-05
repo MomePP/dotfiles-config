@@ -36,7 +36,7 @@ vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.s
 -- ----------------------------------------------------------------------
 --  lsp configs
 --
-local lsp_status_ok, lsp_setup = pcall(require, 'nvim-lsp-setup')
+local lsp_status_ok, lsp_setup = pcall(require, 'lsp-setup')
 if not lsp_status_ok then return end
 
 local function lsp_highlight_document(client)
