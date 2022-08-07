@@ -66,14 +66,9 @@ local function lsp_on_attach(client, bufnr)
     lsp_navic(client, bufnr)
 end
 
-local lsp_capability = vim.lsp.protocol.make_client_capabilities()
-local cmp_status_ok, cmp = pcall(require, 'cmp_nvim_lsp')
-if cmp_status_ok then lsp_capability = cmp.update_capabilities(lsp_capability) end
-
 lsp_setup.setup({
     default_mappings = false,
     on_attach = lsp_on_attach,
-    capabilities = lsp_capability,
     servers = {
         pyright = require('lsp-config.settings.pyright'),
         tsserver = require('lsp-config.settings.tsserver'),
@@ -98,7 +93,6 @@ require('mason').setup({
 -- manually injects unsupported lsp by mason.nvim
 require('lspconfig')['ccls'].setup({
     on_attach = lsp_on_attach,
-    capabilities = lsp_capability,
     settings = {
         ['ccls'] = require('lsp-config.settings.ccls')
     }
