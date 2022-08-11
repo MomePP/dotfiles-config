@@ -54,12 +54,12 @@ vim.keymap.set('n', '<Tab>', ':bnext<CR>', silent)
 vim.keymap.set('n', '<S-Tab>', ':bprev<CR>', silent)
 
 -- INFO: Panes config using `focus` plugin
-vim.keymap.set('n', '<Space>', ':FocusSplitCycle<CR>', silent)
-vim.keymap.set('n', 'wt', ':FocusMaxOrEqual<CR>', silent)
-vim.keymap.set('n', 'wh', ':FocusSplitLeft<CR>', silent)
-vim.keymap.set('n', 'wl', ':FocusSplitRight<CR>', silent)
-vim.keymap.set('n', 'wk', ':FocusSplitUp<CR>', silent)
-vim.keymap.set('n', 'wj', ':FocusSplitDown<CR>', silent)
+vim.keymap.set('n', '<Space>', function() require('focus').split_cycle() end, silent)
+vim.keymap.set('n', 'wt', function() require('focus').focus_max_or_equal() end, silent)
+vim.keymap.set('n', 'wh', function() require('focus').split_command('h') end, silent)
+vim.keymap.set('n', 'wl', function() require('focus').split_command('l') end, silent)
+vim.keymap.set('n', 'wk', function() require('focus').split_command('k') end, silent)
+vim.keymap.set('n', 'wj', function() require('focus').split_command('j') end, silent)
 vim.keymap.set('n', 'wq', '<C-w>q', silent)
 
 -- INFO: resize window
@@ -89,8 +89,12 @@ vim.keymap.set('n', '<C-j>', '<C-i>', silent)
 vim.keymap.set('n', '<C-k>', '<C-o>', silent)
 
 -- INFO: GitSign keymap
-vim.keymap.set('n', ']c', function() if vim.wo.diff then return ']c' end vim.schedule(function() require 'gitsigns.actions'.next_hunk() end) return '<Ignore>' end, expr)
-vim.keymap.set('n', '[c', function() if vim.wo.diff then return '[c' end vim.schedule(function() require 'gitsigns.actions'.prev_hunk() end) return '<Ignore>' end, expr)
+vim.keymap.set('n', ']c',
+    function() if vim.wo.diff then return ']c' end vim.schedule(function() require 'gitsigns.actions'.next_hunk() end) return '<Ignore>' end
+    , expr)
+vim.keymap.set('n', '[c',
+    function() if vim.wo.diff then return '[c' end vim.schedule(function() require 'gitsigns.actions'.prev_hunk() end) return '<Ignore>' end
+    , expr)
 
 vim.keymap.set({ 'n', 'v' }, '<leader>hs', ':Gitsigns stage_hunk<CR>', silent)
 vim.keymap.set({ 'n', 'v' }, '<leader>hr', ':Gitsigns reset_hunk<CR>', silent)
