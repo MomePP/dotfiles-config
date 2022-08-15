@@ -8,17 +8,17 @@ if status is-interactive
   # >>> conda initialize >>>
   # !! Contents within this block are managed by 'conda init' !!
   eval /opt/homebrew/Caskroom/miniforge/base/bin/conda "shell.fish" "hook" $argv | source
-  # <<< conda initialize <<<
+
+  # setup pyenv root
+  set -Ux PYENV_ROOT $HOME/.pyenv
+  set -U fish_user_paths $PYENV_ROOT/bin $fish_user_paths
 end
+
+# init pyenv
+pyenv init - | source
 
 # config homebrew path
 fish_add_path /opt/homebrew/bin
-
-# add platformio env path
-fish_add_path /Users/momeppkt/.platformio/penv/bin
-
-# add default python to homebrew installed
-fish_add_path /opt/homebrew/opt/python@3.10/bin
 
 # set locale terminal
 set -x LC_CTYPE "en_US.UTF-8"

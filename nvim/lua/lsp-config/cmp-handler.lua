@@ -105,7 +105,7 @@ local cmp_sources = {
 local cmp_configs = {
     snippet = { expand = function(args) luasnip.lsp_expand(args.body) end, },
     mapping = cmp_mapping,
-    sources = cmp_sources,
+    sources = cmp.config.sources(cmp_sources),
     formatting = {
         fields = { 'abbr', 'kind' },
         format = function(entry, item)
