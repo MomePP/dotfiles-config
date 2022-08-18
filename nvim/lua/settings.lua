@@ -38,6 +38,15 @@ vim.opt.showmode = false
 vim.opt.showcmd = false
 vim.opt.laststatus = 3
 vim.opt.showtabline = 0
+vim.opt.fillchars:append({
+    horiz = '━',
+    horizup = '┻',
+    horizdown = '┳',
+    vert = '┃',
+    vertleft = '┫',
+    vertright = '┣',
+    verthoriz = '╋',
+})
 
 -- INFO: winbar configuration
 -- vim.o.winbar = '%{%v:lua.require("winbar").statusline()%}'
