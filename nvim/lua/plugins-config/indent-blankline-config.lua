@@ -21,3 +21,5 @@ blankline.setup {
     show_current_context = true,
     -- show_current_context_start = true,
 }
+
+vim.api.nvim_set_hl(0, 'IndentBlanklineContextChar', { fg = '#ff7800', nocombine = true })

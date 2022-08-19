@@ -9,6 +9,10 @@ require('kanagawa').setup({
 })
 vim.cmd.colorscheme 'kanagawa'
 
+-- INFO: adwaita theme config
+-- vim.g.adwaita_darker = true
+-- vim.cmd.colorscheme('adwaita')
+
 -- override signcolumn fg to be transparent
 vim.api.nvim_set_hl(0, 'SignColumn', { fg = 'NONE', bg = 'NONE' })
 vim.api.nvim_set_hl(0, 'Pmenu', { fg = 'NONE', bg = 'NONE' })

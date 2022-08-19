@@ -8,15 +8,11 @@ if not vim.g.vscode then
 
     -- install plugins
     require 'plugins'
-    require 'plugins-config'
 
-    -- apply colorscheme
+    -- apply user configs
     require 'colorscheme'
-
-    -- key mappings
+    require 'plugins-config'
     require 'keymappings'
-
-    -- setup lsp server
     require 'lsp-config'
 else
     -- print('start from vscode !!')

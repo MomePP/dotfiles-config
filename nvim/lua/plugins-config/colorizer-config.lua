@@ -11,7 +11,7 @@ colorizer.setup({'*'}, {
     css = false,
     css_fn = false,
 
-    -- Available modes: foreground, background
+    -- Available modes: foreground, background, virtualtext
     mode = 'background',
 })
 

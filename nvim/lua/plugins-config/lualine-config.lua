@@ -13,6 +13,7 @@ local colors = {
     blue        = '#61afef',
     yellow      = '#e5c07b',
     purple      = '#af5fff',
+    teal        = '#5bc8af',
     grey        = 236,
     lightgrey   = 238,
     transparent = 'NONE',
@@ -63,6 +64,7 @@ local gps_location = {
         end
     end,
     color = { fg = colors.purple },
+    -- color = { fg = colors.teal },
     cond = navic.is_available
 }
 
@@ -88,11 +90,11 @@ local filename = {
     cond = conditions.buffer_not_empty
 }
 
-local filename_path = {
-    "filename",
-    file_status = true,
-    path = 1
-}
+-- local filename_path = {
+--     "filename",
+--     file_status = true,
+--     path = 1
+-- }
 
 local branch = {
     "branch",
@@ -146,41 +148,56 @@ local spacing = {
     end,
 }
 
+-- INFO: custom kanagawa theme
+local custom_kanagawa = {
+    normal = {
+        a = { bg = colors.transparent, fg = colors.purple, gui = 'bold' },
+        b = { bg = colors.transparent, fg = colors.white },
+        c = { bg = colors.transparent, fg = colors.white },
+    },
+    insert = {
+        a = { bg = colors.green, fg = colors.black, gui = 'bold' },
+        b = { bg = colors.transparent, fg = colors.white },
+        c = { bg = colors.transparent, fg = colors.white },
+    },
+    visual = {
+        a = { bg = colors.purple, fg = colors.black, gui = 'bold' },
+        b = { bg = colors.transparent, fg = colors.white },
+        c = { bg = colors.transparent, fg = colors.white },
+    },
+    replace = {
+        a = { bg = colors.yellow, fg = colors.black, gui = 'bold' },
+        b = { bg = colors.transparent, fg = colors.white },
+        c = { bg = colors.transparent, fg = colors.white },
+    },
+    command = {
+        a = { bg = colors.red, fg = colors.black, gui = 'bold' },
+        b = { bg = colors.transparent, fg = colors.white },
+        c = { bg = colors.transparent, fg = colors.white },
+    },
+    inactive = {
+        a = { bg = colors.transparent, fg = colors.lightgrey },
+        b = { bg = colors.transparent, fg = colors.lightgrey },
+        c = { bg = colors.transparent, fg = colors.lightgrey },
+    },
+}
+
+-- INFO: custom adwaita theme
+-- local custom_adwaita = require('lualine.utils.loader').load_theme('adwaita')
+-- custom_adwaita.normal.b.bg = 'NONE'
+-- custom_adwaita.normal.c.bg = 'NONE'
+-- custom_adwaita.insert.b.bg = 'NONE'
+-- custom_adwaita.insert.c.bg = 'NONE'
+-- custom_adwaita.replace.b.bg = 'NONE'
+-- custom_adwaita.replace.c.bg = 'NONE'
+-- custom_adwaita.visual.b.bg = 'NONE'
+
+-- INFO: setup lualine configs
 lualine.setup({
     options = {
         icons_enabled = true,
-        theme = {
-            normal = {
-                a = { bg = colors.transparent, fg = colors.purple, gui = 'bold' },
-                b = { bg = colors.transparent, fg = colors.white },
-                c = { bg = colors.transparent, fg = colors.white },
-            },
-            insert = {
-                a = { bg = colors.green, fg = colors.black, gui = 'bold' },
-                b = { bg = colors.transparent, fg = colors.white },
-                c = { bg = colors.transparent, fg = colors.white },
-            },
-            visual = {
-                a = { bg = colors.purple, fg = colors.black, gui = 'bold' },
-                b = { bg = colors.transparent, fg = colors.white },
-                c = { bg = colors.transparent, fg = colors.white },
-            },
-            replace = {
-                a = { bg = colors.yellow, fg = colors.black, gui = 'bold' },
-                b = { bg = colors.transparent, fg = colors.white },
-                c = { bg = colors.transparent, fg = colors.white },
-            },
-            command = {
-                a = { bg = colors.red, fg = colors.black, gui = 'bold' },
-                b = { bg = colors.transparent, fg = colors.white },
-                c = { bg = colors.transparent, fg = colors.white },
-            },
-            inactive = {
-                a = { bg = colors.transparent, fg = colors.lightgrey },
-                b = { bg = colors.transparent, fg = colors.lightgrey },
-                c = { bg = colors.transparent, fg = colors.lightgrey },
-            },
-        },
+        theme = custom_kanagawa,
+        -- theme = custom_adwaita,
         section_separators = '',
         component_separators = '',
         always_divide_middle = true,

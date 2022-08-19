@@ -6,6 +6,7 @@ local colors = {
     red = '#ff3838',
     white = '#e4e4e4',
     gray = '#989898',
+    orange = '#ff7800',
     transparent = 'NONE',
 }
 
@@ -24,6 +25,7 @@ incline.setup {
             InclineSpacing = {
                 guifg = colors.white,
                 guibg = colors.purple,
+                -- guibg = colors.orange,
             },
             InclineModified = {
                 guifg = colors.red,
