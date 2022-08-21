@@ -129,7 +129,6 @@ return packer.startup({
         -- misc. cool stuff
         -- use 'andweeb/presence.nvim' -- discord activity status
         -- use 'dstein64/vim-startuptime'
-        use 'wakatime/vim-wakatime'
 
         -- Automatically set up your configuration after cloning packer.nvim
         -- Put this at the end after all plugins
