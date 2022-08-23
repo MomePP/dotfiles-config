@@ -39,13 +39,6 @@ vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.s
 local lsp_status_ok, lsp_setup = pcall(require, 'lsp-setup')
 if not lsp_status_ok then return end
 
-local function lsp_highlight_document(client)
-    local loaded_plugin, illuminate = pcall(require, 'illuminate')
-    if not loaded_plugin then return end
-
-    illuminate.on_attach(client)
-end
-
 local function lsp_keymaps(bufnr, mapping)
     local opts = { buffer = bufnr, silent = true, remap = false }
     for key, cmd in pairs(mapping or {}) do
@@ -62,7 +55,6 @@ end
 
 local function lsp_on_attach(client, bufnr)
     lsp_keymaps(bufnr, require('keymappings').lsp)
-    lsp_highlight_document(client)
     lsp_navic(client, bufnr)
 end
 

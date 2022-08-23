@@ -12,6 +12,12 @@ if status is-interactive
   # setup pyenv root
   set -Ux PYENV_ROOT $HOME/.pyenv
   set -U fish_user_paths $PYENV_ROOT/bin $fish_user_paths
+
+  # config fish cursor prompt
+  set fish_cursor_default block blink
+
+  # render man page with bat
+  set -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
 end
 
 # init pyenv
@@ -46,7 +52,7 @@ set -gx CPPFLAGS "-I/opt/homebrew/opt/ruby/include"
 set -gx PKG_CONFIG_PATH "/opt/homebrew/opt/ruby/lib/pkgconfig"
 
 # config gem path, its actually just runs once but if it exists not appended.
-fish_add_path (ruby -e 'print Gem.user_dir')/bin
+fish_add_path (ruby -e "print Gem.user_dir")/bin
 
 # config rust tools for esp32
 fish_add_path $HOME/.cargo/bin
@@ -76,11 +82,11 @@ set -Ux SDKROOT /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.plat
 # aliases
 alias ls "l"
 alias lg "lazygit"
-alias rbrew='arch -x86_64 /usr/local/bin/brew'
-alias rosetta="arch -x86_64"
-alias py="python3"
-alias python="python3"
-alias pip="python3 -m pip"
+alias rbrew "arch -x86_64 /usr/local/bin/brew"
+alias rosetta "arch -x86_64"
+alias py "python3"
+alias python "python3"
+alias pip "python3 -m pip"
 alias tma "tmux attach-session || tmux new -s default"
 alias tmd "tmux detach"
 alias cat "bat"

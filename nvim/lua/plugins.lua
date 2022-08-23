@@ -74,7 +74,7 @@ return packer.startup({
         }
         use 'RRethy/vim-illuminate'
         use 'antoinemadec/FixCursorHold.nvim'
-        use { 'Maan2003/lsp_lines.nvim', config = function() require("lsp_lines").setup() end }
+        use { 'Maan2003/lsp_lines.nvim', config = function() require('lsp_lines').setup() end }
 
         -- Git plugins
         use 'lewis6991/gitsigns.nvim'
@@ -114,7 +114,7 @@ return packer.startup({
         use 'nvim-lualine/lualine.nvim'
         use 'folke/todo-comments.nvim'
         use 'kevinhwang91/nvim-hlslens'
-        use 'lukas-reineke/indent-blankline.nvim'
+        use { 'lukas-reineke/indent-blankline.nvim', cmd = { 'IndentBlanklineToggle', 'IndentBlanklineRefresh' } }
         -- use 'SmiteshP/nvim-navic'
         use { 'jason0x43/nvim-navic', branch = 'symbolinformation-support' }
         use 'b0o/incline.nvim'
