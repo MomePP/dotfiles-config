@@ -18,6 +18,6 @@ illuminate.configure({
 })
 
 -- override vim-illuminate highlight
-vim.api.nvim_set_hl(0, 'IlluminatedWordText', { link = 'Visual' })
-vim.api.nvim_set_hl(0, 'IlluminatedWordRead', { link = 'Visual' })
-vim.api.nvim_set_hl(0, 'IlluminatedWordWrite', { link = 'Visual' })
+vim.api.nvim_set_hl(0, 'IlluminatedWordText', { link = 'LspReferenceText' })
+vim.api.nvim_set_hl(0, 'IlluminatedWordRead', { link = 'LspReferenceRead' })
+vim.api.nvim_set_hl(0, 'IlluminatedWordWrite', { link = 'LspReferenceWrite' })

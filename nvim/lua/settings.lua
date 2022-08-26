@@ -1,5 +1,3 @@
-local indent_size = 4
-
 vim.opt.syntax = 'on'
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -9,10 +7,8 @@ vim.opt.showcmd = false
 vim.opt.ruler = false
 vim.opt.showmatch = true
 vim.opt.expandtab = true
-vim.opt.shiftwidth = indent_size
 vim.opt.autoindent = true
-vim.opt.smartindent = true
-vim.opt.tabstop = indent_size
+vim.opt.smartindent = false
 vim.opt.hidden = true
 vim.opt.ignorecase = true
 vim.opt.scrolloff = 8

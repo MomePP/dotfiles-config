@@ -114,7 +114,7 @@ return packer.startup({
         use 'nvim-lualine/lualine.nvim'
         use 'folke/todo-comments.nvim'
         use 'kevinhwang91/nvim-hlslens'
-        use { 'lukas-reineke/indent-blankline.nvim', cmd = { 'IndentBlanklineToggle', 'IndentBlanklineRefresh' } }
+        use 'lukas-reineke/indent-blankline.nvim'
         -- use 'SmiteshP/nvim-navic'
         use { 'jason0x43/nvim-navic', branch = 'symbolinformation-support' }
         use 'b0o/incline.nvim'
