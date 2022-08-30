@@ -89,31 +89,23 @@ vim.keymap.set('n', '<C-j>', '<C-i>', silent)
 vim.keymap.set('n', '<C-k>', '<C-o>', silent)
 
 -- INFO: GitSign keymap
-vim.keymap.set('n', ']c',
-    function() if vim.wo.diff then return ']c' end vim.schedule(function() require 'gitsigns.actions'.next_hunk() end) return '<Ignore>' end
-    , expr)
-vim.keymap.set('n', '[c',
-    function() if vim.wo.diff then return '[c' end vim.schedule(function() require 'gitsigns.actions'.prev_hunk() end) return '<Ignore>' end
-    , expr)
-
+vim.keymap.set('n', ']c', function() if vim.wo.diff then return ']c' end vim.schedule(function() require 'gitsigns.actions'.next_hunk() end) return '<Ignore>' end , expr)
+vim.keymap.set('n', '[c', function() if vim.wo.diff then return '[c' end vim.schedule(function() require 'gitsigns.actions'.prev_hunk() end) return '<Ignore>' end , expr)
 vim.keymap.set({ 'n', 'v' }, '<leader>hs', ':Gitsigns stage_hunk<CR>', silent)
-vim.keymap.set({ 'n', 'v' }, '<leader>hr', ':Gitsigns reset_hunk<CR>', silent)
 vim.keymap.set('n', '<leader>hu', ':Gitsigns undo_stage_hunk<CR>', silent)
-vim.keymap.set('n', '<leader>hR', ':Gitsigns reset_buffer<CR>', silent)
+vim.keymap.set({ 'n', 'v' }, '<leader>hr', ':Gitsigns reset_hunk<CR>', silent)
 vim.keymap.set('n', '<leader>hp', ':Gitsigns preview_hunk<CR>', silent)
 vim.keymap.set('n', '<leader>hb', ':Gitsigns blame_line<CR>', silent)
-vim.keymap.set('n', '<leader>hS', ':Gitsigns stage_buffer<CR>', silent)
-vim.keymap.set('n', '<leader>hU', ':Gitsigns reset_buffer_index<CR>', silent)
-vim.keymap.set({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', silent)
 
 -- INFO: Telescope keymap
-vim.keymap.set('n', 'gw', ":Telescope grep_string<CR>", silent)
-vim.keymap.set('n', '<leader>\\', ":Telescope buffers<CR>", silent)
-vim.keymap.set('n', '<leader>;', ":Telescope help_tags<CR>", silent)
-vim.keymap.set('n', '<leader>j', ":Telescope jumplist<CR>", silent)
-vim.keymap.set('n', '<leader>/', ":Telescope current_buffer_fuzzy_find<CR>", silent)
-vim.keymap.set('n', '<leader>fs', ":Telescope live_grep<CR>", silent)
-vim.keymap.set('n', '<leader>fb', ":Telescope file_browser<CR>", silent)
+vim.keymap.set('n', 'gw', require 'telescope.builtin'.grep_string, silent)
+vim.keymap.set('n', '<leader>\\', require 'telescope.builtin'.buffers, silent)
+vim.keymap.set('n', '<leader>;', require 'telescope.builtin'.help_tags, silent)
+vim.keymap.set('n', '<leader>j', require 'telescope.builtin'.jumplist, silent)
+vim.keymap.set('n', '<leader>/', require 'telescope.builtin'.current_buffer_fuzzy_find, silent)
+vim.keymap.set('n', '<leader>?', require 'telescope.builtin'.oldfiles, silent)
+vim.keymap.set('n', '<leader>fs', require 'telescope.builtin'.live_grep, silent)
+vim.keymap.set('n', '<leader>fb', require 'telescope'.extensions.file_browser.file_browser, silent)
 
 -- INFO: Todo comments keymap
 vim.keymap.set('n', '<leader>c', ":TodoTelescope<CR>", silent)
@@ -131,11 +123,11 @@ vim.keymap.set('n', '<leader>p', ':MarkdownPreviewToggle<CR>', silent)
 
 -- INFO: LSP keymap
 keymaps.lsp = {
-    ['gd'] = function() require "telescope.builtin".lsp_definitions() end,
+    ['gd'] = function() require 'telescope.builtin'.lsp_definitions() end,
     ['gD'] = function() vim.lsp.buf.declaration() end,
-    ['gi'] = function() require "telescope.builtin".lsp_implementations() end,
-    ['gt'] = function() require "telescope.builtin".lsp_type_definitions() end,
-    ['gr'] = function() require "telescope.builtin".lsp_references() end,
+    ['gi'] = function() require 'telescope.builtin'.lsp_implementations() end,
+    ['gt'] = function() require 'telescope.builtin'.lsp_type_definitions() end,
+    ['gr'] = function() require 'telescope.builtin'.lsp_references() end,
     ['gx'] = function() vim.lsp.buf.code_action() end,
     ['gs'] = function() vim.lsp.buf.signature_help() end,
     ['gp'] = function() vim.lsp.buf.hover() end,
@@ -143,8 +135,8 @@ keymaps.lsp = {
     ['gl'] = function() vim.diagnostic.open_float() end,
     [']d'] = function() vim.diagnostic.goto_next({ float = false }) end,
     ['[d'] = function() vim.diagnostic.goto_prev({ float = false }) end,
-    ['<leader>ls'] = function() require "telescope.builtin".lsp_document_symbols() end,
-    ['<leader>ld'] = function() require "telescope.builtin".diagnostics() end,
+    ['<leader>ls'] = function() require 'telescope.builtin'.lsp_document_symbols() end,
+    ['<leader>ld'] = function() require 'telescope.builtin'.diagnostics() end,
     ['<leader>lr'] = function() vim.lsp.buf.rename() end,
     ['<leader>ff'] = function() vim.lsp.buf.format({ async = true }) end,
 }
