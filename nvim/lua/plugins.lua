@@ -120,6 +120,7 @@ return packer.startup({
         use 'b0o/incline.nvim'
         use { 'Darazaki/indent-o-matic', config = function() require('indent-o-matic').setup {} end }
         use { 'stevearc/dressing.nvim', config = function() require('dressing').setup {} end }
+        use { 'vigoux/notifier.nvim', config = function() require('notifier').setup {} end }
 
         -- Color Schemes
         -- use 'MomePP/plastic-nvim'

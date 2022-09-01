@@ -35,6 +35,9 @@ local conditions = {
 
 local mode = {
     "mode",
+    fmt = function(mode_string)
+        return string.format("%7s", mode_string)
+    end,
 }
 
 local diagnostics = {
@@ -119,7 +122,6 @@ local lsp_status = {
         return msg
     end,
     icon = '',
-    color = { fg = colors.white },
 }
 
 local session_status = {
@@ -133,7 +135,6 @@ local session_status = {
         return session_name
     end,
     icon = '',
-    color = { fg = colors.white }
 }
 
 local location = {
@@ -148,32 +149,32 @@ local spacing = {
     end,
 }
 
--- INFO: custom kanagawa theme
-local custom_kanagawa = {
+-- INFO: custom gruvbox light theme
+local gruvbox_light = {
     normal = {
         a = { bg = colors.transparent, fg = colors.purple, gui = 'bold' },
-        b = { bg = colors.transparent, fg = colors.white },
-        c = { bg = colors.transparent, fg = colors.white },
+        b = { bg = colors.transparent, fg = colors.gray },
+        c = { bg = colors.transparent, fg = colors.gray },
     },
     insert = {
         a = { bg = colors.green, fg = colors.black, gui = 'bold' },
-        b = { bg = colors.transparent, fg = colors.white },
-        c = { bg = colors.transparent, fg = colors.white },
+        b = { bg = colors.transparent, fg = colors.gray },
+        c = { bg = colors.transparent, fg = colors.gray },
     },
     visual = {
         a = { bg = colors.purple, fg = colors.black, gui = 'bold' },
-        b = { bg = colors.transparent, fg = colors.white },
-        c = { bg = colors.transparent, fg = colors.white },
+        b = { bg = colors.transparent, fg = colors.gray },
+        c = { bg = colors.transparent, fg = colors.gray },
     },
     replace = {
         a = { bg = colors.yellow, fg = colors.black, gui = 'bold' },
-        b = { bg = colors.transparent, fg = colors.white },
-        c = { bg = colors.transparent, fg = colors.white },
+        b = { bg = colors.transparent, fg = colors.gray },
+        c = { bg = colors.transparent, fg = colors.gray },
     },
     command = {
         a = { bg = colors.red, fg = colors.black, gui = 'bold' },
-        b = { bg = colors.transparent, fg = colors.white },
-        c = { bg = colors.transparent, fg = colors.white },
+        b = { bg = colors.transparent, fg = colors.gray },
+        c = { bg = colors.transparent, fg = colors.gray },
     },
     inactive = {
         a = { bg = colors.transparent, fg = colors.lightgrey },
@@ -181,6 +182,40 @@ local custom_kanagawa = {
         c = { bg = colors.transparent, fg = colors.lightgrey },
     },
 }
+
+-- INFO: custom kanagawa theme
+-- local custom_kanagawa = {
+--     normal = {
+--         a = { bg = colors.transparent, fg = colors.purple, gui = 'bold' },
+--         b = { bg = colors.transparent, fg = colors.white },
+--         c = { bg = colors.transparent, fg = colors.white },
+--     },
+--     insert = {
+--         a = { bg = colors.green, fg = colors.black, gui = 'bold' },
+--         b = { bg = colors.transparent, fg = colors.white },
+--         c = { bg = colors.transparent, fg = colors.white },
+--     },
+--     visual = {
+--         a = { bg = colors.purple, fg = colors.black, gui = 'bold' },
+--         b = { bg = colors.transparent, fg = colors.white },
+--         c = { bg = colors.transparent, fg = colors.white },
+--     },
+--     replace = {
+--         a = { bg = colors.yellow, fg = colors.black, gui = 'bold' },
+--         b = { bg = colors.transparent, fg = colors.white },
+--         c = { bg = colors.transparent, fg = colors.white },
+--     },
+--     command = {
+--         a = { bg = colors.red, fg = colors.black, gui = 'bold' },
+--         b = { bg = colors.transparent, fg = colors.white },
+--         c = { bg = colors.transparent, fg = colors.white },
+--     },
+--     inactive = {
+--         a = { bg = colors.transparent, fg = colors.lightgrey },
+--         b = { bg = colors.transparent, fg = colors.lightgrey },
+--         c = { bg = colors.transparent, fg = colors.lightgrey },
+--     },
+-- }
 
 -- INFO: custom adwaita theme
 -- local custom_adwaita = require('lualine.utils.loader').load_theme('adwaita')
@@ -196,7 +231,8 @@ local custom_kanagawa = {
 lualine.setup({
     options = {
         icons_enabled = true,
-        theme = custom_kanagawa,
+        theme = gruvbox_light,
+        -- theme = custom_kanagawa,
         -- theme = custom_adwaita,
         section_separators = '',
         component_separators = '',

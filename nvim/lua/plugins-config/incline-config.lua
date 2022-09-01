@@ -5,8 +5,9 @@ local colors = {
     purple = '#6100e0',
     red = '#ff3838',
     white = '#e4e4e4',
-    gray = '#989898',
+    gray = '#727169',
     orange = '#ff7800',
+    black = '#303030',
     transparent = 'NONE',
 }
 
@@ -14,7 +15,7 @@ incline.setup {
     highlight = {
         groups = {
             InclineNormal = {
-                guifg = colors.white,
+                guifg = colors.black,
                 guibg = colors.transparent,
                 gui = 'bold'
             },

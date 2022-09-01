@@ -1,0 +1,31 @@
+[user]
+	name = momeppkt
+	email = peeranut32@gmail.com
+[core]
+	excludesfile = /Users/momeppkt/.gitignore_global
+    pager = delta
+[interactive]
+    diffFilter = delta --color-only
+[add.interactive]
+    useBuiltin = false
+[init]
+	defaultBranch = main
+[difftool]
+	prompt = false
+[diff]
+    colorMoved = default
+    tool = nvimdiff
+[difftool "nvimdiff"]
+	cmd = nvim -d $LOCAL $REMOTE
+[merge]
+    conflictstyle = diff3
+    tool = nvimmerge
+[mergetool]
+	keepBackup = false
+	prompt = false
+[mergetool "nvimmerge"]
+	cmd = nvim -d $MERGED $REMOTE $LOCAL -c 'wincmd J | norm ]c'
+[delta]
+    navigate = true
+	light = true
+    line-numbers = true
