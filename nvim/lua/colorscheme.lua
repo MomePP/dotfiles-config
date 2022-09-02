@@ -1,7 +1,7 @@
 -- vim.g.plastic_nvim_transparent_bg = true
 -- vim.cmd('colorscheme plastic-nvim')
 
-vim.o.background = 'dark'
+vim.opt.background = 'dark'
 
 -- INFO: kanagawa theme config
 local gruvbox_color = {
