@@ -27,5 +27,5 @@
 	cmd = nvim -d $MERGED $REMOTE $LOCAL -c 'wincmd J | norm ]c'
 [delta]
     navigate = true
-	light = true
+	light = false
     line-numbers = true

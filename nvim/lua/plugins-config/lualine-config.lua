@@ -8,14 +8,17 @@ local navic = require('nvim-navic')
 local colors = {
     black       = 234,
     white       = 254,
-    red         = '#e06c75',
-    green       = '#98c379',
-    blue        = '#61afef',
-    yellow      = '#e5c07b',
+    red         = '#ea6962',
+    green       = '#a9b665',
+    blue        = '#7daea3',
+    yellow      = '#d8a657',
     purple      = '#af5fff',
+    magenta     = '#d3869b',
     teal        = '#5bc8af',
-    grey        = 236,
-    lightgrey   = 238,
+    cyan        = '#89b482',
+    light_brown = '#d4be98',
+    gray        = 236,
+    lightgray   = 238,
     transparent = 'NONE',
 }
 
@@ -66,7 +69,8 @@ local gps_location = {
             return ''
         end
     end,
-    color = { fg = colors.purple },
+    color = { fg = colors.cyan },
+    -- color = { fg = colors.purple },
     -- color = { fg = colors.teal },
     cond = navic.is_available
 }
@@ -150,36 +154,36 @@ local spacing = {
 }
 
 -- INFO: custom gruvbox light theme
-local gruvbox_light = {
+local gruvbox = {
     normal = {
-        a = { bg = colors.transparent, fg = colors.purple, gui = 'bold' },
-        b = { bg = colors.transparent, fg = colors.gray },
-        c = { bg = colors.transparent, fg = colors.gray },
+        a = { bg = colors.transparent, fg = colors.cyan, gui = 'bold' },
+        b = { bg = colors.transparent, fg = colors.light_brown },
+        c = { bg = colors.transparent, fg = colors.light_brown },
     },
     insert = {
         a = { bg = colors.green, fg = colors.black, gui = 'bold' },
-        b = { bg = colors.transparent, fg = colors.gray },
-        c = { bg = colors.transparent, fg = colors.gray },
+        b = { bg = colors.transparent, fg = colors.light_brown },
+        c = { bg = colors.transparent, fg = colors.light_brown },
     },
     visual = {
-        a = { bg = colors.purple, fg = colors.black, gui = 'bold' },
-        b = { bg = colors.transparent, fg = colors.gray },
-        c = { bg = colors.transparent, fg = colors.gray },
+        a = { bg = colors.magenta, fg = colors.black, gui = 'bold' },
+        b = { bg = colors.transparent, fg = colors.light_brown },
+        c = { bg = colors.transparent, fg = colors.light_brown },
     },
     replace = {
         a = { bg = colors.yellow, fg = colors.black, gui = 'bold' },
-        b = { bg = colors.transparent, fg = colors.gray },
-        c = { bg = colors.transparent, fg = colors.gray },
+        b = { bg = colors.transparent, fg = colors.light_brown },
+        c = { bg = colors.transparent, fg = colors.light_brown },
     },
     command = {
         a = { bg = colors.red, fg = colors.black, gui = 'bold' },
-        b = { bg = colors.transparent, fg = colors.gray },
-        c = { bg = colors.transparent, fg = colors.gray },
+        b = { bg = colors.transparent, fg = colors.light_brown },
+        c = { bg = colors.transparent, fg = colors.light_brown },
     },
     inactive = {
-        a = { bg = colors.transparent, fg = colors.lightgrey },
-        b = { bg = colors.transparent, fg = colors.lightgrey },
-        c = { bg = colors.transparent, fg = colors.lightgrey },
+        a = { bg = colors.transparent, fg = colors.lightgray },
+        b = { bg = colors.transparent, fg = colors.lightgray },
+        c = { bg = colors.transparent, fg = colors.lightgray },
     },
 }
 
@@ -211,9 +215,9 @@ local gruvbox_light = {
 --         c = { bg = colors.transparent, fg = colors.white },
 --     },
 --     inactive = {
---         a = { bg = colors.transparent, fg = colors.lightgrey },
---         b = { bg = colors.transparent, fg = colors.lightgrey },
---         c = { bg = colors.transparent, fg = colors.lightgrey },
+--         a = { bg = colors.transparent, fg = colors.lightgray },
+--         b = { bg = colors.transparent, fg = colors.lightgray },
+--         c = { bg = colors.transparent, fg = colors.lightgray },
 --     },
 -- }
 
@@ -231,7 +235,7 @@ local gruvbox_light = {
 lualine.setup({
     options = {
         icons_enabled = true,
-        theme = gruvbox_light,
+        theme = gruvbox,
         -- theme = custom_kanagawa,
         -- theme = custom_adwaita,
         section_separators = '',
