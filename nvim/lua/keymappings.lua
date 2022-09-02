@@ -23,16 +23,6 @@ vim.keymap.set('c', 'Q!', 'q!')
 vim.keymap.set('c', 'Qa', 'qa')
 vim.keymap.set('c', 'QA', 'qa')
 
--- INFO: map shift scroll wheel to scroll horizontal
-vim.keymap.set('', '<S-ScrollWheelUp>', 'zh')
-vim.keymap.set('', '<S-2-ScrollWheelUp>', '2zh')
-vim.keymap.set('', '<S-3-ScrollWheelUp>', '3zh')
-vim.keymap.set('', '<S-4-ScrollWheelUp>', '4zh')
-vim.keymap.set('', '<S-ScrollWheelDown>', 'zl')
-vim.keymap.set('', '<S-2-ScrollWheelDown>', '2zl')
-vim.keymap.set('', '<S-3-ScrollWheelDown>', '3zl')
-vim.keymap.set('', '<S-4-ScrollWheelDown>', '4zl')
-
 -- INFO: Keeping cursor centered
 vim.keymap.set('n', 'n', 'nzzzv')
 vim.keymap.set('n', 'N', 'Nzzzv')
