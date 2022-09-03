@@ -1,26 +1,7 @@
 local status_ok, incline = pcall(require, 'incline')
 if not status_ok then return end
 
--- local colors = {
---     purple = '#6100e0',
---     red = '#ff3838',
---     white = '#e4e4e4',
---     gray = '#727169',
---     orange = '#ff7800',
---     black = '#303030',
---     transparent = 'NONE',
--- }
-
-local colors = {
-    cyan = '#89b482',
-    yellow = '#e78a4e',
-    red = '#ea6962',
-    white = '#d4be98',
-    gray = '#928374',
-    black = '#665c54',
-    transparent = 'NONE',
-}
-
+local colors = require('colorscheme').colorset
 
 incline.setup {
     highlight = {

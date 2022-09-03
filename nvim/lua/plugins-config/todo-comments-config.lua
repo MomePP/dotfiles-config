@@ -1,6 +1,8 @@
 local status_ok, todocomments = pcall(require, 'todo-comments')
 if not status_ok then return end
 
+local todocomment_colors = require('colorscheme').colorset.todocomments
+
 -- HACK: #104 Invalid in command-line window
 local hl = require("todo-comments.highlight")
 local highlight_win = hl.highlight_win
@@ -37,15 +39,7 @@ todocomments.setup {
     },
     -- list of named colors where we try to extract the guifg from the
     -- list of hilight groups or use the hex color if hl not found as a fallback
-    colors = {
-        error = { "#D74E42" },
-        warn = { "#E9D16C" },
-        hint = { "#98C379" },
-        perf = { "#1085FF" },
-        info = { "#61AFEF" },
-        todo = { "#B57EDC" },
-        hack = { "#D19A66" },
-    },
+	colors = todocomment_colors,
     search = {
         command = "rg",
         args = {

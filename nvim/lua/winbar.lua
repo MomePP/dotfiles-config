@@ -8,13 +8,7 @@ local winbar_filetype_exclude = {
     "TelescopeResults"
 }
 
-local colors = {
-    purple = '#6100e0',
-    red = '#ff3838',
-    white = '#e4e4e4',
-    gray = '#989898',
-    transparent = 'NONE',
-}
+local colors = require('colorscheme').colorset
 
 -- INFO: winbar colorscheme
 -- New winbar colorscheme

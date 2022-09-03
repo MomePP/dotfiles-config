@@ -1,26 +1,8 @@
-local lualine_loadded, lualine = pcall(require, "lualine")
+local lualine_loadded, lualine = pcall(require, 'lualine')
 if not lualine_loadded then return end
--- local theme_loadded, plastic_lualine = pcall(require, "lualine.plastic")
--- if not theme_loadded then plastic_lualine = 'auto' end -- set fallback theme
 
 local navic = require('nvim-navic')
-
-local colors = {
-    black       = 234,
-    white       = 254,
-    red         = '#ea6962',
-    green       = '#a9b665',
-    blue        = '#7daea3',
-    yellow      = '#d8a657',
-    purple      = '#af5fff',
-    magenta     = '#d3869b',
-    teal        = '#5bc8af',
-    cyan        = '#89b482',
-    light_brown = '#d4be98',
-    gray        = 236,
-    lightgray   = 238,
-    transparent = 'NONE',
-}
+local colors = require('colorscheme').colorset
 
 local conditions = {
     buffer_not_empty = function()
@@ -153,73 +135,39 @@ local spacing = {
     end,
 }
 
--- INFO: custom gruvbox light theme
-local gruvbox = {
+-- INFO: custom dark theme
+local lualine_colors = {
     normal = {
         a = { bg = colors.transparent, fg = colors.cyan, gui = 'bold' },
-        b = { bg = colors.transparent, fg = colors.light_brown },
-        c = { bg = colors.transparent, fg = colors.light_brown },
+        b = { bg = colors.transparent, fg = colors.white },
+        c = { bg = colors.transparent, fg = colors.white },
     },
     insert = {
-        a = { bg = colors.green, fg = colors.black, gui = 'bold' },
-        b = { bg = colors.transparent, fg = colors.light_brown },
-        c = { bg = colors.transparent, fg = colors.light_brown },
+        a = { bg = colors.green, fg = colors.bg, gui = 'bold' },
+        b = { bg = colors.transparent, fg = colors.white },
+        c = { bg = colors.transparent, fg = colors.white },
     },
     visual = {
-        a = { bg = colors.magenta, fg = colors.black, gui = 'bold' },
-        b = { bg = colors.transparent, fg = colors.light_brown },
-        c = { bg = colors.transparent, fg = colors.light_brown },
+        a = { bg = colors.magenta, fg = colors.bg, gui = 'bold' },
+        b = { bg = colors.transparent, fg = colors.white },
+        c = { bg = colors.transparent, fg = colors.white },
     },
     replace = {
-        a = { bg = colors.yellow, fg = colors.black, gui = 'bold' },
-        b = { bg = colors.transparent, fg = colors.light_brown },
-        c = { bg = colors.transparent, fg = colors.light_brown },
+        a = { bg = colors.yellow, fg = colors.bg, gui = 'bold' },
+        b = { bg = colors.transparent, fg = colors.white },
+        c = { bg = colors.transparent, fg = colors.white },
     },
     command = {
-        a = { bg = colors.red, fg = colors.black, gui = 'bold' },
-        b = { bg = colors.transparent, fg = colors.light_brown },
-        c = { bg = colors.transparent, fg = colors.light_brown },
+        a = { bg = colors.red, fg = colors.bg, gui = 'bold' },
+        b = { bg = colors.transparent, fg = colors.white },
+        c = { bg = colors.transparent, fg = colors.white },
     },
     inactive = {
-        a = { bg = colors.transparent, fg = colors.lightgray },
-        b = { bg = colors.transparent, fg = colors.lightgray },
-        c = { bg = colors.transparent, fg = colors.lightgray },
+        a = { bg = colors.transparent, fg = colors.gray },
+        b = { bg = colors.transparent, fg = colors.gray },
+        c = { bg = colors.transparent, fg = colors.gray },
     },
 }
-
--- INFO: custom kanagawa theme
--- local custom_kanagawa = {
---     normal = {
---         a = { bg = colors.transparent, fg = colors.purple, gui = 'bold' },
---         b = { bg = colors.transparent, fg = colors.white },
---         c = { bg = colors.transparent, fg = colors.white },
---     },
---     insert = {
---         a = { bg = colors.green, fg = colors.black, gui = 'bold' },
---         b = { bg = colors.transparent, fg = colors.white },
---         c = { bg = colors.transparent, fg = colors.white },
---     },
---     visual = {
---         a = { bg = colors.purple, fg = colors.black, gui = 'bold' },
---         b = { bg = colors.transparent, fg = colors.white },
---         c = { bg = colors.transparent, fg = colors.white },
---     },
---     replace = {
---         a = { bg = colors.yellow, fg = colors.black, gui = 'bold' },
---         b = { bg = colors.transparent, fg = colors.white },
---         c = { bg = colors.transparent, fg = colors.white },
---     },
---     command = {
---         a = { bg = colors.red, fg = colors.black, gui = 'bold' },
---         b = { bg = colors.transparent, fg = colors.white },
---         c = { bg = colors.transparent, fg = colors.white },
---     },
---     inactive = {
---         a = { bg = colors.transparent, fg = colors.lightgray },
---         b = { bg = colors.transparent, fg = colors.lightgray },
---         c = { bg = colors.transparent, fg = colors.lightgray },
---     },
--- }
 
 -- INFO: custom adwaita theme
 -- local custom_adwaita = require('lualine.utils.loader').load_theme('adwaita')
@@ -235,8 +183,7 @@ local gruvbox = {
 lualine.setup({
     options = {
         icons_enabled = true,
-        theme = gruvbox,
-        -- theme = custom_kanagawa,
+        theme = lualine_colors,
         -- theme = custom_adwaita,
         section_separators = '',
         component_separators = '',

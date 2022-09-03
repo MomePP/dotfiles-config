@@ -1,6 +1,8 @@
 local status_ok, blankline = pcall(require, 'indent_blankline')
 if not status_ok then return end
 
+local colors = require('colorscheme').colorset
+
 blankline.setup {
     -- char = '▏',
     -- context_char = '▏',
@@ -24,6 +26,6 @@ blankline.setup {
     -- show_current_context_start = true,
 }
 
--- vim.api.nvim_set_hl(0, 'IndentBlanklineContextStart', { sp = '#ff7800', underline = true })
--- vim.api.nvim_set_hl(0, 'IndentBlanklineContextStart', { fg = '#ff7800', nocombine = true })
-vim.api.nvim_set_hl(0, 'IndentBlanklineContextChar', { fg = '#ff7800', nocombine = true })
+-- vim.api.nvim_set_hl(0, 'IndentBlanklineContextStart', { sp = colors.orange, underline = true })
+-- vim.api.nvim_set_hl(0, 'IndentBlanklineContextStart', { fg = colors.orange, nocombine = true })
+vim.api.nvim_set_hl(0, 'IndentBlanklineContextChar', { fg = colors.orange, nocombine = true })
