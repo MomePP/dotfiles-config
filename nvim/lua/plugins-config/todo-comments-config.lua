@@ -3,13 +3,6 @@ if not status_ok then return end
 
 local todocomment_colors = require('colorscheme').colorset.todocomments
 
--- HACK: #104 Invalid in command-line window
-local hl = require("todo-comments.highlight")
-local highlight_win = hl.highlight_win
-hl.highlight_win = function(win, force)
-	pcall(highlight_win, win, force)
-end
-
 todocomments.setup {
     signs = true, -- show icons in the signs column
     sign_priority = 8, -- sign priority
