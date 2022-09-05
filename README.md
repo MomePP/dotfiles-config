@@ -51,8 +51,8 @@ Already configured with following keybindings
 || Session | Window | Pane |
 |--- | --- | --- | --- |
 |new  | `<prefix>N` | `<prefix><C-n>` | `<prefix>n` |
-|next | `<prefix>L` or `<prefix>O` | `<prefix><C-l>` or `<prefix><C-o>` | `<prefix>l` or `<prefix>o` |
-|previous | `<prefix>H` | `<prefix><C-h>` | `<prefix>h` |
+|next | `<prefix>J` or `<prefix>O` | `<prefix><C-j>` or `<prefix><C-o>` | `<prefix>j` or `<prefix>o` |
+|previous | `<prefix>K` | `<prefix><C-k>` | `<prefix>k` |
 |kill | `<prefix>X` | `<prefix><C-x>` | `<prefix>x` |
 
 ---
