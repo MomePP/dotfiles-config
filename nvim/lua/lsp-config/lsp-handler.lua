@@ -50,7 +50,9 @@ local function lsp_navic(client, bufnr)
     local loaded_plugin, navic = pcall(require, 'nvim-navic')
     if not loaded_plugin then return end
 
-    navic.attach(client, bufnr)
+    if client.server_capabilities.documentSymbolProvider then
+        navic.attach(client, bufnr)
+    end
 end
 
 local function lsp_on_attach(client, bufnr)
