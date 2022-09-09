@@ -21,7 +21,7 @@ local conditions = {
 local mode = {
     "mode",
     fmt = function(mode_string)
-        return string.format("%7s", mode_string)
+        return string.format("%-7s", mode_string)
     end,
 }
 
@@ -125,7 +125,7 @@ local session_status = {
 
 local location = {
     function()
-        return "[%3l/%3L] :%-2v"
+        return "[%3l/%3L] :%2v"
     end
 }
 
@@ -143,22 +143,22 @@ local lualine_colors = {
         c = { bg = colors.transparent, fg = colors.white },
     },
     insert = {
-        a = { bg = colors.green, fg = colors.bg, gui = 'bold' },
+        a = { bg = colors.transparent, fg = colors.green, gui = 'bold' },
         b = { bg = colors.transparent, fg = colors.white },
         c = { bg = colors.transparent, fg = colors.white },
     },
     visual = {
-        a = { bg = colors.magenta, fg = colors.bg, gui = 'bold' },
+        a = { bg = colors.transparent, fg = colors.magenta, gui = 'bold' },
         b = { bg = colors.transparent, fg = colors.white },
         c = { bg = colors.transparent, fg = colors.white },
     },
     replace = {
-        a = { bg = colors.yellow, fg = colors.bg, gui = 'bold' },
+        a = { bg = colors.transparent, fg = colors.yellow, gui = 'bold' },
         b = { bg = colors.transparent, fg = colors.white },
         c = { bg = colors.transparent, fg = colors.white },
     },
     command = {
-        a = { bg = colors.red, fg = colors.bg, gui = 'bold' },
+        a = { bg = colors.transparent, fg = colors.red, gui = 'bold' },
         b = { bg = colors.transparent, fg = colors.white },
         c = { bg = colors.transparent, fg = colors.white },
     },
