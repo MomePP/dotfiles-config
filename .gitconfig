@@ -24,7 +24,8 @@
 	keepBackup = false
 	prompt = false
 [mergetool "nvimmerge"]
-	cmd = nvim -d $MERGED $REMOTE $LOCAL -c 'wincmd J | norm ]c'
+	; cmd = nvim -d $MERGED $REMOTE $LOCAL -c 'wincmd J | norm ]c'
+	cmd = nvim -d $MERGED
 [delta]
     navigate = true
 	light = false

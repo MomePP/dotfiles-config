@@ -78,6 +78,7 @@ return packer.startup({
 
         -- Git plugins
         use 'lewis6991/gitsigns.nvim'
+        use { 'akinsho/git-conflict.nvim', tag = "*" }
 
         -- Telescope
         use 'nvim-telescope/telescope.nvim'
