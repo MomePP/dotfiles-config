@@ -48,7 +48,8 @@ local function focus_resize_triggered()
     vim.api.nvim_exec_autocmds('WinScrolled', {})
 end
 
-vim.keymap.set('n', '<Space>', function() require('focus').split_cycle() focus_resize_triggered() end, silent)
+vim.keymap.set('n', '<space>', function() require('focus').split_cycle() focus_resize_triggered() end, silent)
+vim.keymap.set('n', '<leader><space>', function() require('focus').focus_toggle() end, silent)
 vim.keymap.set('n', 'wt', function() require('focus').focus_max_or_equal() focus_resize_triggered() end, silent)
 vim.keymap.set('n', 'wh', function() require('focus').split_command('h') focus_resize_triggered() end, silent)
 vim.keymap.set('n', 'wl', function() require('focus').split_command('l') focus_resize_triggered() end, silent)
