@@ -1,4 +1,5 @@
 vim.opt.syntax = 'on'
+vim.opt.spelloptions = 'noplainbuffer'
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.title = true

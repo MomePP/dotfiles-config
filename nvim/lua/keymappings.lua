@@ -44,12 +44,16 @@ vim.keymap.set('n', '<Tab>', ':bnext<CR>', silent)
 vim.keymap.set('n', '<S-Tab>', ':bprev<CR>', silent)
 
 -- INFO: Panes config using `focus` plugin
-vim.keymap.set('n', '<Space>', function() require('focus').split_cycle() end, silent)
-vim.keymap.set('n', 'wt', function() require('focus').focus_max_or_equal() end, silent)
-vim.keymap.set('n', 'wh', function() require('focus').split_command('h') end, silent)
-vim.keymap.set('n', 'wl', function() require('focus').split_command('l') end, silent)
-vim.keymap.set('n', 'wk', function() require('focus').split_command('k') end, silent)
-vim.keymap.set('n', 'wj', function() require('focus').split_command('j') end, silent)
+local function focus_resize_triggered()
+    vim.api.nvim_exec_autocmds('WinScrolled', {})
+end
+
+vim.keymap.set('n', '<Space>', function() require('focus').split_cycle() focus_resize_triggered() end, silent)
+vim.keymap.set('n', 'wt', function() require('focus').focus_max_or_equal() focus_resize_triggered() end, silent)
+vim.keymap.set('n', 'wh', function() require('focus').split_command('h') focus_resize_triggered() end, silent)
+vim.keymap.set('n', 'wl', function() require('focus').split_command('l') focus_resize_triggered() end, silent)
+vim.keymap.set('n', 'wk', function() require('focus').split_command('k') focus_resize_triggered() end, silent)
+vim.keymap.set('n', 'wj', function() require('focus').split_command('j') focus_resize_triggered() end, silent)
 vim.keymap.set('n', 'wq', '<C-w>q', silent)
 
 -- INFO: resize window

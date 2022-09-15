@@ -12,6 +12,14 @@ truncation_length = 10
 truncate_to_repo = true # truncates directory to root folder if in github repo
 style = "bold blue"
 
+[[battery.display]]
+threshold = 10
+style = "bold red"
+
+[[battery.display]]
+threshold = 30
+style = "bold yellow"
+
 [git_branch]
 symbol = " "
 

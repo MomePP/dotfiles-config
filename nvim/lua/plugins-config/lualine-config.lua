@@ -19,17 +19,17 @@ local conditions = {
 }
 
 local mode = {
-    "mode",
+    'mode',
     fmt = function(mode_string)
-        return string.format("%-7s", mode_string)
+        return string.format('%-7s', mode_string)
     end,
 }
 
 local diagnostics = {
-    "diagnostics",
-    sources = { "nvim_diagnostic" },
-    sections = { "error", "warn" },
-    symbols = { error = " ", warn = " " },
+    'diagnostics',
+    sources = { 'nvim_diagnostic' },
+    sections = { 'error', 'warn' },
+    symbols = { error = ' ', warn = ' ' },
     colored = true,
     update_in_insert = false,
     always_visible = true,
@@ -42,11 +42,11 @@ local diagnostics = {
 --     cond = hide_in_width
 -- }
 
-local gps_location = {
+local navic_location = {
     function()
-        local gps_text = navic.get_location()
-        if #gps_text ~= 0 then
-            return ' ' .. gps_text
+        local navic_text = navic.get_location()
+        if #navic_text ~= 0 then
+            return ' ' .. navic_text
         else
             return ''
         end
@@ -57,12 +57,6 @@ local gps_location = {
     cond = navic.is_available
 }
 
--- local filesize = {
---     "filesize",
---     color = { fg = colors.purple },
---     cond = conditions.buffer_not_empty
--- }
-
 local filetype = {
     'filetype',
     icon_only = true,
@@ -71,7 +65,7 @@ local filetype = {
 }
 
 local filename = {
-    "filename",
+    'filename',
     file_status = false, -- displays file status (readonly status, modified status)
     path = 0, -- 0 = just filename, 1 = relative path, 2 = absolute path
     color = { gui = 'bold' },
@@ -79,16 +73,10 @@ local filename = {
     cond = conditions.buffer_not_empty
 }
 
--- local filename_path = {
---     "filename",
---     file_status = true,
---     path = 1
--- }
-
 local branch = {
-    "branch",
+    'branch',
     icons_enabled = true,
-    icon = "",
+    icon = '',
 }
 
 local lsp_status = {
@@ -125,7 +113,7 @@ local session_status = {
 
 local location = {
     function()
-        return "[%3l/%3L] :%2v"
+        return '[%3l/%3L] :%2v'
     end
 }
 
@@ -192,7 +180,7 @@ lualine.setup({
     sections = {
         lualine_a = { mode },
         lualine_b = { branch },
-        lualine_c = { session_status, spacing, filetype, filename, gps_location },
+        lualine_c = { session_status, spacing, filetype, filename, navic_location },
         lualine_x = { diagnostics },
         lualine_y = { lsp_status },
         lualine_z = { location },
