@@ -21,6 +21,12 @@ local diagnostic_config = {
     },
 }
 
+local handler_config = {
+    border = 'rounded',
+    focusable = false,
+    noautocmd = true
+}
+
 -- setup diagnostic signs
 for _, sign in ipairs(diagnostic_signs) do
     vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text })
@@ -30,8 +36,8 @@ end
 vim.diagnostic.config(diagnostic_config)
 
 -- setup round bordered floating window for cursor hover and signature help
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
-vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with( vim.lsp.handlers.hover, handler_config)
+vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, handler_config)
 
 -- ----------------------------------------------------------------------
 --  lsp configs

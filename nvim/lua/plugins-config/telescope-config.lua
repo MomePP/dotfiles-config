@@ -89,11 +89,23 @@ telescope.setup {
         lsp_code_actions = {
             theme = 'cursor'
         },
+        live_grep = {
+            layout_strategy = 'vertical',
+            layout_config = {
+                preview_height = 0.75,
+            },
+        },
         grep_string = {
-            layout_strategy = 'horizontal',
+            layout_strategy = 'vertical',
+            layout_config = {
+                preview_height = 0.75,
+            },
         },
         current_buffer_fuzzy_find = {
             layout_strategy = 'vertical',
+            layout_config = {
+                preview_height = 0.75,
+            },
         },
         buffers = {
             layout_strategy = 'horizontal',

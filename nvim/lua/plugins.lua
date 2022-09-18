@@ -73,7 +73,6 @@ return packer.startup({
             }
         }
         use 'RRethy/vim-illuminate'
-        use 'antoinemadec/FixCursorHold.nvim'
         use { 'Maan2003/lsp_lines.nvim', config = function() require('lsp_lines').setup() end }
 
         -- Git plugins
