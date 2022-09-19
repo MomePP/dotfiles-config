@@ -18,8 +18,6 @@ vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 8
 vim.opt.shiftround = true
 vim.opt.smartcase = true
-vim.opt.splitbelow = true
-vim.opt.splitright = true
 vim.opt.wildmode = 'list:longest'
 vim.opt.clipboard = 'unnamedplus'
 vim.opt.mouse = 'a'
@@ -34,9 +32,9 @@ vim.opt.wildignore = '**/node_module/*, **/.pio/*, **/.git/*'
 vim.opt.formatoptions:append('r')
 vim.opt.swapfile = false
 vim.opt.showmode = false
-vim.opt.showcmd = false
 vim.opt.laststatus = 3
 vim.opt.showtabline = 0
+vim.opt.sessionoptions = 'blank,buffers,curdir,folds'
 vim.opt.fillchars:append({
     horiz = '━',
     horizup = '┻',
