@@ -8,7 +8,8 @@ focus.setup({
     excluded_buftypes = {
         'nofile',
         'prompt',
-        'popup'
+        'popup',
+        'terminal'
     },
     autoresize = false,
     number = false,
@@ -23,7 +24,9 @@ vim.api.nvim_create_autocmd('BufEnter', {
     pattern = '*',
     callback = function()
         local is_notifier_ok, notifier_status_module = pcall(require, 'notifier.status')
-        if not is_notifier_ok or notifier_status_module.win_nr ~= nil then return end
+        if is_notifier_ok and notifier_status_module.win_nr ~= nil then
+            focus.setup({ excluded_windows = { notifier_status_module.win_nr } })
+        end
         vim.api.nvim_exec_autocmds('WinScrolled', {})
         focus.resize()
     end
