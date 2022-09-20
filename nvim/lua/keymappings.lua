@@ -93,9 +93,9 @@ vim.keymap.set('n', 'gw', require 'telescope.builtin'.grep_string, silent)
 vim.keymap.set('n', '<leader>\\', require 'telescope.builtin'.buffers, silent)
 vim.keymap.set('n', '<leader>;', require 'telescope.builtin'.help_tags, silent)
 vim.keymap.set('n', '<leader>j', require 'telescope.builtin'.jumplist, silent)
-vim.keymap.set('n', '<leader>/', require 'telescope.builtin'.current_buffer_fuzzy_find, silent)
+vim.keymap.set('n', '<leader>/', require 'telescope.builtin'.live_grep, silent)
 vim.keymap.set('n', '<leader>?', require 'telescope.builtin'.oldfiles, silent)
-vim.keymap.set('n', '<leader>fs', require 'telescope.builtin'.live_grep, silent)
+vim.keymap.set('n', '<leader>fs', require 'telescope.builtin'.current_buffer_fuzzy_find, silent)
 vim.keymap.set('n', '<leader>fb', require 'telescope'.extensions.file_browser.file_browser, silent)
 
 -- INFO: Todo comments keymap
