@@ -1,7 +1,7 @@
 local status_ok, focus = pcall(require, 'focus')
 if not status_ok then return end
 
-focus.setup({
+local focus_configs = {
     excluded_filetypes = {
         'toggleterm',
     },
@@ -11,21 +11,24 @@ focus.setup({
         'popup',
         'terminal'
     },
+    excluded_windows = {},
     autoresize = false,
     number = false,
     signcolumn = false,
-})
+}
+focus.setup(focus_configs)
 
 
--- INFO: register user autocmd to prevents resized notifier's window
+-- INFO: changed user autocmd to prevents resized notifier's window
 -- INFO:    this need `notifier` to triggers autocmd by remove `noautocmd` option when open new window
+local notifier_ok, notifier_status_module = pcall(require, 'notifier.status')
 vim.api.nvim_create_autocmd('BufEnter', {
     desc = '`focus.nvim` resized windows',
     pattern = '*',
     callback = function()
-        local is_notifier_ok, notifier_status_module = pcall(require, 'notifier.status')
-        if is_notifier_ok and notifier_status_module.win_nr ~= nil then
-            focus.setup({ excluded_windows = { notifier_status_module.win_nr } })
+        if notifier_ok and notifier_status_module.win_nr ~= nil then
+            table.insert(focus_configs.excluded_windows, notifier_status_module.win_nr)
+            focus.setup(focus_configs)
         end
         vim.api.nvim_exec_autocmds('WinScrolled', {})
         focus.resize()
