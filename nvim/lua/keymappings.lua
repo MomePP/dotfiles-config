@@ -80,8 +80,16 @@ vim.keymap.set('n', '<C-j>', '<C-i>', silent)
 vim.keymap.set('n', '<C-k>', '<C-o>', silent)
 
 -- INFO: GitSign keymap
-vim.keymap.set('n', ']c', function() if vim.wo.diff then return ']c' end vim.schedule(function() require 'gitsigns.actions'.next_hunk() end) return '<Ignore>' end , expr)
-vim.keymap.set('n', '[c', function() if vim.wo.diff then return '[c' end vim.schedule(function() require 'gitsigns.actions'.prev_hunk() end) return '<Ignore>' end , expr)
+vim.keymap.set('n', ']c', function()
+    if vim.wo.diff then return ']c' end
+    vim.schedule(function() require 'gitsigns.actions'.next_hunk() end)
+    return '<Ignore>'
+end, expr)
+vim.keymap.set('n', '[c', function()
+    if vim.wo.diff then return '[c' end
+    vim.schedule(function() require 'gitsigns.actions'.prev_hunk() end)
+    return '<Ignore>'
+end, expr)
 vim.keymap.set({ 'n', 'v' }, '<leader>hs', ':Gitsigns stage_hunk<CR>', silent)
 vim.keymap.set('n', '<leader>hu', ':Gitsigns undo_stage_hunk<CR>', silent)
 vim.keymap.set({ 'n', 'v' }, '<leader>hr', ':Gitsigns reset_hunk<CR>', silent)
@@ -122,7 +130,10 @@ keymaps.lsp = {
     ['gx'] = function() vim.lsp.buf.code_action() end,
     ['gs'] = function() vim.lsp.buf.signature_help() end,
     ['gp'] = function() vim.lsp.buf.hover() end,
-    ['K'] = function() vim.lsp.buf.hover() end,
+    ['K'] = function() local ufo_loaded, ufo = pcall(require, 'ufo')
+        if ufo_loaded then if ufo.peekFoldedLinesUnderCursor() then return end end
+        vim.lsp.buf.hover()
+    end,
     ['gl'] = function() vim.diagnostic.open_float() end,
     [']d'] = function() vim.diagnostic.goto_next({ float = false }) end,
     ['[d'] = function() vim.diagnostic.goto_prev({ float = false }) end,
@@ -133,11 +144,11 @@ keymaps.lsp = {
 }
 
 -- INFO: Marks keymap
-vim.keymap.set('n', "'", function() require 'marks'.next() end, silent)
-vim.keymap.set('n', '"', function() require 'marks'.prev() end, silent)
-vim.keymap.set('n', "m'", function() require 'marks'.toggle() end, silent)
-vim.keymap.set('n', 'm"', function() require 'marks'.preview() end, silent)
-vim.keymap.set('n', 'md', function() require 'marks'.delete_buf() end, silent)
+vim.keymap.set('n', "'", require 'marks'.next, silent)
+vim.keymap.set('n', '"', require 'marks'.prev, silent)
+vim.keymap.set('n', "m'", require 'marks'.toggle, silent)
+vim.keymap.set('n', 'm"', require 'marks'.preview, silent)
+vim.keymap.set('n', 'md', require 'marks'.delete_buf, silent)
 
 -- using telescope to show all marks list
 vim.keymap.set('n', '<leader>m', function()
@@ -152,9 +163,24 @@ keymaps.autopair = {
     wrap = '<C-e>'
 }
 
+-- INFO: ufo keymap
+vim.keymap.set('n', 'zR', require 'ufo'.openAllFolds, silent)
+vim.keymap.set('n', 'zM', require 'ufo'.closeAllFolds, silent)
+vim.keymap.set('n', 'zr', require 'ufo'.openFoldsExceptKinds, silent)
+vim.keymap.set('n', 'zm', require 'ufo'.closeFoldsWith, silent) -- closeAllFolds == closeFoldsWith(0)
+
 -- INFO: hlslens keymap
-vim.keymap.set('n', 'n', [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]], silent)
-vim.keymap.set('n', 'N', [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]], silent)
+local function ufoSearchKeys(c)
+    local ok, msg = pcall(vim.cmd, 'norm!' .. vim.v.count1 .. c)
+    if not ok then
+        vim.api.nvim_echo({ { msg:match(':(.*)$'), 'ErrorMsg' } }, false, {})
+        return
+    end
+    require('hlslens').start()
+    require('ufo').peekFoldedLinesUnderCursor()
+end
+vim.keymap.set('n', 'n', function() ufoSearchKeys('n') end, silent)
+vim.keymap.set('n', 'N', function() ufoSearchKeys('N') end, silent)
 vim.keymap.set('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]], silent)
 vim.keymap.set('n', '#', [[#<Cmd>lua require('hlslens').start()<CR>]], silent)
 vim.keymap.set('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]], silent)

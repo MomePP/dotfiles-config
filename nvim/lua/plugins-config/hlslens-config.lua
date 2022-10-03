@@ -3,28 +3,32 @@ if not status_ok then return end
 
 hlslens.setup({
     calm_down = true,
-    override_lens = function(render, plist, nearest, idx, r_idx)
+    nearest_float_when = 'never',
+    override_lens = function(render, posList, nearest, idx, relIdx)
         local sfw = vim.v.searchforward == 1
         local indicator, text, chunks
-        local abs_r_idx = math.abs(r_idx)
-        if abs_r_idx > 1 then
-            indicator = ('%d%s'):format(abs_r_idx, sfw ~= (r_idx > 1) and '▲' or '▼')
-        elseif abs_r_idx == 1 then
-            indicator = sfw ~= (r_idx == 1) and '▲' or '▼'
+        local absRelIdx = math.abs(relIdx)
+        if absRelIdx > 1 then
+            indicator = ('%d%s'):format(absRelIdx, sfw ~= (relIdx > 1) and '▲' or '▼')
+        elseif absRelIdx == 1 then
+            indicator = sfw ~= (relIdx == 1) and '▲' or '▼'
         else
             indicator = ''
         end
 
-        local lnum, col = unpack(plist[idx])
+        local lnum, col = unpack(posList[idx])
         if nearest then
-            local cnt = #plist
-            text = ('[%d/%d]'):format(idx, cnt)
-            chunks = {{' ', 'Ignore'}, {text, 'HlSearchLensNear'}}
+            local cnt = #posList
+            if indicator ~= '' then
+                text = ('[%s %d/%d]'):format(indicator, idx, cnt)
+            else
+                text = ('[%d/%d]'):format(idx, cnt)
+            end
+            chunks = { { ' ', 'Ignore' }, { text, 'HlSearchLensNear' } }
         else
             text = ('[%s %d]'):format(indicator, idx)
-            chunks = {{' ', 'Ignore'}, {text, 'HlSearchLens'}}
+            chunks = { { ' ', 'Ignore' }, { text, 'HlSearchLens' } }
         end
-        render.set_virt(0, lnum - 1, col - 1, chunks, nearest)
+        render.setVirt(0, lnum - 1, col - 1, chunks, nearest)
     end
 })
-

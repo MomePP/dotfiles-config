@@ -117,6 +117,7 @@ return packer.startup({
         use 'lukas-reineke/indent-blankline.nvim'
         use 'b0o/incline.nvim'
         use 'SmiteshP/nvim-navic'
+        use { 'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async' }
         use { 'Darazaki/indent-o-matic', config = function() require('indent-o-matic').setup {} end }
         use { 'stevearc/dressing.nvim', config = function() require('dressing').setup {} end }
         use { 'vigoux/notifier.nvim', config = function() require('notifier').setup {} end }

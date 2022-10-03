@@ -69,4 +69,7 @@ vim.api.nvim_set_hl(0, 'Pmenu', { fg = M.colorset.transparent, bg = M.colorset.t
 vim.api.nvim_set_hl(0, 'NormalFloat', { bg = M.colorset.transparent })
 vim.api.nvim_set_hl(0, 'FloatBorder', { bg = M.colorset.transparent })
 
+-- override MoreMsg highlight
+vim.api.nvim_set_hl(0, 'MoreMsg', { fg = M.colorset.blue, bg = M.colorset.transparent })
+
 return M
