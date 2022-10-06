@@ -3,6 +3,8 @@ if not status_ok then return end
 
 local focus_configs = {
     excluded_filetypes = {
+        '',
+        'TelescopePrompt',
         'toggleterm',
     },
     excluded_buftypes = {

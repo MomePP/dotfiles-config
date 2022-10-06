@@ -106,6 +106,7 @@ return packer.startup({
         use 'NvChad/nvim-colorizer.lua'
         use 'windwp/nvim-autopairs'
         use 'chentoast/marks.nvim'
+        use 'fedepujol/move.nvim'
         use { 'ggandor/leap.nvim', config = function() require('leap').set_default_keymaps() end }
         use { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install' }
 

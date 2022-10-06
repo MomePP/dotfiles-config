@@ -1,4 +1,4 @@
-local silent = { silent = true }
+local silent = { noremap = true, silent = true }
 local expr = { expr = true }
 
 local keymaps = {}
@@ -59,21 +59,21 @@ vim.keymap.set('n', '<C-w><right>', '<C-w>>')
 vim.keymap.set('n', '<C-w><up>', '<C-w>+')
 vim.keymap.set('n', '<C-w><down>', '<C-w>-')
 
--- INFO: move line or visually selected block - opt+j/k - must set iterm to esc+
-vim.keymap.set('i', '<m-j>', '<Esc>:m .+1<CR>==gi', silent)
-vim.keymap.set('i', '<m-k>', '<Esc>:m .-2<CR>==gi', silent)
-vim.keymap.set('i', '<m-down>', '<Esc>:m .+1<CR>==gi', silent)
-vim.keymap.set('i', '<m-up>', '<Esc>:m .-2<CR>==gi', silent)
+-- INFO: move line or visually selected block - opt+j/k
+vim.keymap.set('n', '<m-j>', ':MoveLine(1)<CR>', silent)
+vim.keymap.set('n', '<m-k>', ':MoveLine(-1)<CR>', silent)
+vim.keymap.set('n', '<m-down>', ':MoveLine(1)<CR>', silent)
+vim.keymap.set('n', '<m-up>', ':MoveLine(-1)<CR>', silent)
 
-vim.keymap.set('v', '<m-k>', ':m \'<-2<CR>gv=gv', silent)
-vim.keymap.set('v', '<m-j>', ':m \'>+1<CR>gv=gv', silent)
-vim.keymap.set('v', '<m-down>', ':m \'>+1<CR>gv=gv', silent)
-vim.keymap.set('v', '<m-up>', ':m \'<-2<CR>gv=gv', silent)
+vim.keymap.set('v', '<m-j>', ':MoveBlock(1)<CR>', silent)
+vim.keymap.set('v', '<m-k>', ':MoveBlock(-1)<CR>', silent)
+vim.keymap.set('v', '<m-down>', ':MoveBlock(1)<CR>', silent)
+vim.keymap.set('v', '<m-up>', ':MoveBlock(-1)<CR>', silent)
 
-vim.keymap.set('n', '<m-j>', ':m+<CR>', silent)
-vim.keymap.set('n', '<m-k>', ':m-2<CR>', silent)
-vim.keymap.set('n', '<m-down>', ':m+<CR>', silent)
-vim.keymap.set('n', '<m-up>', ':m-2<CR>', silent)
+vim.keymap.set('i', '<m-j>', '<Esc>:MoveLine(1)<CR>==gi', silent)
+vim.keymap.set('i', '<m-k>', '<Esc>:MoveLine(-1)<CR>==gi', silent)
+vim.keymap.set('i', '<m-down>', '<Esc>:MoveLine(1)<CR>==gi', silent)
+vim.keymap.set('i', '<m-up>', '<Esc>:MoveLine(-1)<CR>==gi', silent)
 
 -- INFO: remap jump keys
 vim.keymap.set('n', '<C-j>', '<C-i>', silent)
@@ -179,6 +179,7 @@ local function ufoSearchKeys(c)
     require('hlslens').start()
     require('ufo').peekFoldedLinesUnderCursor()
 end
+
 vim.keymap.set('n', 'n', function() ufoSearchKeys('n') end, silent)
 vim.keymap.set('n', 'N', function() ufoSearchKeys('N') end, silent)
 vim.keymap.set('n', '*', [[*<Cmd>lua require('hlslens').start()<CR>]], silent)
