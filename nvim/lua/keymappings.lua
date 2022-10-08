@@ -34,30 +34,26 @@ vim.keymap.set('i', '.', '.<C-g>u')
 vim.keymap.set('i', '!', '!<C-g>u')
 vim.keymap.set('i', '?', '?<C-g>u')
 
--- INFO: Jumplist mutation
--- vim.keymap.set('n', 'k', '(v:count > 5 ? "m\'" . v:count : "") . "k"', expr)
--- vim.keymap.set('n', 'j', '(v:count > 5 ? "m\'" . v:count : "") . "j"', expr)
-
 -- INFO: Buffers navigated keys
 vim.keymap.set('n', 'tq', ':Bdelete<CR>', silent)
 vim.keymap.set('n', '<Tab>', ':bnext<CR>', silent)
 vim.keymap.set('n', '<S-Tab>', ':bprev<CR>', silent)
 
 -- INFO: Panes config using `focus` plugin
-vim.keymap.set('n', '<space>', function() require('focus').split_cycle() end, silent)
-vim.keymap.set('n', '<leader><space>', function() require('focus').focus_toggle() end, silent)
-vim.keymap.set('n', 'wt', function() require('focus').focus_max_or_equal() end, silent)
-vim.keymap.set('n', 'wh', function() require('focus').split_command('h') end, silent)
-vim.keymap.set('n', 'wl', function() require('focus').split_command('l') end, silent)
-vim.keymap.set('n', 'wk', function() require('focus').split_command('k') end, silent)
-vim.keymap.set('n', 'wj', function() require('focus').split_command('j') end, silent)
+vim.keymap.set('n', '<space>', require 'focus'.split_cycle, silent)
+vim.keymap.set('n', '<leader><space>', require 'focus'.focus_toggle, silent)
+vim.keymap.set('n', 'wt', require 'focus'.focus_max_or_equal, silent)
+vim.keymap.set('n', 'wh', function() require 'focus'.split_command('h') end, silent)
+vim.keymap.set('n', 'wl', function() require 'focus'.split_command('l') end, silent)
+vim.keymap.set('n', 'wk', function() require 'focus'.split_command('k') end, silent)
+vim.keymap.set('n', 'wj', function() require 'focus'.split_command('j') end, silent)
 vim.keymap.set('n', 'wq', '<C-w>q', silent)
 
 -- INFO: resize window
-vim.keymap.set('n', '<C-w><left>', '<C-w><')
-vim.keymap.set('n', '<C-w><right>', '<C-w>>')
-vim.keymap.set('n', '<C-w><up>', '<C-w>+')
-vim.keymap.set('n', '<C-w><down>', '<C-w>-')
+-- vim.keymap.set('n', '<C-w><left>', '<C-w><')
+-- vim.keymap.set('n', '<C-w><right>', '<C-w>>')
+-- vim.keymap.set('n', '<C-w><up>', '<C-w>+')
+-- vim.keymap.set('n', '<C-w><down>', '<C-w>-')
 
 -- INFO: move line or visually selected block - opt+j/k
 vim.keymap.set('n', '<m-j>', ':MoveLine(1)<CR>', silent)
@@ -80,21 +76,25 @@ vim.keymap.set('n', '<C-j>', '<C-i>', silent)
 vim.keymap.set('n', '<C-k>', '<C-o>', silent)
 
 -- INFO: GitSign keymap
-vim.keymap.set('n', ']c', function()
-    if vim.wo.diff then return ']c' end
-    vim.schedule(function() require 'gitsigns.actions'.next_hunk() end)
-    return '<Ignore>'
-end, expr)
-vim.keymap.set('n', '[c', function()
-    if vim.wo.diff then return '[c' end
-    vim.schedule(function() require 'gitsigns.actions'.prev_hunk() end)
-    return '<Ignore>'
-end, expr)
-vim.keymap.set({ 'n', 'v' }, '<leader>hs', ':Gitsigns stage_hunk<CR>', silent)
-vim.keymap.set('n', '<leader>hu', ':Gitsigns undo_stage_hunk<CR>', silent)
-vim.keymap.set({ 'n', 'v' }, '<leader>hr', ':Gitsigns reset_hunk<CR>', silent)
-vim.keymap.set('n', '<leader>hp', ':Gitsigns preview_hunk<CR>', silent)
-vim.keymap.set('n', '<leader>hb', ':Gitsigns blame_line<CR>', silent)
+keymaps.gitsign = function(bufnr)
+    local gs = require 'gitsigns.actions'
+    local opts = { buffer = bufnr, silent = true }
+
+    vim.keymap.set('n', ']c', function()
+        if vim.wo.diff then return ']c' end
+        vim.schedule(function() gs.next_hunk() end)
+        return '<Ignore>'
+    end, expr)
+    vim.keymap.set('n', '[c', function()
+        if vim.wo.diff then return '[c' end
+        vim.schedule(function() gs.prev_hunk() end)
+        return '<Ignore>'
+    end, expr)
+    vim.keymap.set({ 'n', 'v' }, '<leader>hr', gs.reset_hunk, opts)
+    vim.keymap.set('n', '<leader>hp', gs.preview_hunk, opts)
+    vim.keymap.set('n', '<leader>hb', gs.blame_line, opts)
+    vim.keymap.set('n', '<leader>hB', gs.toggle_current_line_blame, opts)
+end
 
 -- INFO: Telescope keymap
 vim.keymap.set('n', 'gw', require 'telescope.builtin'.grep_string, silent)
@@ -122,24 +122,24 @@ vim.keymap.set('n', '<leader>p', ':MarkdownPreviewToggle<CR>', silent)
 
 -- INFO: LSP keymap
 keymaps.lsp = {
-    ['gd'] = function() require 'telescope.builtin'.lsp_definitions() end,
-    ['gD'] = function() vim.lsp.buf.declaration() end,
-    ['gi'] = function() require 'telescope.builtin'.lsp_implementations() end,
-    ['gt'] = function() require 'telescope.builtin'.lsp_type_definitions() end,
-    ['gr'] = function() require 'telescope.builtin'.lsp_references() end,
-    ['gx'] = function() vim.lsp.buf.code_action() end,
-    ['gs'] = function() vim.lsp.buf.signature_help() end,
-    ['gp'] = function() vim.lsp.buf.hover() end,
+    ['gd'] = require 'telescope.builtin'.lsp_definitions,
+    ['gD'] = vim.lsp.buf.declaration,
+    ['gi'] = require 'telescope.builtin'.lsp_implementations,
+    ['gt'] = require 'telescope.builtin'.lsp_type_definitions,
+    ['gr'] = require 'telescope.builtin'.lsp_references,
+    ['gx'] = vim.lsp.buf.code_action,
+    ['gs'] = vim.lsp.buf.signature_help,
+    ['gp'] = vim.lsp.buf.hover,
     ['K'] = function() local ufo_loaded, ufo = pcall(require, 'ufo')
         if ufo_loaded then if ufo.peekFoldedLinesUnderCursor() then return end end
         vim.lsp.buf.hover()
     end,
-    ['gl'] = function() vim.diagnostic.open_float() end,
+    ['gl'] = vim.diagnostic.open_float,
     [']d'] = function() vim.diagnostic.goto_next({ float = false }) end,
     ['[d'] = function() vim.diagnostic.goto_prev({ float = false }) end,
-    ['<leader>ls'] = function() require 'telescope.builtin'.lsp_document_symbols() end,
-    ['<leader>ld'] = function() require 'telescope.builtin'.diagnostics() end,
-    ['<leader>lr'] = function() vim.lsp.buf.rename() end,
+    ['<leader>ls'] = require 'telescope.builtin'.lsp_document_symbols,
+    ['<leader>ld'] = require 'telescope.builtin'.diagnostics,
+    ['<leader>lr'] = vim.lsp.buf.rename,
     ['<leader>ff'] = function() vim.lsp.buf.format({ async = true }) end,
 }
 
@@ -188,8 +188,8 @@ vim.keymap.set('n', 'g*', [[g*<Cmd>lua require('hlslens').start()<CR>]], silent)
 vim.keymap.set('n', 'g#', [[g#<Cmd>lua require('hlslens').start()<CR>]], silent)
 
 -- INFO: session-manager keymaps
-vim.keymap.set('n', '<leader>sr', ':SessionManager load_session<CR>', silent)
-vim.keymap.set('n', '<leader>ss', ':SessionManager save_current_session<CR>', silent)
-vim.keymap.set('n', '<leader>sd', ':SessionManager delete_session<CR>', silent)
+vim.keymap.set('n', '<leader>sr', require 'session_manager'.load_session, silent)
+vim.keymap.set('n', '<leader>ss', require 'session_manager'.save_current_session, silent)
+vim.keymap.set('n', '<leader>sd', require 'session_manager'.delete_session, silent)
 
 return keymaps

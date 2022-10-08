@@ -1,7 +1,5 @@
-local status_ok, gitsigns = pcall(require, "gitsigns")
-if not status_ok then
-    return
-end
+local status_ok, gitsigns = pcall(require, 'gitsigns')
+if not status_ok then return end
 
 gitsigns.setup {
     current_line_blame_formatter_opts = {
@@ -16,5 +14,6 @@ gitsigns.setup {
         col = 2,
         focusable = false,
     },
+    on_attach = require 'keymappings'.gitsign,
 }
 
