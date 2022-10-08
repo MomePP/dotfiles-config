@@ -14,6 +14,5 @@ gitsigns.setup {
         col = 2,
         focusable = false,
     },
-    on_attach = require 'keymappings'.gitsign,
 }
 

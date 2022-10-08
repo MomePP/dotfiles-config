@@ -76,25 +76,20 @@ vim.keymap.set('n', '<C-j>', '<C-i>', silent)
 vim.keymap.set('n', '<C-k>', '<C-o>', silent)
 
 -- INFO: GitSign keymap
-keymaps.gitsign = function(bufnr)
-    local gs = require 'gitsigns.actions'
-    local opts = { buffer = bufnr, silent = true }
-
-    vim.keymap.set('n', ']c', function()
-        if vim.wo.diff then return ']c' end
-        vim.schedule(function() gs.next_hunk() end)
-        return '<Ignore>'
-    end, expr)
-    vim.keymap.set('n', '[c', function()
-        if vim.wo.diff then return '[c' end
-        vim.schedule(function() gs.prev_hunk() end)
-        return '<Ignore>'
-    end, expr)
-    vim.keymap.set({ 'n', 'v' }, '<leader>hr', gs.reset_hunk, opts)
-    vim.keymap.set('n', '<leader>hp', gs.preview_hunk, opts)
-    vim.keymap.set('n', '<leader>hb', gs.blame_line, opts)
-    vim.keymap.set('n', '<leader>hB', gs.toggle_current_line_blame, opts)
-end
+vim.keymap.set('n', ']c', function()
+    if vim.wo.diff then return ']c' end
+    vim.schedule(function() require 'gitsigns.actions'.next_hunk() end)
+    return '<Ignore>'
+end, expr)
+vim.keymap.set('n', '[c', function()
+    if vim.wo.diff then return '[c' end
+    vim.schedule(function() require 'gitsigns.actions'.prev_hunk() end)
+    return '<Ignore>'
+end, expr)
+vim.keymap.set({ 'n', 'v' }, '<leader>hr', require 'gitsigns.actions'.reset_hunk, silent)
+vim.keymap.set('n', '<leader>hp', require 'gitsigns.actions'.preview_hunk, silent)
+vim.keymap.set('n', '<leader>hb', require 'gitsigns.actions'.blame_line, silent)
+vim.keymap.set('n', '<leader>hB', require 'gitsigns.actions'.toggle_current_line_blame, silent)
 
 -- INFO: Telescope keymap
 vim.keymap.set('n', 'gw', require 'telescope.builtin'.grep_string, silent)
