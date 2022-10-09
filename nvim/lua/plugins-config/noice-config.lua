@@ -10,12 +10,6 @@ noice.setup {
             [':'] = { icon = ' ﲵ', hl_group = 'DiagnosticInfo', firstc = false },
         },
     },
-    popupmenu = {
-        enabled = false
-    },
-    notify = {
-        enabled = false
-    }
 }
 
 local notify_status, notify = pcall(require, 'notify')
