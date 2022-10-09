@@ -47,7 +47,7 @@ M.colorset = {
 
 -- INFO: kanagawa theme config
 require('kanagawa').setup({
-    transparent = true, -- do not set background color
+    transparent = false,
     globalStatus = true,
     terminalColors = false,
     colors = {

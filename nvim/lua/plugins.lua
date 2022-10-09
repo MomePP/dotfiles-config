@@ -85,7 +85,8 @@ return packer.startup({
         use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
 
         -- Treesitter
-        use { 'nvim-treesitter/nvim-treesitter', run = function() require('nvim-treesitter.install').update({ with_sync = true }) end }
+        use { 'nvim-treesitter/nvim-treesitter',
+            run = function() require('nvim-treesitter.install').update({ with_sync = true }) end }
         use 'nvim-treesitter/nvim-treesitter-textobjects'
         use 'JoosepAlviste/nvim-ts-context-commentstring'
         use 'windwp/nvim-ts-autotag'
@@ -119,9 +120,9 @@ return packer.startup({
         use 'b0o/incline.nvim'
         use 'SmiteshP/nvim-navic'
         use { 'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async' }
+        use { 'folke/noice.nvim', requires = { 'MunifTanjim/nui.nvim', 'rcarriga/nvim-notify', }, event = 'VimEnter', }
         use { 'Darazaki/indent-o-matic', config = function() require('indent-o-matic').setup {} end }
         use { 'stevearc/dressing.nvim', config = function() require('dressing').setup {} end }
-        use { 'vigoux/notifier.nvim', config = function() require('notifier').setup {} end }
 
         -- Color Schemes
         -- use 'MomePP/plastic-nvim'

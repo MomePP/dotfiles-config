@@ -1,7 +1,7 @@
 local lualine_loadded, lualine = pcall(require, 'lualine')
 if not lualine_loadded then return end
 
-local navic = require('nvim-navic')
+local navic_status, navic = pcall(require, 'nvim-navic')
 local colors = require('colorscheme').colorset
 
 local conditions = {
@@ -15,6 +15,9 @@ local conditions = {
         local filepath = vim.fn.expand('%:p:h')
         local gitdir = vim.fn.finddir('.git', filepath .. ';')
         return gitdir and #gitdir > 0 and #gitdir < #filepath
+    end,
+    is_navic_available = function ()
+        return navic_status
     end,
 }
 
@@ -52,9 +55,7 @@ local navic_location = {
         end
     end,
     color = { fg = colors.cyan },
-    -- color = { fg = colors.purple },
-    -- color = { fg = colors.teal },
-    cond = navic.is_available
+    cond = conditions.is_navic_available and navic.is_available
 }
 
 local filetype = {
