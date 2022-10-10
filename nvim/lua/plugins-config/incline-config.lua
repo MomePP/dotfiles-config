@@ -29,10 +29,13 @@ incline.setup {
         local bufname = vim.api.nvim_buf_get_name(props.buf)
         local render_path = bufname ~= '' and vim.fn.fnamemodify(bufname, ':.') or '[No Name]'
         local render_modified = vim.api.nvim_buf_get_option(props.buf, 'modified') and '  ' or ' '
+        -- local icon, color = require('nvim-web-devicons').get_icon_color(vim.fn.fnamemodify((bufname), ':t'))
+        -- local render_icon = icon .. ' '
 
         local render_incline = {}
         table.insert(render_incline, { ' ', group = 'InclineSpacing' })
         table.insert(render_incline, { render_modified, group = 'InclineModified' })
+        -- table.insert(render_incline, { render_icon, guifg = color })
         table.insert(render_incline, render_path)
         return render_incline
     end,

@@ -71,13 +71,13 @@ lsp_setup.setup({
     on_attach = lsp_on_attach,
     servers = {
         pyright = require('lsp-config.settings.pyright'),
-        tsserver = require('lsp-config.settings.tsserver'),
         jsonls = require('lsp-config.settings.jsonls'),
         sumneko_lua = require('lsp-config.settings.sumneko_lua'),
+        volar = require('lsp-config.settings.volar'),
+        tsserver = {},
         ltex = {},
         cssls = {},
         rust_analyzer = {},
-        volar = {},
         html = {},
         -- clangd = {},
     }
