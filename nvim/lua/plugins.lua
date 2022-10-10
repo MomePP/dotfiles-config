@@ -122,7 +122,6 @@ return packer.startup({
         use { 'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async' }
         use { 'folke/noice.nvim', requires = { 'MunifTanjim/nui.nvim', 'rcarriga/nvim-notify' } }
         use { 'Darazaki/indent-o-matic', config = function() require('indent-o-matic').setup {} end }
-        use { 'stevearc/dressing.nvim', config = function() require('dressing').setup {} end }
 
         -- Color Schemes
         -- use 'MomePP/plastic-nvim'
