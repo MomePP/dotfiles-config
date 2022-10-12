@@ -21,9 +21,6 @@ if status is-interactive
   set -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
 end
 
-# init pyenv
-pyenv init - | source
-
 # config homebrew path
 fish_add_path /opt/homebrew/bin
 
@@ -92,5 +89,6 @@ alias tma "tmux attach-session || tmux new -s default"
 alias tmd "tmux detach"
 alias cat "bat"
 
+pyenv init - | source
 starship init fish | source
 

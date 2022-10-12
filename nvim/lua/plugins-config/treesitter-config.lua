@@ -13,7 +13,6 @@ treesitter.setup {
         enable = false,
         disable = { 'yaml' },
     },
-    ensure_install = 'all',
     auto_install = true,
     sync_install = false,
     ignore_install = {
