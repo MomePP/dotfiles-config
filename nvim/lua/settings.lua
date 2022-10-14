@@ -23,7 +23,6 @@ vim.opt.clipboard = 'unnamedplus'
 vim.opt.mouse = 'a'
 vim.opt.shell = 'fish'
 vim.opt.inccommand = 'nosplit'
-vim.opt.lazyredraw = true
 vim.opt.wrap = false
 vim.opt.signcolumn = 'yes'
 vim.opt.termguicolors = true

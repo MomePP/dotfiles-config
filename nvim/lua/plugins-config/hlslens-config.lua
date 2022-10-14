@@ -3,7 +3,6 @@ if not status_ok then return end
 
 hlslens.setup({
     calm_down = true,
-    nearest_float_when = 'never',
     override_lens = function(render, posList, nearest, idx, relIdx)
         local sfw = vim.v.searchforward == 1
         local indicator, text, chunks
