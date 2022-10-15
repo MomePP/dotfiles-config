@@ -5,36 +5,47 @@ local M = {}
 vim.opt.background = 'dark'
 
 M.colorset = {
-    white        = '#d4be98',
-    gray         = '#928374',
-    black        = '#665c54',
-    red          = '#ea6962',
-    green        = '#a9b665',
-    blue         = '#7daea3',
-    yellow       = '#d8a657',
-    orange       = '#e78a4e',
-    purple       = '#af5fff',
-    magenta      = '#d3869b',
-    teal         = '#5bc8af',
-    cyan         = '#89b482',
-    bg           = '#181a1f',
-    transparent  = 'NONE',
-    bracket      = {
-        "#ffd700",
-        "#da70d6",
-        "#87cefa"
-    },
-    todocomments = {
-        error = { "#D74E42" },
-        warn = { "#E9D16C" },
-        hint = { "#98C379" },
-        perf = { "#1085FF" },
-        info = { "#61AFEF" },
-        todo = { "#B57EDC" },
-        hack = { "#D19A66" },
-    },
+    white       = '#d4be98',
+    gray        = '#928374',
+    black       = '#665c54',
+    red         = '#ea6962',
+    green       = '#a9b665',
+    blue        = '#7daea3',
+    yellow      = '#d8a657',
+    orange      = '#e78a4e',
+    purple      = '#af5fff',
+    magenta     = '#d3869b',
+    teal        = '#5bc8af',
+    cyan        = '#89b482',
+    bg          = '#181a1f',
+    transparent = 'NONE',
 }
 
+M.colorset.bracket = {
+    "#ffd700",
+    "#da70d6",
+    "#87cefa"
+}
+
+M.colorset.todocomments = {
+    error = { "#D74E42" },
+    warn = { "#E9D16C" },
+    hint = { "#98C379" },
+    perf = { "#1085FF" },
+    info = { "#61AFEF" },
+    todo = { "#B57EDC" },
+    hack = { "#D19A66" },
+}
+
+M.colorset.modes = {
+    n = M.colorset.cyan,
+    i = M.colorset.green,
+    v = M.colorset.magenta,
+    V = M.colorset.magenta,
+    r = M.colorset.yellow,
+    R = M.colorset.yellow,
+    c = M.colorset.red,
+}
 -- local colorset = {
 --     purple = '#6100e0',
 --     red = '#ff3838',

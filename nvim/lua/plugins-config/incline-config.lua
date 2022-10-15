@@ -17,7 +17,7 @@ incline.setup {
             },
             InclineSpacing = {
                 guifg = colors.white,
-                guibg = colors.cyan,
+                guibg = colors.purple,
             },
             InclineModified = {
                 guifg = colors.red,
@@ -29,11 +29,14 @@ incline.setup {
         local bufname = vim.api.nvim_buf_get_name(props.buf)
         local render_path = bufname ~= '' and vim.fn.fnamemodify(bufname, ':.') or '[No Name]'
         local render_modified = vim.api.nvim_buf_get_option(props.buf, 'modified') and '  ' or ' '
+        -- local mode_color = colors.modes[(vim.api.nvim_get_mode().mode)]
+        -- print(vim.inspect(mode_color))
         -- local icon, color = require('nvim-web-devicons').get_icon_color(vim.fn.fnamemodify((bufname), ':t'))
         -- local render_icon = icon .. ' '
 
         local render_incline = {}
         table.insert(render_incline, { ' ', group = 'InclineSpacing' })
+        -- table.insert(render_incline, { ' ', guibg = mode_color })
         table.insert(render_incline, { render_modified, group = 'InclineModified' })
         -- table.insert(render_incline, { render_icon, guifg = color })
         table.insert(render_incline, render_path)
