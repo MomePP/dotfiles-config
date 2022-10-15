@@ -6,6 +6,7 @@ local focus_configs = {
         '',
         'TelescopePrompt',
         'toggleterm',
+        'noice',
     },
     excluded_buftypes = {
         'nofile',
@@ -13,7 +14,6 @@ local focus_configs = {
         'popup',
         'terminal'
     },
-    excluded_windows = {},
     autoresize = true,
     number = false,
     signcolumn = false,

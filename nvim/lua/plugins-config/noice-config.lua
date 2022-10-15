@@ -5,6 +5,7 @@ noice.setup {
     views = {
         mini = {
             focusable = false,
+            timeout = 3000,
         },
     },
     cmdline = {
@@ -12,11 +13,14 @@ noice.setup {
         icons = {
             ['?'] = { icon = ' ', hl_group = 'DiagnosticWarn', firstc = false },
             ['/'] = { icon = ' ', hl_group = 'DiagnosticWarn', firstc = false },
-            [':'] = { icon = ' ﲵ', hl_group = 'DiagnosticError', firstc = false },
+            [':'] = { icon = ' ', hl_group = 'DiagnosticError', firstc = false },
         },
     },
     notify = {
         enable = false,
+    },
+    lsp_progress = {
+        enable = true,
     },
     routes = {
         {
