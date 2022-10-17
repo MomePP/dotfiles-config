@@ -1,6 +1,12 @@
 local noice_status, noice = pcall(require, 'noice')
 if not noice_status then return end
 
+local colors = require('colorscheme').colorset
+
+-- override highlight group for Noice cmdline
+vim.api.nvim_set_hl(0, 'NoiceCmdlineIcon', { bg = colors.transparent, fg = colors.red, bold = true })
+vim.api.nvim_set_hl(0, 'NoiceCmdlineIconSearch', { bg = colors.transparent, fg = colors.orange, bold = true })
+
 noice.setup {
     views = {
         mini = {
@@ -11,9 +17,9 @@ noice.setup {
     cmdline = {
         view = 'cmdline',
         icons = {
-            ['?'] = { icon = ' ', hl_group = 'DiagnosticWarn', firstc = false },
-            ['/'] = { icon = ' ', hl_group = 'DiagnosticWarn', firstc = false },
-            [':'] = { icon = ' ', hl_group = 'DiagnosticError', firstc = false },
+            ['?'] = { icon = ' SEARCH ', firstc = false },
+            ['/'] = { icon = ' SEARCH ', firstc = false },
+            [':'] = { icon = ' COMMAND ', firstc = false },
         },
     },
     notify = {

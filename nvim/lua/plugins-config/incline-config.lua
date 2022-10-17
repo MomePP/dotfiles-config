@@ -17,7 +17,7 @@ incline.setup {
             },
             InclineSpacing = {
                 guifg = colors.white,
-                guibg = colors.purple,
+                guibg = colors.cyan,
             },
             InclineModified = {
                 guifg = colors.red,
