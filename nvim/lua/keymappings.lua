@@ -187,4 +187,7 @@ vim.keymap.set('n', '<leader>sr', require 'session_manager'.load_session, silent
 vim.keymap.set('n', '<leader>ss', require 'session_manager'.save_current_session, silent)
 vim.keymap.set('n', '<leader>sd', require 'session_manager'.delete_session, silent)
 
+-- INFO: Noice keymaps
+vim.keymap.set('n', '<leader>M', ':Noice<CR>', silent)
+
 return keymaps
