@@ -16,11 +16,15 @@ noice.setup {
     },
     cmdline = {
         view = 'cmdline',
+        view_search = 'cmdline',
         icons = {
             ['?'] = { icon = ' SEARCH ', firstc = false },
             ['/'] = { icon = ' SEARCH ', firstc = false },
             [':'] = { icon = ' COMMAND ', firstc = false },
         },
+    },
+    popupmenu = {
+        enable = false,
     },
     notify = {
         enable = false,
@@ -43,8 +47,7 @@ noice.setup {
             filter = {
                 any = {
                     { event = 'msg_show', kind = { 'echo', '' } },
-                    { event = 'notify' },
-                    { event = 'noice' },
+                    { event = { 'notify', 'noice', 'lsp' } },
                     { error = true },
                     { warning = true },
                 },

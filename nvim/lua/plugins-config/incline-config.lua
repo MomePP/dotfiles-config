@@ -4,6 +4,13 @@ if not status_ok then return end
 local colors = require('colorscheme').colorset
 
 incline.setup {
+    window = {
+        margin = {
+            horizontal = 0,
+            vertical = 0,
+        },
+        zindex = 10,
+    },
     highlight = {
         groups = {
             InclineNormal = {
@@ -42,12 +49,6 @@ incline.setup {
         table.insert(render_incline, render_path)
         return render_incline
     end,
-    window = {
-        margin = {
-            horizontal = 0,
-            vertical = 0,
-        }
-    }
 }
 
 -- PERF: remove some of events triggered by incline that not being used in my config
