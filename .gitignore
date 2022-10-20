@@ -7,3 +7,5 @@ nvim/plugin/packer_compiled.lua
 tmux/plugins
 containers
 
+
+github-copilot

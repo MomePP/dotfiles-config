@@ -18,6 +18,7 @@ vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 8
 vim.opt.shiftround = true
 vim.opt.smartcase = true
+vim.opt.lazyredraw = false
 vim.opt.wildmode = 'list:longest'
 vim.opt.clipboard = 'unnamedplus'
 vim.opt.mouse = 'a'
