@@ -109,7 +109,7 @@ return packer.startup({
         use 'chentoast/marks.nvim'
         use 'fedepujol/move.nvim'
         use { 'ggandor/leap.nvim', config = function() require('leap').set_default_keymaps() end }
-        use { 'iamcco/markdown-preview.nvim', run = 'cd app && yarn install' }
+        use { 'iamcco/markdown-preview.nvim', run = function() vim.fn['mkdp#util#install']() end, }
 
         -- UI decoration
         use 'kyazdani42/nvim-web-devicons'
