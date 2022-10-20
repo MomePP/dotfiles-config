@@ -36,6 +36,7 @@ vim.opt.laststatus = 3
 vim.opt.showtabline = 0
 vim.opt.cmdheight = 0
 vim.opt.sessionoptions = 'blank,buffers,curdir,folds'
+vim.opt.shortmess = 'fnxoOtTFS'
 vim.opt.fillchars:append({
     horiz = '━',
     horizup = '┻',

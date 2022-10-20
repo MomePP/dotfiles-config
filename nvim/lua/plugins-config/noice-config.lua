@@ -14,6 +14,9 @@ noice.setup {
             timeout = 3000,
         },
     },
+    messages = {
+        view_search = false,
+    },
     cmdline = {
         view = 'cmdline',
         view_search = 'cmdline',
@@ -29,15 +32,5 @@ noice.setup {
     },
     lsp_progress = {
         enable = true,
-    },
-    routes = {
-        {
-            filter = {
-                any = {
-                    { event = 'msg_show', kind = 'search_count' },
-                },
-            },
-            opts = { skip = true },
-        },
     },
 }
