@@ -1,10 +1,10 @@
 return {
     init_options = {
         cache = {
-            directory = ".ccls-cache";
-        };
+            directory = ".ccls-cache"
+        },
         clang = {
-            excludeArgs = { "-frounding-math" };
-        };
+            excludeArgs = { "-frounding-math" }
+        },
     }
 }

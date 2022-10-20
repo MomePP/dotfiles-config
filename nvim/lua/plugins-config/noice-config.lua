@@ -23,6 +23,10 @@ noice.setup {
             [':'] = { icon = ' COMMAND ', firstc = false },
         },
     },
+    popupmenu = {
+        enable = true,
+        backend = 'cmp',
+    },
     lsp_progress = {
         enable = true,
     },

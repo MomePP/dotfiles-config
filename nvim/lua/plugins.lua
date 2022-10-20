@@ -75,6 +75,14 @@ return packer.startup({
         use 'RRethy/vim-illuminate'
         use { 'Maan2003/lsp_lines.nvim', config = function() require('lsp_lines').setup() end }
 
+        -- Github co-pilot
+        use { 'zbirenbaum/copilot.lua', after = { 'lualine.nvim' },
+            config = function()
+                vim.defer_fn(function() require('lsp-config.copilot-handler') end, 100)
+            end
+        }
+        use { 'zbirenbaum/copilot-cmp', after = { 'copilot.lua' } }
+
         -- Git plugins
         use 'lewis6991/gitsigns.nvim'
         use { 'akinsho/git-conflict.nvim', tag = "*" }
