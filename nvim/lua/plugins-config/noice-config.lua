@@ -22,16 +22,13 @@ noice.setup {
         view = 'cmdline',
         format = {
             cmdline = { pattern = '^:', icon = ' COMMAND ' },
-            search = { pattern = '^[?/]', icon = ' SEARCH ', conceal = true },
-            filter = { pattern = '^:%s*!', icon = ' BASH ', opts = { buf_options = { filetype = 'sh' } } },
+            search_down = { kind = 'search', pattern = '^/', icon = ' SEARCH  ', ft = 'regex' },
+            search_up = { kind = 'search', pattern = '^%?', icon = ' SEARCH  ', ft = 'regex' },
+            filter = { pattern = '^:%s*!', icon = ' TERMINAL ', opts = { buf_options = { filetype = 'sh' } } },
             lua = false,
         }
     },
     popupmenu = {
-        enable = true,
         backend = 'cmp',
-    },
-    lsp_progress = {
-        enable = true,
     },
 }

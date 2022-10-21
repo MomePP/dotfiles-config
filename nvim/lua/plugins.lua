@@ -78,7 +78,7 @@ return packer.startup({
         -- Github co-pilot
         use { 'zbirenbaum/copilot.lua', after = { 'lualine.nvim' },
             config = function()
-                vim.defer_fn(function() require('lsp-config.copilot-handler') end, 100)
+                vim.defer_fn(function() require('lsp-config.copilot-handler') end, 200)
             end
         }
         use { 'zbirenbaum/copilot-cmp', after = { 'copilot.lua' } }
