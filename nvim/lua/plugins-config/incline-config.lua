@@ -19,7 +19,7 @@ incline.setup {
                 gui = 'bold'
             },
             InclineNormalNC = {
-                guifg = colors.gray,
+                guifg = colors.black,
                 guibg = colors.transparent,
             },
             InclineSpacing = {

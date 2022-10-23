@@ -151,9 +151,9 @@ local lualine_colors = {
         c = { bg = colors.transparent, fg = colors.white },
     },
     inactive = {
-        a = { bg = colors.transparent, fg = colors.gray },
-        b = { bg = colors.transparent, fg = colors.gray },
-        c = { bg = colors.transparent, fg = colors.gray },
+        a = { bg = colors.transparent, fg = colors.black },
+        b = { bg = colors.transparent, fg = colors.black },
+        c = { bg = colors.transparent, fg = colors.black },
     },
 }
 
