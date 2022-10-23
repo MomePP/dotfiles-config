@@ -57,16 +57,51 @@ M.colorset.modes = {
 -- }
 
 -- INFO: kanagawa theme config
-require('kanagawa').setup({
-    transparent = false,
-    globalStatus = true,
-    terminalColors = false,
-    colors = {
-        fg_border = M.colorset.white,
-        bg = M.colorset.bg,
-    },
-})
-vim.cmd.colorscheme 'kanagawa'
+local kanagawa_status, kanagawa = pcall(require, 'kanagawa')
+if kanagawa_status then
+    local colors = require('kanagawa.colors').setup()
+    M.navic_highlight = {
+        NavicIconsFile = { fg = colors.springViolet2 },
+        NavicIconsModule = { fg = colors.boatYellow2 },
+        NavicIconsNamespace = { fg = colors.springViolet2 },
+        NavicIconsPackage = { fg = colors.springViolet1 },
+        NavicIconsClass = { fg = colors.surimiOrange },
+        NavicIconsMethod = { fg = colors.crystalBlue },
+        NavicIconsProperty = { fg = colors.waveAqua2 },
+        NavicIconsField = { fg = colors.waveAqua1 },
+        NavicIconsConstructor = { fg = colors.surimiOrange },
+        NavicIconsEnum = { fg = colors.boatYellow2 },
+        NavicIconsInterface = { fg = colors.carpYellow },
+        NavicIconsFunction = { fg = colors.crystalBlue },
+        NavicIconsVariable = { fg = colors.oniViolet },
+        NavicIconsConstant = { fg = colors.oniViolet },
+        NavicIconsString = { fg = colors.springGreen },
+        NavicIconsNumber = { fg = colors.sakuraPink },
+        NavicIconsBoolean = { fg = colors.surimiOrange },
+        NavicIconsArray = { fg = colors.waveAqua2 },
+        NavicIconsObject = { fg = colors.surimiOrange },
+        NavicIconsKey = { fg = colors.oniViolet },
+        NavicIconsNull = { fg = colors.carpYellow },
+        NavicIconsEnumMember = { fg = colors.carpYellow },
+        NavicIconsStruct = { fg = colors.surimiOrange },
+        NavicIconsEvent = { fg = colors.surimiOrange },
+        NavicIconsOperator = { fg = colors.springViolet2 },
+        NavicIconsTypeParameter = { fg = colors.springBlue },
+        NavicText = { fg = M.colorset.white },
+        NavicSeparator = { fg = M.colorset.orange },
+    }
+
+    kanagawa.setup({
+        transparent = false,
+        globalStatus = true,
+        terminalColors = false,
+        colors = {
+            fg_border = M.colorset.white,
+            bg = M.colorset.bg,
+        },
+    })
+    vim.cmd.colorscheme 'kanagawa'
+end
 
 -- INFO: adwaita theme config
 -- vim.g.adwaita_darker = true

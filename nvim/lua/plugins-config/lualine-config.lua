@@ -16,7 +16,7 @@ local conditions = {
         local gitdir = vim.fn.finddir('.git', filepath .. ';')
         return gitdir and #gitdir > 0 and #gitdir < #filepath
     end,
-    is_navic_available = function ()
+    is_navic_available = function()
         return navic_status
     end,
 }
@@ -54,7 +54,6 @@ local navic_location = {
             return ''
         end
     end,
-    color = { fg = colors.cyan },
     cond = conditions.is_navic_available and navic.is_available
 }
 
@@ -127,7 +126,7 @@ local spacing = {
 -- INFO: custom dark theme
 local lualine_colors = {
     normal = {
-        a = { bg = colors.transparent, fg = colors.cyan, gui = 'bold' },
+        a = { bg = colors.transparent, fg = colors.orange, gui = 'bold' },
         b = { bg = colors.transparent, fg = colors.white },
         c = { bg = colors.transparent, fg = colors.white },
     },
