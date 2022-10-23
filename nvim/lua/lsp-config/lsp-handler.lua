@@ -36,8 +36,8 @@ end
 vim.diagnostic.config(diagnostic_config)
 
 -- setup round bordered floating window for cursor hover and signature help
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, handler_config)
-vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, handler_config)
+vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, handler_config)
+vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, handler_config)
 
 -- ----------------------------------------------------------------------
 --  lsp configs

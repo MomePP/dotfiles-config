@@ -3,7 +3,6 @@
 require('plugins-config.autopairs-config')
 require('plugins-config.gitsigns-config')
 require('plugins-config.telescope-config')
-require('plugins-config.treesitter-config')
 require('plugins-config.toggleterm-config')
 require('plugins-config.todo-comments-config')
 require('plugins-config.colorizer-config')

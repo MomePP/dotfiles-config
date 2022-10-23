@@ -15,5 +15,6 @@ git:
   branchLogCmd: "git log --graph --color --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%n%C(reset)%C(dim cyan)Author: %an <%ae>%n%C(reset)%C(white)%w(0,4,4)%B%n%C(reset)' {{branchName}} --"
 os:
   editCommand: "code"
-  openCommand: "code {{filename}}"
+  editCommandTemplate: '{{editor}} --goto -- {{filename}}:{{line}}'
+  openCommand: "code -rg {{filename}}"
 promptToReturnFromSubprocess: false

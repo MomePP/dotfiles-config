@@ -1,4 +1,4 @@
-local status_ok, treesitter = pcall(require, "nvim-treesitter.configs")
+local status_ok, treesitter = pcall(require, 'nvim-treesitter.configs')
 if not status_ok then return end
 
 local bracket_colors = require('colorscheme').colorset.bracket

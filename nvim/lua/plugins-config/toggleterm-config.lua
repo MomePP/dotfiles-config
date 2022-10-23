@@ -33,23 +33,21 @@ end
 -- function _NODE_TOGGLE()
 -- 	node:toggle()
 -- end
---
+
 -- local ncdu = Terminal:new({ cmd = 'ncdu', hidden = true })
 -- function _NCDU_TOGGLE()
 -- 	ncdu:toggle()
 -- end
---
-local gotop = Terminal:new({ cmd = 'gotop', count = 21, hidden = true })
-function _GOTOP_TOGGLE()
-	gotop:toggle()
-end
 
---
+-- local gotop = Terminal:new({ cmd = 'gotop', count = 21, hidden = true })
+-- function _GOTOP_TOGGLE()
+-- 	gotop:toggle()
+-- end
+
 -- local python = Terminal:new({ cmd = 'python', hidden = true })
 -- function _PYTHON_TOGGLE()
 -- 	python:toggle()
 -- end
---
 
 -- local spotify = Terminal:new({ cmd = 'spt', hidden = true })
 -- function _SPOTIFY_TOGGLE()

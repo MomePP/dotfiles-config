@@ -110,7 +110,7 @@ keymaps.toggleterm = {
     toggle = '<leader>t'
 }
 vim.keymap.set('n', '<leader>g', function() _LAZYGIT_TOGGLE() end, silent)
-vim.keymap.set('n', '<leader>P', function() _GOTOP_TOGGLE() end, silent)
+-- vim.keymap.set('n', '<leader>P', function() _GOTOP_TOGGLE() end, silent)
 
 -- INFO: markdown preview keymap
 vim.keymap.set('n', '<leader>p', ':MarkdownPreviewToggle<CR>', silent)
