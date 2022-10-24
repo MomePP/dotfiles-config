@@ -2,15 +2,15 @@ set fish_greeting ""
 
 # by default, this var was set by terminal program itself
 # set -gx TERM xterm-256color
-fish_vi_key_bindings
-fish_vi_cursor
-set fish_cursor_default block
-set fish_cursor_insert underscore blink
-set fish_cursor_visual block
-set fish_cursor_replace_one underscore
 
 if status is-interactive
   # Commands to run in interactive sessions can go here
+
+  # config fish cursor prompt
+  fish_vi_key_bindings
+  set fish_cursor_default block 
+  set fish_cursor_insert block blink
+
   # >>> conda initialize >>>
   # !! Contents within this block are managed by 'conda init' !!
   eval /opt/homebrew/Caskroom/miniforge/base/bin/conda "shell.fish" "hook" $argv | source
@@ -18,9 +18,6 @@ if status is-interactive
   # setup pyenv root
   set -Ux PYENV_ROOT $HOME/.pyenv
   set -U fish_user_paths $PYENV_ROOT/bin $fish_user_paths
-
-  # config fish cursor prompt
-  set fish_cursor_default block blink
 
   # render man page with bat
   set -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
