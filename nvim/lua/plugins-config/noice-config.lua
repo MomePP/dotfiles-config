@@ -31,6 +31,15 @@ noice.setup {
     popupmenu = {
         backend = 'cmp',
     },
+    history = {
+        filter = {
+            event = { 'msg_show', 'notify' },
+            ['not'] = {
+                kind = { 'search_count', 'echo' },
+                find = 'warning: multiple different client offset_encodings detected for buffer'
+            }
+        },
+    },
     routes = {
         {
             filter = {
