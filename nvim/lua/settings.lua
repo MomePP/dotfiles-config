@@ -53,6 +53,7 @@ vim.opt.foldlevelstart = 99
 vim.opt.foldenable = true
 -- vim.opt.foldcolumn = '1'
 vim.opt.splitkeep = 'cursor'
+vim.opt.guicursor = 'n-v-c-sm:block,ve:ver25,i-ci-r-cr-o:hor20'
 
 -- INFO: winbar configuration
 -- vim.o.winbar = '%{%v:lua.require("winbar").statusline()%}'

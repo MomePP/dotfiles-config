@@ -3,6 +3,11 @@ set fish_greeting ""
 # by default, this var was set by terminal program itself
 # set -gx TERM xterm-256color
 fish_vi_key_bindings
+fish_vi_cursor
+set fish_cursor_default block
+set fish_cursor_insert underscore blink
+set fish_cursor_visual block
+set fish_cursor_replace_one underscore
 
 if status is-interactive
   # Commands to run in interactive sessions can go here
@@ -56,6 +61,7 @@ fish_add_path (ruby -e "print Gem.user_dir")/bin
 fish_add_path $HOME/.cargo/bin
 fish_add_path $HOME/.espressif/tools/xtensa-esp32-elf-clang/esp-14.0.0-20220415-aarch64-apple-darwin/bin/
 fish_add_path $HOME/.espressif/tools/xtensa-esp32-elf-gcc/8_4_0-esp-2021r2-patch3-aarch64-apple-darwin/bin/
+fish_add_path $HOME/.espressif/tools/xtensa-esp32s2-elf-gcc/8_4_0-esp-2021r2-patch3-aarch64-apple-darwin/bin/
 fish_add_path $HOME/.espressif/tools/xtensa-esp32s3-elf-gcc/8_4_0-esp-2021r2-patch3-aarch64-apple-darwin/bin/
 set -x LIBCLANG_PATH "/Users/momeppkt/.espressif/tools/xtensa-esp32-elf-clang/esp-14.0.0-20220415-aarch64-apple-darwin/lib/"
 set -x PIP_USER no
