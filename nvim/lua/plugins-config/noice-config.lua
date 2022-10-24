@@ -22,9 +22,9 @@ noice.setup {
         view = 'cmdline',
         format = {
             cmdline = { pattern = '^:', icon = ' COMMAND ' },
-            search_down = { kind = 'search', pattern = '^/', icon = ' SEARCH  ', ft = 'regex' },
-            search_up = { kind = 'search', pattern = '^%?', icon = ' SEARCH  ', ft = 'regex' },
-            filter = { pattern = '^:%s*!', icon = ' TERMINAL ', opts = { buf_options = { filetype = 'sh' } } },
+            search_down = { kind = 'search', pattern = '^/', icon = ' SEARCH  ', lang = 'regex' },
+            search_up = { kind = 'search', pattern = '^%?', icon = ' SEARCH  ', lang = 'regex' },
+            filter = { pattern = '^:%s*!', icon = ' TERMINAL ', lang = 'fish' },
             lua = false,
         }
     },
