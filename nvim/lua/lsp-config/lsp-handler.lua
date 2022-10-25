@@ -73,7 +73,7 @@ lsp_setup.setup({
         pyright = require('lsp-config.settings.pyright'),
         jsonls = require('lsp-config.settings.jsonls'),
         sumneko_lua = require('lsp-config.settings.sumneko_lua'),
-        volar = require('lsp-config.settings.volar'),
+        volar = {},
         tsserver = {},
         ltex = {},
         cssls = {},
