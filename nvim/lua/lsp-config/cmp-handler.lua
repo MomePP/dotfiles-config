@@ -53,19 +53,9 @@ local cmp_icons = {
     Copilot = '',
 }
 
-local cmp_menu_icon = {
-    nvim_lsp = 'LSP',
-    luasnip = 'Snippet',
-    buffer = 'Buffer',
-    path = 'Path',
-    nvim_lua = 'Lua',
-    copilot = 'Copilot',
-}
-
 local cmp_formatting = {
     fields = { 'abbr', 'kind' },
-    format = function(entry, vim_item)
-        vim_item.menu = cmp_menu_icon[entry.source.name]
+    format = function(_, vim_item)
         vim_item.kind = string.format('%s %s', cmp_icons[vim_item.kind], vim_item.kind)
         return vim_item
     end,
@@ -119,8 +109,9 @@ local cmp_configs = {
     sources = cmp_sources,
     formatting = cmp_formatting,
     window = {
-        documentation = cmp.config.window.bordered(),
-        completion = cmp.config.window.bordered(),
+        completion = {
+            winhighlight = 'Normal:Pmenu,FloatBorder:Pmenu,Search:None',
+        },
     },
     experimental = {
         ghost_text = true

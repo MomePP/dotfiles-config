@@ -76,9 +76,9 @@ return packer.startup({
         use { 'Maan2003/lsp_lines.nvim', config = function() require('lsp_lines').setup() end }
 
         -- Github co-pilot
-        use { 'zbirenbaum/copilot.lua', after = { 'lualine.nvim' },
+        use { 'zbirenbaum/copilot.lua', event = 'InsertEnter',
             config = function()
-                vim.defer_fn(function() require('lsp-config.copilot-handler') end, 200)
+                vim.schedule(function() require('lsp-config.copilot-handler') end)
             end
         }
         use { 'zbirenbaum/copilot-cmp', after = { 'copilot.lua' } }

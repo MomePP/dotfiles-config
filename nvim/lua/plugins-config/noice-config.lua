@@ -15,6 +15,9 @@ noice.setup {
             focusable = false,
             timeout = 3000,
         },
+        hover = {
+            focusable = false,
+        },
     },
     messages = {
         view_search = false,
@@ -22,24 +25,19 @@ noice.setup {
     cmdline = {
         view = 'cmdline',
         format = {
-            cmdline = { pattern = '^:', icon = ' COMMAND ' },
-            search_down = { kind = 'search', pattern = '^/', icon = ' SEARCH  ', lang = 'regex' },
-            search_up = { kind = 'search', pattern = '^%?', icon = ' SEARCH  ', lang = 'regex' },
-            filter = { pattern = '^:%s*!', icon = ' TERMINAL ', lang = 'fish' },
+            cmdline = { icon = ' COMMAND ' },
+            search_down = { icon = ' SEARCH  ' },
+            search_up = { icon = ' SEARCH  ' },
+            filter = { icon = ' TERMINAL ', lang = 'fish' },
             lua = false,
         }
     },
     popupmenu = {
         backend = 'cmp',
     },
-    history = {
-        filter = {
-            event = { 'msg_show', 'notify' },
-            ['not'] = {
-                kind = { 'search_count', 'echo' },
-                find = 'warning: multiple different client offset_encodings detected for buffer'
-            }
-        },
+    lsp = {
+        hover = { enabled = true, },
+        signature = { enabled = true },
     },
     routes = {
         {
