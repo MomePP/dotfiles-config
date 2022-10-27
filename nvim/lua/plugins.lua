@@ -138,7 +138,6 @@ return packer.startup({
         -- Color Schemes
         -- use 'MomePP/plastic-nvim'
         use 'rebelot/kanagawa.nvim'
-        -- use 'Mofiqul/adwaita.nvim'
 
         -- misc. cool stuff
         -- use 'andweeb/presence.nvim' -- discord activity status

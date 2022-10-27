@@ -103,10 +103,6 @@ if kanagawa_status then
     vim.cmd.colorscheme 'kanagawa'
 end
 
--- INFO: adwaita theme config
--- vim.g.adwaita_darker = true
--- vim.cmd.colorscheme('adwaita')
-
 -- override signcolumn fg to be transparent
 vim.api.nvim_set_hl(0, 'SignColumn', { fg = M.colorset.transparent, bg = M.colorset.transparent })
 vim.api.nvim_set_hl(0, 'Pmenu', { fg = M.colorset.transparent, bg = M.colorset.transparent })

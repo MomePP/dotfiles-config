@@ -158,22 +158,11 @@ local lualine_colors = {
     },
 }
 
--- INFO: custom adwaita theme
--- local custom_adwaita = require('lualine.utils.loader').load_theme('adwaita')
--- custom_adwaita.normal.b.bg = 'NONE'
--- custom_adwaita.normal.c.bg = 'NONE'
--- custom_adwaita.insert.b.bg = 'NONE'
--- custom_adwaita.insert.c.bg = 'NONE'
--- custom_adwaita.replace.b.bg = 'NONE'
--- custom_adwaita.replace.c.bg = 'NONE'
--- custom_adwaita.visual.b.bg = 'NONE'
-
 -- INFO: setup lualine configs
 lualine.setup({
     options = {
         icons_enabled = true,
         theme = lualine_colors,
-        -- theme = custom_adwaita,
         section_separators = '',
         component_separators = '',
         always_divide_middle = true,
