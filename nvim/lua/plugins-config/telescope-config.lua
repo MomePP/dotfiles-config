@@ -1,16 +1,16 @@
 local status_ok, telescope = pcall(require, 'telescope')
 if not status_ok then return end
 
--- local actions = require "telescope.actions"
-local utils = require "telescope.utils"
-local entry_display = require "telescope.pickers.entry_display"
+-- local actions = require 'telescope.actions'
+local utils = require 'telescope.utils'
+local entry_display = require 'telescope.pickers.entry_display'
 
 -- custom entry makers for some components
 local function entry_lsp_references(opts)
     opts = opts or {}
 
     local displayer = entry_display.create {
-        separator = "│ ",
+        separator = '│ ',
         items = {
             { width = 8 },
             { width = 0.65 },
@@ -21,11 +21,11 @@ local function entry_lsp_references(opts)
     local make_display = function(entry)
         local filename = utils.transform_path(opts, entry.filename)
 
-        local line_info = { table.concat({ entry.lnum, entry.col }, ":"), "TelescopeResultsLineNr" }
+        local line_info = { table.concat({ entry.lnum, entry.col }, ':'), 'TelescopeResultsLineNr' }
 
         return displayer {
             line_info,
-            entry.text:gsub(".* | ", ""),
+            entry.text:gsub('.* | ', ''),
             filename,
         }
     end
@@ -37,7 +37,7 @@ local function entry_lsp_references(opts)
             valid = true,
 
             value = entry,
-            ordinal = (not opts.ignore_filename and filename or "") .. " " .. entry.text,
+            ordinal = (not opts.ignore_filename and filename or '') .. ' ' .. entry.text,
             display = make_display,
 
             bufnr = entry.bufnr,
@@ -53,13 +53,13 @@ end
 
 telescope.setup {
     defaults = {
-        prompt_prefix = "   ", -- this still got an issue of prompt buffer bug, can be workaround by changes it to empty string
-        entry_prefix = "  ",
-        selection_caret = "  ",
+        prompt_prefix = '   ', -- this still got an issue of prompt buffer bug, can be workaround by changes it to empty string
+        entry_prefix = '  ',
+        selection_caret = '  ',
         color_devicons = true,
-        path_display = { "tail", "smart" },
-        set_env = { ["COLORTERM"] = "truecolor" },
-        file_ignore_patterns = { "node_module" },
+        path_display = { 'tail', 'smart' },
+        set_env = { ['COLORTERM'] = 'truecolor' },
+        file_ignore_patterns = { 'node_module' },
     },
     pickers = {
         help_tags = {
@@ -119,7 +119,7 @@ telescope.setup {
             fuzzy = true, -- false will only do exact matching
             override_generic_sorter = true, -- override the generic sorter
             override_file_sorter = true, -- override the file sorter
-            case_mode = "smart_case", -- or "ignore_case" or "respect_case"
+            case_mode = 'smart_case', -- or 'ignore_case' or 'respect_case'
         },
         ['file_browser'] = {
             layout_strategy = 'horizontal',
@@ -133,18 +133,22 @@ telescope.setup {
             grouped = true,
             hijack_netrw = true,
         },
+        ['ui-select'] = {
+            require('telescope.themes').get_cursor()
+        },
     }
 }
-telescope.load_extension("fzf")
-telescope.load_extension("file_browser")
+telescope.load_extension('fzf')
+telescope.load_extension('file_browser')
+telescope.load_extension('ui-select')
 
 
 -- INFO: custom telescope pickers
 local custom_telescope = {}
-local pickers = require "telescope.pickers"
-local finders = require "telescope.finders"
-local make_entry = require "telescope.make_entry"
-local conf = require("telescope.config").values
+local pickers = require 'telescope.pickers'
+local finders = require 'telescope.finders'
+local make_entry = require 'telescope.make_entry'
+local conf = require('telescope.config').values
 
 function custom_telescope.marks_picker(opts)
     require('marks').mark_state:all_to_list() -- generate marks to loclist
@@ -167,7 +171,7 @@ function custom_telescope.marks_picker(opts)
     end
 
     pickers.new(opts, {
-        prompt_title = "Marks",
+        prompt_title = 'Marks',
         finder = finders.new_table {
             results = locations,
             entry_maker = opts.entry_maker or make_entry.gen_from_quickfix(opts),
