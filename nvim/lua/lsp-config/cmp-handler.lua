@@ -53,9 +53,12 @@ local cmp_icons = {
 }
 
 local cmp_formatting = {
-    fields = { 'abbr', 'kind' },
-    format = function(_, vim_item)
-        vim_item.kind = string.format('%s %s', cmp_icons[vim_item.kind], vim_item.kind)
+    -- fields = { 'abbr', 'kind', 'menu' },
+    fields = { 'kind', 'abbr', 'menu' },
+    format = function(entry, vim_item)
+        -- vim_item.abbr = string.format('%s  ', vim_item.abbr)
+        vim_item.kind = string.format(' %s ', cmp_icons[vim_item.kind])
+        vim_item.menu = string.format('   (%s)', entry.source.name)
         return vim_item
     end,
 }
@@ -112,6 +115,8 @@ local cmp_configs = {
         },
         completion = {
             winhighlight = 'Normal:Pmenu,FloatBorder:Pmenu,Search:None',
+            col_offset = -3,
+            side_padding = 0,
         },
     },
     experimental = {
