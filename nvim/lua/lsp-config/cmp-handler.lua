@@ -109,6 +109,9 @@ local cmp_configs = {
     sources = cmp_sources,
     formatting = cmp_formatting,
     window = {
+        documentation = {
+            winhighlight = 'Normal:Pmenu,FloatBorder:Pmenu,Search:None',
+        },
         completion = {
             winhighlight = 'Normal:Pmenu,FloatBorder:Pmenu,Search:None',
         },
@@ -138,6 +141,3 @@ cmp.setup.cmdline(':', {
         { name = 'cmdline' }
     })
 })
-
--- INFO: overrides Cmp highlight groups
-vim.api.nvim_set_hl(0, 'CmpItemKindCopilot', { fg = colors.green })

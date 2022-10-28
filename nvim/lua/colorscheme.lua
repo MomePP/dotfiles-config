@@ -7,7 +7,7 @@ vim.opt.background = 'dark'
 M.colorset = {
     white       = '#d4be98',
     gray        = '#928374',
-    black       = '#665c54',
+    black       = '#21252B',
     red         = '#ea6962',
     green       = '#a9b665',
     blue        = '#7daea3',
@@ -59,34 +59,35 @@ M.colorset.modes = {
 -- INFO: kanagawa theme config
 local kanagawa_status, kanagawa = pcall(require, 'kanagawa')
 if kanagawa_status then
-    local colors = require('kanagawa.colors').setup()
+
+    local navic_colors = require('kanagawa.colors').setup()
     M.navic_highlight = {
-        NavicIconsFile = { fg = colors.springViolet2 },
-        NavicIconsModule = { fg = colors.boatYellow2 },
-        NavicIconsNamespace = { fg = colors.springViolet2 },
-        NavicIconsPackage = { fg = colors.springViolet1 },
-        NavicIconsClass = { fg = colors.surimiOrange },
-        NavicIconsMethod = { fg = colors.crystalBlue },
-        NavicIconsProperty = { fg = colors.waveAqua2 },
-        NavicIconsField = { fg = colors.waveAqua1 },
-        NavicIconsConstructor = { fg = colors.surimiOrange },
-        NavicIconsEnum = { fg = colors.boatYellow2 },
-        NavicIconsInterface = { fg = colors.carpYellow },
-        NavicIconsFunction = { fg = colors.crystalBlue },
-        NavicIconsVariable = { fg = colors.oniViolet },
-        NavicIconsConstant = { fg = colors.oniViolet },
-        NavicIconsString = { fg = colors.springGreen },
-        NavicIconsNumber = { fg = colors.sakuraPink },
-        NavicIconsBoolean = { fg = colors.surimiOrange },
-        NavicIconsArray = { fg = colors.waveAqua2 },
-        NavicIconsObject = { fg = colors.surimiOrange },
-        NavicIconsKey = { fg = colors.oniViolet },
-        NavicIconsNull = { fg = colors.carpYellow },
-        NavicIconsEnumMember = { fg = colors.carpYellow },
-        NavicIconsStruct = { fg = colors.surimiOrange },
-        NavicIconsEvent = { fg = colors.surimiOrange },
-        NavicIconsOperator = { fg = colors.springViolet2 },
-        NavicIconsTypeParameter = { fg = colors.springBlue },
+        NavicIconsFile = { fg = navic_colors.springViolet2 },
+        NavicIconsModule = { fg = navic_colors.boatYellow2 },
+        NavicIconsNamespace = { fg = navic_colors.springViolet2 },
+        NavicIconsPackage = { fg = navic_colors.springViolet1 },
+        NavicIconsClass = { fg = navic_colors.surimiOrange },
+        NavicIconsMethod = { fg = navic_colors.crystalBlue },
+        NavicIconsProperty = { fg = navic_colors.waveAqua2 },
+        NavicIconsField = { fg = navic_colors.waveAqua1 },
+        NavicIconsConstructor = { fg = navic_colors.surimiOrange },
+        NavicIconsEnum = { fg = navic_colors.boatYellow2 },
+        NavicIconsInterface = { fg = navic_colors.carpYellow },
+        NavicIconsFunction = { fg = navic_colors.crystalBlue },
+        NavicIconsVariable = { fg = navic_colors.oniViolet },
+        NavicIconsConstant = { fg = navic_colors.oniViolet },
+        NavicIconsString = { fg = navic_colors.springGreen },
+        NavicIconsNumber = { fg = navic_colors.sakuraPink },
+        NavicIconsBoolean = { fg = navic_colors.surimiOrange },
+        NavicIconsArray = { fg = navic_colors.waveAqua2 },
+        NavicIconsObject = { fg = navic_colors.surimiOrange },
+        NavicIconsKey = { fg = navic_colors.oniViolet },
+        NavicIconsNull = { fg = navic_colors.carpYellow },
+        NavicIconsEnumMember = { fg = navic_colors.carpYellow },
+        NavicIconsStruct = { fg = navic_colors.surimiOrange },
+        NavicIconsEvent = { fg = navic_colors.surimiOrange },
+        NavicIconsOperator = { fg = navic_colors.springViolet2 },
+        NavicIconsTypeParameter = { fg = navic_colors.springBlue },
         NavicText = { fg = M.colorset.white },
         NavicSeparator = { fg = M.colorset.orange },
     }
@@ -105,7 +106,7 @@ end
 
 -- override signcolumn fg to be transparent
 vim.api.nvim_set_hl(0, 'SignColumn', { fg = M.colorset.transparent, bg = M.colorset.transparent })
-vim.api.nvim_set_hl(0, 'Pmenu', { fg = M.colorset.transparent, bg = M.colorset.transparent })
+vim.api.nvim_set_hl(0, 'Pmenu', { fg = M.colorset.transparent, bg = M.colorset.black })
 
 -- override floatborder bg
 vim.api.nvim_set_hl(0, 'NormalFloat', { bg = M.colorset.transparent })

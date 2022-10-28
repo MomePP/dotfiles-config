@@ -17,6 +17,20 @@ noice.setup {
         },
         hover = {
             focusable = false,
+            border = {
+                style = 'none',
+                padding = { 0, 2 },
+            },
+            position = { row = 1, col = 0 },
+            win_options = {
+                wrap = true,
+                linebreak = true,
+                winhighlight = {
+                    Normal = 'Pmenu',
+                    FloatBorder = 'Pmenu',
+                    Search = 'NONE',
+                }
+            },
         },
     },
     messages = {
