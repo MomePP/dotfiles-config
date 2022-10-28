@@ -53,14 +53,4 @@ noice.setup {
         hover = { enabled = true, },
         signature = { enabled = true },
     },
-    routes = {
-        {
-            filter = {
-                event = 'notify',
-                warning = true,
-                find = 'warning: multiple different client offset_encodings detected for buffer'
-            },
-            opts = { skip = true },
-        },
-    }
 }

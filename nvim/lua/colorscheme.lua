@@ -6,7 +6,7 @@ vim.opt.background = 'dark'
 
 M.colorset = {
     white       = '#d4be98',
-    gray        = '#928374',
+    gray        = '#665c54',
     black       = '#21252B',
     red         = '#ea6962',
     green       = '#a9b665',
