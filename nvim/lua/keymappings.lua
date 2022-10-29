@@ -189,5 +189,15 @@ vim.keymap.set('n', '<leader>sd', require 'session_manager'.delete_session, sile
 
 -- INFO: Noice keymaps
 vim.keymap.set('n', '<leader>M', ':Noice<CR>', silent)
+vim.keymap.set('n', '<C-d>', function()
+    if not require('noice.lsp').scroll(4) then
+        return '<C-d>'
+    end
+end, { silent = true, expr = true })
+vim.keymap.set('n', '<C-u>', function()
+    if not require('noice.lsp').scroll(-4) then
+        return '<C-u>'
+    end
+end, { silent = true, expr = true })
 
 return keymaps
