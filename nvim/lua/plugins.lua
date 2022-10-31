@@ -1,27 +1,22 @@
-local fn = vim.fn
-
 -- Automatically install packer
-local install_path = fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
-if fn.empty(fn.glob(install_path)) > 0 then
-    PACKER_BOOTSTRAP = fn.system {
-        'git',
-        'clone',
-        '--depth',
-        '1',
-        'https://github.com/wbthomason/packer.nvim',
-        install_path,
-    }
-    print 'Installing packer close and reopen Neovim...'
-    vim.cmd 'packadd packer.nvim'
+local ensure_packer = function()
+    local fn = vim.fn
+    local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
+    if fn.empty(fn.glob(install_path)) > 0 then
+        fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
+        vim.cmd 'packadd packer.nvim'
+        return true
+    end
+    return false
 end
-
+local packer_bootstrap = ensure_packer()
 -- Autocommand that reloads neovim whenever you save the plugins.lua file
 vim.api.nvim_create_augroup('packer_user_config', { clear = true })
 vim.api.nvim_create_autocmd('BufWritePost', {
     desc = 'Sync packer after modifying plugins.lua',
     group = 'packer_user_config',
     pattern = 'plugins.lua',
-    command = 'source <afile> | PackerSync'
+    command = 'source <afile> | PackerCompile'
 })
 
 -- Use a protected call so we don't error out on first use
@@ -75,7 +70,7 @@ return packer.startup({
 
         -- Git plugins
         use 'lewis6991/gitsigns.nvim'
-        use { 'akinsho/git-conflict.nvim', tag = '*' }
+        use 'akinsho/git-conflict.nvim'
 
         -- Telescope
         use 'nvim-telescope/telescope.nvim'
@@ -110,7 +105,7 @@ return packer.startup({
         use 'windwp/nvim-autopairs'
         use 'chentoast/marks.nvim'
         use 'fedepujol/move.nvim'
-        use { 'ggandor/leap.nvim', config = function() require('leap').set_default_keymaps() end }
+        use 'ggandor/leap.nvim'
         use { 'iamcco/markdown-preview.nvim', run = function() vim.fn['mkdp#util#install']() end, }
 
         -- UI decoration
@@ -138,7 +133,7 @@ return packer.startup({
 
         -- Automatically set up your configuration after cloning packer.nvim
         -- Put this at the end after all plugins
-        if PACKER_BOOTSTRAP then
+        if packer_bootstrap then
             require('packer').sync()
         end
     end

@@ -151,7 +151,7 @@ vim.api.nvim_set_hl(0, 'MoreMsg', { fg = M.colorset.blue, bg = M.colorset.transp
 
 -- override CMP highlight groups
 for group, colors in pairs(M.colorset.cmp) do
-   vim.api.nvim_set_hl(0, group, colors)
+    vim.api.nvim_set_hl(0, group, colors)
 end
 
 return M
