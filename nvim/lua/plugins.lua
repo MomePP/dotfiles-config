@@ -116,9 +116,9 @@ return packer.startup({
         use 'lukas-reineke/indent-blankline.nvim'
         use 'b0o/incline.nvim'
         use 'SmiteshP/nvim-navic'
+        use 'Darazaki/indent-o-matic'
         use { 'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async' }
         use { 'folke/noice.nvim', requires = { 'MunifTanjim/nui.nvim' } }
-        use { 'Darazaki/indent-o-matic', config = function() require('indent-o-matic').setup {} end }
 
         -- Color Schemes
         -- use 'MomePP/plastic-nvim'
