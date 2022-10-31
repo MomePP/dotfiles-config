@@ -16,7 +16,7 @@ vim.api.nvim_create_autocmd('BufWritePost', {
     desc = 'Sync packer after modifying plugins.lua',
     group = 'packer_user_config',
     pattern = 'plugins.lua',
-    command = 'source <afile> | PackerCompile'
+    command = 'source <afile> | PackerSync'
 })
 
 -- Use a protected call so we don't error out on first use
