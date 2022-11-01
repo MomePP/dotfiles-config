@@ -87,8 +87,8 @@ vim.keymap.set('n', '[c', function()
     return '<Ignore>'
 end, expr)
 vim.keymap.set({ 'n', 'v' }, '<leader>hr', require 'gitsigns.actions'.reset_hunk, silent)
-vim.keymap.set('n', '<leader>hp', require 'gitsigns.actions'.preview_hunk, silent)
-vim.keymap.set('n', '<leader>hb', require 'gitsigns.actions'.blame_line, silent)
+vim.keymap.set('n', '<leader>hp', require 'gitsigns.actions'.preview_hunk_inline, silent)
+vim.keymap.set('n', '<leader>hb', function() require 'gitsigns.actions'.blame_line { full = true } end, silent)
 vim.keymap.set('n', '<leader>hB', require 'gitsigns.actions'.toggle_current_line_blame, silent)
 
 -- INFO: Telescope keymap
