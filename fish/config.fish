@@ -25,6 +25,7 @@ end
 
 # config homebrew path
 fish_add_path /opt/homebrew/bin
+fish_add_path /opt/homebrew/sbin
 
 # set locale terminal
 set -x LC_CTYPE "en_US.UTF-8"
