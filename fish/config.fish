@@ -69,17 +69,17 @@ alias get-idf ". $HOME/Developments/toolchains/esp-idf/export.fish"
 
 # config llvm arm64
 fish_add_path /opt/homebrew/opt/llvm/bin
-# set -gx LDFLAGS "-L/opt/homebrew/opt/llvm/lib"
-# set -gx CPPFLAGS "-I/opt/homebrew/opt/llvm/include"
+set -gx LDFLAGS "-L/opt/homebrew/opt/llvm/lib"
+set -gx CPPFLAGS "-I/opt/homebrew/opt/llvm/include"
 
 # config llvm x86_64
 # fish_add_path /usr/local/opt/llvm/bin
-set -gx LDFLAGS "-L/usr/local/opt/llvm/lib"
-set -gx CPPFLAGS "-I/usr/local/opt/llvm/include"
+# set -gx LDFLAGS "-L/usr/local/opt/llvm/lib"
+# set -gx CPPFLAGS "-I/usr/local/opt/llvm/include"
 
 # set path for commandline tools
 fish_add_path /Library/Developer/CommandLineTools/usr/bin
-set -Ux SDKROOT /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+set -Ux SDKROOT /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
 
 # aliases
 alias ls "l"
