@@ -1,6 +1,8 @@
 local status_ok, illuminate = pcall(require, 'illuminate')
 if not status_ok then return end
 
+local colors = require('colorscheme').colorset
+
 illuminate.configure({
     filetypes_denylist = {
         'dirvish',
@@ -18,6 +20,6 @@ illuminate.configure({
 })
 
 -- override vim-illuminate highlight
-vim.api.nvim_set_hl(0, 'IlluminatedWordText', { link = 'LspReferenceText' })
-vim.api.nvim_set_hl(0, 'IlluminatedWordRead', { link = 'LspReferenceRead' })
-vim.api.nvim_set_hl(0, 'IlluminatedWordWrite', { link = 'LspReferenceWrite' })
+vim.api.nvim_set_hl(0, 'IlluminatedWordText', { bg = colors.bg1, bold = true, nocombine = true })
+vim.api.nvim_set_hl(0, 'IlluminatedWordRead', { link = 'IlluminatedWordText' })
+vim.api.nvim_set_hl(0, 'IlluminatedWordWrite', { link = 'IlluminatedWordText' })
