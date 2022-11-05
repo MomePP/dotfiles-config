@@ -200,4 +200,9 @@ vim.keymap.set('n', '<C-u>', function()
     end
 end, { silent = true, expr = true })
 
+keymaps.leap = {
+    search = 's',
+    line_search = 'S',
+}
+
 return keymaps
