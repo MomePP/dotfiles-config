@@ -11,7 +11,6 @@ vim.api.nvim_set_hl(0, 'NoiceCmdlineIconFilter', { bg = colors.transparent, fg =
 noice.setup {
     views = {
         mini = {
-            reverse = false,
             focusable = false,
             timeout = 3000,
         },

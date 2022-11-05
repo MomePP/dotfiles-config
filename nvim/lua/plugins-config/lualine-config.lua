@@ -55,7 +55,8 @@ local navic_location = {
         end
     end,
     color = { fg = colors.orange },
-    cond = conditions.is_navic_available and navic.is_available
+    cond = conditions.is_navic_available and navic.is_available,
+    padding = { left = 1, right = 0 }
 }
 
 local filetype = {
