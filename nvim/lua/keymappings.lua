@@ -35,9 +35,9 @@ vim.keymap.set('i', '!', '!<C-g>u')
 vim.keymap.set('i', '?', '?<C-g>u')
 
 -- INFO: Buffers navigated keys
-vim.keymap.set('n', 'tq', ':Bdelete<CR>', silent)
-vim.keymap.set('n', '<Tab>', ':bnext<CR>', silent)
-vim.keymap.set('n', '<S-Tab>', ':bprev<CR>', silent)
+vim.keymap.set('n', 'tq', '<Cmd>Bdelete<CR>', silent)
+vim.keymap.set('n', '<Tab>', '<Cmd>bnext<CR>', silent)
+vim.keymap.set('n', '<S-Tab>', '<Cmd>bprev<CR>', silent)
 
 -- INFO: Panes config using `focus` plugin
 vim.keymap.set('n', '<space>', require 'focus'.split_cycle, silent)
@@ -56,20 +56,20 @@ vim.keymap.set('n', 'wq', '<C-w>q', silent)
 -- vim.keymap.set('n', '<C-w><down>', '<C-w>-')
 
 -- INFO: move line or visually selected block - opt+j/k
-vim.keymap.set('n', '<m-j>', ':MoveLine(1)<CR>', silent)
-vim.keymap.set('n', '<m-k>', ':MoveLine(-1)<CR>', silent)
-vim.keymap.set('n', '<m-down>', ':MoveLine(1)<CR>', silent)
-vim.keymap.set('n', '<m-up>', ':MoveLine(-1)<CR>', silent)
+vim.keymap.set('n', '<m-j>', '<Cmd>MoveLine(1)<CR>', silent)
+vim.keymap.set('n', '<m-k>', '<Cmd>MoveLine(-1)<CR>', silent)
+vim.keymap.set('n', '<m-down>', '<Cmd>MoveLine(1)<CR>', silent)
+vim.keymap.set('n', '<m-up>', '<Cmd>MoveLine(-1)<CR>', silent)
 
-vim.keymap.set('v', '<m-j>', ':MoveBlock(1)<CR>', silent)
-vim.keymap.set('v', '<m-k>', ':MoveBlock(-1)<CR>', silent)
-vim.keymap.set('v', '<m-down>', ':MoveBlock(1)<CR>', silent)
-vim.keymap.set('v', '<m-up>', ':MoveBlock(-1)<CR>', silent)
+vim.keymap.set('v', '<m-j>', '<Cmd>MoveBlock(1)<CR>', silent)
+vim.keymap.set('v', '<m-k>', '<Cmd>MoveBlock(-1)<CR>', silent)
+vim.keymap.set('v', '<m-down>', '<Cmd>MoveBlock(1)<CR>', silent)
+vim.keymap.set('v', '<m-up>', '<Cmd>MoveBlock(-1)<CR>', silent)
 
-vim.keymap.set('i', '<m-j>', '<Esc>:MoveLine(1)<CR>==gi', silent)
-vim.keymap.set('i', '<m-k>', '<Esc>:MoveLine(-1)<CR>==gi', silent)
-vim.keymap.set('i', '<m-down>', '<Esc>:MoveLine(1)<CR>==gi', silent)
-vim.keymap.set('i', '<m-up>', '<Esc>:MoveLine(-1)<CR>==gi', silent)
+vim.keymap.set('i', '<m-j>', '<Esc><Cmd>MoveLine(1)<CR>==gi', silent)
+vim.keymap.set('i', '<m-k>', '<Esc><Cmd>MoveLine(-1)<CR>==gi', silent)
+vim.keymap.set('i', '<m-down>', '<Esc><Cmd>MoveLine(1)<CR>==gi', silent)
+vim.keymap.set('i', '<m-up>', '<Esc><Cmd>MoveLine(-1)<CR>==gi', silent)
 
 -- INFO: remap jump keys
 vim.keymap.set('n', '<C-j>', '<C-i>', silent)
@@ -102,7 +102,7 @@ vim.keymap.set('n', '<leader>fs', require 'telescope.builtin'.current_buffer_fuz
 vim.keymap.set('n', '<leader>fb', require 'telescope'.extensions.file_browser.file_browser, silent)
 
 -- INFO: Todo comments keymap
-vim.keymap.set('n', '<leader>c', ":TodoTelescope<CR>", silent)
+vim.keymap.set('n', '<leader>c', '<Cmd>TodoTelescope<CR>', silent)
 
 -- INFO: Terminal & ToggleTerm keymap
 --  toggleterm keymap, set in `toggleterm-conf` file. Currently used : <leader>t
@@ -113,7 +113,7 @@ vim.keymap.set('n', '<leader>g', function() _LAZYGIT_TOGGLE() end, silent)
 -- vim.keymap.set('n', '<leader>P', function() _GOTOP_TOGGLE() end, silent)
 
 -- INFO: markdown preview keymap
-vim.keymap.set('n', '<leader>p', ':MarkdownPreviewToggle<CR>', silent)
+vim.keymap.set('n', '<leader>p', '<Cmd>MarkdownPreviewToggle<CR>', silent)
 
 -- INFO: LSP keymap
 keymaps.lsp = {
@@ -189,7 +189,7 @@ vim.keymap.set('n', '<leader>ss', require 'session_manager'.save_current_session
 vim.keymap.set('n', '<leader>sd', require 'session_manager'.delete_session, silent)
 
 -- INFO: Noice keymaps
-vim.keymap.set('n', '<leader>M', ':Noice<CR>', silent)
+vim.keymap.set('n', '<leader>M', '<Cmd>Noice<CR>', silent)
 vim.keymap.set('n', '<C-d>', function()
     if not require('noice.lsp').scroll(4) then
         return '<C-d>'
