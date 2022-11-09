@@ -165,10 +165,11 @@ vim.keymap.set('n', 'zr', require 'ufo'.openFoldsExceptKinds, silent)
 vim.keymap.set('n', 'zm', require 'ufo'.closeFoldsWith, silent) -- closeAllFolds == closeFoldsWith(0)
 
 -- INFO: hlslens keymap
+
 local function ufoSearchKeys(c)
-    local ok, msg = pcall(vim.cmd, 'norm!' .. vim.v.count1 .. c)
-    if not ok then
-        vim.api.nvim_echo({ { msg:match(':(.*)$'), 'ErrorMsg' } }, false, {})
+    local ok, msg = pcall(function() vim.cmd('norm!' .. vim.v.count1 .. c) end)
+    if not ok and msg then
+        vim.api.nvim_notify(msg:match(':(.*)$'), vim.log.levels.ERROR)
         return
     end
     require('hlslens').start()
