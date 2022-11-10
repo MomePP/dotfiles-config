@@ -1,5 +1,6 @@
 local silent = { noremap = true, silent = true }
 local expr = { expr = true }
+local silent_expr = { silent = true, expr = true }
 
 local keymaps = {}
 
@@ -191,15 +192,17 @@ vim.keymap.set('n', '<leader>sd', require 'session_manager'.delete_session, sile
 -- INFO: Noice keymaps
 vim.keymap.set('n', '<leader>M', '<Cmd>Noice<CR>', silent)
 vim.keymap.set('n', '<C-d>', function()
-    if not require('noice.lsp').scroll(4) then
+    local noice_status, noice_docs = pcall(require, 'noice.lsp.docs')
+    if not noice_status or not noice_docs.scroll(4) then
         return '<C-d>'
     end
-end, { silent = true, expr = true })
+end, silent_expr)
 vim.keymap.set('n', '<C-u>', function()
-    if not require('noice.lsp').scroll(-4) then
+    local noice_status, noice_docs = pcall(require, 'noice.lsp.docs')
+    if not noice_status or not noice_docs.scroll(-4) then
         return '<C-u>'
     end
-end, { silent = true, expr = true })
+end, silent_expr)
 
 keymaps.leap = {
     search = 's',
