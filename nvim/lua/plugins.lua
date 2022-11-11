@@ -106,12 +106,13 @@ return packer.startup({
         use 'chentoast/marks.nvim'
         use 'fedepujol/move.nvim'
         use 'ggandor/leap.nvim'
+        use 'folke/todo-comments.nvim'
+        use 'folke/trouble.nvim'
         use { 'iamcco/markdown-preview.nvim', run = function() vim.fn['mkdp#util#install']() end, }
 
         -- UI decoration
         use 'kyazdani42/nvim-web-devicons'
         use 'nvim-lualine/lualine.nvim'
-        use 'folke/todo-comments.nvim'
         use 'kevinhwang91/nvim-hlslens'
         use 'lukas-reineke/indent-blankline.nvim'
         use 'b0o/incline.nvim'

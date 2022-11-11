@@ -45,3 +45,10 @@ ufo.setup({
         return newVirtText
     end,
 })
+
+local ufo_keymaps = require('keymappings').ufo
+
+vim.keymap.set('n', ufo_keymaps.open_all, ufo.openAllFolds, ufo_keymaps.opts)
+vim.keymap.set('n', ufo_keymaps.open_except, ufo.openFoldsExceptKinds, ufo_keymaps.opts)
+vim.keymap.set('n', ufo_keymaps.close_all, ufo.closeAllFolds, ufo_keymaps.opts)
+vim.keymap.set('n', ufo_keymaps.close_with, ufo.closeFoldsWith, ufo_keymaps.opts) -- closeAllFolds == closeFoldsWith(0)

@@ -61,3 +61,20 @@ noice.setup {
         }
     },
 }
+
+local noice_keymaps = require('keymappings').noice
+local noice_docs = require('noice.lsp.docs')
+
+vim.keymap.set('n', noice_keymaps.history, '<Cmd>Noice<CR>', noice_keymaps.opts.silent)
+
+vim.keymap.set('n', noice_keymaps.docs_scroll_down, function()
+    if not noice_docs.scroll(4) then
+        return noice_keymaps.docs_scroll_down
+    end
+end, noice_keymaps.opts.silent_expr)
+
+vim.keymap.set('n', noice_keymaps.docs_scroll_up, function()
+    if not noice_docs.scroll(-4) then
+        return noice_keymaps.docs_scroll_up
+    end
+end, noice_keymaps.opts.silent_expr)

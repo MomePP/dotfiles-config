@@ -4,8 +4,6 @@ if not status_ok then return end
 -- override virtual text highlight for bookmarks
 -- vim.cmd 'hi MarkVirtTextHL guifg=NONE guibg=NONE'
 
--- local marks_keymap = require("keymappings").marks
-
 marks.setup {
     -- whether to map keybinds or not. default true
     default_mappings = false,
@@ -44,12 +42,23 @@ marks.setup {
         sign = "",
         virt_text = '-  ',
     },
-    -- mappings = {
-    --     toggle = marks_keymap.toggle,
-    --     delete_buf = marks_keymap.delete_buf,
-    --     next = marks_keymap.next,
-    --     prev = marks_keymap.prev,
-    --     preview = marks_keymap.preview,
-    --     annotate = marks_keymap.annotate,
-    -- }
 }
+
+local marks_keymaps = require('keymappings').marks
+
+-- NOTE: used `trouble.nvim` loclist to show all marks
+vim.keymap.set('n', marks_keymaps.list, function()
+    -- marks.nvim uses loclist 0 for store marked list
+    marks.mark_state:all_to_list()
+    if vim.tbl_isempty(vim.fn.getloclist(0)) then
+        vim.notify('There is no marked - ', vim.log.levels.WARN)
+        return
+    end
+    vim.cmd 'TroubleToggle loclist'
+end, marks_keymaps.opts)
+
+vim.keymap.set('n', marks_keymaps.next, marks.next, marks_keymaps.opts)
+vim.keymap.set('n', marks_keymaps.prev, marks.prev, marks_keymaps.opts)
+vim.keymap.set('n', marks_keymaps.toggle, marks.toggle, marks_keymaps.opts)
+vim.keymap.set('n', marks_keymaps.preview, marks.preview, marks_keymaps.opts)
+vim.keymap.set('n', marks_keymaps.clear, marks.delete_buf, marks_keymaps.opts)

@@ -10,9 +10,9 @@ if not vim.g.vscode then
     require 'plugins'
 
     -- apply user configs
+    require 'keymappings'.setup()
     require 'colorscheme'
     require 'plugins-config'
-    require 'keymappings'
     require 'lsp-config'
 else
     -- print('start from vscode !!')

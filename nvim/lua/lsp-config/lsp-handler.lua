@@ -36,7 +36,7 @@ local lsp_status_ok, lsp_setup = pcall(require, 'lsp-setup')
 if not lsp_status_ok then return end
 
 local function lsp_keymaps(bufnr, mapping)
-    local opts = { buffer = bufnr, silent = true, remap = false }
+    local opts = { buffer = bufnr, silent = true, noremap = true }
     for key, cmd in pairs(mapping or {}) do
         vim.keymap.set('n', key, cmd, opts)
     end

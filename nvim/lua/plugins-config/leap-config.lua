@@ -45,20 +45,20 @@ local function get_line_starts(winid)
     end
 end
 
--- custom keymapping
 local leap_keymap = require('keymappings').leap
-local leap_keymap_opts = { noremap = true, silent = true }
 
-vim.keymap.set('n', leap_keymap.search, function()
-    leap.leap {
-        target_windows = { vim.api.nvim_get_current_win() }
-    }
-end, leap_keymap_opts)
+vim.keymap.set('n', leap_keymap.search,
+    function()
+        leap.leap {
+            target_windows = { vim.api.nvim_get_current_win() }
+        }
+    end, leap_keymap.opts)
 
-vim.keymap.set('n', leap_keymap.line_search, function()
-    local winid = vim.api.nvim_get_current_win()
-    leap.leap {
-        target_windows = { winid },
-        targets = get_line_starts(winid),
-    }
-end, leap_keymap_opts)
+vim.keymap.set('n', leap_keymap.line_search,
+    function()
+        local winid = vim.api.nvim_get_current_win()
+        leap.leap {
+            target_windows = { winid },
+            targets = get_line_starts(winid),
+        }
+    end, leap_keymap.opts)

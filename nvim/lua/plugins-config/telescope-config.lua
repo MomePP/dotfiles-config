@@ -142,43 +142,15 @@ telescope.load_extension('fzf')
 telescope.load_extension('file_browser')
 telescope.load_extension('ui-select')
 
+-- INFO: setup keymap
+local telescope_builtin = require('telescope.builtin')
+local telescope_keymap = require('keymappings').telescope
 
--- INFO: custom telescope pickers
-local custom_telescope = {}
-local pickers = require 'telescope.pickers'
-local finders = require 'telescope.finders'
-local make_entry = require 'telescope.make_entry'
-local conf = require('telescope.config').values
-
-function custom_telescope.marks_picker(opts)
-    require('marks').mark_state:all_to_list() -- generate marks to loclist
-
-    local filenames = {}
-    local locations = vim.fn.getloclist(0) -- marks.nvim uses loclist 0 for store marked list
-    if locations then
-        for _, value in pairs(locations) do
-            local bufnr = value.bufnr
-            if filenames[bufnr] == nil then
-                filenames[bufnr] = vim.api.nvim_buf_get_name(bufnr)
-            end
-            value.filename = filenames[bufnr]
-        end
-    end
-
-    if vim.tbl_isempty(locations) then
-        print('There is no marked - ')
-        return
-    end
-
-    pickers.new(opts, {
-        prompt_title = 'Marks',
-        finder = finders.new_table {
-            results = locations,
-            entry_maker = opts.entry_maker or make_entry.gen_from_quickfix(opts),
-        },
-        previewer = conf.qflist_previewer(opts),
-        sorter = conf.generic_sorter(opts),
-    }):find()
-end
-
-return custom_telescope
+vim.keymap.set('n', telescope_keymap.grep_workspace, telescope_builtin.grep_string, telescope_keymap.opts)
+vim.keymap.set('n', telescope_keymap.buffers, telescope_builtin.buffers, telescope_keymap.opts)
+vim.keymap.set('n', telescope_keymap.help, telescope_builtin.help_tags, telescope_keymap.opts)
+vim.keymap.set('n', telescope_keymap.jumplist, telescope_builtin.jumplist, telescope_keymap.opts)
+vim.keymap.set('n', telescope_keymap.search_workspace, telescope_builtin.live_grep, telescope_keymap.opts)
+vim.keymap.set('n', telescope_keymap.oldfiles, telescope_builtin.oldfiles, telescope_keymap.opts)
+vim.keymap.set('n', telescope_keymap.search_buffer, telescope_builtin.current_buffer_fuzzy_find, telescope_keymap.opts)
+vim.keymap.set('n', telescope_keymap.file_browse, telescope.extensions.file_browser.file_browser, telescope_keymap.opts)
