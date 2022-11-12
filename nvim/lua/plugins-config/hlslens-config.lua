@@ -35,17 +35,6 @@ hlslens.setup({
 
 local hlslens_keymap = require('keymappings').hlslens
 
-local function ufoSearchKeys(c)
-    local ok, msg = pcall(function() vim.cmd('norm!' .. vim.v.count1 .. c) end)
-    if not ok and msg then
-        vim.api.nvim_notify(msg:match(':(.*)$'), vim.log.levels.ERROR)
-        return
-    end
-    hlslens.start()
-    local ufo_status, ufo = pcall(require, 'ufo')
-    if ufo_status then ufo.peekFoldedLinesUnderCursor() end
-end
-
 local function hlsSearchKeys(c)
     if pcall(vim.api.nvim_feedkeys, c, 'n', true) then
         hlslens.start()
@@ -54,12 +43,12 @@ end
 
 vim.keymap.set('n', hlslens_keymap.search_next,
     function()
-        ufoSearchKeys(hlslens_keymap.search_next)
+        hlslens.nNPeekWithUFO(hlslens_keymap.search_next)
     end, hlslens_keymap.opts)
 
 vim.keymap.set('n', hlslens_keymap.search_prev,
     function()
-        ufoSearchKeys(hlslens_keymap.search_prev)
+        hlslens.nNPeekWithUFO(hlslens_keymap.search_prev)
     end, hlslens_keymap.opts)
 
 vim.keymap.set('n', hlslens_keymap.word_next,
