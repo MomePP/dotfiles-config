@@ -1,8 +1,6 @@
 local cmp_loaded, cmp = pcall(require, 'cmp')
 if not cmp_loaded then return end
 
-local colors = require('colorscheme').colorset
-
 -- ----------------------------------------------------------------------
 --  luasnip configs
 --
@@ -99,9 +97,10 @@ local cmp_mapping = {
 local cmp_sources = cmp.config.sources({
     { name = 'nvim_lsp' },
     { name = 'nvim_lua' },
+    { name = 'luasnip' },
     { name = 'path' },
-    { name = 'buffer' },
-    { name = 'luasnip', keyword_length = 2 },
+    { name = 'buffer', keyword_length = 3 },
+    { name = 'rg', keyword_length = 3 },
 })
 
 local cmp_configs = {
@@ -124,7 +123,7 @@ local cmp_configs = {
     },
     completion = {
         completeopt = 'menu,menuone,noselect',
-        keyword_length = 3,
+        keyword_length = 2,
     }
 }
 cmp.setup(cmp_configs)
