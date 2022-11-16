@@ -7,7 +7,9 @@ trouble.setup {
     action_keys = {
         close = {},
         cancel = {},
-        close_to_parent = { 'q', '<esc>' }
+        close_to_parent = { 'q', '<esc>' },
+        jump = {},
+        jump_close = { '<cr>', '<tab>', 'o' }
     }
 }
 
