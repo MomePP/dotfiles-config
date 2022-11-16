@@ -10,17 +10,13 @@ vim.api.nvim_set_hl(0, 'NoiceCmdlineIconFilter', { bg = colors.transparent, fg =
 
 noice.setup {
     views = {
-        mini = {
-            focusable = false,
-            timeout = 3000,
-        },
         hover = {
             focusable = false,
             border = {
                 style = 'none',
-                padding = { 0, 2 },
+                padding = { 1, 2 },
             },
-            position = { row = 1, col = 0 },
+            position = { row = 2, col = 0 },
             win_options = {
                 wrap = true,
                 linebreak = true,
@@ -52,11 +48,8 @@ noice.setup {
         hover = { enabled = true, },
         signature = { enabled = true },
         override = {
-            -- override the default lsp markdown formatter with Noice
             ['vim.lsp.util.convert_input_to_markdown_lines'] = true,
-            -- override the lsp markdown formatter with Noice
             ['vim.lsp.util.stylize_markdown'] = true,
-            -- override cmp documentation with Noice (needs the other options to work)
             ['cmp.entry.get_documentation'] = true,
         }
     },

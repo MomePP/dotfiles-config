@@ -30,6 +30,7 @@ vim.opt.termguicolors = true
 vim.opt.completeopt:append('menuone,noselect')
 vim.opt.wildignore = '**/node_module/*, **/.pio/*, **/.git/*'
 vim.opt.formatoptions:append('r')
+vim.opt.undofile = true
 vim.opt.swapfile = false
 vim.opt.showmode = false
 vim.opt.laststatus = 3
