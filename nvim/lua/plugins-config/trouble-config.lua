@@ -8,8 +8,8 @@ trouble.setup {
         close = {},
         cancel = {},
         close_to_parent = { 'q', '<esc>' },
-        jump = {},
-        jump_close = { '<cr>', '<tab>', 'o' }
+        jump = { '<tab>', '<space>' },
+        jump_close = { '<cr>', 'o' }
     }
 }
 
