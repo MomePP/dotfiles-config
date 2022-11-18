@@ -9,7 +9,7 @@ gui:
 git:
   paging:
     colorArg: always
-    pager: delta --paging=never
+    useConfig: true
   log:
     showGraph: always
     showWholeGraph: true

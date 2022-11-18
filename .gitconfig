@@ -3,7 +3,7 @@
 	email = peeranut32@gmail.com
 [core]
 	excludesfile = /Users/momeppkt/.gitignore_global
-    pager = delta
+	pager = delta --paging=never
 [interactive]
     diffFilter = delta --color-only
 [add.interactive]
