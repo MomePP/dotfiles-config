@@ -13,7 +13,7 @@ treesitter.setup {
         enable = true,
         disable = { 'yaml' },
     },
-    ensure_installed = { 'regex', 'lua', 'vim', 'markdown', 'markdown_inline', 'bash', 'fish', 'comment' },
+    ensure_installed = { 'regex', 'lua', 'vim', 'markdown', 'markdown_inline', 'bash', 'fish' },
     auto_install = true,
     sync_install = false,
     ignore_install = {
