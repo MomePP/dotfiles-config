@@ -35,20 +35,33 @@ hlslens.setup({
 
 local hlslens_keymap = require('keymappings').hlslens
 
-local function hlsSearchKeys(c)
-    if pcall(vim.api.nvim_feedkeys, c, 'n', true) then
+local function hlsPeekKeys(char)
+    local ok, winid = hlslens.nNPeekWithUFO(char)
+    if ok and winid then
+        -- Safe to override buffer scope keymaps remapped by ufo,
+        -- ufo will restore previous buffer keymaps before closing preview window
+        -- Type <CR> will switch to preview window and fire `trace` action
+        vim.keymap.set('n', '<CR>', function()
+            local keyCodes = vim.api.nvim_replace_termcodes('<Tab><CR>', true, false, true)
+            vim.api.nvim_feedkeys(keyCodes, 'im', false)
+        end, { buffer = true })
+    end
+end
+
+local function hlsSearchKeys(char)
+    if pcall(vim.api.nvim_feedkeys, char, 'n', true) then
         hlslens.start()
     end
 end
 
-vim.keymap.set('n', hlslens_keymap.search_next,
+vim.keymap.set({ 'n', 'x' }, hlslens_keymap.search_next,
     function()
-        hlslens.nNPeekWithUFO(hlslens_keymap.search_next)
+        hlsPeekKeys(hlslens_keymap.search_next)
     end, hlslens_keymap.opts)
 
-vim.keymap.set('n', hlslens_keymap.search_prev,
+vim.keymap.set({ 'n', 'x' }, hlslens_keymap.search_prev,
     function()
-        hlslens.nNPeekWithUFO(hlslens_keymap.search_prev)
+        hlsPeekKeys(hlslens_keymap.search_prev)
     end, hlslens_keymap.opts)
 
 vim.keymap.set('n', hlslens_keymap.word_next,
