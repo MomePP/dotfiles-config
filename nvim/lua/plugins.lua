@@ -69,6 +69,9 @@ return packer.startup({
         use 'RRethy/vim-illuminate'
         use { 'Maan2003/lsp_lines.nvim', config = function() require('lsp_lines').setup() end }
 
+        use 'jose-elias-alvarez/null-ls.nvim'
+        use 'jayp0521/mason-null-ls.nvim'
+
         -- Git plugins
         use 'lewis6991/gitsigns.nvim'
         use 'akinsho/git-conflict.nvim'
