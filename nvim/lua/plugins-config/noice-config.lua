@@ -44,6 +44,11 @@ noice.setup {
     popupmenu = {
         backend = 'cmp',
     },
+    commands = {
+        history = {
+            filter_opts = { reverse = true }
+        }
+    },
     lsp = {
         hover = { enabled = true, },
         signature = { enabled = true },
