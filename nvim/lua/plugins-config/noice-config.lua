@@ -38,6 +38,7 @@ noice.setup {
             search_down = { icon = ' SEARCH  ' },
             search_up = { icon = ' SEARCH  ' },
             filter = { icon = ' TERMINAL ', lang = 'fish' },
+            calculator = { icon = ' CALCULATOR ', icon_hl_group = 'NoiceCmdlineIconFilter' },
             lua = false,
         }
     },
