@@ -67,12 +67,12 @@ set -x MENUCONFIG_STYLE "monochrome"
 alias get-idf ". $HOME/Developments/toolchains/esp-idf/export.fish"
 
 # config llvm arm64
-# fish_add_path /opt/homebrew/opt/llvm/bin
-# set -gx LDFLAGS "-L/opt/homebrew/opt/llvm/lib"
-# set -gx CPPFLAGS "-I/opt/homebrew/opt/llvm/include"
+fish_add_path /opt/homebrew/opt/llvm/bin
+set -gx LDFLAGS "-L/opt/homebrew/opt/llvm/lib"
+set -gx CPPFLAGS "-I/opt/homebrew/opt/llvm/include"
 
 # config llvm x86_64
-fish_add_path /usr/local/opt/llvm/bin
+# fish_add_path /usr/local/opt/llvm/bin
 set -gx LDFLAGS "-L/usr/local/opt/llvm/lib"
 set -gx CPPFLAGS "-I/usr/local/opt/llvm/include"
 
