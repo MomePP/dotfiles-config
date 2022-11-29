@@ -51,7 +51,7 @@ vim.keymap.set('n', marks_keymaps.list, function()
     -- marks.nvim uses loclist 0 for store marked list
     marks.mark_state:all_to_list()
     if vim.tbl_isempty(vim.fn.getloclist(0)) then
-        vim.notify('There is no marked - ', vim.log.levels.WARN)
+        vim.notify('There is no marked -  ', vim.log.levels.WARN)
         return
     end
     vim.cmd 'TroubleToggle loclist'

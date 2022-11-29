@@ -2,6 +2,12 @@ local silent = { noremap = true, silent = true }
 local expr = { expr = true }
 local silent_expr = { silent = true, expr = true }
 
+-- NOTE: helper functions
+local function open_trouble_qflist(options)
+    vim.fn.setqflist({}, ' ', options)
+    vim.cmd 'TroubleToggle quickfix'
+end
+
 local keymaps = {}
 
 keymaps.setup = function()
@@ -74,11 +80,6 @@ keymaps.setup = function()
 end
 
 -- INFO: LSP keymap
-local function open_trouble_qflist(options)
-    vim.fn.setqflist({}, ' ', options)
-    vim.cmd 'TroubleToggle quickfix'
-end
-
 keymaps.lsp = {
     ['gd'] = function() require 'trouble'.toggle('lsp_definitions') end,
     ['gt'] = function() require 'trouble'.toggle('lsp_type_definitions') end,
@@ -121,6 +122,12 @@ keymaps.gitsigns = {
     blame_line = '<leader>hb',
     toggle_blame = '<leader>hB',
     opts = { silent = silent, expr = expr },
+}
+
+-- INFO: git-conflict keymap
+keymaps.gitconflict = {
+    toggle_qflist = '<leader>x',
+    opts = silent,
 }
 
 -- INFO: Telescope keymap
