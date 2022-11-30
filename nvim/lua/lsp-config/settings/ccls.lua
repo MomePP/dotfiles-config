@@ -3,8 +3,9 @@ return {
         cache = {
             directory = ".ccls-cache"
         },
-        clang = {
-            excludeArgs = { "-frounding-math" }
-        },
+        -- index = {
+        --     multiVersion = 1,
+        --     multiVersionBlacklist = { "^/usr/include" },
+        -- }
     }
 }
