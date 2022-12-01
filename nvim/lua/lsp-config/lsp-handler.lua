@@ -79,6 +79,9 @@ require('mason').setup({
     }
 })
 
+-- config `lspinfo` window border
+require('lspconfig.ui.windows').default_options.border = 'rounded'
+
 -- manually injects unsupported lsp by mason.nvim
 require('lspconfig')['ccls'].setup({
     on_attach = lsp_on_attach,
