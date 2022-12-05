@@ -11,6 +11,7 @@ M.colorset = {
     red         = '#ea6962',
     green       = '#a9b665',
     blue        = '#7daea3',
+    bright_blue = '#1085FF',
     yellow      = '#d8a657',
     orange      = '#e78a4e',
     purple      = '#af5fff',
