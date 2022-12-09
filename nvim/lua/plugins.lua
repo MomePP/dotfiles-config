@@ -108,6 +108,7 @@ return packer.startup({
         use 'NvChad/nvim-colorizer.lua'
         use 'windwp/nvim-autopairs'
         use 'chentoast/marks.nvim'
+        -- use 'MattesGroeger/vim-bookmarks'
         use 'fedepujol/move.nvim'
         use 'ggandor/leap.nvim'
         use 'folke/todo-comments.nvim'

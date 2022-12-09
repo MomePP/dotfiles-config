@@ -170,6 +170,17 @@ keymaps.marks = {
     opts = silent,
 }
 
+-- INFO: bookmarks keymap
+-- keymaps.bookmarks = {
+--     next = "'",
+--     prev = '"',
+--     toggle = "m'",
+--     annotate = 'm"',
+--     clear = 'md',
+--     list = '<leader>m',
+--     opts = silent,
+-- }
+
 -- INFO: autopair keymap
 keymaps.autopair = {
     wrap = '<C-e>'
