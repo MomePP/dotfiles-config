@@ -40,7 +40,7 @@ keymaps.setup = function()
     vim.keymap.set('n', 'wq', '<C-w>q', silent)
 
     -- INFO: misc. keymap
-    vim.keymap.set('n', '<C-l>', ':nohl<CR>', silent) -- clear highlight
+    vim.keymap.set('n', '<C-l>', '<Cmd>noh<CR>', silent) -- clear highlight
     vim.keymap.set('n', 'dw', 'vb"_d') -- delete a word backward
     vim.keymap.set('n', '<leader>d', '"_d') -- delete without yank
     vim.keymap.set('n', 'x', '"_x')

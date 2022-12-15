@@ -131,9 +131,6 @@ return packer.startup({
         -- use 'MomePP/plastic-nvim'
         use 'rebelot/kanagawa.nvim'
 
-        -- Obsidian plugin support
-        use 'epwalsh/obsidian.nvim'
-
         -- misc. cool stuff
         -- use 'andweeb/presence.nvim' -- discord activity status
         -- use 'dstein64/vim-startuptime'
