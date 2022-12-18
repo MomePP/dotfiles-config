@@ -7,7 +7,7 @@ blankline.setup {
     -- char = '▏',
     -- context_char = '▏',
     use_treesitter = true,
-    use_treesitter_scope = false,
+    use_treesitter_scope = true,
     filetype_exclude = {
         'man',
         'checkhealth',
@@ -16,14 +16,15 @@ blankline.setup {
         'terminal',
         'packer',
         'lspinfo',
-        'lsp-installer',
         'TelescopePrompt',
         'TelescopeResults',
     },
+    -- show_current_context_start = true,
     show_tailing_blankline_indent = false,
     show_first_indent_level = false,
     show_current_context = true,
-    -- show_current_context_start = true,
+    indent_level = 4,
+    max_indent_increase = 1,
 }
 
 -- vim.api.nvim_set_hl(0, 'IndentBlanklineContextStart', { sp = colors.orange, underline = true })

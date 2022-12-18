@@ -123,7 +123,7 @@ return packer.startup({
         use 'lukas-reineke/indent-blankline.nvim'
         use 'b0o/incline.nvim'
         use 'SmiteshP/nvim-navic'
-        use 'Darazaki/indent-o-matic'
+        use 'nmac427/guess-indent.nvim'
         use { 'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async' }
         use { 'folke/noice.nvim', requires = { 'MunifTanjim/nui.nvim' } }
 
