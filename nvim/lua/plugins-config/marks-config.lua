@@ -35,16 +35,45 @@ local colors = require('colorscheme').colorset
 local marks_keymaps = require('keymappings').marks
 
 vim.keymap.set('n', marks_keymaps.toggle, marks.toggle, marks_keymaps.opts)
-vim.keymap.set('n', marks_keymaps.preview, marks.preview, marks_keymaps.opts)
 vim.keymap.set('n', marks_keymaps.next, marks.next, marks_keymaps.opts)
 vim.keymap.set('n', marks_keymaps.prev, marks.prev, marks_keymaps.opts)
 vim.keymap.set('n', marks_keymaps.clear, marks.delete_buf, marks_keymaps.opts)
+
+-- NOTE: preview marks in current buffer
+vim.keymap.set('n', marks_keymaps.preview, function()
+    local mark = marks.mark_state:get_nearest_next_mark()
+    if not mark then
+        vim.notify('No marks to preview -  ', vim.log.levels.WARN)
+        return
+    end
+
+    local pos = vim.fn.getpos("'" .. mark)
+    if pos[2] == 0 then
+        return
+    end
+
+    local width = vim.api.nvim_win_get_width(0)
+    local height = vim.api.nvim_win_get_height(0)
+
+    vim.api.nvim_open_win(pos[1], true, {
+        relative = 'win',
+        win = 0,
+        width = math.floor(width / 2),
+        height = math.floor(height / 2),
+        col = math.floor(width / 4),
+        row = math.floor(height / 8),
+        border = 'rounded',
+        title = ' Marks previewer '
+    })
+    vim.cmd("normal! `" .. mark)
+    vim.cmd("normal! zz")
+end, marks_keymaps.opts)
 
 -- NOTE: used `trouble.nvim` quickfix to show all marks
 vim.keymap.set('n', marks_keymaps.list, function()
     marks.mark_state:all_to_list('quickfixlist')
     if vim.tbl_isempty(vim.fn.getqflist()) then
-        vim.notify('There is no bookmarks -  ', vim.log.levels.WARN)
+        vim.notify('There is no marks -  ', vim.log.levels.WARN)
         return
     end
     vim.cmd 'TroubleToggle quickfix'
