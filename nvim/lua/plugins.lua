@@ -27,7 +27,7 @@ if not status_ok then return end
 packer.init {
     display = {
         open_fn = function()
-            return require('packer.util').float { border = 'rounded' }
+            return require('packer.util').float { border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' } }
         end,
     },
 }
@@ -109,11 +109,9 @@ return packer.startup({
         use 'windwp/nvim-autopairs'
         -- use 'chentoast/marks.nvim'
         use 'MomePP/marks.nvim'
-        -- use 'MattesGroeger/vim-bookmarks'
         use 'fedepujol/move.nvim'
         use 'ggandor/leap.nvim'
         use 'folke/todo-comments.nvim'
-        use 'folke/trouble.nvim'
         use { 'iamcco/markdown-preview.nvim', run = function() vim.fn['mkdp#util#install']() end, }
 
         -- UI decoration

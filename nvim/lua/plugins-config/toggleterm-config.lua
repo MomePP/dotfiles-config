@@ -2,22 +2,18 @@ local status_ok, toggleterm = pcall(require, 'toggleterm')
 if not status_ok then return end
 
 local toggleterm_keymap = require('keymappings').toggleterm
-local colors = require('colorscheme').colorset
 
 toggleterm.setup({
 	size = 20,
 	open_mapping = toggleterm_keymap.toggle,
-	shade_terminals = true,
-	shading_factor = 2,
+	shade_terminals = false,
 	direction = 'float',
 	float_opts = {
-		border = 'curved',
+		border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
 	},
 	highlights = {
-		FloatBorder = {
-			guifg = colors.white,
-			guibg = colors.transparent,
-		}
+		FloatBorder = { link = 'FloatBorder' },
+		NormalFloat = { link = 'NormalFloat' }
 	}
 })
 

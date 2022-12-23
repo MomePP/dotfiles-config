@@ -17,7 +17,7 @@ vim.keymap.set('n', gitconflict_keymap.toggle_qflist, function()
     git_conflict.conflicts_to_qf_items(function(items)
         if #items > 0 then
             vim.fn.setqflist(items, 'r')
-            vim.cmd 'TroubleToggle quickfix'
+            vim.cmd 'Telescope quickfix'
         else
             vim.notify('There is no conflict -  ', vim.log.levels.WARN)
         end

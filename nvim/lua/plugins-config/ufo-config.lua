@@ -6,7 +6,6 @@ ufo.setup({
     preview = {
         win_config = {
             border = { '', '─', '', '', '', '─', '', '' },
-            -- border = 'rounded',
             winhighlight = 'Normal:Normal',
             winblend = 0
         },

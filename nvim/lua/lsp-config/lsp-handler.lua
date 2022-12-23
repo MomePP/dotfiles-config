@@ -14,7 +14,7 @@ local diagnostic_config = {
     float = {
         focusable = false,
         style = 'minimal',
-        border = 'rounded',
+        border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
         source = 'always',
         header = '',
         prefix = '',
@@ -74,12 +74,12 @@ lsp_setup.setup({
 -- configure mason after lsp-setup intialized
 require('mason').setup({
     ui = {
-        border = 'rounded'
+        border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }
     }
 })
 
 -- config `lspinfo` window border
-require('lspconfig.ui.windows').default_options.border = 'rounded'
+require('lspconfig.ui.windows').default_options.border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }
 
 -- manually injects unsupported lsp by mason.nvim
 require('lspconfig')['ccls'].setup({

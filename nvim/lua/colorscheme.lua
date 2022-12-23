@@ -18,7 +18,8 @@ M.colorset = {
     magenta     = '#d3869b',
     teal        = '#5bc8af',
     cyan        = '#89b482',
-    bg          = '#181a1f',
+    bg          = '#1d2021',
+    bg0         = '#282828',
     bg1         = '#3c3836',
     bg2         = '#504945',
     bg3         = '#665c54',
@@ -49,6 +50,18 @@ M.colorset.modes = {
     r = M.colorset.yellow,
     R = M.colorset.yellow,
     c = M.colorset.red,
+}
+
+M.colorset.telescope = {
+    TelescopeSelection = { bg = M.colorset.bg1 },
+    TelescopeNormal = { bg = M.colorset.bg0 },
+    TelescopePromptNormal = { bg = M.colorset.bg1 },
+    TelescopeResultsBorder = { fg = M.colorset.bright_blue, bg = M.colorset.bg0 },
+    TelescopePreviewBorder = { fg = M.colorset.bright_blue, bg = M.colorset.bg0 },
+    TelescopePromptBorder = { fg = M.colorset.bright_blue, bg = M.colorset.bg1 },
+    TelescopePromptTitle = { fg = M.colorset.bg1, bg = M.colorset.bright_blue },
+    TelescopeResultsTitle = { fg = M.colorset.bg1, bg = M.colorset.bright_blue },
+    TelescopePreviewTitle = { fg = M.colorset.bg1, bg = M.colorset.bright_blue },
 }
 
 M.colorset.cmp = {
@@ -145,14 +158,18 @@ end
 
 -- override signcolumn fg to be transparent
 vim.api.nvim_set_hl(0, 'SignColumn', { fg = M.colorset.transparent, bg = M.colorset.transparent })
-vim.api.nvim_set_hl(0, 'Pmenu', { fg = M.colorset.transparent, bg = M.colorset.black })
 
 -- override floatborder bg
-vim.api.nvim_set_hl(0, 'NormalFloat', { bg = M.colorset.transparent })
-vim.api.nvim_set_hl(0, 'FloatBorder', { bg = M.colorset.transparent })
+vim.api.nvim_set_hl(0, 'NormalFloat', { bg = M.colorset.bg0 })
+vim.api.nvim_set_hl(0, 'FloatBorder', { bg = M.colorset.bg0 })
 
 -- override MoreMsg highlight
 vim.api.nvim_set_hl(0, 'MoreMsg', { fg = M.colorset.blue, bg = M.colorset.transparent })
+
+-- override telescope highlight groups
+for group, colors in pairs(M.colorset.telescope) do
+    vim.api.nvim_set_hl(0, group, colors)
+end
 
 -- override CMP highlight groups
 for group, colors in pairs(M.colorset.cmp) do

@@ -3,9 +3,9 @@ local expr = { expr = true }
 local silent_expr = { silent = true, expr = true }
 
 -- NOTE: helper functions
-local function open_trouble_qflist(options)
+local function open_telescope_qflist(options)
     vim.fn.setqflist({}, ' ', options)
-    vim.cmd 'TroubleToggle quickfix'
+    vim.cmd 'Telescope quickfix'
 end
 
 local keymaps = {}
@@ -81,15 +81,15 @@ end
 
 -- INFO: LSP keymap
 keymaps.lsp = {
-    ['gd'] = function() require 'trouble'.toggle('lsp_definitions') end,
-    ['gt'] = function() require 'trouble'.toggle('lsp_type_definitions') end,
-    ['gr'] = function() require 'trouble'.toggle('lsp_references') end,
-    ['<leader>lw'] = function() require 'trouble'.toggle('workspace_diagnostics') end,
-    ['<leader>ld'] = function() require 'trouble'.toggle('document_diagnostics') end,
+    ['gd'] = require 'telescope.builtin'.lsp_definitions,
+    ['gt'] = require 'telescope.builtin'.lsp_type_definitions,
+    ['gr'] = require 'telescope.builtin'.lsp_references,
     ['<leader>ls'] = require 'telescope.builtin'.lsp_document_symbols,
+    ['<leader>lw'] = function() require 'telescope.builtin'.diagnostics({ bufnr = nil }) end,
+    ['<leader>ld'] = function() require 'telescope.builtin'.diagnostics({ bufnr = 0 }) end,
     [']d'] = function() vim.diagnostic.goto_next({ float = false }) end,
     ['[d'] = function() vim.diagnostic.goto_prev({ float = false }) end,
-    ['gD'] = function() vim.lsp.buf.declaration({ on_list = open_trouble_qflist }) end,
+    ['gD'] = function() vim.lsp.buf.declaration({ on_list = open_telescope_qflist }) end,
     ['gx'] = vim.lsp.buf.code_action,
     ['gs'] = vim.lsp.buf.signature_help,
     ['gp'] = vim.lsp.buf.hover,
@@ -134,8 +134,9 @@ keymaps.gitconflict = {
 keymaps.telescope = {
     grep_workspace = 'gw',
     search_buffer = '<leader>/',
-    search_workspace = '<leader>fs',
+    search_workspace = '<leader>fw',
     buffers = '<leader>\\',
+    find_files = '<leader>fs',
     help = '<leader>;',
     jumplist = '<leader>j',
     oldfiles = '<leader>?',

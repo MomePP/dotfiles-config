@@ -2,7 +2,7 @@ local null_ls_status, null_ls = pcall(require, 'null-ls')
 if not null_ls_status then return end
 
 null_ls.setup {
-    border = 'rounded'
+    border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }
 }
 
 local mason_null_ls_status, mason_null_ls = pcall(require, 'mason-null-ls')

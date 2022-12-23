@@ -43,7 +43,7 @@ todocomments.setup {
 
 local todocomments_keymap = require('keymappings').todocomments
 
-vim.keymap.set('n', todocomments_keymap.toggle, '<Cmd>TodoTrouble<CR>', todocomments_keymap.opts)
+vim.keymap.set('n', todocomments_keymap.toggle, '<Cmd>TodoTelescope<CR>', todocomments_keymap.opts)
 
 vim.keymap.set('n', todocomments_keymap.next_todo,
     function()

@@ -62,21 +62,21 @@ vim.keymap.set('n', marks_keymaps.preview, function()
         height = math.floor(height / 2),
         col = math.floor(width / 4),
         row = math.floor(height / 8),
-        border = 'rounded',
+        border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
         title = ' Marks previewer '
     })
-    vim.cmd("normal! `" .. mark)
-    vim.cmd("normal! zz")
+    vim.cmd('normal! `' .. mark)
+    vim.cmd('normal! zz')
 end, marks_keymaps.opts)
 
--- NOTE: used `trouble.nvim` quickfix to show all marks
+-- NOTE: used `telescope.nvim` quickfix to show all marks
 vim.keymap.set('n', marks_keymaps.list, function()
     marks.mark_state:all_to_list('quickfixlist')
     if vim.tbl_isempty(vim.fn.getqflist()) then
         vim.notify('There is no marks -  ', vim.log.levels.WARN)
         return
     end
-    vim.cmd 'TroubleToggle quickfix'
+    vim.cmd 'Telescope quickfix'
 end, marks_keymaps.opts)
 
 -- INFO: set marks sign highlight
