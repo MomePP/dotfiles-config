@@ -1,7 +1,7 @@
 local M = {
     -- 'chentoast/marks.nvim',
     'MomePP/marks.nvim',
-    event = 'BufReadPre'
+    event = 'BufReadPost'
 }
 
 M.config = function()

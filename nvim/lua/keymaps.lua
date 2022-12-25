@@ -78,105 +78,101 @@ end
 
 -- INFO: LSP keymap
 keymaps.lsp = {
-    ['gd'] = '<Cmd>Telescope lsp_definitions<CR>',
-    ['gt'] = '<Cmd>Telescope lsp_type_definitions<CR>',
-    ['gr'] = '<Cmd>Telescope lsp_references<CR>',
+    ['gd']         = '<Cmd>Telescope lsp_definitions<CR>',
+    ['gt']         = '<Cmd>Telescope lsp_type_definitions<CR>',
+    ['gr']         = '<Cmd>Telescope lsp_references<CR>',
     ['<leader>ls'] = '<Cmd>Telescope lsp_document_symbols<CR>',
     ['<leader>ld'] = '<Cmd>Telescope diagnostics<CR>',
-    [']d'] = function() vim.diagnostic.goto_next({ float = false }) end,
-    ['[d'] = function() vim.diagnostic.goto_prev({ float = false }) end,
-    ['gD'] = function() vim.lsp.buf.declaration({ on_list = open_telescope_qflist }) end,
-    ['gx'] = vim.lsp.buf.code_action,
-    ['gs'] = vim.lsp.buf.signature_help,
-    ['gp'] = vim.lsp.buf.hover,
+    [']d']         = function() vim.diagnostic.goto_next({ float = false }) end,
+    ['[d']         = function() vim.diagnostic.goto_prev({ float = false }) end,
+    ['gD']         = function() vim.lsp.buf.declaration({ on_list = open_telescope_qflist }) end,
+    ['gx']         = vim.lsp.buf.code_action,
+    ['gs']         = vim.lsp.buf.signature_help,
+    ['gp']         = vim.lsp.buf.hover,
     ['<leader>lr'] = vim.lsp.buf.rename,
     ['<leader>ff'] = function() vim.lsp.buf.format({ async = true }) end,
-    ['K'] = function() local ufo_loaded, ufo = pcall(require, 'ufo')
+    ['K']          = function()
+        local ufo_loaded, ufo = pcall(require, 'ufo')
         if ufo_loaded then if ufo.peekFoldedLinesUnderCursor() then return end end
         vim.lsp.buf.hover()
     end,
 }
 
+-- INFO: Lazy keymap
+keymaps.lazy = {
+    open = '<leader>p',
+    opts = silent
+}
+
 -- INFO: Focus keymap
 keymaps.focus = {
     toggle_enable = '<leader><space>',
-    toggle_size = 'wt',
-    split_cycle = '<space>',
-    split_left = 'wh',
-    split_right = 'wl',
-    split_up = 'wk',
-    split_down = 'wj',
-    opts = silent
+    toggle_size   = 'wt',
+    split_cycle   = '<space>',
+    split_left    = 'wh',
+    split_right   = 'wl',
+    split_up      = 'wk',
+    split_down    = 'wj',
+    opts          = silent
 }
 
 -- INFO: GitSign keymap
 keymaps.gitsigns = {
-    next_hunk = ']c',
-    prev_hunk = '[c',
-    reset_hunk = '<leader>hr',
+    next_hunk    = ']c',
+    prev_hunk    = '[c',
+    reset_hunk   = '<leader>hr',
     preview_hunk = '<leader>hp',
-    blame_line = '<leader>hb',
+    blame_line   = '<leader>hb',
     toggle_blame = '<leader>hB',
-    opts = { silent = silent, expr = expr },
+    opts         = { silent = silent, expr = expr },
 }
 
 -- INFO: git-conflict keymap
 keymaps.gitconflict = {
     toggle_qflist = '<leader>x',
-    opts = silent,
+    opts          = silent,
 }
 
 -- INFO: Telescope keymap
 keymaps.telescope = {
-    grep_workspace = 'gw',
-    search_buffer = '<leader>/',
+    grep_workspace   = 'gw',
+    search_buffer    = '<leader>/',
     search_workspace = '<leader>fw',
-    buffers = '<leader>\\',
-    find_files = '<leader>fs',
-    help = '<leader>;',
-    jumplist = '<leader>j',
-    oldfiles = '<leader>?',
-    file_browse = '<leader>fb',
-    opts = silent,
+    buffers          = '<leader>\\',
+    find_files       = '<leader>fs',
+    help             = '<leader>;',
+    jumplist         = '<leader>j',
+    oldfiles         = '<leader>?',
+    file_browse      = '<leader>fb',
+    opts             = silent,
 }
 
 -- INFO: Todocomments keymap
 keymaps.todocomments = {
-    toggle = '<leader>c',
+    toggle    = '<leader>c',
     next_todo = ']t',
     prev_todo = '[t',
-    opts = silent,
+    opts      = silent,
 }
 
 -- INFO: Terminal & ToggleTerm keymap
 keymaps.toggleterm = {
-    toggle = '<leader>t',
+    toggle  = '<leader>t',
     lazygit = '<leader>g',
-    -- gotop = '<leader>P',
-    opts = silent,
+    -- gotop   = '<leader>P',
+    opts    = silent,
 }
 
 -- INFO: Marks keymap
 keymaps.marks = {
-    next = "'",
-    prev = '"',
-    toggle = "m'",
+    next    = "'",
+    prev    = '"',
+    toggle  = "m'",
     preview = 'm"',
-    clear = 'md',
-    list = '<leader>m',
-    opts = silent,
+    clear   = 'md',
+    list    = '<leader>m',
+    opts    = silent,
 }
-
--- INFO: bookmarks keymap
--- keymaps.bookmarks = {
---     next = "'",
---     prev = '"',
---     toggle = "m'",
---     annotate = 'm"',
---     clear = 'md',
---     list = '<leader>m',
---     opts = silent,
--- }
 
 -- INFO: autopair keymap
 keymaps.autopair = {
@@ -185,30 +181,30 @@ keymaps.autopair = {
 
 -- INFO: ufo keymap
 keymaps.ufo = {
-    open_all = 'zR',
+    open_all    = 'zR',
     open_except = 'zr',
-    close_all = 'zM',
-    close_with = 'zm',
-    opts = silent,
+    close_all   = 'zM',
+    close_with  = 'zm',
+    opts        = silent,
 }
 
 -- INFO: hlslens keymap
 keymaps.hlslens = {
     search_next = 'n',
     search_prev = 'N',
-    word_next = '*',
-    word_prev = '#',
-    go_next = 'g*',
-    go_prev = 'g#',
-    opts = silent
+    word_next   = '*',
+    word_prev   = '#',
+    go_next     = 'g*',
+    go_prev     = 'g#',
+    opts        = silent
 }
 
 -- INFO: session-manager keymaps
 keymaps.session_manager = {
-    load = '<leader>sr',
-    save = '<leader>ss',
+    load   = '<leader>sr',
+    save   = '<leader>ss',
     delete = '<leader>sd',
-    opts = silent,
+    opts   = silent,
 }
 
 -- INFO: Noice keymaps
@@ -221,15 +217,15 @@ keymaps.noice = {
 
 -- INFO: Leap keymaps
 keymaps.leap = {
-    search = 's',
+    search      = 's',
     line_search = 'S',
-    opts = silent,
+    opts        = silent,
 }
 
 -- INFO: markdown preview keymap
 keymaps.markdown_preview = {
-    toggle = '<leader>p',
-    opts = silent
+    toggle = '<leader>P',
+    opts   = silent
 }
 
 return keymaps

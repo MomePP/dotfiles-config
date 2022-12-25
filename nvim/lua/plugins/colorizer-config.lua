@@ -1,6 +1,6 @@
 local M = {
     'NvChad/nvim-colorizer.lua',
-    event = 'BufReadPre',
+    event = 'BufReadPost'
 }
 
 M.config = function()
@@ -21,9 +21,6 @@ M.config = function()
             virtualtext = '■',
         }
     }
-    vim.cmd(
-        [[autocmd ColorScheme * lua package.loaded['colorizer'] = nil; require('colorizer').setup(); require('colorizer').attach_to_buffer(0)]]
-    )
 end
 
 return M

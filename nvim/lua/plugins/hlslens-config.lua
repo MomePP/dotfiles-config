@@ -1,6 +1,6 @@
 local M = {
     'kevinhwang91/nvim-hlslens',
-    event = 'VeryLazy'
+    event = 'BufReadPost'
 }
 
 M.config = function()

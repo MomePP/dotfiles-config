@@ -1,4 +1,4 @@
--- Automatically install packer
+-- INFO: lazy.nvim bootstrap checking
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
     vim.fn.system({
@@ -12,16 +12,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.runtimepath:prepend(lazypath)
 
--- Autocommand that reloads neovim whenever you save the plugins.lua file
-vim.api.nvim_create_augroup('lazy_user_config', { clear = true })
-vim.api.nvim_create_autocmd('BufWritePost', {
-    desc = 'Sync plugins after modifying lazy-config.lua or update plugins.lua',
-    group = 'lazy_user_config',
-    pattern = { 'lazy-config.lua', 'plugins.lua' },
-    command = 'source <afile> | Lazy sync'
-})
-
--- INFO: lazy configs
+-- INFO: lazy.nvim configs
 local lazy_config = {
     defaults = {
         lazy = true
@@ -57,3 +48,7 @@ local lazy_config = {
     }
 }
 require('lazy').setup('plugins', lazy_config)
+
+-- INFO: lazy.nvim keybinding
+local lazy_keymap = require('keymaps').lazy
+vim.keymap.set('n', lazy_keymap.open, '<Cmd>Lazy<CR>', lazy_keymap.opts)
