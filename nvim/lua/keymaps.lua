@@ -59,9 +59,6 @@ keymaps.setup = function()
     vim.keymap.set('n', '<C-j>', '<C-i>', silent)
     vim.keymap.set('n', '<C-k>', '<C-o>', silent)
 
-    -- INFO: markdown preview keymap
-    vim.keymap.set('n', '<leader>p', '<Cmd>MarkdownPreviewToggle<CR>', silent)
-
     -- INFO: move line or visually selected block - opt+j/k
     vim.keymap.set('n', '<m-j>', ':MoveLine(1)<CR>', silent)
     vim.keymap.set('n', '<m-k>', ':MoveLine(-1)<CR>', silent)
@@ -227,6 +224,12 @@ keymaps.leap = {
     search = 's',
     line_search = 'S',
     opts = silent,
+}
+
+-- INFO: markdown preview keymap
+keymaps.markdown_preview = {
+    toggle = '<leader>p',
+    opts = silent
 }
 
 return keymaps

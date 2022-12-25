@@ -6,20 +6,12 @@ Runs `neovim-installer.sh` script to install neovim with MomePP's configuration.
 ``` bash
 ./neovim-installer.sh
 ```
-Currently, uses `impatient` plugin to cache lua config files.
-This may result first times running failed to import `packer_compiled` file.
-
-To fix this, try to run neovim for first time with initial command.
-``` bash
-nvim +PackerSync
-```
-**Note:** This may need to restart neovim for a couple of times
 
 ### Keybindings
-Most of the shortcuts can be modified in [keymappings](nvim/lua/keymappings.lua). ~~LSP related shortcuts can be found in [lsp-handler](nvim/lua/lsp-config/lsp-handler.lua).~~
+Most of the shortcuts can be modified in [keymaps.lua](nvim/lua/keymaps.lua).
 
 ### Plugins
-All the installed plugins are listed [Here](nvim/lua/plugins.lua)
+All the installed plugins are listed in [plugins.lua](nvim/lua/plugins.lua) or [plugins/](nvim/lua/plugins/)
 
 ---
 

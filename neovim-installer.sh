@@ -3,7 +3,7 @@
 # WARN: must have brew installed
 brew install wget neovim lazygit git-flow-avh git-delta ripgrep fd
 
-# -- move nvim config files to local config directory
+# INFO: -- move nvim config files to local config directory
 config_path=~/.config
 update_nvim_config="y"
 found_nvim_config=false
@@ -21,7 +21,7 @@ else
     echo "skipped neovim config.."
 fi
 
-# -- add edit and open commands for lazygit config if config not exists
+# INFO: -- add edit and open commands for lazygit config if config not exists
 lazygit_config=~/Library/Application\ Support/lazygit/config.yml
 update_lazygit_config="y"
 found_lazygit_config=false
@@ -39,3 +39,20 @@ else
     echo "skipped lazygit config.."
 fi
 
+# INFO: -- symlink gitconfig file
+gitconfig=~/.gitconfig
+update_gitconfig="y"
+found_gitconfig=false
+if [[ -f "$gitconfig" || -L "$gitconfig" ]]; then
+    found_gitconfig=true
+    read -p "found exist gitconfig file.. overwrite (y) or (n) ? : " update_gitconfig
+fi
+if [ $update_gitconfig = "y" ]; then
+    if $found_gitconfig; then
+        rm "$gitconfig" # remove old symlink or old config file
+    fi
+    ln -s "${config_path}/.gitconfig" "$gitconfig"
+    echo "update gitconfig !"
+else
+    echo "skipped gitconfig.."
+fi
