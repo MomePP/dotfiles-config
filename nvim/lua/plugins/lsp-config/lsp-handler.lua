@@ -90,7 +90,16 @@ M.config = function()
     })
 
     -- config `lspinfo` window border
-    require('lspconfig.ui.windows').default_options.border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }
+    require('lspconfig.ui.windows').default_options.border = {
+        { ' ', 'NormalFloat' },
+        { ' ', 'NormalFloat' },
+        { ' ', 'NormalFloat' },
+        { ' ', 'NormalFloat' },
+        { ' ', 'NormalFloat' },
+        { ' ', 'NormalFloat' },
+        { ' ', 'NormalFloat' },
+        { ' ', 'NormalFloat' },
+    }
 
     -- manually injects unsupported lsp by mason.nvim
     require('lspconfig')['ccls'].setup({
