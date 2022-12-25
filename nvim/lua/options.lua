@@ -1,0 +1,56 @@
+vim.opt.syntax = 'on'
+vim.opt.spelloptions = 'noplainbuffer'
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.title = true
+vim.opt.backup = false
+vim.opt.showcmd = false
+vim.opt.ruler = false
+vim.opt.showmatch = true
+vim.opt.expandtab = true
+vim.opt.autoindent = true
+vim.opt.smartindent = false
+vim.opt.shiftwidth = 4
+vim.opt.tabstop = 4
+vim.opt.hidden = true
+vim.opt.ignorecase = true
+vim.opt.scrolloff = 8
+vim.opt.sidescrolloff = 8
+vim.opt.shiftround = true
+vim.opt.smartcase = true
+vim.opt.lazyredraw = false
+vim.opt.wildmode = 'list:longest'
+vim.opt.clipboard = 'unnamedplus'
+vim.opt.mouse = 'a'
+vim.opt.shell = 'fish'
+vim.opt.inccommand = 'nosplit'
+vim.opt.wrap = false
+vim.opt.signcolumn = 'yes'
+vim.opt.termguicolors = true
+vim.opt.completeopt:append('menuone,noselect')
+vim.opt.wildignore = '**/node_module/*, **/.pio/*, **/.git/*'
+vim.opt.formatoptions:append('r')
+vim.opt.undofile = true
+vim.opt.swapfile = false
+vim.opt.showmode = false
+vim.opt.laststatus = 3
+vim.opt.showtabline = 0
+vim.opt.cmdheight = 0
+vim.opt.sessionoptions = 'buffers,curdir,folds,localoptions'
+vim.opt.shortmess = 'fnxoOtTF'
+vim.opt.fillchars:append({
+    horiz = '━',
+    horizup = '┻',
+    horizdown = '┳',
+    vert = '┃',
+    vertleft = '┫',
+    vertright = '┣',
+    verthoriz = '╋',
+    foldopen = '',
+    foldclose = '',
+})
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99
+vim.opt.foldenable = true
+-- vim.opt.foldcolumn = '1'
+-- vim.opt.splitkeep = 'cursor'
