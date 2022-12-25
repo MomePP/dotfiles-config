@@ -21,6 +21,7 @@ M.config = function()
     }
 
     local diagnostic_config = {
+        update_in_insert = false,
         virtual_text = false,
         severity_sort = true,
         float = {

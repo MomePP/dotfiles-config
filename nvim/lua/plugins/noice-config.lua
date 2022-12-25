@@ -25,8 +25,8 @@ M.config = function()
                     wrap = true,
                     linebreak = true,
                     winhighlight = {
-                        Normal = 'Pmenu',
-                        FloatBorder = 'Pmenu',
+                        Normal = 'NormalFloat',
+                        FloatBorder = 'FloatBorder',
                         Search = 'NONE',
                     }
                 },
