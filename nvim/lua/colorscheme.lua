@@ -52,68 +52,27 @@ M.colorset.modes = {
     c = M.colorset.red,
 }
 
-M.colorset.telescope = {
-    TelescopeSelection = { bg = M.colorset.bg1 },
-    TelescopeNormal = { bg = M.colorset.bg0 },
-    TelescopePromptNormal = { bg = M.colorset.bg1 },
-    TelescopeResultsBorder = { fg = M.colorset.bright_blue, bg = M.colorset.bg0 },
-    TelescopePreviewBorder = { fg = M.colorset.bright_blue, bg = M.colorset.bg0 },
-    TelescopePromptBorder = { fg = M.colorset.bright_blue, bg = M.colorset.bg1 },
-    TelescopePromptTitle = { fg = M.colorset.bg1, bg = M.colorset.bright_blue },
-    TelescopeResultsTitle = { fg = M.colorset.bg1, bg = M.colorset.bright_blue },
-    TelescopePreviewTitle = { fg = M.colorset.bg1, bg = M.colorset.bright_blue },
-}
-
-M.colorset.cmp = {
-    PmenuSel = { bg = "#282C34", fg = "NONE" },
-    Pmenu = { fg = "#C5CDD9", bg = "#22252A" },
-
-    CmpItemAbbrDeprecated = { fg = "#7E8294", bg = "NONE", strikethrough = true },
-    CmpItemAbbrMatch = { fg = "#82AAFF", bg = "NONE", bold = true },
-    CmpItemAbbrMatchFuzzy = { fg = "#82AAFF", bg = "NONE", bold = true },
-    CmpItemMenu = { fg = "#C792EA", bg = "NONE", italic = true },
-
-    CmpItemKindField = { fg = "#EED8DA", bg = "#B5585F" },
-    CmpItemKindProperty = { fg = "#EED8DA", bg = "#B5585F" },
-    CmpItemKindEvent = { fg = "#EED8DA", bg = "#B5585F" },
-
-    CmpItemKindText = { fg = "#C3E88D", bg = "#9FBD73" },
-    CmpItemKindEnum = { fg = "#C3E88D", bg = "#9FBD73" },
-    CmpItemKindKeyword = { fg = "#C3E88D", bg = "#9FBD73" },
-
-    CmpItemKindConstant = { fg = "#FFE082", bg = "#D4BB6C" },
-    CmpItemKindConstructor = { fg = "#FFE082", bg = "#D4BB6C" },
-    CmpItemKindReference = { fg = "#FFE082", bg = "#D4BB6C" },
-
-    CmpItemKindFunction = { fg = "#EADFF0", bg = "#A377BF" },
-    CmpItemKindStruct = { fg = "#EADFF0", bg = "#A377BF" },
-    CmpItemKindClass = { fg = "#EADFF0", bg = "#A377BF" },
-    CmpItemKindModule = { fg = "#EADFF0", bg = "#A377BF" },
-    CmpItemKindOperator = { fg = "#EADFF0", bg = "#A377BF" },
-
-    CmpItemKindVariable = { fg = "#C5CDD9", bg = "#7E8294" },
-    CmpItemKindFile = { fg = "#C5CDD9", bg = "#7E8294" },
-
-    CmpItemKindUnit = { fg = "#F5EBD9", bg = "#D4A959" },
-    CmpItemKindSnippet = { fg = "#F5EBD9", bg = "#D4A959" },
-    CmpItemKindFolder = { fg = "#F5EBD9", bg = "#D4A959" },
-
-    CmpItemKindMethod = { fg = "#DDE5F5", bg = "#6C8ED4" },
-    CmpItemKindValue = { fg = "#DDE5F5", bg = "#6C8ED4" },
-    CmpItemKindEnumMember = { fg = "#DDE5F5", bg = "#6C8ED4" },
-
-    CmpItemKindInterface = { fg = "#D8EEEB", bg = "#58B5A8" },
-    CmpItemKindColor = { fg = "#D8EEEB", bg = "#58B5A8" },
-    CmpItemKindTypeParameter = { fg = "#D8EEEB", bg = "#58B5A8" },
-}
-
 -- INFO: kanagawa theme config
 local kanagawa_status, kanagawa = pcall(require, 'kanagawa')
 if kanagawa_status then
 
     local kanagawa_colors = require('kanagawa.colors').setup()
+    local highlight_overrides = {}
 
-    M.navic_highlight = {
+    local function addHighlightConfig(rhs)
+        highlight_overrides = vim.tbl_deep_extend('force', highlight_overrides, rhs)
+    end
+
+
+    local override_highlight = {
+        WinSeparator = { fg = M.colorset.bg1, bg = M.colorset.transparent },
+        SignColumn = { fg = M.colorset.transparent, bg = M.colorset.transparent },
+        NormalFloat = { bg = M.colorset.bg0 },
+        FloatBorder = { bg = M.colorset.bg0 },
+        MoreMsg = { fg = M.colorset.blue, bg = M.colorset.transparent },
+    }
+
+    local navic_highlight = {
         NavicIconsFile = { fg = kanagawa_colors.springViolet2 },
         NavicIconsModule = { fg = kanagawa_colors.boatYellow2 },
         NavicIconsNamespace = { fg = kanagawa_colors.springViolet2 },
@@ -144,6 +103,66 @@ if kanagawa_status then
         NavicSeparator = { fg = M.colorset.orange },
     }
 
+    local cmp_highlight = {
+        PmenuSel = { bg = '#282C34', fg = 'NONE' },
+        Pmenu = { fg = '#C5CDD9', bg = '#22252A' },
+
+        CmpItemAbbrDeprecated = { fg = '#7E8294', bg = 'NONE', strikethrough = true },
+        CmpItemAbbrMatch = { fg = '#82AAFF', bg = 'NONE', bold = true },
+        CmpItemAbbrMatchFuzzy = { fg = '#82AAFF', bg = 'NONE', bold = true },
+        CmpItemMenu = { fg = '#C792EA', bg = 'NONE', italic = true },
+
+        CmpItemKindField = { fg = '#EED8DA', bg = '#B5585F' },
+        CmpItemKindProperty = { fg = '#EED8DA', bg = '#B5585F' },
+        CmpItemKindEvent = { fg = '#EED8DA', bg = '#B5585F' },
+
+        CmpItemKindText = { fg = '#C3E88D', bg = '#9FBD73' },
+        CmpItemKindEnum = { fg = '#C3E88D', bg = '#9FBD73' },
+        CmpItemKindKeyword = { fg = '#C3E88D', bg = '#9FBD73' },
+
+        CmpItemKindConstant = { fg = '#FFE082', bg = '#D4BB6C' },
+        CmpItemKindConstructor = { fg = '#FFE082', bg = '#D4BB6C' },
+        CmpItemKindReference = { fg = '#FFE082', bg = '#D4BB6C' },
+
+        CmpItemKindFunction = { fg = '#EADFF0', bg = '#A377BF' },
+        CmpItemKindStruct = { fg = '#EADFF0', bg = '#A377BF' },
+        CmpItemKindClass = { fg = '#EADFF0', bg = '#A377BF' },
+        CmpItemKindModule = { fg = '#EADFF0', bg = '#A377BF' },
+        CmpItemKindOperator = { fg = '#EADFF0', bg = '#A377BF' },
+
+        CmpItemKindVariable = { fg = '#C5CDD9', bg = '#7E8294' },
+        CmpItemKindFile = { fg = '#C5CDD9', bg = '#7E8294' },
+
+        CmpItemKindUnit = { fg = '#F5EBD9', bg = '#D4A959' },
+        CmpItemKindSnippet = { fg = '#F5EBD9', bg = '#D4A959' },
+        CmpItemKindFolder = { fg = '#F5EBD9', bg = '#D4A959' },
+
+        CmpItemKindMethod = { fg = '#DDE5F5', bg = '#6C8ED4' },
+        CmpItemKindValue = { fg = '#DDE5F5', bg = '#6C8ED4' },
+        CmpItemKindEnumMember = { fg = '#DDE5F5', bg = '#6C8ED4' },
+
+        CmpItemKindInterface = { fg = '#D8EEEB', bg = '#58B5A8' },
+        CmpItemKindColor = { fg = '#D8EEEB', bg = '#58B5A8' },
+        CmpItemKindTypeParameter = { fg = '#D8EEEB', bg = '#58B5A8' },
+    }
+
+    local telescope_highlight = {
+        TelescopeSelection = { bg = M.colorset.bg1 },
+        TelescopeNormal = { bg = M.colorset.bg0 },
+        TelescopePromptNormal = { bg = M.colorset.bg1 },
+        TelescopeResultsBorder = { fg = M.colorset.bright_blue, bg = M.colorset.bg0 },
+        TelescopePreviewBorder = { fg = M.colorset.bright_blue, bg = M.colorset.bg0 },
+        TelescopePromptBorder = { fg = M.colorset.bright_blue, bg = M.colorset.bg1 },
+        TelescopePromptTitle = { fg = M.colorset.bg1, bg = M.colorset.bright_blue },
+        TelescopeResultsTitle = { fg = M.colorset.bg1, bg = M.colorset.bright_blue },
+        TelescopePreviewTitle = { fg = M.colorset.bg1, bg = M.colorset.bright_blue },
+    }
+
+    addHighlightConfig(override_highlight)
+    addHighlightConfig(navic_highlight)
+    addHighlightConfig(cmp_highlight)
+    addHighlightConfig(telescope_highlight)
+
     kanagawa.setup({
         transparent = false,
         globalStatus = true,
@@ -152,28 +171,9 @@ if kanagawa_status then
             fg_border = M.colorset.white,
             bg = M.colorset.bg,
         },
+        overrides = highlight_overrides,
     })
     vim.cmd.colorscheme 'kanagawa'
-end
-
--- override signcolumn fg to be transparent
-vim.api.nvim_set_hl(0, 'SignColumn', { fg = M.colorset.transparent, bg = M.colorset.transparent })
-
--- override floatborder bg
-vim.api.nvim_set_hl(0, 'NormalFloat', { bg = M.colorset.bg0 })
-vim.api.nvim_set_hl(0, 'FloatBorder', { bg = M.colorset.bg0 })
-
--- override MoreMsg highlight
-vim.api.nvim_set_hl(0, 'MoreMsg', { fg = M.colorset.blue, bg = M.colorset.transparent })
-
--- override telescope highlight groups
-for group, colors in pairs(M.colorset.telescope) do
-    vim.api.nvim_set_hl(0, group, colors)
-end
-
--- override CMP highlight groups
-for group, colors in pairs(M.colorset.cmp) do
-    vim.api.nvim_set_hl(0, group, colors)
 end
 
 return M
