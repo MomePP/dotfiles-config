@@ -174,11 +174,6 @@ keymaps.marks = {
     opts    = silent,
 }
 
--- INFO: autopair keymap
-keymaps.autopair = {
-    wrap = '<C-e>'
-}
-
 -- INFO: ufo keymap
 keymaps.ufo = {
     open_all    = 'zR',
