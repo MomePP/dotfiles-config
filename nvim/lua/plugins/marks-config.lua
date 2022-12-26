@@ -81,11 +81,6 @@ M.config = function()
         end
         vim.cmd 'Telescope quickfix'
     end, marks_keymaps.opts)
-
-    local colors = require('colorscheme').colorset
-    -- INFO: set marks sign highlight
-    vim.api.nvim_set_hl(0, 'MarkSignHL', { fg = colors.bright_blue })
-    -- vim.api.nvim_set_hl(0, 'MarkVirtTextHL', { fg = colors.bright_blue, bg = colors.transparent, nocombine = true })
 end
 
 return M

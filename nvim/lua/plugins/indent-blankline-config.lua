@@ -29,11 +29,6 @@ M.config = function()
         indent_level = 4,
         max_indent_increase = 1,
     }
-
-    local colors = require('colorscheme').colorset
-    vim.api.nvim_set_hl(0, 'IndentBlanklineContextChar', { fg = colors.orange, nocombine = true })
-    -- vim.api.nvim_set_hl(0, 'IndentBlanklineContextStart', { sp = colors.orange, underline = true })
-    -- vim.api.nvim_set_hl(0, 'IndentBlanklineContextStart', { fg = colors.orange, nocombine = true })
 end
 
 return M

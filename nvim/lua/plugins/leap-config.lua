@@ -7,13 +7,6 @@ M.config = function()
     local leap = require('leap')
     leap.opts.highlight_unlabeled_phase_one_targets = true
 
-    local colors = require('colorscheme').colorset
-    -- greyout search area of `leap.nvim`
-    vim.api.nvim_set_hl(0, 'LeapBackdrop', { fg = '#727169' })
-    vim.api.nvim_set_hl(0, 'LeapLabelPrimary', { fg = 'cyan', bold = true, nocombine = true })
-    vim.api.nvim_set_hl(0, 'LeapLabelSecondary', { fg = colors.purple, bold = true, nocombine = true })
-    vim.api.nvim_set_hl(0, 'LeapMatch', { fg = 'white', bold = true, nocombine = true })
-
     -- linewise motion
     local function get_line_starts(winid)
         local wininfo = vim.fn.getwininfo(winid)[1]

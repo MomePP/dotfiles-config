@@ -63,7 +63,6 @@ if kanagawa_status then
         highlight_overrides = vim.tbl_deep_extend('force', highlight_overrides, rhs)
     end
 
-
     local override_highlight = {
         WinSeparator = { fg = M.colorset.bg1, bg = M.colorset.transparent },
         SignColumn = { fg = M.colorset.transparent, bg = M.colorset.transparent },
@@ -149,19 +148,56 @@ if kanagawa_status then
     local telescope_highlight = {
         TelescopeSelection = { bg = M.colorset.bg1 },
         TelescopeNormal = { bg = M.colorset.bg0 },
-        TelescopePromptNormal = { bg = M.colorset.bg1 },
+        TelescopePromptNormal = { bg = M.colorset.bg0 },
         TelescopeResultsBorder = { fg = M.colorset.bright_blue, bg = M.colorset.bg0 },
         TelescopePreviewBorder = { fg = M.colorset.bright_blue, bg = M.colorset.bg0 },
-        TelescopePromptBorder = { fg = M.colorset.bright_blue, bg = M.colorset.bg1 },
-        TelescopePromptTitle = { fg = M.colorset.bg1, bg = M.colorset.bright_blue },
-        TelescopeResultsTitle = { fg = M.colorset.bg1, bg = M.colorset.bright_blue },
-        TelescopePreviewTitle = { fg = M.colorset.bg1, bg = M.colorset.bright_blue },
+        TelescopePromptBorder = { fg = M.colorset.bright_blue, bg = M.colorset.bg0 },
+        TelescopePromptTitle = { fg = M.colorset.bg, bg = M.colorset.bright_blue },
+        TelescopeResultsTitle = { fg = M.colorset.bg, bg = M.colorset.bright_blue },
+        TelescopePreviewTitle = { fg = M.colorset.bg, bg = M.colorset.bright_blue },
+    }
+
+    local leap_highlight = {
+        -- greyout search area of `leap.nvim`
+        LeapBackdrop = { fg = '#727169' },
+        LeapLabelPrimary = { fg = 'cyan', bold = true, nocombine = true },
+        LeapLabelSecondary = { fg = M.colorset.purple, bold = true, nocombine = true },
+        LeapMatch = { fg = 'white', bold = true, nocombine = true },
+    }
+
+    local indent_blankline_highlight = {
+        IndentBlanklineContextChar = { fg = M.colorset.orange, nocombine = true },
+        -- IndentBlanklineContextStart = { sp = M.colorset.orange, underline = true },
+        -- IndentBlanklineContextStart = { fg = M.colorset.orange, nocombine = true },
+    }
+
+    local marks_highlight = {
+        MarkSignHL = { fg = M.colorset.bright_blue },
+        -- MarkVirtTextHL = { fg = M.colorset.bright_blue, bg = M.colorset.transparent, nocombine = true },
+    }
+
+    local illuminate_highlight = {
+        IlluminatedWordText = { bg = M.colorset.bg1, bold = true, nocombine = true },
+        IlluminatedWordRead = { link = 'IlluminatedWordText' },
+        IlluminatedWordWrite = { link = 'IlluminatedWordText' },
+    }
+
+    local noice_highlight = {
+        NoiceCmdlineIconCmdline = { bg = M.colorset.transparent, fg = M.colorset.red, bold = true },
+        NoiceCmdlineIconSearch = { bg = M.colorset.transparent, fg = M.colorset.orange, bold = true },
+        NoiceCmdlineIconFilter = { bg = M.colorset.transparent, fg = M.colorset.teal, bold = true },
+        NoiceSplit = { bg = M.colorset.bg },
     }
 
     addHighlightConfig(override_highlight)
     addHighlightConfig(navic_highlight)
     addHighlightConfig(cmp_highlight)
     addHighlightConfig(telescope_highlight)
+    addHighlightConfig(leap_highlight)
+    addHighlightConfig(indent_blankline_highlight)
+    addHighlightConfig(marks_highlight)
+    addHighlightConfig(illuminate_highlight)
+    addHighlightConfig(noice_highlight)
 
     kanagawa.setup({
         transparent = false,
