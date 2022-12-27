@@ -72,9 +72,9 @@ M.config = function()
         default_mappings = false,
         on_attach = lsp_on_attach,
         servers = {
-            pyright = require('plugins.lsp-config.settings.pyright'),
-            sumneko_lua = require('plugins.lsp-config.settings.sumneko_lua'),
-            volar = require('plugins.lsp-config.settings.volar'),
+            pyright = require('plugins.lsp-settings.pyright'),
+            sumneko_lua = require('plugins.lsp-settings.sumneko_lua'),
+            volar = require('plugins.lsp-settings.volar'),
             ltex = {},
             cssls = {},
             rust_analyzer = {},
@@ -106,7 +106,7 @@ M.config = function()
     require('lspconfig')['ccls'].setup({
         on_attach = lsp_on_attach,
         settings = {
-            ['ccls'] = require('plugins.lsp-config.settings.ccls')
+            ['ccls'] = require('plugins.lsp-settings.ccls')
         }
     })
 end
