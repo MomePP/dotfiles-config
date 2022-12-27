@@ -27,19 +27,19 @@ M.colorset = {
 }
 
 M.colorset.bracket = {
-    "#ffd700",
-    "#da70d6",
-    "#87cefa"
+    '#ffd700',
+    '#da70d6',
+    '#87cefa'
 }
 
 M.colorset.todocomments = {
-    error = { "#D74E42" },
-    warn = { "#E9D16C" },
-    hint = { "#98C379" },
-    perf = { "#1085FF" },
-    info = { "#61AFEF" },
-    todo = { "#B57EDC" },
-    hack = { "#D19A66" },
+    error = { '#D74E42' },
+    warn = { '#E9D16C' },
+    hint = { '#98C379' },
+    perf = { '#1085FF' },
+    info = { '#61AFEF' },
+    todo = { '#B57EDC' },
+    hack = { '#D19A66' },
 }
 
 M.colorset.modes = {

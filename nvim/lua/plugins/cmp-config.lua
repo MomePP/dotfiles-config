@@ -70,7 +70,7 @@ M.config = function()
         format = function(entry, vim_item)
             -- vim_item.abbr = string.format('%s  ', vim_item.abbr)
             vim_item.kind = string.format(' %s ', cmp_icons[vim_item.kind])
-            vim_item.menu = string.format('   (%s)', entry.source.name)
+            vim_item.menu = string.format('    %s', entry.source.name)
             return vim_item
         end,
     }
