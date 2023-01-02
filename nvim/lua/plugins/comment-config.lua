@@ -1,9 +1,8 @@
 local M = {
-    'numToStr/Comment.nvim',
+    'echasnovski/mini.comment',
     keys = {
         { 'gcc' },
-        { 'gc', mode = 'v' },
-        { 'gbc', mode = { 'n', 'v' } },
+        { 'gc', mode = { 'n', 'v' } },
     },
     dependencies = {
         'JoosepAlviste/nvim-ts-context-commentstring'
@@ -11,16 +10,14 @@ local M = {
 }
 
 function M.config()
-    local comment = require('Comment')
+    local comment = require('mini.comment')
     comment.setup {
-        pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
+        hooks = {
+            pre = function()
+                require('ts_context_commentstring.internal').update_commentstring({})
+            end
+        }
     }
-    -- fallback comment string if not found by plugin
-    vim.bo.commentstring = '//%s'
-
-    local ft = require('Comment.ft')
-    ft({ 'json', 'rust' }, { '//%s', '/*%s*/' })
-    ft({ 'toml', 'graphql' }, '#%s')
 end
 
 return M

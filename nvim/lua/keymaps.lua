@@ -34,13 +34,12 @@ keymaps.setup = function()
     vim.keymap.set('i', '?', '?<C-g>u')
 
     -- INFO: windows/buffers navigated keys
-    vim.keymap.set('n', 'tq', '<Cmd>Bdelete<CR>', silent)
     vim.keymap.set('n', '<Tab>', '<Cmd>bnext<CR>', silent)
     vim.keymap.set('n', '<S-Tab>', '<Cmd>bprev<CR>', silent)
     vim.keymap.set('n', 'wq', '<C-w>q', silent)
 
     -- INFO: misc. keymap
-    vim.keymap.set('n', '<C-l>', '<Cmd>noh<CR>', silent) -- clear highlight
+    vim.keymap.set({ 'i', 'n' }, '<esc>', '<cmd>noh<cr><esc>', silent)
     vim.keymap.set('n', 'dw', 'vb"_d') -- delete a word backward
     vim.keymap.set('n', '<leader>d', '"_d') -- delete without yank
     vim.keymap.set('n', 'x', '"_x')
@@ -48,6 +47,8 @@ keymaps.setup = function()
     vim.keymap.set('i', '<S-Tab>', '<C-d>') -- de-tab while in insert mode
     vim.keymap.set('n', 'Y', 'y$') -- Yank line after cursor
     vim.keymap.set('n', 'P', '<cmd>pu<CR>') -- Paste on new line
+    vim.keymap.set('v', '<', '<gv')
+    vim.keymap.set('v', '>', '>gv')
 
     -- INFO: resize window
     -- vim.keymap.set('n', '<C-w><left>', '<C-w><')
@@ -100,8 +101,9 @@ keymaps.lsp = {
 
 -- INFO: Lazy keymap
 keymaps.lazy = {
-    open = '<leader>p',
-    opts = silent
+    open     = '<leader>p',
+    lazygit  = '<leader>g',
+    opts     = silent
 }
 
 -- INFO: Focus keymap
@@ -158,8 +160,6 @@ keymaps.todocomments = {
 -- INFO: Terminal & ToggleTerm keymap
 keymaps.toggleterm = {
     toggle  = '<leader>t',
-    lazygit = '<leader>g',
-    -- gotop   = '<leader>P',
     opts    = silent,
 }
 
@@ -221,6 +221,13 @@ keymaps.leap = {
 keymaps.markdown_preview = {
     toggle = '<leader>P',
     opts   = silent
+}
+
+-- INFO: mini.bufremove keymap
+keymaps.bufremove = {
+    delete = '<leader>bd',
+    force_delete = '<leader>bD',
+    opts = silent
 }
 
 return keymaps

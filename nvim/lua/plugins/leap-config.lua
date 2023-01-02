@@ -1,6 +1,10 @@
 local M = {
     'ggandor/leap.nvim',
-    event = 'VeryLazy'
+    event = 'VeryLazy',
+
+    dependencies = {
+        { 'ggandor/flit.nvim', config = { labeled_modes = 'nv' } },
+    },
 }
 
 M.config = function()

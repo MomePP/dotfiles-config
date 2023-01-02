@@ -18,7 +18,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- check if we need to reload file when it changed
 vim.api.nvim_create_autocmd('FocusGained', {
-    command = ':checktime'
+    command = 'checktime'
 })
 
 -- disable search highlight when enter terminal mode and re-enable when leave
