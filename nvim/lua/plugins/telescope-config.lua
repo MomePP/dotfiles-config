@@ -11,9 +11,12 @@ local M = {
 
 M.config = function()
     local telescope = require('telescope')
+    local telescope_builtin = require('telescope.builtin')
+    local telescope_keymap = require('keymaps').telescope
 
-    -- local actions = require 'telescope.actions'
     local utils = require('telescope.utils')
+    -- local actions = require('telescope.actions')
+    local action_state = require('telescope.actions.state')
     local entry_display = require('telescope.pickers.entry_display')
 
     local vertical_layout_config = {
@@ -124,8 +127,57 @@ M.config = function()
                     preview_width = 0.5,
                 }
             }),
+            buffers = mergeConfig(horizontal_layout_config, {
+                attach_mappings = function(prompt_bufnr, map)
+                    local delete_buf = function()
+                        local current_picker = action_state.get_current_picker(prompt_bufnr)
+                        local multi_selections = current_picker:get_multi_selection()
+
+                        local buffers = vim.tbl_map(function(selection)
+                            return utils.transform_path({}, selection.filename)
+                        end, multi_selections)
+
+                        if next(buffers) == nil then
+                            local selection = action_state.get_selected_entry()
+                            multi_selections = vim.tbl_extend('force', multi_selections, { selection })
+                            buffers = { utils.transform_path({}, selection.filename) }
+                        end
+
+                        local removed = {}
+                        local message = 'Selections to be deleted: ' .. table.concat(buffers, ', ')
+                        vim.notify(string.format('[buffers.actions.remove] %s', message), vim.log.levels.INFO,
+                            { title = 'Telescope builtin' })
+
+                        vim.ui.input({ prompt = 'Remove selections [y/N]: ' }, function(input)
+                            vim.cmd [[ redraw ]] -- redraw to clear out vim.ui.prompt to avoid hit-enter prompt
+                            if input and input:lower() == 'y' then
+                                -- INFO: lazy loads `mini.bufremove` for handles buffer deletion
+                                require('lazy').load({ plugins = { 'mini.bufremove' } })
+                                local bufremove = require('mini.bufremove')
+
+                                current_picker:delete_selection(function(selection)
+                                    local force = vim.api.nvim_buf_get_option(selection.bufnr, 'buftype') == 'terminal'
+                                    local ok = pcall(bufremove.delete, selection.bufnr, force)
+                                    if ok then table.insert(removed, utils.transform_path({}, selection.filename)) end
+                                    return ok
+                                end)
+
+                                vim.notify('[buffers.actions.remove] Removed: ' .. table.concat(removed, ', '),
+                                    vim.log.levels.INFO,
+                                    { title = 'Telescope builtin' })
+                            else
+                                vim.notify('[buffers.actions.remove] Removing selections aborted!', vim.log.levels.INFO,
+                                    { title = 'Telescope builtin' })
+                            end
+                        end)
+                    end
+
+                    map('n', telescope_keymap.action_buffer_delete.n, delete_buf)
+                    map('i', telescope_keymap.action_buffer_delete.i, delete_buf)
+                    return true
+                end
+            }),
             help_tags = horizontal_layout_config,
-            buffers = horizontal_layout_config,
             live_grep = vertical_layout_config,
             grep_string = vertical_layout_config,
             current_buffer_fuzzy_find = vertical_layout_config,
@@ -156,9 +208,6 @@ M.config = function()
     telescope.load_extension('ui-select')
 
     -- INFO: setup keymap
-    local telescope_builtin = require('telescope.builtin')
-    local telescope_keymap = require('keymaps').telescope
-
     vim.keymap.set('n', telescope_keymap.grep_workspace, telescope_builtin.grep_string, telescope_keymap.opts)
     vim.keymap.set('n', telescope_keymap.buffers, telescope_builtin.buffers, telescope_keymap.opts)
     vim.keymap.set('n', telescope_keymap.help, telescope_builtin.help_tags, telescope_keymap.opts)

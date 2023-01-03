@@ -101,9 +101,9 @@ keymaps.lsp = {
 
 -- INFO: Lazy keymap
 keymaps.lazy = {
-    open     = '<leader>p',
-    lazygit  = '<leader>g',
-    opts     = silent
+    open    = '<leader>p',
+    lazygit = '<leader>g',
+    opts    = silent
 }
 
 -- INFO: Focus keymap
@@ -137,16 +137,17 @@ keymaps.gitconflict = {
 
 -- INFO: Telescope keymap
 keymaps.telescope = {
-    grep_workspace   = 'gw',
-    search_buffer    = '<leader>/',
-    search_workspace = '<leader>fw',
-    buffers          = '<leader>\\',
-    find_files       = '<leader>fs',
-    help             = '<leader>;',
-    jumplist         = '<leader>j',
-    oldfiles         = '<leader>?',
-    file_browse      = '<leader>fb',
-    opts             = silent,
+    grep_workspace       = 'gw',
+    search_buffer        = '<leader>/',
+    search_workspace     = '<leader>fw',
+    buffers              = '<leader>\\',
+    find_files           = '<leader>fs',
+    help                 = '<leader>;',
+    jumplist             = '<leader>j',
+    oldfiles             = '<leader>?',
+    file_browse          = '<leader>fb',
+    action_buffer_delete = { n = 'd', i = '<m-d>' },
+    opts                 = silent,
 }
 
 -- INFO: Todocomments keymap
@@ -159,8 +160,8 @@ keymaps.todocomments = {
 
 -- INFO: Terminal & ToggleTerm keymap
 keymaps.toggleterm = {
-    toggle  = '<leader>t',
-    opts    = silent,
+    toggle = '<leader>t',
+    opts   = silent,
 }
 
 -- INFO: Marks keymap
@@ -221,13 +222,6 @@ keymaps.leap = {
 keymaps.markdown_preview = {
     toggle = '<leader>P',
     opts   = silent
-}
-
--- INFO: mini.bufremove keymap
-keymaps.bufremove = {
-    delete = '<leader>bd',
-    force_delete = '<leader>bD',
-    opts = silent
 }
 
 return keymaps
