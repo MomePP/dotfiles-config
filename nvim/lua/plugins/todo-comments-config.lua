@@ -25,7 +25,7 @@ M.config = function()
             multiline_pattern = '^.', -- lua pattern to match the next multiline from the start of the matched keyword
             multiline_context = 10, -- extra lines that will be re-evaluated when changing a line
             before = '',
-            keyword = 'fg', -- 'fg', 'bg', 'wide', 'wide_bg', 'wide_fg' or empty. (wide and wide_bg is the same as bg, but will also highlight surrounding characters, wide_fg acts accordingly but with fg)
+            keyword = 'wide_bg', -- 'fg', 'bg', 'wide', 'wide_bg', 'wide_fg' or empty. (wide and wide_bg is the same as bg, but will also highlight surrounding characters, wide_fg acts accordingly but with fg)
             after = 'fg', -- 'fg' or 'bg' or empty
             pattern = [[.*<(KEYWORDS)\s*:]], -- pattern or table of patterns, used for highlightng (vim regex)
             comments_only = true, -- uses treesitter to match keywords in comments only
@@ -46,6 +46,12 @@ M.config = function()
         },
     }
 
+    -- HACK: force keyword highlight from wide_bg to bold fg style
+    for kw, opts in pairs(require('todo-comments.config').options.keywords) do
+        vim.api.nvim_set_hl(0, 'TodoBg' .. kw, { fg = todocomment_colors[opts.color], bg = 'NONE', bold = true })
+    end
+
+    -- INFO: setup todocomments keymap
     local todocomments_keymap = require('keymaps').todocomments
 
     vim.keymap.set('n', todocomments_keymap.toggle, '<Cmd>TodoTelescope<CR>', todocomments_keymap.opts)
