@@ -9,32 +9,39 @@ local M = {
         'saadparwaiz1/cmp_luasnip',
         'lukas-reineke/cmp-rg',
 
-        'L3MON4D3/LuaSnip',
-        'rafamadriz/friendly-snippets',
+        -- NOTE: snippet plugins
+        {
+            'L3MON4D3/LuaSnip',
+            dependencies = {
+                'rafamadriz/friendly-snippets',
+                config = function()
+                    require('luasnip.loaders.from_vscode').lazy_load()
+                end,
+            },
+        }
     },
 }
 
 M.config = function()
-    local cmp = require('cmp')
+    local function has_words_before()
+        if vim.api.nvim_buf_get_option(0, 'buftype') == 'prompt' then return false end
+        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+        return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match('^%s*$') == nil
+    end
 
     -- ----------------------------------------------------------------------
     --  luasnip configs
     --
     local luasnip = require('luasnip')
     luasnip.config.set_config({
-        region_check_events = 'InsertEnter',
-        delete_check_events = 'InsertLeave'
+        history = true,
+        delete_check_events = 'TextChanged',
     })
-    require('luasnip.loaders.from_vscode').lazy_load()
 
     -- ----------------------------------------------------------------------
     --  cmp configs
     --
-    local function has_words_before()
-        if vim.api.nvim_buf_get_option(0, 'buftype') == 'prompt' then return false end
-        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-        return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match('^%s*$') == nil
-    end
+    local cmp = require('cmp')
 
     local cmp_icons = {
         Text = '',
@@ -76,8 +83,8 @@ M.config = function()
     }
 
     local cmp_mapping = {
-        ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(1), { 'i', 'c' }),
-        ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-1), { 'i', 'c' }),
+        ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(2), { 'i', 'c' }),
+        ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-2), { 'i', 'c' }),
         ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
         ['<C-y>'] = cmp.config.disable,
         ['<C-e>'] = cmp.mapping {
@@ -111,8 +118,8 @@ M.config = function()
     local cmp_sources = cmp.config.sources({
         { name = 'nvim_lsp' },
         { name = 'luasnip' },
-        { name = 'path' },
         { name = 'buffer', keyword_length = 3 },
+        { name = 'path', keyword_length = 3 },
         { name = 'rg', keyword_length = 3 },
     })
 
