@@ -33,13 +33,13 @@ M.colorset.bracket = {
 }
 
 M.colorset.todocomments = {
-    error = { '#D74E42' },
-    warn = { '#E9D16C' },
-    hint = { '#98C379' },
-    perf = { '#1085FF' },
-    info = { '#61AFEF' },
-    todo = { '#B57EDC' },
-    hack = { '#D19A66' },
+    error = '#D74E42',
+    warn  = '#E9D16C',
+    hint  = '#98C379',
+    perf  = '#1085FF',
+    info  = '#61AFEF',
+    todo  = '#B57EDC',
+    hack  = '#D19A66',
 }
 
 M.colorset.modes = {
@@ -165,12 +165,6 @@ if kanagawa_status then
         LeapMatch = { fg = 'white', bold = true, nocombine = true },
     }
 
-    local indent_blankline_highlight = {
-        IndentBlanklineContextChar = { fg = M.colorset.orange, nocombine = true },
-        -- IndentBlanklineContextStart = { sp = M.colorset.orange, underline = true },
-        -- IndentBlanklineContextStart = { fg = M.colorset.orange, nocombine = true },
-    }
-
     local marks_highlight = {
         MarkSignHL = { fg = M.colorset.bright_blue },
         -- MarkVirtTextHL = { fg = M.colorset.bright_blue, bg = M.colorset.transparent, nocombine = true },
@@ -189,15 +183,19 @@ if kanagawa_status then
         NoiceSplit = { bg = M.colorset.bg },
     }
 
+    local indentscope_highlight = {
+        MiniIndentscopeSymbol = { fg = M.colorset.orange, nocombine = true }
+    }
+
     addHighlightConfig(override_highlight)
     addHighlightConfig(navic_highlight)
     addHighlightConfig(cmp_highlight)
     addHighlightConfig(telescope_highlight)
     addHighlightConfig(leap_highlight)
-    addHighlightConfig(indent_blankline_highlight)
     addHighlightConfig(marks_highlight)
     addHighlightConfig(illuminate_highlight)
     addHighlightConfig(noice_highlight)
+    addHighlightConfig(indentscope_highlight)
 
     kanagawa.setup({
         transparent = false,
