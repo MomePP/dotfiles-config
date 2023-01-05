@@ -23,8 +23,6 @@ keymaps.setup = function()
     vim.keymap.set('c', 'QA', 'qa')
 
     -- INFO: keeping cursor centered
-    vim.keymap.set('n', 'n', 'nzzzv')
-    vim.keymap.set('n', 'N', 'Nzzzv')
     vim.keymap.set('n', 'J', 'mzJ`z')
 
     -- INFO: add undo break points
