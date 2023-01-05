@@ -66,7 +66,7 @@ M.config = function()
             col = math.floor(width / 4),
             row = math.floor(height / 8),
             border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
-            title = ' Marks previewer '
+            -- title = ' Marks previewer '
         })
         vim.cmd('normal! `' .. mark)
         vim.cmd('normal! zz')
