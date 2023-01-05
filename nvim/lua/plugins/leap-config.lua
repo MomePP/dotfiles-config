@@ -1,6 +1,6 @@
 local M = {
     'ggandor/leap.nvim',
-    event = 'VeryLazy',
+    event = 'BufReadPost',
 
     dependencies = {
         { 'ggandor/flit.nvim', config = { labeled_modes = 'nv' } },
