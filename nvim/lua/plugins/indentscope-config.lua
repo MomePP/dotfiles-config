@@ -8,7 +8,7 @@ M.config = function()
 
     -- INFO: disable on some filetypes
     vim.api.nvim_create_autocmd('FileType', {
-        pattern = { 'alpha', 'lazy', 'man', 'help', 'lspinfo', 'checkhealth', 'toggleterm' },
+        pattern = { 'alpha', 'lazy', 'man', 'help', 'lspinfo', 'checkhealth', 'toggleterm', 'mason' },
         callback = function()
             vim.b.miniindentscope_disable = true
         end,

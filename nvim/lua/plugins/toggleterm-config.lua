@@ -15,9 +15,9 @@ M.config = function()
 		shade_terminals = false,
 		direction = 'float',
 		float_opts = {
-			border = { ' ', '', ' ', ' ', ' ', '', ' ', ' ' },
+			border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
 			width = function() return math.ceil(vim.o.columns * 0.9) end,
-			height = function() return math.ceil(vim.o.lines * 0.85) end,
+			height = function() return math.ceil((vim.o.lines + 1) * 0.85) end,
 		},
 		highlights = {
 			FloatBorder = { link = 'FloatBorder' },
