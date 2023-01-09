@@ -3,7 +3,7 @@ local M = {
     event = 'BufReadPost',
 
     dependencies = {
-        { 'ggandor/flit.nvim', config = { labeled_modes = 'nv' } },
+        { 'ggandor/flit.nvim', opts = { labeled_modes = 'nv' } },
     },
 }
 
