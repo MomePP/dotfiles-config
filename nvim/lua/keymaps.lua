@@ -222,4 +222,11 @@ keymaps.markdown_preview = {
     opts   = silent
 }
 
+-- INFO: mini.bufremove keymap
+keymaps.bufremove = {
+    delete = '<leader>bd',
+    force_delete = '<leader>bD',
+    opts = silent
+}
+
 return keymaps

@@ -112,7 +112,7 @@ return {
         -- INFO: formatters config
         --
         'jose-elias-alvarez/null-ls.nvim',
-        event = 'BufReadPre',
+        event = 'BufReadPost',
 
         dependencies = {
             'mason.nvim',
@@ -120,20 +120,15 @@ return {
         },
 
         config = function()
+            local mason_null_ls = require('mason-null-ls')
+            mason_null_ls.setup { automatic_setup = true }
+
             local null_ls = require('null-ls')
             null_ls.setup {
                 border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }
             }
 
-            local mason_null_ls = require('mason-null-ls')
-            mason_null_ls.setup {}
-            mason_null_ls.setup_handlers {
-                function(source_name, methods)
-                    -- all sources with no handler get passed here
-                    -- Keep original functionality of `automatic_setup = true`
-                    require('mason-null-ls.automatic_setup')(source_name, methods)
-                end,
-            }
+            mason_null_ls.setup_handlers {}
         end
     }
 }
