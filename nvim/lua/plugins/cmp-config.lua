@@ -23,6 +23,9 @@ local M = {
 }
 
 M.config = function()
+
+    local icons = require('settings').icons
+
     local function has_words_before()
         if vim.api.nvim_buf_get_option(0, 'buftype') == 'prompt' then return false end
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -43,41 +46,13 @@ M.config = function()
     --
     local cmp = require('cmp')
 
-    local cmp_icons = {
-        Text = '',
-        Method = '',
-        Function = '',
-        Constructor = '',
-        Field = 'ﰠ',
-        Variable = '',
-        Class = 'ﴯ',
-        Interface = '',
-        Module = '',
-        Property = 'ﰠ',
-        Unit = '塞',
-        Value = '',
-        Enum = '',
-        Keyword = '',
-        Snippet = '',
-        Color = '',
-        File = '',
-        Reference = '',
-        Folder = '',
-        EnumMember = '',
-        Constant = '',
-        Struct = 'פּ',
-        Event = '',
-        Operator = '',
-        TypeParameter = '',
-    }
-
     local cmp_formatting = {
         -- fields = { 'abbr', 'kind', 'menu' },
         fields = { 'kind', 'abbr', 'menu' },
         format = function(entry, vim_item)
             -- vim_item.abbr = string.format('%s  ', vim_item.abbr)
-            vim_item.kind = string.format(' %s ', cmp_icons[vim_item.kind])
-            vim_item.menu = string.format('    %s', entry.source.name)
+            vim_item.kind = string.format(' %s ', icons.cmp.kinds[vim_item.kind])
+            vim_item.menu = string.format(icons.cmp.source_format .. '%s', entry.source.name)
             return vim_item
         end,
     }

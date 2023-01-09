@@ -6,6 +6,8 @@ local M = {
 M.config = function()
     local lualine = require('lualine')
     local colors = require('colorscheme').colorset
+    local icons = require('settings').icons
+
     local conditions = {
         buffer_not_empty = function()
             return vim.fn.empty(vim.fn.expand('%:t')) ~= 1
@@ -18,6 +20,9 @@ M.config = function()
             local gitdir = vim.fn.finddir('.git', filepath .. ';')
             return gitdir and #gitdir > 0 and #gitdir < #filepath
         end,
+        check_session_exist = function()
+            return vim.v.this_session ~= ''
+        end
     }
 
     local mode = {
@@ -29,19 +34,16 @@ M.config = function()
 
     local diagnostics = {
         'diagnostics',
-        sources = { 'nvim_diagnostic' },
         sections = { 'error', 'warn' },
-        symbols = { error = ' ', warn = ' ' },
-        colored = true,
+        symbols = { error = icons.diagnostics.Error, warn = icons.diagnostics.Warn },
         update_in_insert = false,
         always_visible = true,
     }
 
     -- local diff = {
-    --     "diff",
-    --     colored = true,
-    --     symbols = { added = " ", modified = " ", removed = " " }, -- changes diff symbols
-    --     cond = hide_in_width
+    --     'diff',
+    --     symbols = icons.git,
+    --     cond = conditions.hide_in_width
     -- }
 
     local navic_location = {
@@ -49,7 +51,7 @@ M.config = function()
             local navic = require('nvim-navic')
             local navic_text = navic.get_location()
             if #navic_text ~= 0 then
-                return ' ' .. navic_text
+                return icons.lualine.navic .. navic_text
             else
                 return ''
             end
@@ -78,7 +80,7 @@ M.config = function()
     local branch = {
         'branch',
         icons_enabled = true,
-        icon = '',
+        icon = icons.lualine.git,
     }
 
     local lsp_status = {
@@ -97,20 +99,18 @@ M.config = function()
             end
             return msg
         end,
-        icon = '',
+        icon = icons.lualine.lsp,
     }
 
     local session_status = {
         function()
-            local session_name = 'none'
-            if vim.v.this_session ~= '' then
-                local fname = vim.fn.fnamemodify(vim.v.this_session, ':t')
-                local fname_split = vim.split(fname, '__')
-                session_name = fname_split[#fname_split]
-            end
-            return session_name
+            local fname = vim.fn.fnamemodify(vim.v.this_session, ':t')
+            local fname_split = vim.split(fname, '__')
+            return fname_split[#fname_split]
         end,
-        icon = '',
+        icon = icons.lualine.session,
+        padding = { left = -1, right = 1 },
+        cond = conditions.check_session_exist
     }
 
     local location = {
@@ -170,8 +170,8 @@ M.config = function()
         },
         sections = {
             lualine_a = { mode },
-            lualine_b = { branch },
-            lualine_c = { session_status, spacing, filetype, filename, navic_location },
+            lualine_b = { session_status },
+            lualine_c = { branch, spacing, filetype, filename, navic_location },
             lualine_x = { diagnostics },
             lualine_y = { lsp_status },
             lualine_z = { location },
