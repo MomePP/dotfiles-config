@@ -1,22 +1,16 @@
 local M = {
-    'echasnovski/mini.comment',
-    keys = {
-        { 'gcc' },
-        { 'gc', mode = { 'n', 'v' } },
-    },
+    'numToStr/Comment.nvim',
+    event = 'BufReadPost',
     dependencies = {
-        'JoosepAlviste/nvim-ts-context-commentstring'
+        'nvim-ts-context-commentstring'
     },
 }
 
 function M.config()
-    local comment = require('mini.comment')
+    local comment = require('Comment')
     comment.setup {
-        hooks = {
-            pre = function()
-                require('ts_context_commentstring.internal').update_commentstring({})
-            end
-        }
+        mappings = { extra = false },
+        pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook()
     }
 end
 
