@@ -6,7 +6,7 @@ local M = {
     dependencies = {
         'nvim-treesitter/nvim-treesitter-textobjects',
         'windwp/nvim-ts-autotag',
-        'p00f/nvim-ts-rainbow',
+        'mrjones2014/nvim-ts-rainbow',
     }
 }
 
