@@ -58,7 +58,7 @@ M.config = function()
         },
     }
 
-    local noice_keymaps = require('keymaps').noice
+    local noice_keymaps = require('config.keymaps').noice
     local noice_docs = require('noice.lsp.docs')
 
     vim.keymap.set('n', noice_keymaps.history, '<Cmd>Noice<CR>', noice_keymaps.opts.silent)

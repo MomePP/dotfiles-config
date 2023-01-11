@@ -32,7 +32,7 @@ return {
             --
 
             -- setup diagnostic signs
-            for name, icon in pairs(require('settings').icons.diagnostics) do
+            for name, icon in pairs(require('config').icons.diagnostics) do
                 name = 'DiagnosticSign' .. name
                 vim.fn.sign_define(name, { texthl = name, text = icon, numhl = '' })
             end
@@ -67,7 +67,7 @@ return {
             end
 
             local function lsp_on_attach(client, bufnr)
-                lsp_keymaps(bufnr, require('keymaps').lsp)
+                lsp_keymaps(bufnr, require('config.keymaps').lsp)
                 lsp_navic(client, bufnr)
             end
 

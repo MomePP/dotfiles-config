@@ -13,7 +13,7 @@ local M = {
 
 M.config = function()
     local treesitter = require('nvim-treesitter.configs')
-    local bracket_colors = require('colorscheme').colorset.bracket
+    local bracket_colors = require('plugins.colorscheme').colorset.bracket
 
     treesitter.setup {
         highlight = {

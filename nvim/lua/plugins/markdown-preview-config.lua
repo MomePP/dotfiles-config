@@ -1,4 +1,4 @@
-local markdown_preview_keymap = require('keymaps').markdown_preview
+local markdown_preview_keymap = require('config.keymaps').markdown_preview
 
 local M = {
     'iamcco/markdown-preview.nvim',

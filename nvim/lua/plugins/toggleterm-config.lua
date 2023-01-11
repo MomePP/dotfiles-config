@@ -1,4 +1,4 @@
-local toggleterm_keymap = require('keymaps').toggleterm
+local toggleterm_keymap = require('config.keymaps').toggleterm
 
 local M = {
 	'akinsho/toggleterm.nvim',

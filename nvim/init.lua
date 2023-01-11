@@ -1,20 +1,13 @@
 -- INFO: checking does nvim runs from `vscode-neovim` or not
 if not vim.g.vscode then
-    -- nvim setting config
-    require 'options'
 
     -- plugin config
-    require 'lazyconfig'
-    require 'colorscheme'
+    require 'lazy-config'
 
-    -- apply user config
-    vim.api.nvim_create_autocmd('User', {
-        pattern = 'VeryLazy',
-        callback = function()
-            require 'autocommands'
-            require 'keymaps'.setup()
-        end,
-    })
+    -- loads user config
+    require 'config'.setup()
 else
+
+    -- loads keymap for neovim-vscode
     vim.cmd('source $HOME/.config/nvim/vscode/init.vim')
 end

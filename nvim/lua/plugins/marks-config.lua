@@ -36,7 +36,7 @@ M.config = function()
         marks_sign = '',
     }
 
-    local marks_keymaps = require('keymaps').marks
+    local marks_keymaps = require('config.keymaps').marks
 
     vim.keymap.set('n', marks_keymaps.toggle, marks.toggle, marks_keymaps.opts)
     vim.keymap.set('n', marks_keymaps.next, marks.next, marks_keymaps.opts)

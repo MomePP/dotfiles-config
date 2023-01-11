@@ -6,7 +6,7 @@ local M = {
 
 M.config = function()
     local todocomments = require('todo-comments')
-    local todocomment_colors = require('colorscheme').colorset.todocomments
+    local todocomment_colors = require('plugins.colorscheme').colorset.todocomments
 
     todocomments.setup {
         signs = false,
@@ -52,7 +52,7 @@ M.config = function()
     end
 
     -- INFO: setup todocomments keymap
-    local todocomments_keymap = require('keymaps').todocomments
+    local todocomments_keymap = require('config.keymaps').todocomments
 
     vim.keymap.set('n', todocomments_keymap.toggle, '<Cmd>TodoTelescope<CR>', todocomments_keymap.opts)
 

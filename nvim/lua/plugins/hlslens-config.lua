@@ -36,7 +36,7 @@ M.config = function()
         end
     })
 
-    local hlslens_keymap = require('keymaps').hlslens
+    local hlslens_keymap = require('config.keymaps').hlslens
 
     local function hlsPeekKeys(char)
         local ok, winid = hlslens.nNPeekWithUFO(char)

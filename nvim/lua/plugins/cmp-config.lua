@@ -24,7 +24,7 @@ local M = {
 
 M.config = function()
 
-    local icons = require('settings').icons
+    local icons = require('config').icons
 
     local function has_words_before()
         if vim.api.nvim_buf_get_option(0, 'buftype') == 'prompt' then return false end

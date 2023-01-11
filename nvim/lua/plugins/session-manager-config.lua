@@ -11,7 +11,7 @@ M.config = function()
         autosave_only_in_session = true,
     })
 
-    local session_manager_keymaps = require('keymaps').session_manager
+    local session_manager_keymaps = require('config.keymaps').session_manager
     vim.keymap.set('n', session_manager_keymaps.load, session_manager.load_session, session_manager_keymaps.opts)
     vim.keymap.set('n', session_manager_keymaps.save, session_manager.save_current_session, session_manager_keymaps.opts)
     vim.keymap.set('n', session_manager_keymaps.delete, session_manager.delete_session, session_manager_keymaps.opts)

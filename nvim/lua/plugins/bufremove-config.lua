@@ -1,4 +1,4 @@
-local bufremove_keymap = require('keymaps').bufremove
+local bufremove_keymap = require('config.keymaps').bufremove
 
 local M = {
     'echasnovski/mini.bufremove',

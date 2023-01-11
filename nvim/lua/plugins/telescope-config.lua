@@ -1,6 +1,6 @@
 local M = {
     'nvim-telescope/telescope.nvim',
-    event = 'VeryLazy',
+    event = 'BufEnter',
 
     dependencies = {
         'nvim-telescope/telescope-file-browser.nvim',
@@ -12,10 +12,9 @@ local M = {
 M.config = function()
     local telescope = require('telescope')
     local telescope_builtin = require('telescope.builtin')
-    local telescope_keymap = require('keymaps').telescope
+    local telescope_keymap = require('config.keymaps').telescope
 
     local utils = require('telescope.utils')
-    -- local actions = require('telescope.actions')
     local action_state = require('telescope.actions.state')
     local entry_display = require('telescope.pickers.entry_display')
 

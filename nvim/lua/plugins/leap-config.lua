@@ -45,7 +45,7 @@ M.config = function()
         end
     end
 
-    local leap_keymap = require('keymaps').leap
+    local leap_keymap = require('config.keymaps').leap
 
     vim.keymap.set('n', leap_keymap.search,
         function()

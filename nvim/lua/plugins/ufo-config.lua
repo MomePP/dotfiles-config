@@ -50,7 +50,7 @@ M.config = function()
         end,
     })
 
-    local ufo_keymaps = require('keymaps').ufo
+    local ufo_keymaps = require('config.keymaps').ufo
     vim.keymap.set('n', ufo_keymaps.open_all, ufo.openAllFolds, ufo_keymaps.opts)
     vim.keymap.set('n', ufo_keymaps.open_except, ufo.openFoldsExceptKinds, ufo_keymaps.opts)
     vim.keymap.set('n', ufo_keymaps.close_all, ufo.closeAllFolds, ufo_keymaps.opts)

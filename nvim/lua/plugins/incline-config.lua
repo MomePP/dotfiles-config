@@ -5,7 +5,7 @@ local M = {
 
 M.config = function()
     local incline = require('incline')
-    local colors = require('colorscheme').colorset
+    local colors = require('plugins.colorscheme').colorset
 
     incline.setup {
         window = {

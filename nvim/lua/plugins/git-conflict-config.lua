@@ -15,7 +15,7 @@ M.config = function()
         }
     })
 
-    local gitconflict_keymap = require('keymaps').gitconflict
+    local gitconflict_keymap = require('config.keymaps').gitconflict
     vim.keymap.set('n', gitconflict_keymap.toggle_qflist, function()
         git_conflict.conflicts_to_qf_items(function(items)
             if #items > 0 then
