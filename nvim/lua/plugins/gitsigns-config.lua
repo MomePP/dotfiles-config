@@ -5,9 +5,11 @@ local M = {
 
 M.config = function()
     local gitsigns = require('gitsigns')
+    local default_config = require('config').defaults
+
     gitsigns.setup {
         preview_config = {
-            border = 'none',
+            border = default_config.float_border,
             style = 'minimal',
             relative = 'cursor',
             row = 1,

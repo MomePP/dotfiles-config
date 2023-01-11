@@ -6,7 +6,7 @@ local M = {
 M.config = function()
     local lualine = require('lualine')
     local colors = require('plugins.colorscheme').colorset
-    local icons = require('config').icons
+    local icons = require('config').defaults.icons
 
     local conditions = {
         buffer_not_empty = function()

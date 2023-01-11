@@ -13,13 +13,15 @@ end
 vim.opt.runtimepath:prepend(lazypath)
 
 -- INFO: lazy.nvim configs
+local default_config = require('config').defaults
+
 local lazy_config = {
     defaults = {
         lazy = true
     },
     performance = {
         ui = {
-            border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }
+            border = default_config.float_border
         },
         rtp = {
             disabled_plugins = {
@@ -57,6 +59,6 @@ vim.keymap.set('n', lazy_keymap.lazygit, function()
     require('lazy.util').float_term({ 'lazygit' }, {
         size = { width = 0.9, height = 0.85 },
         margin = { top = -2, left = -1 },
-        border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', }
+        border = default_config.float_border
     })
 end, { desc = 'Lazygit' })

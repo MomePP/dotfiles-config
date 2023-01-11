@@ -10,6 +10,8 @@ local M = {
 }
 
 M.config = function()
+    local default_config = require('config').defaults
+
     local telescope = require('telescope')
     local telescope_builtin = require('telescope.builtin')
     local telescope_keymap = require('config.keymaps').telescope
@@ -104,7 +106,7 @@ M.config = function()
             path_display = { 'tail', 'smart' },
             set_env = { ['COLORTERM'] = 'truecolor' },
             file_ignore_patterns = { 'node_module' },
-            borderchars = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+            borderchars = default_config.float_border,
             dynamic_preview_title = true,
         },
         pickers = {

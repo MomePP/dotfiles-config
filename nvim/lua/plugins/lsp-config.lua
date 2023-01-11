@@ -1,3 +1,5 @@
+local default_config = require('config').defaults
+
 return {
     {
         -- ----------------------------------------------------------------------
@@ -9,7 +11,7 @@ return {
         config = function()
             require('mason').setup {
                 ui = {
-                    border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }
+                    border = default_config.float_border
                 }
             }
         end
@@ -32,7 +34,7 @@ return {
             --
 
             -- setup diagnostic signs
-            for name, icon in pairs(require('config').icons.diagnostics) do
+            for name, icon in pairs(default_config.icons.diagnostics) do
                 name = 'DiagnosticSign' .. name
                 vim.fn.sign_define(name, { texthl = name, text = icon, numhl = '' })
             end
@@ -125,7 +127,7 @@ return {
 
             local null_ls = require('null-ls')
             null_ls.setup {
-                border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }
+                border = default_config.float_border
             }
 
             mason_null_ls.setup_handlers {}

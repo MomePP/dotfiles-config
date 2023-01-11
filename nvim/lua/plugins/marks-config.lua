@@ -65,7 +65,7 @@ M.config = function()
             height = math.floor(height / 2),
             col = math.floor(width / 4),
             row = math.floor(height / 8),
-            border = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' },
+            border = require('config').defaults.float_border,
             -- title = ' Marks previewer '
         })
         vim.cmd('normal! `' .. mark)
