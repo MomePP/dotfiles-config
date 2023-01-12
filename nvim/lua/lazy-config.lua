@@ -58,7 +58,7 @@ vim.keymap.set('n', lazy_keymap.open, '<Cmd>Lazy<CR>', lazy_keymap.opts)
 vim.keymap.set('n', lazy_keymap.lazygit, function()
     require('lazy.util').float_term({ 'lazygit' }, {
         size = { width = 0.9, height = 0.85 },
-        margin = { top = -2, left = -1 },
+        margin = { top = -2, bottom = 1, left = -2, right = 1 },
         border = default_config.float_border
     })
 end, { desc = 'Lazygit' })
