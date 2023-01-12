@@ -21,7 +21,7 @@ M.config = function()
             disable = {},
             additional_vim_regex_highlighting = false,
         },
-        indent = { enable = false },
+        indent = { enable = true },
         ensure_installed = { 'regex', 'lua', 'vim', 'markdown', 'markdown_inline', 'bash', 'fish' },
         auto_install = true,
         sync_install = false,

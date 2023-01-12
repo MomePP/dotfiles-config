@@ -99,7 +99,7 @@ keymaps.lsp = {
 
 -- INFO: Lazy keymap
 keymaps.lazy = {
-    open    = '<leader>p',
+    open    = '<leader>P',
     lazygit = '<leader>g',
     opts    = silent
 }
@@ -218,14 +218,13 @@ keymaps.leap = {
 
 -- INFO: markdown preview keymap
 keymaps.markdown_preview = {
-    toggle = '<leader>P',
+    toggle = '<leader>p',
     opts   = silent
 }
 
 -- INFO: mini.bufremove keymap
 keymaps.bufremove = {
-    delete = '<leader>bd',
-    force_delete = '<leader>bD',
+    delete = 'wQ',
     opts = silent
 }
 
