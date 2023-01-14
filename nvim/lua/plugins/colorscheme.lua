@@ -190,6 +190,14 @@ M.config = function()
             MiniIndentscopeSymbol = { fg = M.colorset.orange, nocombine = true }
         }
 
+        local incline_highlight = {
+            InclineNormal = { fg = vim.o.background ~= 'dark' and M.colorset.black or M.colorset.white,
+                bg = M.colorset.transparent, bold = true },
+            InclineNormalNC = { fg = M.colorset.gray, bg = M.colorset.transparent, },
+            InclineSpacing = { fg = M.colorset.white, bg = M.colorset.orange, },
+            InclineModified = { fg = M.colorset.red, bg = M.colorset.transparent, }
+        }
+
         addHighlightConfig(override_highlight)
         addHighlightConfig(navic_highlight)
         addHighlightConfig(cmp_highlight)
@@ -199,6 +207,7 @@ M.config = function()
         addHighlightConfig(illuminate_highlight)
         addHighlightConfig(noice_highlight)
         addHighlightConfig(indentscope_highlight)
+        addHighlightConfig(incline_highlight)
 
         kanagawa.setup({
             transparent = false,

@@ -4,10 +4,9 @@ local M = {
 }
 
 M.config = function()
-    local gitsigns = require('gitsigns')
     local default_config = require('config').defaults
 
-    gitsigns.setup {
+    require('gitsigns').setup {
         preview_config = {
             border = default_config.float_border,
             style = 'minimal',

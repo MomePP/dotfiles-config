@@ -18,7 +18,10 @@ local M = {
                     require('luasnip.loaders.from_vscode').lazy_load()
                 end,
             },
-        }
+        },
+
+        -- NOTE: utilities
+        { 'windwp/nvim-autopairs', config = true },
     },
 }
 
@@ -138,6 +141,9 @@ M.config = function()
             { name = 'cmdline' }
         })
     })
+
+    -- INFO: setup utilities plugin
+    cmp.event:on('confirm_done', require('nvim-autopairs.completion.cmp').on_confirm_done())
 end
 
 return M

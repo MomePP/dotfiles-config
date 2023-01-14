@@ -1,11 +1,25 @@
+local telescope_keymap = require('config.keymaps').telescope
+
 local M = {
     'nvim-telescope/telescope.nvim',
-    event = 'BufEnter',
+    cmd = 'Telescope',
 
     dependencies = {
         'nvim-telescope/telescope-file-browser.nvim',
         'nvim-telescope/telescope-ui-select.nvim',
         { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+    },
+
+    keys = {
+        { telescope_keymap.grep_workspace, '<Cmd>Telescope grep_string<CR>', telescope_keymap.opts },
+        { telescope_keymap.buffers, '<Cmd>Telescope buffers<CR>', telescope_keymap.opts },
+        { telescope_keymap.help, '<Cmd>Telescope help_tags<CR>', telescope_keymap.opts },
+        { telescope_keymap.jumplist, '<Cmd>Telescope jumplist<CR>', telescope_keymap.opts },
+        { telescope_keymap.search_workspace, '<Cmd>Telescope live_grep<CR>', telescope_keymap.opts },
+        { telescope_keymap.oldfiles, '<Cmd>Telescope oldfiles<CR>', telescope_keymap.opts },
+        { telescope_keymap.search_buffer, '<Cmd>Telescope current_buffer_fuzzy_find<CR>', telescope_keymap.opts },
+        { telescope_keymap.file_browse, '<Cmd>Telescope file_browser<CR>', telescope_keymap.opts },
+        { telescope_keymap.find_files, '<Cmd>Telescope find_files<CR>', telescope_keymap.opts },
     }
 }
 
@@ -13,8 +27,6 @@ M.config = function()
     local default_config = require('config').defaults
 
     local telescope = require('telescope')
-    local telescope_builtin = require('telescope.builtin')
-    local telescope_keymap = require('config.keymaps').telescope
 
     local utils = require('telescope.utils')
     local action_state = require('telescope.actions.state')
@@ -192,7 +204,7 @@ M.config = function()
                 case_mode = 'smart_case', -- or 'ignore_case' or 'respect_case'
             },
             ['file_browser'] = mergeConfig(horizontal_layout_config, {
-                path = "%:p:h",
+                path = '%:p:h',
                 cwd_to_path = true,
                 respect_gitignore = false,
                 hidden = true,
@@ -207,19 +219,6 @@ M.config = function()
     telescope.load_extension('fzf')
     telescope.load_extension('file_browser')
     telescope.load_extension('ui-select')
-
-    -- INFO: setup keymap
-    vim.keymap.set('n', telescope_keymap.grep_workspace, telescope_builtin.grep_string, telescope_keymap.opts)
-    vim.keymap.set('n', telescope_keymap.buffers, telescope_builtin.buffers, telescope_keymap.opts)
-    vim.keymap.set('n', telescope_keymap.help, telescope_builtin.help_tags, telescope_keymap.opts)
-    vim.keymap.set('n', telescope_keymap.jumplist, telescope_builtin.jumplist, telescope_keymap.opts)
-    vim.keymap.set('n', telescope_keymap.search_workspace, telescope_builtin.live_grep, telescope_keymap.opts)
-    vim.keymap.set('n', telescope_keymap.oldfiles, telescope_builtin.oldfiles, telescope_keymap.opts)
-    vim.keymap.set('n', telescope_keymap.search_buffer, telescope_builtin.current_buffer_fuzzy_find,
-        telescope_keymap.opts)
-    vim.keymap.set('n', telescope_keymap.file_browse, telescope.extensions.file_browser.file_browser,
-        telescope_keymap.opts)
-    vim.keymap.set('n', telescope_keymap.find_files, telescope_builtin.find_files, telescope_keymap.opts)
 end
 
 return M

@@ -1,5 +1,5 @@
-local silent = { noremap = true, silent = true }
 local expr = { expr = true }
+local silent = { noremap = true, silent = true }
 local silent_expr = { silent = true, expr = true }
 
 -- NOTE: helper functions

@@ -4,7 +4,6 @@ local M = {
 }
 
 M.config = function()
-    local lualine = require('lualine')
     local colors = require('plugins.colorscheme').colorset
     local icons = require('config').defaults.icons
 
@@ -160,7 +159,7 @@ M.config = function()
     }
 
     -- INFO: setup lualine configs
-    lualine.setup({
+    require('lualine').setup({
         options = {
             icons_enabled = true,
             theme = lualine_colors,

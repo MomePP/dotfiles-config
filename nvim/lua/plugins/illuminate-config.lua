@@ -4,8 +4,7 @@ local M = {
 }
 
 M.config = function()
-    local illuminate = require('illuminate')
-    illuminate.configure({
+    require('illuminate').configure({
         delay = 200,
         filetypes_denylist = {
             'dirvish',

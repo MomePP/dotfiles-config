@@ -8,10 +8,9 @@ local M = {
 }
 
 M.config = function()
-	local toggleterm = require('toggleterm')
 	local default_config = require('config').defaults
 
-	toggleterm.setup({
+	require('toggleterm').setup({
 		size = 20,
 		open_mapping = toggleterm_keymap.toggle,
 		shade_terminals = false,

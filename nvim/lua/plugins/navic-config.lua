@@ -4,8 +4,7 @@ local M = {
 }
 
 M.config = function()
-    local navic = require('nvim-navic')
-    navic.setup({
+    require('nvim-navic').setup({
         separator = '  ',
         depth_limit = 6,
         highlight = true,

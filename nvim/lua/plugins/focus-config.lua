@@ -1,10 +1,20 @@
+local focus_keymaps = require('config.keymaps').focus
+
 local M = {
     'beauwilliams/focus.nvim',
-    event = 'BufReadPre'
+
+    keys = {
+        { focus_keymaps.toggle_enable, function() require 'focus'.focus_toggle() end, focus_keymaps.opts },
+        { focus_keymaps.toggle_size, function() require 'focus'.focus_max_or_equal() end, focus_keymaps.opts },
+        { focus_keymaps.split_cycle, function() require 'focus'.split_cycle() end, focus_keymaps.opts },
+        { focus_keymaps.split_left, function() require 'focus'.split_command('h') end, focus_keymaps.opts },
+        { focus_keymaps.split_right, function() require 'focus'.split_command('l') end, focus_keymaps.opts },
+        { focus_keymaps.split_up, function() require 'focus'.split_command('k') end, focus_keymaps.opts },
+        { focus_keymaps.split_down, function() require 'focus'.split_command('j') end, focus_keymaps.opts },
+    }
 }
 
 M.config = function()
-    local focus = require('focus')
     local focus_configs = {
         excluded_filetypes = {
             '',
@@ -22,16 +32,7 @@ M.config = function()
         number = false,
         signcolumn = false,
     }
-    focus.setup(focus_configs)
-
-    local focus_keymaps = require('config.keymaps').focus
-    vim.keymap.set('n', focus_keymaps.toggle_enable, focus.focus_toggle, focus_keymaps.opts)
-    vim.keymap.set('n', focus_keymaps.toggle_size, focus.focus_max_or_equal, focus_keymaps.opts)
-    vim.keymap.set('n', focus_keymaps.split_cycle, focus.split_cycle, focus_keymaps.opts)
-    vim.keymap.set('n', focus_keymaps.split_left, function() focus.split_command('h') end, focus_keymaps.opts)
-    vim.keymap.set('n', focus_keymaps.split_right, function() focus.split_command('l') end, focus_keymaps.opts)
-    vim.keymap.set('n', focus_keymaps.split_up, function() focus.split_command('k') end, focus_keymaps.opts)
-    vim.keymap.set('n', focus_keymaps.split_down, function() focus.split_command('j') end, focus_keymaps.opts)
+    require('focus').setup(focus_configs)
 end
 
 return M

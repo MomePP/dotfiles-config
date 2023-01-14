@@ -4,8 +4,7 @@ local M = {
 }
 
 M.config = function()
-    local colorizer = require('colorizer')
-    colorizer.setup {
+    require('colorizer').setup {
         user_default_options = {
             RGB = true, -- #RGB hex codes
             RRGGBB = true, -- #RRGGBB hex codes

@@ -4,8 +4,7 @@ local M = {
 }
 
 M.config = function()
-    local noice = require('noice')
-    noice.setup {
+    require('noice').setup {
         views = {
             hover = {
                 focusable = false,
