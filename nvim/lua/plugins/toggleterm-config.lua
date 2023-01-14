@@ -2,9 +2,10 @@ local toggleterm_keymap = require('config.keymaps').toggleterm
 
 local M = {
 	'akinsho/toggleterm.nvim',
-	keys = {
-		{ toggleterm_keymap.toggle },
-	}
+}
+
+M.keys = {
+	{ toggleterm_keymap.toggle },
 }
 
 M.config = function()

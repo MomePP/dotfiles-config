@@ -9,18 +9,18 @@ local M = {
         'nvim-telescope/telescope-ui-select.nvim',
         { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
     },
+}
 
-    keys = {
-        { telescope_keymap.grep_workspace, '<Cmd>Telescope grep_string<CR>', telescope_keymap.opts },
-        { telescope_keymap.buffers, '<Cmd>Telescope buffers<CR>', telescope_keymap.opts },
-        { telescope_keymap.help, '<Cmd>Telescope help_tags<CR>', telescope_keymap.opts },
-        { telescope_keymap.jumplist, '<Cmd>Telescope jumplist<CR>', telescope_keymap.opts },
-        { telescope_keymap.search_workspace, '<Cmd>Telescope live_grep<CR>', telescope_keymap.opts },
-        { telescope_keymap.oldfiles, '<Cmd>Telescope oldfiles<CR>', telescope_keymap.opts },
-        { telescope_keymap.search_buffer, '<Cmd>Telescope current_buffer_fuzzy_find<CR>', telescope_keymap.opts },
-        { telescope_keymap.file_browse, '<Cmd>Telescope file_browser<CR>', telescope_keymap.opts },
-        { telescope_keymap.find_files, '<Cmd>Telescope find_files<CR>', telescope_keymap.opts },
-    }
+M.keys = {
+    { telescope_keymap.grep_workspace, '<Cmd>Telescope grep_string<CR>', telescope_keymap.opts },
+    { telescope_keymap.buffers, '<Cmd>Telescope buffers<CR>', telescope_keymap.opts },
+    { telescope_keymap.help, '<Cmd>Telescope help_tags<CR>', telescope_keymap.opts },
+    { telescope_keymap.jumplist, '<Cmd>Telescope jumplist<CR>', telescope_keymap.opts },
+    { telescope_keymap.search_workspace, '<Cmd>Telescope live_grep<CR>', telescope_keymap.opts },
+    { telescope_keymap.oldfiles, '<Cmd>Telescope oldfiles<CR>', telescope_keymap.opts },
+    { telescope_keymap.search_buffer, '<Cmd>Telescope current_buffer_fuzzy_find<CR>', telescope_keymap.opts },
+    { telescope_keymap.file_browse, '<Cmd>Telescope file_browser<CR>', telescope_keymap.opts },
+    { telescope_keymap.find_files, '<Cmd>Telescope find_files<CR>', telescope_keymap.opts },
 }
 
 M.config = function()
