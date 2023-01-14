@@ -22,9 +22,6 @@ keymaps.setup = function()
     vim.keymap.set('c', 'Qa', 'qa')
     vim.keymap.set('c', 'QA', 'qa')
 
-    -- INFO: keeping cursor centered
-    vim.keymap.set('n', 'J', 'mzJ`z')
-
     -- INFO: add undo break points
     vim.keymap.set('i', ',', ',<C-g>u')
     vim.keymap.set('i', '.', '.<C-g>u')
@@ -57,22 +54,6 @@ keymaps.setup = function()
     -- INFO: remap jump keys
     vim.keymap.set('n', '<C-j>', '<C-i>', silent)
     vim.keymap.set('n', '<C-k>', '<C-o>', silent)
-
-    -- INFO: move line or visually selected block - opt+j/k
-    vim.keymap.set('n', '<m-j>', ':MoveLine(1)<CR>', silent)
-    vim.keymap.set('n', '<m-k>', ':MoveLine(-1)<CR>', silent)
-    vim.keymap.set('n', '<m-down>', ':MoveLine(1)<CR>', silent)
-    vim.keymap.set('n', '<m-up>', ':MoveLine(-1)<CR>', silent)
-
-    vim.keymap.set('v', '<m-j>', ':MoveBlock(1)<CR>', silent)
-    vim.keymap.set('v', '<m-k>', ':MoveBlock(-1)<CR>', silent)
-    vim.keymap.set('v', '<m-down>', ':MoveBlock(1)<CR>', silent)
-    vim.keymap.set('v', '<m-up>', ':MoveBlock(-1)<CR>', silent)
-
-    vim.keymap.set('i', '<m-j>', '<Esc>:MoveLine(1)<CR>==gi', silent)
-    vim.keymap.set('i', '<m-k>', '<Esc>:MoveLine(-1)<CR>==gi', silent)
-    vim.keymap.set('i', '<m-down>', '<Esc>:MoveLine(1)<CR>==gi', silent)
-    vim.keymap.set('i', '<m-up>', '<Esc>:MoveLine(-1)<CR>==gi', silent)
 end
 
 -- INFO: LSP keymap
@@ -225,6 +206,14 @@ keymaps.markdown_preview = {
 -- INFO: mini.bufremove keymap
 keymaps.bufremove = {
     delete = 'wQ',
+    opts = silent
+}
+
+keymaps.gomove = {
+    move_up = '<m-k>',
+    move_down = '<m-j>',
+    dup_up = '<m-s-j>',
+    dup_down = '<m-s-k>',
     opts = silent
 }
 
