@@ -8,40 +8,38 @@ M.keys = {
 	{ toggleterm_keymap.toggle },
 }
 
-M.config = function()
-	local default_config = require('config').defaults
+M.opts = {
+	size = 20,
+	open_mapping = toggleterm_keymap.toggle,
+	shade_terminals = false,
+	direction = 'float',
+	float_opts = {
+		border = require('config').defaults.float_border,
+		width = function() return math.ceil(vim.o.columns * 0.9) end,
+		height = function() return math.ceil(vim.o.lines * 0.85) end,
+	},
+	highlights = {
+		FloatBorder = { link = 'FloatBorder' },
+		NormalFloat = { link = 'NormalFloat' }
+	}
+}
 
-	require('toggleterm').setup({
-		size = 20,
-		open_mapping = toggleterm_keymap.toggle,
-		shade_terminals = false,
-		direction = 'float',
-		float_opts = {
-			border = default_config.float_border,
-			width = function() return math.ceil(vim.o.columns * 0.9) end,
-			height = function() return math.ceil(vim.o.lines * 0.85) end,
-		},
-		highlights = {
-			FloatBorder = { link = 'FloatBorder' },
-			NormalFloat = { link = 'NormalFloat' }
-		}
-	})
-
-	-- local Terminal = require('toggleterm.terminal').Terminal
-	--
-	-- local lazygit = Terminal:new({ cmd = 'lazygit', count = 20, hidden = true })
-	-- vim.api.nvim_create_user_command('ToggleLazyGit',
-	-- 	function()
-	-- 		lazygit:toggle()
-	-- 	end,
-	-- 	{ desc = 'Toggle `lazygit` terminal using toggleterm' }
-	-- )
-	--
-	-- local gotop = Terminal:new({ cmd = 'gotop', count = 21, hidden = true })
-	-- local node = Terminal:new({ cmd = 'node', hidden = true })
-	-- local ncdu = Terminal:new({ cmd = 'ncdu', hidden = true })
-	-- local python = Terminal:new({ cmd = 'python', hidden = true })
-	-- local spotify = Terminal:new({ cmd = 'spt', hidden = true })
-end
+-- M.config = function()
+-- 	-- local Terminal = require('toggleterm.terminal').Terminal
+-- 	--
+-- 	-- local lazygit = Terminal:new({ cmd = 'lazygit', count = 20, hidden = true })
+-- 	-- vim.api.nvim_create_user_command('ToggleLazyGit',
+-- 	-- 	function()
+-- 	-- 		lazygit:toggle()
+-- 	-- 	end,
+-- 	-- 	{ desc = 'Toggle `lazygit` terminal using toggleterm' }
+-- 	-- )
+-- 	--
+-- 	-- local gotop = Terminal:new({ cmd = 'gotop', count = 21, hidden = true })
+-- 	-- local node = Terminal:new({ cmd = 'node', hidden = true })
+-- 	-- local ncdu = Terminal:new({ cmd = 'ncdu', hidden = true })
+-- 	-- local python = Terminal:new({ cmd = 'python', hidden = true })
+-- 	-- local spotify = Terminal:new({ cmd = 'spt', hidden = true })
+-- end
 
 return M

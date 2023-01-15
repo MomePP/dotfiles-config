@@ -1,24 +1,22 @@
-
 local M = {
     'booperlv/nvim-gomove',
     event = 'BufReadPost',
 }
 
-M.config = function()
-    require('gomove').setup {
-        map_defaults = true
-    }
+M.opts = {
+    map_defaults = true
+}
 
-    -- INFO: add extra mapping for insert mode
+M.keys = function()
     local gomove_keymap = require('config.keymaps').gomove
 
-    -- move line
-    vim.keymap.set('i', gomove_keymap.move_up, '<Esc><Plug>GoNSMUpgi', gomove_keymap.opts)
-    vim.keymap.set('i', gomove_keymap.move_down, '<Esc><Plug>GoNSMDowngi', gomove_keymap.opts)
-
-    -- duplicate line
-    vim.keymap.set('i', gomove_keymap.dup_up, '<Esc><Plug>GoNSDUpgi', gomove_keymap.opts)
-    vim.keymap.set('i', gomove_keymap.dup_down, '<Esc><Plug>GoNSDDowngi', gomove_keymap.opts)
+    return {
+        -- INFO: add extra mapping for insert mode
+        { gomove_keymap.move_up, '<Esc><Plug>GoNSMUpgi', mode = 'i' },
+        { gomove_keymap.move_down, '<Esc><Plug>GoNSMDowngi', mode = 'i' },
+        { gomove_keymap.dup_up, '<Esc><Plug>GoNSDUpgi', mode = 'i' },
+        { gomove_keymap.dup_down, '<Esc><Plug>GoNSDDowngi', mode = 'i' },
+    }
 end
 
 return M

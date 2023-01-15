@@ -18,6 +18,10 @@ local M = {
                     require('luasnip.loaders.from_vscode').lazy_load()
                 end,
             },
+            opts = {
+                history = true,
+                delete_check_events = 'TextChanged',
+            }
         },
 
         -- NOTE: utilities
@@ -25,8 +29,9 @@ local M = {
     },
 }
 
-M.config = function()
-
+M.opts = function()
+    local cmp = require('cmp')
+    local luasnip = require('luasnip')
     local icons = require('config').defaults.icons
 
     local function has_words_before()
@@ -34,20 +39,6 @@ M.config = function()
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
         return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match('^%s*$') == nil
     end
-
-    -- ----------------------------------------------------------------------
-    --  luasnip configs
-    --
-    local luasnip = require('luasnip')
-    luasnip.config.set_config({
-        history = true,
-        delete_check_events = 'TextChanged',
-    })
-
-    -- ----------------------------------------------------------------------
-    --  cmp configs
-    --
-    local cmp = require('cmp')
 
     local cmp_formatting = {
         -- fields = { 'abbr', 'kind', 'menu' },
@@ -101,7 +92,7 @@ M.config = function()
         { name = 'rg', keyword_length = 3 },
     })
 
-    local cmp_configs = {
+    return {
         snippet = { expand = function(args) luasnip.lsp_expand(args.body) end, },
         mapping = cmp_mapping,
         sources = cmp_sources,
@@ -124,7 +115,12 @@ M.config = function()
             keyword_length = 2,
         }
     }
-    cmp.setup(cmp_configs)
+end
+
+M.config = function(_, opts)
+    local cmp = require('cmp')
+
+    cmp.setup(opts)
 
     cmp.setup.cmdline({ '/', '?' }, {
         mapping = cmp.mapping.preset.cmdline(),

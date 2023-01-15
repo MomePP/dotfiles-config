@@ -1,14 +1,10 @@
-local expr = { expr = true }
-local silent = { noremap = true, silent = true }
-local silent_expr = { silent = true, expr = true }
+local keymaps = {}
 
 -- NOTE: helper functions
 local function open_telescope_qflist(options)
     vim.fn.setqflist({}, ' ', options)
     vim.cmd 'Telescope quickfix'
 end
-
-local keymaps = {}
 
 keymaps.setup = function()
     -- INFO: command-line abbreviations
@@ -29,12 +25,12 @@ keymaps.setup = function()
     vim.keymap.set('i', '?', '?<C-g>u')
 
     -- INFO: windows/buffers navigated keys
-    vim.keymap.set('n', '<Tab>', '<Cmd>bnext<CR>', silent)
-    vim.keymap.set('n', '<S-Tab>', '<Cmd>bprev<CR>', silent)
-    vim.keymap.set('n', 'wq', '<C-w>q', silent)
+    vim.keymap.set('n', '<Tab>', '<Cmd>bnext<CR>')
+    vim.keymap.set('n', '<S-Tab>', '<Cmd>bprev<CR>')
+    vim.keymap.set('n', 'wq', '<C-w>q')
 
     -- INFO: misc. keymap
-    vim.keymap.set({ 'i', 'n' }, '<Esc>', '<Cmd>noh<CR><Esc>', silent)
+    vim.keymap.set({ 'i', 'n' }, '<Esc>', '<Cmd>noh<CR><Esc>')
     vim.keymap.set('n', 'dw', 'vb"_d') -- delete a word backward
     vim.keymap.set('n', '<leader>d', '"_d') -- delete without yank
     vim.keymap.set('n', 'x', '"_x')
@@ -52,8 +48,8 @@ keymaps.setup = function()
     -- vim.keymap.set('n', '<C-w><down>', '<C-w>-')
 
     -- INFO: remap jump keys
-    vim.keymap.set('n', '<C-j>', '<C-i>', silent)
-    vim.keymap.set('n', '<C-k>', '<C-o>', silent)
+    vim.keymap.set('n', '<C-j>', '<C-i>')
+    vim.keymap.set('n', '<C-k>', '<C-o>')
 end
 
 -- INFO: LSP keymap
@@ -82,7 +78,6 @@ keymaps.lsp = {
 keymaps.lazy = {
     open    = '<leader>P',
     lazygit = '<leader>g',
-    opts    = silent
 }
 
 -- INFO: Focus keymap
@@ -94,7 +89,6 @@ keymaps.focus = {
     split_right   = 'wl',
     split_up      = 'wk',
     split_down    = 'wj',
-    opts          = silent
 }
 
 -- INFO: GitSign keymap
@@ -105,13 +99,11 @@ keymaps.gitsigns = {
     preview_hunk = '<leader>hp',
     blame_line   = '<leader>hb',
     toggle_blame = '<leader>hB',
-    opts         = { silent = silent, expr = expr },
 }
 
 -- INFO: git-conflict keymap
 keymaps.gitconflict = {
     toggle_qflist = '<leader>x',
-    opts          = silent,
 }
 
 -- INFO: Telescope keymap
@@ -126,7 +118,6 @@ keymaps.telescope = {
     oldfiles             = '<leader>?',
     file_browse          = '<leader>fb',
     action_buffer_delete = { n = 'd', i = '<m-d>' },
-    opts                 = silent,
 }
 
 -- INFO: Todocomments keymap
@@ -134,13 +125,11 @@ keymaps.todocomments = {
     toggle    = '<leader>c',
     next_todo = ']t',
     prev_todo = '[t',
-    opts      = silent,
 }
 
 -- INFO: Terminal & ToggleTerm keymap
 keymaps.toggleterm = {
     toggle = '<leader>t',
-    opts   = silent,
 }
 
 -- INFO: Marks keymap
@@ -151,7 +140,6 @@ keymaps.marks = {
     preview = 'm"',
     clear   = 'md',
     list    = '<leader>m',
-    opts    = silent,
 }
 
 -- INFO: ufo keymap
@@ -160,7 +148,8 @@ keymaps.ufo = {
     open_except = 'zr',
     close_all   = 'zM',
     close_with  = 'zm',
-    opts        = silent,
+    scroll_up   = '<c-u>',
+    scroll_down = '<c-d>',
 }
 
 -- INFO: hlslens keymap
@@ -171,7 +160,6 @@ keymaps.hlslens = {
     word_prev   = '#',
     go_next     = 'g*',
     go_prev     = 'g#',
-    opts        = silent
 }
 
 -- INFO: session-manager keymaps
@@ -179,7 +167,6 @@ keymaps.session_manager = {
     load   = '<leader>sr',
     save   = '<leader>ss',
     delete = '<leader>sd',
-    opts   = silent,
 }
 
 -- INFO: Noice keymaps
@@ -187,26 +174,22 @@ keymaps.noice = {
     history          = '<leader>M',
     docs_scroll_up   = '<C-u>',
     docs_scroll_down = '<C-d>',
-    opts             = { silent = silent, silent_expr = silent_expr },
 }
 
 -- INFO: Leap keymaps
 keymaps.leap = {
     search      = 's',
     line_search = 'S',
-    opts        = silent,
 }
 
 -- INFO: markdown preview keymap
 keymaps.markdown_preview = {
     toggle = '<leader>p',
-    opts   = silent
 }
 
 -- INFO: mini.bufremove keymap
 keymaps.bufremove = {
     delete = 'wQ',
-    opts = silent
 }
 
 keymaps.gomove = {
@@ -214,7 +197,6 @@ keymaps.gomove = {
     move_down = '<m-j>',
     dup_up = '<m-s-j>',
     dup_down = '<m-s-k>',
-    opts = silent
 }
 
 return keymaps

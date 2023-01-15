@@ -3,7 +3,7 @@ local M = {
     event = 'VeryLazy'
 }
 
-M.config = function()
+M.opts = function()
     local colors = require('plugins.colorscheme').colorset
     local icons = require('config').defaults.icons
 
@@ -158,8 +158,7 @@ M.config = function()
         },
     }
 
-    -- INFO: setup lualine configs
-    require('lualine').setup({
+    return {
         options = {
             icons_enabled = true,
             theme = lualine_colors,
@@ -177,7 +176,7 @@ M.config = function()
         },
         tabline = {},
         extensions = { 'toggleterm' }
-    })
+    }
 end
 
 return M

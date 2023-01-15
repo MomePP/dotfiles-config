@@ -3,23 +3,25 @@ local M = {
     event = 'BufReadPost'
 }
 
-M.config = function()
-    require('illuminate').configure({
-        delay = 200,
-        filetypes_denylist = {
-            'dirvish',
-            'fugitive',
-            'man',
-            'checkhealth',
-            'help',
-            'terminal',
-            'packer',
-            'lspinfo',
-            'lsp-installer',
-            'TelescopePrompt',
-            'TelescopeResults',
-        },
-    })
+M.opts = {
+    delay = 200,
+    filetypes_denylist = {
+        'dirvish',
+        'fugitive',
+        'man',
+        'checkhealth',
+        'help',
+        'terminal',
+        'packer',
+        'lspinfo',
+        'lsp-installer',
+        'TelescopePrompt',
+        'TelescopeResults',
+    },
+}
+
+M.config = function(_, opts)
+    require('illuminate').configure(opts)
 end
 
 return M

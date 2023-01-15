@@ -53,7 +53,7 @@ require('lazy').setup('plugins', lazy_config)
 
 -- INFO: lazy.nvim keybinding
 local lazy_keymap = require('config.keymaps').lazy
-vim.keymap.set('n', lazy_keymap.open, '<Cmd>Lazy<CR>', lazy_keymap.opts)
+vim.keymap.set('n', lazy_keymap.open, '<Cmd>Lazy<CR>')
 
 vim.keymap.set('n', lazy_keymap.lazygit, function()
     require('lazy.util').float_term({ 'lazygit' }, {

@@ -6,28 +6,23 @@ local M = {
 
     dependencies = {
         'nvim-telescope/telescope-file-browser.nvim',
-        'nvim-telescope/telescope-ui-select.nvim',
         { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
     },
 }
 
 M.keys = {
-    { telescope_keymap.grep_workspace, '<Cmd>Telescope grep_string<CR>', telescope_keymap.opts },
-    { telescope_keymap.buffers, '<Cmd>Telescope buffers<CR>', telescope_keymap.opts },
-    { telescope_keymap.help, '<Cmd>Telescope help_tags<CR>', telescope_keymap.opts },
-    { telescope_keymap.jumplist, '<Cmd>Telescope jumplist<CR>', telescope_keymap.opts },
-    { telescope_keymap.search_workspace, '<Cmd>Telescope live_grep<CR>', telescope_keymap.opts },
-    { telescope_keymap.oldfiles, '<Cmd>Telescope oldfiles<CR>', telescope_keymap.opts },
-    { telescope_keymap.search_buffer, '<Cmd>Telescope current_buffer_fuzzy_find<CR>', telescope_keymap.opts },
-    { telescope_keymap.file_browse, '<Cmd>Telescope file_browser<CR>', telescope_keymap.opts },
-    { telescope_keymap.find_files, '<Cmd>Telescope find_files<CR>', telescope_keymap.opts },
+    { telescope_keymap.grep_workspace, '<Cmd>Telescope grep_string<CR>' },
+    { telescope_keymap.buffers, '<Cmd>Telescope buffers<CR>' },
+    { telescope_keymap.help, '<Cmd>Telescope help_tags<CR>' },
+    { telescope_keymap.jumplist, '<Cmd>Telescope jumplist<CR>' },
+    { telescope_keymap.search_workspace, '<Cmd>Telescope live_grep<CR>' },
+    { telescope_keymap.oldfiles, '<Cmd>Telescope oldfiles<CR>' },
+    { telescope_keymap.search_buffer, '<Cmd>Telescope current_buffer_fuzzy_find<CR>' },
+    { telescope_keymap.file_browse, '<Cmd>Telescope file_browser<CR>' },
+    { telescope_keymap.find_files, '<Cmd>Telescope find_files<CR>' },
 }
 
-M.config = function()
-    local default_config = require('config').defaults
-
-    local telescope = require('telescope')
-
+M.opts = function()
     local utils = require('telescope.utils')
     local action_state = require('telescope.actions.state')
     local entry_display = require('telescope.pickers.entry_display')
@@ -109,7 +104,56 @@ M.config = function()
         end
     end
 
-    telescope.setup {
+    local function buffers_mapping(prompt_bufnr, map)
+        local function delete_buf()
+            local current_picker = action_state.get_current_picker(prompt_bufnr)
+            local multi_selections = current_picker:get_multi_selection()
+
+            local buffers = vim.tbl_map(function(selection)
+                return utils.transform_path({}, selection.filename)
+            end, multi_selections)
+
+            if next(buffers) == nil then
+                local selection = action_state.get_selected_entry()
+                multi_selections = vim.tbl_extend('force', multi_selections, { selection })
+                buffers = { utils.transform_path({}, selection.filename) }
+            end
+
+            local removed = {}
+            local message = 'Selections to be deleted: ' .. table.concat(buffers, ', ')
+            vim.notify(string.format('[buffers.actions.remove] %s', message), vim.log.levels.INFO,
+                { title = 'Telescope builtin' })
+
+            vim.ui.input({ prompt = 'Remove selections [y/N]: ' }, function(input)
+                vim.cmd [[ redraw ]] -- redraw to clear out vim.ui.prompt to avoid hit-enter prompt
+                if input and input:lower() == 'y' then
+                    -- INFO: lazy loads `mini.bufremove` for handles buffer deletion
+                    require('lazy').load({ plugins = { 'mini.bufremove' } })
+                    local bufremove = require('mini.bufremove')
+
+                    current_picker:delete_selection(function(selection)
+                        local force = vim.api.nvim_buf_get_option(selection.bufnr, 'buftype') == 'terminal'
+                        local ok = pcall(bufremove.delete, selection.bufnr, force)
+                        if ok then table.insert(removed, utils.transform_path({}, selection.filename)) end
+                        return ok
+                    end)
+
+                    vim.notify('[buffers.actions.remove] Removed: ' .. table.concat(removed, ', '),
+                        vim.log.levels.INFO,
+                        { title = 'Telescope builtin' })
+                else
+                    vim.notify('[buffers.actions.remove] Removing selections aborted!', vim.log.levels.INFO,
+                        { title = 'Telescope builtin' })
+                end
+            end)
+        end
+
+        map('n', telescope_keymap.action_buffer_delete.n, delete_buf)
+        map('i', telescope_keymap.action_buffer_delete.i, delete_buf)
+        return true
+    end
+
+    return {
         defaults = {
             prompt_prefix = '   ', -- this still got an issue of prompt buffer bug, can be workaround by changes it to empty string
             entry_prefix = '  ',
@@ -118,12 +162,12 @@ M.config = function()
             path_display = { 'tail', 'smart' },
             set_env = { ['COLORTERM'] = 'truecolor' },
             file_ignore_patterns = { 'node_module' },
-            borderchars = default_config.float_border,
+            borderchars = require('config').defaults.float_border,
             dynamic_preview_title = true,
         },
         pickers = {
             lsp_references = mergeConfig(bottom_layout_config, {
-                entry_maker = entry_lsp_references()
+                entry_maker = entry_lsp_references
             }),
             diagnostics = mergeConfig(bottom_layout_config, {
                 line_width = 0.7
@@ -141,54 +185,7 @@ M.config = function()
                 }
             }),
             buffers = mergeConfig(horizontal_layout_config, {
-                attach_mappings = function(prompt_bufnr, map)
-                    local delete_buf = function()
-                        local current_picker = action_state.get_current_picker(prompt_bufnr)
-                        local multi_selections = current_picker:get_multi_selection()
-
-                        local buffers = vim.tbl_map(function(selection)
-                            return utils.transform_path({}, selection.filename)
-                        end, multi_selections)
-
-                        if next(buffers) == nil then
-                            local selection = action_state.get_selected_entry()
-                            multi_selections = vim.tbl_extend('force', multi_selections, { selection })
-                            buffers = { utils.transform_path({}, selection.filename) }
-                        end
-
-                        local removed = {}
-                        local message = 'Selections to be deleted: ' .. table.concat(buffers, ', ')
-                        vim.notify(string.format('[buffers.actions.remove] %s', message), vim.log.levels.INFO,
-                            { title = 'Telescope builtin' })
-
-                        vim.ui.input({ prompt = 'Remove selections [y/N]: ' }, function(input)
-                            vim.cmd [[ redraw ]] -- redraw to clear out vim.ui.prompt to avoid hit-enter prompt
-                            if input and input:lower() == 'y' then
-                                -- INFO: lazy loads `mini.bufremove` for handles buffer deletion
-                                require('lazy').load({ plugins = { 'mini.bufremove' } })
-                                local bufremove = require('mini.bufremove')
-
-                                current_picker:delete_selection(function(selection)
-                                    local force = vim.api.nvim_buf_get_option(selection.bufnr, 'buftype') == 'terminal'
-                                    local ok = pcall(bufremove.delete, selection.bufnr, force)
-                                    if ok then table.insert(removed, utils.transform_path({}, selection.filename)) end
-                                    return ok
-                                end)
-
-                                vim.notify('[buffers.actions.remove] Removed: ' .. table.concat(removed, ', '),
-                                    vim.log.levels.INFO,
-                                    { title = 'Telescope builtin' })
-                            else
-                                vim.notify('[buffers.actions.remove] Removing selections aborted!', vim.log.levels.INFO,
-                                    { title = 'Telescope builtin' })
-                            end
-                        end)
-                    end
-
-                    map('n', telescope_keymap.action_buffer_delete.n, delete_buf)
-                    map('i', telescope_keymap.action_buffer_delete.i, delete_buf)
-                    return true
-                end
+                attach_mappings = buffers_mapping
             }),
             help_tags = horizontal_layout_config,
             live_grep = vertical_layout_config,
@@ -211,14 +208,16 @@ M.config = function()
                 grouped = true,
                 hijack_netrw = true,
             }),
-            ['ui-select'] = {
-                theme = 'cursor'
-            },
         }
     }
+end
+
+M.config = function(_, opts)
+    local telescope = require('telescope')
+
+    telescope.setup(opts)
     telescope.load_extension('fzf')
     telescope.load_extension('file_browser')
-    telescope.load_extension('ui-select')
 end
 
 return M

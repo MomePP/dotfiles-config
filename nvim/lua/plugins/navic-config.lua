@@ -3,12 +3,10 @@ local M = {
     event = 'BufReadPre'
 }
 
-M.config = function()
-    require('nvim-navic').setup({
-        separator = '  ',
-        depth_limit = 6,
-        highlight = true,
-    })
-end
+M.opts = {
+    separator = '  ',
+    depth_limit = 6,
+    highlight = true,
+}
 
 return M

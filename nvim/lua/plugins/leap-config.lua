@@ -7,9 +7,9 @@ local M = {
     },
 }
 
-M.config = function()
+M.keys = function()
     local leap = require('leap')
-    leap.opts.highlight_unlabeled_phase_one_targets = true
+    local leap_keymap = require('config.keymaps').leap
 
     -- linewise motion
     local function get_line_starts(winid)
@@ -45,23 +45,30 @@ M.config = function()
         end
     end
 
-    local leap_keymap = require('config.keymaps').leap
+    return {
+        {
+            leap_keymap.search,
+            function()
+                leap.leap {
+                    target_windows = { vim.api.nvim_get_current_win() }
+                }
+            end
+        },
+        {
+            leap_keymap.line_search,
+            function()
+                local winid = vim.api.nvim_get_current_win()
+                leap.leap {
+                    target_windows = { winid },
+                    targets = get_line_starts(winid),
+                }
+            end
+        },
+    }
+end
 
-    vim.keymap.set('n', leap_keymap.search,
-        function()
-            leap.leap {
-                target_windows = { vim.api.nvim_get_current_win() }
-            }
-        end, leap_keymap.opts)
-
-    vim.keymap.set('n', leap_keymap.line_search,
-        function()
-            local winid = vim.api.nvim_get_current_win()
-            leap.leap {
-                target_windows = { winid },
-                targets = get_line_starts(winid),
-            }
-        end, leap_keymap.opts)
+M.config = function()
+    require('leap').opts.highlight_unlabeled_phase_one_targets = true
 end
 
 return M
