@@ -124,44 +124,10 @@ M.opts = function()
         end,
     }
 
-    -- INFO: custom dark theme
-    local lualine_colors = {
-        normal = {
-            a = { bg = colors.transparent, fg = colors.orange, gui = 'bold' },
-            b = { bg = colors.transparent, fg = colors.white },
-            c = { bg = colors.transparent, fg = colors.white },
-        },
-        insert = {
-            a = { bg = colors.transparent, fg = colors.green, gui = 'bold' },
-            b = { bg = colors.transparent, fg = colors.white },
-            c = { bg = colors.transparent, fg = colors.white },
-        },
-        visual = {
-            a = { bg = colors.transparent, fg = colors.magenta, gui = 'bold' },
-            b = { bg = colors.transparent, fg = colors.white },
-            c = { bg = colors.transparent, fg = colors.white },
-        },
-        replace = {
-            a = { bg = colors.transparent, fg = colors.yellow, gui = 'bold' },
-            b = { bg = colors.transparent, fg = colors.white },
-            c = { bg = colors.transparent, fg = colors.white },
-        },
-        command = {
-            a = { bg = colors.transparent, fg = colors.red, gui = 'bold' },
-            b = { bg = colors.transparent, fg = colors.white },
-            c = { bg = colors.transparent, fg = colors.white },
-        },
-        inactive = {
-            a = { bg = colors.transparent, fg = colors.black },
-            b = { bg = colors.transparent, fg = colors.black },
-            c = { bg = colors.transparent, fg = colors.black },
-        },
-    }
-
     return {
         options = {
             icons_enabled = true,
-            theme = lualine_colors,
+            theme = colors.lualine,
             section_separators = '',
             component_separators = '',
             always_divide_middle = true,

@@ -43,14 +43,37 @@ M.colorset.todocomments = {
     hack  = '#D19A66',
 }
 
-M.colorset.modes = {
-    n = M.colorset.cyan,
-    i = M.colorset.green,
-    v = M.colorset.magenta,
-    V = M.colorset.magenta,
-    r = M.colorset.yellow,
-    R = M.colorset.yellow,
-    c = M.colorset.red,
+M.colorset.lualine = {
+    normal = {
+        a = { bg = M.colorset.transparent, fg = M.colorset.orange, gui = 'bold' },
+        b = { bg = M.colorset.transparent, fg = M.colorset.white },
+        c = { bg = M.colorset.transparent, fg = M.colorset.white },
+    },
+    insert = {
+        a = { bg = M.colorset.transparent, fg = M.colorset.green, gui = 'bold' },
+        b = { bg = M.colorset.transparent, fg = M.colorset.white },
+        c = { bg = M.colorset.transparent, fg = M.colorset.white },
+    },
+    visual = {
+        a = { bg = M.colorset.transparent, fg = M.colorset.magenta, gui = 'bold' },
+        b = { bg = M.colorset.transparent, fg = M.colorset.white },
+        c = { bg = M.colorset.transparent, fg = M.colorset.white },
+    },
+    replace = {
+        a = { bg = M.colorset.transparent, fg = M.colorset.yellow, gui = 'bold' },
+        b = { bg = M.colorset.transparent, fg = M.colorset.white },
+        c = { bg = M.colorset.transparent, fg = M.colorset.white },
+    },
+    command = {
+        a = { bg = M.colorset.transparent, fg = M.colorset.red, gui = 'bold' },
+        b = { bg = M.colorset.transparent, fg = M.colorset.white },
+        c = { bg = M.colorset.transparent, fg = M.colorset.white },
+    },
+    inactive = {
+        a = { bg = M.colorset.transparent, fg = M.colorset.black },
+        b = { bg = M.colorset.transparent, fg = M.colorset.black },
+        c = { bg = M.colorset.transparent, fg = M.colorset.black },
+    },
 }
 
 M.config = function()
