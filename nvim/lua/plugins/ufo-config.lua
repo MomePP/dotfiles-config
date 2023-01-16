@@ -3,19 +3,11 @@ local ufo_keymap = require('config.keymaps').ufo
 local M = {
     'kevinhwang91/nvim-ufo',
     event = 'BufReadPost',
-    dependencies = { 'kevinhwang91/promise-async' }
-}
 
-M.keys = function()
-    local ufo = require('ufo')
-
-    return {
-        { ufo_keymap.open_all, ufo.openAllFolds },
-        { ufo_keymap.open_except, ufo.openFoldsExceptKinds },
-        { ufo_keymap.close_all, ufo.closeAllFolds },
-        { ufo_keymap.close_with, ufo.closeFoldsWith },
+    dependencies = {
+        'kevinhwang91/promise-async'
     }
-end
+}
 
 M.opts = {
     close_fold_kinds = { 'imports', 'comment' },
@@ -60,5 +52,16 @@ M.opts = {
         return newVirtText
     end,
 }
+
+M.keys = function()
+    local ufo = require('ufo')
+
+    return {
+        { ufo_keymap.open_all, ufo.openAllFolds },
+        { ufo_keymap.open_except, ufo.openFoldsExceptKinds },
+        { ufo_keymap.close_all, ufo.closeAllFolds },
+        { ufo_keymap.close_with, ufo.closeFoldsWith },
+    }
+end
 
 return M

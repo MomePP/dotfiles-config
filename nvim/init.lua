@@ -9,5 +9,5 @@ if not vim.g.vscode then
 else
 
     -- loads keymap for neovim-vscode
-    vim.cmd('source $HOME/.config/nvim/vscode/init.vim')
+    vim.cmd 'source $HOME/.config/nvim/vscode/init.vim'
 end

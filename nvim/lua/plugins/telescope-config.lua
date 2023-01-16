@@ -10,18 +10,6 @@ local M = {
     },
 }
 
-M.keys = {
-    { telescope_keymap.grep_workspace, '<Cmd>Telescope grep_string<CR>' },
-    { telescope_keymap.buffers, '<Cmd>Telescope buffers<CR>' },
-    { telescope_keymap.help, '<Cmd>Telescope help_tags<CR>' },
-    { telescope_keymap.jumplist, '<Cmd>Telescope jumplist<CR>' },
-    { telescope_keymap.search_workspace, '<Cmd>Telescope live_grep<CR>' },
-    { telescope_keymap.oldfiles, '<Cmd>Telescope oldfiles<CR>' },
-    { telescope_keymap.search_buffer, '<Cmd>Telescope current_buffer_fuzzy_find<CR>' },
-    { telescope_keymap.file_browse, '<Cmd>Telescope file_browser<CR>' },
-    { telescope_keymap.find_files, '<Cmd>Telescope find_files<CR>' },
-}
-
 M.opts = function()
     local utils = require('telescope.utils')
     local action_state = require('telescope.actions.state')
@@ -219,5 +207,17 @@ M.config = function(_, opts)
     telescope.load_extension('fzf')
     telescope.load_extension('file_browser')
 end
+
+M.keys = {
+    { telescope_keymap.grep_workspace, '<Cmd>Telescope grep_string<CR>' },
+    { telescope_keymap.buffers, '<Cmd>Telescope buffers<CR>' },
+    { telescope_keymap.help, '<Cmd>Telescope help_tags<CR>' },
+    { telescope_keymap.jumplist, '<Cmd>Telescope jumplist<CR>' },
+    { telescope_keymap.search_workspace, '<Cmd>Telescope live_grep<CR>' },
+    { telescope_keymap.oldfiles, '<Cmd>Telescope oldfiles<CR>' },
+    { telescope_keymap.search_buffer, '<Cmd>Telescope current_buffer_fuzzy_find<CR>' },
+    { telescope_keymap.file_browse, '<Cmd>Telescope file_browser<CR>' },
+    { telescope_keymap.find_files, '<Cmd>Telescope find_files<CR>' },
+}
 
 return M

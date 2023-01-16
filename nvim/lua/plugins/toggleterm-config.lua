@@ -4,10 +4,6 @@ local M = {
 	'akinsho/toggleterm.nvim',
 }
 
-M.keys = {
-	{ toggleterm_keymap.toggle },
-}
-
 M.opts = {
 	size = 20,
 	open_mapping = toggleterm_keymap.toggle,
@@ -41,5 +37,9 @@ M.opts = {
 -- 	-- local python = Terminal:new({ cmd = 'python', hidden = true })
 -- 	-- local spotify = Terminal:new({ cmd = 'spt', hidden = true })
 -- end
+
+M.keys = {
+	{ toggleterm_keymap.toggle },
+}
 
 return M

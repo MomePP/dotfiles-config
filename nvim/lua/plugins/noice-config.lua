@@ -3,33 +3,6 @@ local M = {
     event = 'VeryLazy'
 }
 
-M.keys = function()
-    local noice_docs = require('noice.lsp')
-    local noice_keymaps = require('config.keymaps').noice
-
-    return {
-        { noice_keymaps.history, '<Cmd>Noice<CR>' },
-        {
-            noice_keymaps.docs_scroll_down,
-            function()
-                if not noice_docs.scroll(4) then
-                    return noice_keymaps.docs_scroll_down
-                end
-            end,
-            silent = true, expr = true,
-        },
-        {
-            noice_keymaps.docs_scroll_up,
-            function()
-                if not noice_docs.scroll(-4) then
-                    return noice_keymaps.docs_scroll_up
-                end
-            end,
-            silent = true, expr = true,
-        },
-    }
-end
-
 M.opts = {
     views = {
         hover = {
@@ -82,5 +55,32 @@ M.opts = {
         }
     },
 }
+
+M.keys = function()
+    local noice_docs = require('noice.lsp')
+    local noice_keymaps = require('config.keymaps').noice
+
+    return {
+        { noice_keymaps.history, '<Cmd>Noice<CR>' },
+        {
+            noice_keymaps.docs_scroll_down,
+            function()
+                if not noice_docs.scroll(4) then
+                    return noice_keymaps.docs_scroll_down
+                end
+            end,
+            silent = true, expr = true,
+        },
+        {
+            noice_keymaps.docs_scroll_up,
+            function()
+                if not noice_docs.scroll(-4) then
+                    return noice_keymaps.docs_scroll_up
+                end
+            end,
+            silent = true, expr = true,
+        },
+    }
+end
 
 return M

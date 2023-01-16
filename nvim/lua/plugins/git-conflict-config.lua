@@ -3,6 +3,16 @@ local M = {
     event = 'BufReadPre'
 }
 
+M.opts = {
+    default_mappings = true,
+    default_commands = true,
+    disable_diagnostics = true,
+    highlights = {
+        incoming = 'DiffText',
+        current = 'DiffAdd',
+    }
+}
+
 M.keys = function()
     local git_conflict = require('git-conflict')
     local gitconflict_keymap = require('config.keymaps').gitconflict
@@ -23,15 +33,5 @@ M.keys = function()
         },
     }
 end
-
-M.opts = {
-    default_mappings = true,
-    default_commands = true,
-    disable_diagnostics = true,
-    highlights = {
-        incoming = 'DiffText',
-        current = 'DiffAdd',
-    }
-}
 
 return M

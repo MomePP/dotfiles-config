@@ -7,6 +7,10 @@ local M = {
     },
 }
 
+M.config = function()
+    require('leap').opts.highlight_unlabeled_phase_one_targets = true
+end
+
 M.keys = function()
     local leap = require('leap')
     local leap_keymap = require('config.keymaps').leap
@@ -65,10 +69,6 @@ M.keys = function()
             end
         },
     }
-end
-
-M.config = function()
-    require('leap').opts.highlight_unlabeled_phase_one_targets = true
 end
 
 return M

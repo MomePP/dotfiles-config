@@ -4,18 +4,6 @@ local M = {
     event = 'BufReadPost'
 }
 
-M.keys = function()
-    -- INFO: setup todocomments keymap
-    local todocomments = require('todo-comments')
-    local todocomments_keymap = require('config.keymaps').todocomments
-
-    return {
-        { todocomments_keymap.toggle, '<Cmd>TodoTelescope<CR>' },
-        { todocomments_keymap.next_todo, function() todocomments.jump_next() end },
-        { todocomments_keymap.prev_todo, function() todocomments.jump_prev() end },
-    }
-end
-
 M.opts = {
     signs = false,
     keywords = {
@@ -61,6 +49,18 @@ M.config = function(_, opts)
     for kw, options in pairs(opts.keywords) do
         vim.api.nvim_set_hl(0, 'TodoBg' .. kw, { fg = opts.colors[options.color], bg = 'NONE', bold = true })
     end
+end
+
+M.keys = function()
+    -- INFO: setup todocomments keymap
+    local todocomments = require('todo-comments')
+    local todocomments_keymap = require('config.keymaps').todocomments
+
+    return {
+        { todocomments_keymap.toggle, '<Cmd>TodoTelescope<CR>' },
+        { todocomments_keymap.next_todo, function() todocomments.jump_next() end },
+        { todocomments_keymap.prev_todo, function() todocomments.jump_prev() end },
+    }
 end
 
 return M

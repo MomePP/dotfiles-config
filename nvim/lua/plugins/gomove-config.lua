@@ -1,6 +1,6 @@
 local M = {
     'booperlv/nvim-gomove',
-    event = 'BufReadPost',
+    event = 'BufReadPost'
 }
 
 M.opts = {
