@@ -192,11 +192,11 @@ keymaps.bufremove = {
     delete = 'wQ',
 }
 
-keymaps.gomove = {
+keymaps.move = {
     move_up = '<m-k>',
     move_down = '<m-j>',
-    dup_up = '<m-s-j>',
-    dup_down = '<m-s-k>',
+    move_left = '<m-h>',
+    move_right = '<m-l>',
 }
 
 return keymaps
