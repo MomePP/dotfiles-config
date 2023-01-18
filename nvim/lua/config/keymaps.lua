@@ -30,7 +30,8 @@ keymaps.setup = function()
     vim.keymap.set('n', 'wq', '<C-w>q')
 
     -- INFO: misc. keymap
-    vim.keymap.set({ 'i', 'n' }, '<Esc>', '<Cmd>noh<CR><Esc>')
+    vim.keymap.set({ 'n', 'i' }, '<Esc>', '<Cmd>noh<CR><Esc>')
+    vim.keymap.set({ 'n', 'i' }, '<C-l>', '<Cmd>noh<CR>')
     vim.keymap.set('n', 'dw', 'vb"_d') -- delete a word backward
     vim.keymap.set('n', '<leader>d', '"_d') -- delete without yank
     vim.keymap.set('n', 'x', '"_x')
@@ -176,10 +177,12 @@ keymaps.noice = {
     docs_scroll_down = '<C-d>',
 }
 
--- INFO: Leap keymaps
-keymaps.leap = {
-    search      = 's',
-    line_search = 'S',
+-- INFO: flit keymaps
+keymaps.flit = {
+    forward = 'f',
+    backward = 'F',
+    till = 't',
+    backtill = 'T',
 }
 
 -- INFO: markdown preview keymap

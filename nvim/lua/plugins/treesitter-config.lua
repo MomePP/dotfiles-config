@@ -4,25 +4,29 @@ local M = {
     event = 'BufReadPost',
 
     dependencies = {
-        'nvim-treesitter/nvim-treesitter-textobjects',
-        'JoosepAlviste/nvim-ts-context-commentstring',
         'windwp/nvim-ts-autotag',
         'mrjones2014/nvim-ts-rainbow',
     }
 }
 
 M.opts = {
-    highlight = {
-        enable = true,
-        additional_vim_regex_highlighting = false,
-    },
-    indent = { enable = true },
     ensure_installed = { 'regex', 'lua', 'vim', 'markdown', 'markdown_inline', 'bash', 'fish' },
     auto_install = true,
     sync_install = false,
     ignore_install = {
         'norg',
         'vala'
+    },
+    highlight = {
+        enable = true,
+        additional_vim_regex_highlighting = false,
+    },
+    indent = {
+        enable = true
+    },
+    context_commentstring = {
+        enable = true,
+        enable_autocmd = false,
     },
     rainbow = {
         enable = true,
@@ -33,18 +37,6 @@ M.opts = {
     autotag = {
         enable = true,
     },
-    context_commentstring = {
-        enable = true,
-        enable_autocmd = false,
-    },
-    textobjects = {
-        select = {
-            enable = true
-        },
-        move = {
-            enable = true
-        }
-    }
 }
 
 M.config = function(_, opts)

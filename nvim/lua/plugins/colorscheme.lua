@@ -183,9 +183,9 @@ M.config = function()
             TelescopePreviewTitle = { fg = M.colorset.bg, bg = M.colorset.bright_blue },
         }
 
-        local leap_highlight = {
-            -- greyout search area of `leap.nvim`
-            LeapBackdrop = { fg = '#727169' },
+        local flit_highlight = {
+            -- greyout search area of `flit.nvim` by configures `leap.nvim` highlight
+            LeapBackdrop = { fg = kanagawa_colors.fujiGray },
             LeapLabelPrimary = { fg = 'cyan', bold = true, nocombine = true },
             LeapLabelSecondary = { fg = M.colorset.purple, bold = true, nocombine = true },
             LeapMatch = { fg = 'white', bold = true, nocombine = true },
@@ -225,7 +225,7 @@ M.config = function()
         addHighlightConfig(navic_highlight)
         addHighlightConfig(cmp_highlight)
         addHighlightConfig(telescope_highlight)
-        addHighlightConfig(leap_highlight)
+        addHighlightConfig(flit_highlight)
         addHighlightConfig(marks_highlight)
         addHighlightConfig(illuminate_highlight)
         addHighlightConfig(noice_highlight)
