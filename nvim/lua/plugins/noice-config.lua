@@ -57,7 +57,6 @@ M.opts = {
 }
 
 M.keys = function()
-    local noice_docs = require('noice.lsp')
     local noice_keymaps = require('config.keymaps').noice
 
     return {
@@ -65,7 +64,7 @@ M.keys = function()
         {
             noice_keymaps.docs_scroll_down,
             function()
-                if not noice_docs.scroll(4) then
+                if not require('noice.lsp').scroll(4) then
                     return noice_keymaps.docs_scroll_down
                 end
             end,
@@ -74,7 +73,7 @@ M.keys = function()
         {
             noice_keymaps.docs_scroll_up,
             function()
-                if not noice_docs.scroll(-4) then
+                if not require('noice.lsp').scroll(-4) then
                     return noice_keymaps.docs_scroll_up
                 end
             end,

@@ -53,13 +53,12 @@ end
 
 M.keys = function()
     -- INFO: setup todocomments keymap
-    local todocomments = require('todo-comments')
     local todocomments_keymap = require('config.keymaps').todocomments
 
     return {
         { todocomments_keymap.toggle, '<Cmd>TodoTelescope<CR>' },
-        { todocomments_keymap.next_todo, function() todocomments.jump_next() end },
-        { todocomments_keymap.prev_todo, function() todocomments.jump_prev() end },
+        { todocomments_keymap.next_todo, function() require('todo-comments').jump_next() end },
+        { todocomments_keymap.prev_todo, function() require('todo-comments').jump_prev() end },
     }
 end
 

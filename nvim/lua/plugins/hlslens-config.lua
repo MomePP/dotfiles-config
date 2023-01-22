@@ -34,7 +34,7 @@ M.opts = {
     end
 }
 
-M.keys = function()
+M.config = function(_, opts)
     local hlslens = require('hlslens')
     local hlslens_keymap = require('config.keymaps').hlslens
 
@@ -54,46 +54,15 @@ M.keys = function()
         end
     end
 
-    return {
-        {
-            hlslens_keymap.search_next,
-            function()
-                hlsPeekKeys(hlslens_keymap.search_next)
-            end,
-            mode = { 'n', 'x' }
-        },
-        {
-            hlslens_keymap.search_prev,
-            function()
-                hlsPeekKeys(hlslens_keymap.search_prev)
-            end,
-            mode = { 'n', 'x' }
-        },
-        {
-            hlslens_keymap.word_next,
-            function()
-                hlsSearchKeys(hlslens_keymap.word_next)
-            end
-        },
-        {
-            hlslens_keymap.word_prev,
-            function()
-                hlsSearchKeys(hlslens_keymap.word_prev)
-            end
-        },
-        {
-            hlslens_keymap.go_next,
-            function()
-                hlsSearchKeys(hlslens_keymap.go_next)
-            end
-        },
-        {
-            hlslens_keymap.go_prev,
-            function()
-                hlsSearchKeys(hlslens_keymap.go_prev)
-            end
-        },
-    }
+    hlslens.setup(opts)
+
+    -- INFO: setup keybinding
+    vim.keymap.set({ 'n', 'x' }, hlslens_keymap.search_next, function() hlsPeekKeys(hlslens_keymap.search_next) end)
+    vim.keymap.set({ 'n', 'x' }, hlslens_keymap.search_prev, function() hlsPeekKeys(hlslens_keymap.search_prev) end)
+    vim.keymap.set('n', hlslens_keymap.word_next, function() hlsSearchKeys(hlslens_keymap.word_next) end)
+    vim.keymap.set('n', hlslens_keymap.word_prev, function() hlsSearchKeys(hlslens_keymap.word_prev) end)
+    vim.keymap.set('n', hlslens_keymap.go_next, function() hlsSearchKeys(hlslens_keymap.go_next) end)
+    vim.keymap.set('n', hlslens_keymap.go_prev, function() hlsSearchKeys(hlslens_keymap.go_prev) end)
 end
 
 return M

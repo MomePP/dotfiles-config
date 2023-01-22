@@ -39,7 +39,7 @@ vim.opt.laststatus = 3
 vim.opt.showtabline = 0
 vim.opt.cmdheight = 0
 vim.opt.winminwidth = 5
-vim.opt.sessionoptions = 'buffers,curdir,folds,localoptions'
+vim.opt.sessionoptions = 'buffers,curdir,folds,resize,winsize'
 vim.opt.shortmess = 'fnxoOtTF'
 vim.opt.fillchars:append({
     horiz = '━',

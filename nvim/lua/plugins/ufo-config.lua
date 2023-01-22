@@ -54,13 +54,12 @@ M.opts = {
 }
 
 M.keys = function()
-    local ufo = require('ufo')
 
     return {
-        { ufo_keymap.open_all, ufo.openAllFolds },
-        { ufo_keymap.open_except, ufo.openFoldsExceptKinds },
-        { ufo_keymap.close_all, ufo.closeAllFolds },
-        { ufo_keymap.close_with, ufo.closeFoldsWith },
+        { ufo_keymap.open_all, function() require('ufo').openAllFolds() end },
+        { ufo_keymap.open_except, function() require('ufo').openFoldsExceptKinds() end },
+        { ufo_keymap.close_all, function() require('ufo').closeAllFolds() end },
+        { ufo_keymap.close_with, function() require('ufo').closeFoldsWith() end },
     }
 end
 

@@ -35,20 +35,19 @@ M.opts = {
 }
 
 M.keys = function()
-    local marks = require('marks')
     local marks_keymap = require('config.keymaps').marks
 
     return {
-        { marks_keymap.toggle, marks.toggle },
-        { marks_keymap.next, marks.next },
-        { marks_keymap.prev, marks.prev },
-        { marks_keymap.clear, marks.delete_buf },
+        { marks_keymap.toggle, function() require('marks').toggle() end },
+        { marks_keymap.next, function() require('marks').next() end },
+        { marks_keymap.prev, function() require('marks').prev() end },
+        { marks_keymap.clear, function() require('marks').delete_buf() end },
 
         -- NOTE: preview marks in current buffer
         {
             marks_keymap.preview,
             function()
-                local mark = marks.mark_state:get_nearest_next_mark()
+                local mark = require('marks').mark_state:get_nearest_next_mark()
                 if not mark then
                     vim.notify('No marks to preview -  ', vim.log.levels.WARN)
                     return
@@ -80,7 +79,7 @@ M.keys = function()
         {
             marks_keymap.list,
             function()
-                marks.mark_state:all_to_list('quickfixlist')
+                require('marks').mark_state:all_to_list('quickfixlist')
                 if vim.tbl_isempty(vim.fn.getqflist()) then
                     vim.notify('There is no marks -  ', vim.log.levels.WARN)
                     return

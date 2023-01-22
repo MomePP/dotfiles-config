@@ -14,14 +14,13 @@ M.opts = {
 }
 
 M.keys = function()
-    local git_conflict = require('git-conflict')
     local gitconflict_keymap = require('config.keymaps').gitconflict
 
     return {
         {
             gitconflict_keymap.toggle_qflist,
             function()
-                git_conflict.conflicts_to_qf_items(function(items)
+                require('git-conflict').conflicts_to_qf_items(function(items)
                     if #items > 0 then
                         vim.fn.setqflist(items, 'r')
                         vim.cmd 'Telescope quickfix'
