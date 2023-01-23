@@ -56,7 +56,7 @@ M.opts = function()
             end
         end,
         cond = require('nvim-navic').is_available,
-        color = { fg = colors.orange },
+        color = { link = 'NavicSeparator' },
         padding = { left = 1, right = 0 }
     }
 

@@ -15,7 +15,7 @@ M.opts = {
 		height = function() return math.ceil(vim.o.lines * 0.85) end,
 	},
 	highlights = {
-		FloatBorder = { link = 'FloatBorder' },
+		FloatBorder = { link = 'NormalFloat' },
 		NormalFloat = { link = 'NormalFloat' }
 	}
 }
