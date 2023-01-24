@@ -163,10 +163,10 @@ M.colorset.lualine = {
     },
 }
 
-local rainbow_bracket = {
-    rainbowcol1 = { fg = '#ffd700' },
-    rainbowcol2 = { fg = '#da70d6' },
-    rainbowcol3 = { fg = '#87cefa' },
+M.colorset.bracket = {
+    '#ffd700',
+    '#da70d6',
+    '#2ac3de',
 }
 
 M.config = function()
@@ -222,7 +222,6 @@ M.config = function()
         overrideHighlightConfig(noice_highlight)
         overrideHighlightConfig(indentscope_highlight)
         overrideHighlightConfig(incline_highlight)
-        overrideHighlightConfig(rainbow_bracket)
 
         kanagawa.setup {
             transparent = false,
@@ -270,13 +269,6 @@ M.config = function()
             }),
         }
 
-        -- INFO: ts-rainbow hightlights
-        M.colorset.bracket = {
-            tokyonight_colors.yellow,
-            tokyonight_colors.magenta,
-            tokyonight_colors.blue1,
-        }
-
         -- INFO: todo-comments highlights
         M.colorset.todocomments.error = tokyonight_colors.error
         M.colorset.todocomments.warn = tokyonight_colors.warning
@@ -306,18 +298,12 @@ M.config = function()
         -- INFO: default highlights
         overrided_highlight_group.WinSeparator.fg = M.colorset.bg_storm
 
-        -- INFO: rainbow bracket highlights
-        rainbow_bracket.rainbowcol1.fg = tokyonight_colors.yellow
-        rainbow_bracket.rainbowcol2.fg = tokyonight_colors.magenta
-        rainbow_bracket.rainbowcol3.fg = tokyonight_colors.blue
-
         overrideHighlightConfig(noice_highlight)
         overrideHighlightConfig(incline_highlight)
         overrideHighlightConfig(telescope_highlight)
         overrideHighlightConfig(flit_highlight)
         overrideHighlightConfig(marks_highlight)
         overrideHighlightConfig(overrided_highlight_group)
-        overrideHighlightConfig(rainbow_bracket)
 
         tokyonight.setup {
             style = 'storm',
