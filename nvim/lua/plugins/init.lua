@@ -6,4 +6,7 @@ return {
     -- Utilities
     { 'nmac427/guess-indent.nvim', event = 'BufReadPost', config = true },
     { 'Maan2003/lsp_lines.nvim', dependencies = 'nvim-lspconfig', event = 'BufReadPost', config = true },
+
+    -- Miscellaneous
+    { 'RaafatTurki/hex.nvim', event = 'BufReadPre', config = true },
 }
