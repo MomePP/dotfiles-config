@@ -26,14 +26,24 @@ M.colorset = {
     bg2         = '#504945',
     bg3         = '#665c54',
     transparent = 'NONE',
+    error       = '#c53b53',
+    warn        = '#ffc777',
+    info        = '#0db9d7',
+    hint        = '#4fd6be',
+}
+
+M.colorset.bracket = {
+    '#ffd700',
+    '#da70d6',
+    '#2ac3de',
 }
 
 M.colorset.todocomments = {
-    error = '#D74E42',
-    warn  = '#E9D16C',
-    hint  = '#98C379',
+    error = M.colorset.error,
+    warn  = M.colorset.warn,
+    info  = M.colorset.info,
+    hint  = M.colorset.hint,
     perf  = '#1085FF',
-    info  = '#61AFEF',
     todo  = '#B57EDC',
     hack  = '#D19A66',
 }
@@ -163,12 +173,6 @@ M.colorset.lualine = {
     },
 }
 
-M.colorset.bracket = {
-    '#ffd700',
-    '#da70d6',
-    '#2ac3de',
-}
-
 M.config = function()
 
     -- INFO: kanagawa theme config
@@ -210,6 +214,10 @@ M.config = function()
 
         overrideHighlightConfig({
             NormalFloat = { bg = M.colorset.bg0 },
+            DiagnosticError = { fg = M.colorset.error },
+            DiagnosticWarn = { fg = M.colorset.warn },
+            DiagnosticInfo = { fg = M.colorset.info },
+            DiagnosticHint = { fg = M.colorset.hint },
         })
 
         overrideHighlightConfig(overrided_highlight_group)

@@ -5,7 +5,7 @@ M.defaults = {
         diagnostics = {
             Error = ' ',
             Warn = ' ',
-            Hint = ' ',
+            Hint = '󰄮 ',
             Info = ' ',
         },
         git = {
@@ -53,7 +53,6 @@ M.defaults = {
             source_format = '    '
         },
         lualine = {
-            navic = ' ',
             lsp = '',
             git = '',
             session = '',

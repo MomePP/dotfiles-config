@@ -47,16 +47,14 @@ M.opts = function()
 
     local navic_location = {
         function()
-            local navic = require('nvim-navic')
-            local navic_text = navic.get_location()
+            local navic_text = require('nvim-navic').get_location()
             if #navic_text ~= 0 then
-                return icons.lualine.navic .. navic_text
+                return navic_text
             else
                 return ''
             end
         end,
         cond = require('nvim-navic').is_available,
-        color = { link = 'NavicSeparator' },
         padding = { left = 1, right = 0 }
     }
 
@@ -135,7 +133,7 @@ M.opts = function()
         sections = {
             lualine_a = { mode },
             lualine_b = { session_status },
-            lualine_c = { branch, spacing, filetype, filename, navic_location },
+            lualine_c = { branch, spacing, navic_location },
             lualine_x = { diagnostics },
             lualine_y = { lsp_status },
             lualine_z = { location },
