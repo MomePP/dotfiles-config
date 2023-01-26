@@ -26,10 +26,10 @@ M.colorset = {
     bg2         = '#504945',
     bg3         = '#665c54',
     transparent = 'NONE',
-    error       = '#c53b53',
-    warn        = '#e9d16c',
+    error       = '#e82424',
+    warn        = '#ff9e3b',
     info        = '#0db9d7',
-    hint        = '#4fd6be',
+    hint        = '#4fd699',
 }
 
 M.colorset.bracket = {
