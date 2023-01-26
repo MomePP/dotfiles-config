@@ -12,7 +12,7 @@ M.opts = {
 	float_opts = {
 		border = require('config').defaults.float_border,
 		width = function() return math.ceil(vim.o.columns * 0.9) end,
-		height = function() return math.ceil(vim.o.lines * 0.85) end,
+		height = function() return math.ceil(vim.o.lines * 0.85) - 1 end,
 	},
 	highlights = {
 		FloatBorder = { link = 'NormalFloat' },
