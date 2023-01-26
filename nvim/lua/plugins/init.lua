@@ -8,5 +8,5 @@ return {
     { 'Maan2003/lsp_lines.nvim', dependencies = 'nvim-lspconfig', event = 'BufReadPost', config = true },
 
     -- Miscellaneous
-    { 'RaafatTurki/hex.nvim', event = 'BufReadPre', config = true },
+    { 'RaafatTurki/hex.nvim', cmd = { 'HexToggle', 'HexDump', 'HexAssemble' }, config = true },
 }

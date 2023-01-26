@@ -27,7 +27,7 @@ M.colorset = {
     bg3         = '#665c54',
     transparent = 'NONE',
     error       = '#c53b53',
-    warn        = '#ffc777',
+    warn        = '#e9d16c',
     info        = '#0db9d7',
     hint        = '#4fd6be',
 }

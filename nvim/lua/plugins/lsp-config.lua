@@ -81,9 +81,7 @@ lsp_setup_module.config = function()
             sumneko_lua = require('plugins.lsp-settings.sumneko_lua'),
             volar = require('plugins.lsp-settings.volar'),
             ltex = {},
-            cssls = {},
             rust_analyzer = {},
-            html = {},
             -- clangd = {},
         }
     })

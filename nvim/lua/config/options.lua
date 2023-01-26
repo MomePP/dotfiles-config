@@ -29,17 +29,16 @@ vim.opt.inccommand = 'nosplit'
 vim.opt.wrap = false
 vim.opt.signcolumn = 'yes'
 vim.opt.termguicolors = true
-vim.opt.completeopt:append('menuone,noselect')
+vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
 vim.opt.wildignore = '**/node_module/*, **/.pio/*, **/.git/*'
-vim.opt.formatoptions:append('r')
-vim.opt.undofile = true
+vim.opt.formatoptions = 'jcroqlnt' -- tcqj
 vim.opt.swapfile = false
 vim.opt.showmode = false
 vim.opt.laststatus = 3
 vim.opt.showtabline = 0
 vim.opt.cmdheight = 0
 vim.opt.winminwidth = 5
-vim.opt.sessionoptions = 'buffers,curdir,folds,resize,winsize'
+vim.opt.sessionoptions = { 'buffers', 'curdir', 'winsize' }
 vim.opt.shortmess = 'fnxoOtTF'
 vim.opt.fillchars:append({
     horiz = '━',
@@ -59,3 +58,7 @@ vim.opt.foldenable = true
 -- vim.opt.splitkeep = 'cursor'
 vim.opt.numberwidth = 3
 vim.opt.statuscolumn = "%=%{v:virtnum < 1 ? (v:relnum ? v:relnum : v:lnum < 10 ? v:lnum . '  ' : v:lnum) : ''}%=%s"
+vim.opt.pumblend = 10 -- Popup blend
+vim.opt.pumheight = 10 -- Maximum number of entries in a popup
+vim.opt.undofile = true
+vim.opt.updatetime = 200 -- Save swap file and trigger CursorHold
