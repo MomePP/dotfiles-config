@@ -108,7 +108,7 @@ M.opts = function()
             end
 
             local removed = {}
-            local message = 'Selections to be deleted: ' .. table.concat(buffers, ', ')
+            local message = 'Selections to be removed: ' .. table.concat(buffers, ', ')
             vim.notify(string.format('[buffers.actions.remove] %s', message), vim.log.levels.INFO,
                 { title = 'Telescope builtin' })
 
@@ -117,11 +117,10 @@ M.opts = function()
                 if input and input:lower() == 'y' then
                     -- INFO: lazy loads `mini.bufremove` for handles buffer deletion
                     require('lazy').load({ plugins = { 'mini.bufremove' } })
-                    local bufremove = require('mini.bufremove')
 
                     current_picker:delete_selection(function(selection)
                         local force = vim.api.nvim_buf_get_option(selection.bufnr, 'buftype') == 'terminal'
-                        local ok = pcall(bufremove.delete, selection.bufnr, force)
+                        local ok = pcall(require('mini.bufremove').delete, selection.bufnr, force)
                         if ok then table.insert(removed, utils.transform_path({}, selection.filename)) end
                         return ok
                     end)

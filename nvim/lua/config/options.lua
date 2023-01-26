@@ -62,3 +62,4 @@ vim.opt.pumblend = 10 -- Popup blend
 vim.opt.pumheight = 10 -- Maximum number of entries in a popup
 vim.opt.undofile = true
 vim.opt.updatetime = 200 -- Save swap file and trigger CursorHold
+vim.opt.iskeyword:append { '-' } -- consider string-string as whole word
