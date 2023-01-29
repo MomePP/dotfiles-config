@@ -23,6 +23,7 @@ local lsp_setup_module = {
 
     dependencies = {
         'mason.nvim',
+        'cmp-nvim-lsp',
         'neovim/nvim-lspconfig',
         'williamboman/mason-lspconfig.nvim',
     },
@@ -103,7 +104,10 @@ lsp_setup_module.config = function()
         on_attach = lsp_on_attach,
         settings = {
             ['ccls'] = require('plugins.lsp-settings.ccls')
-        }
+        },
+        root_dir = function()
+            return vim.loop.cwd()
+        end,
     })
 end
 

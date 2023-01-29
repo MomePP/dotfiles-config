@@ -13,7 +13,6 @@ local M = {
 M.opts = function()
     local utils = require('telescope.utils')
     local action_state = require('telescope.actions.state')
-    local entry_display = require('telescope.pickers.entry_display')
 
     local vertical_layout_config = {
         layout_strategy = 'vertical',
@@ -35,7 +34,7 @@ M.opts = function()
     local bottom_layout_config = {
         layout_strategy = 'bottom_pane',
         layout_config = {
-            height = 0.3,
+            height = 0.33,
             preview_width = 0.4,
             prompt_position = 'bottom'
         },
@@ -44,52 +43,6 @@ M.opts = function()
 
     local function mergeConfig(conf1, conf2)
         return vim.tbl_deep_extend('force', conf1, conf2)
-    end
-
-    -- custom entry makers for some components
-    local function entry_lsp_references(opts)
-        opts = opts or {}
-
-        local displayer = entry_display.create {
-            separator = '│ ',
-            items = {
-                { width = 8 },
-                { width = 0.65 },
-                { remaining = true },
-            },
-        }
-
-        local make_display = function(entry)
-            local filename = utils.transform_path(opts, entry.filename)
-
-            local line_info = { table.concat({ entry.lnum, entry.col }, ':'), 'TelescopeResultsLineNr' }
-
-            return displayer {
-                line_info,
-                entry.text:gsub('.* | ', ''),
-                filename,
-            }
-        end
-
-        return function(entry)
-            local filename = entry.filename or vim.api.nvim_buf_get_name(entry.bufnr)
-
-            return {
-                valid = true,
-
-                value = entry,
-                ordinal = (not opts.ignore_filename and filename or '') .. ' ' .. entry.text,
-                display = make_display,
-
-                bufnr = entry.bufnr,
-                filename = filename,
-                lnum = entry.lnum,
-                col = entry.col,
-                text = entry.text,
-                start = entry.start,
-                finish = entry.finish,
-            }
-        end
     end
 
     local function buffers_mapping(prompt_bufnr, map)
@@ -153,9 +106,6 @@ M.opts = function()
             dynamic_preview_title = true,
         },
         pickers = {
-            lsp_references = mergeConfig(bottom_layout_config, {
-                entry_maker = entry_lsp_references
-            }),
             diagnostics = mergeConfig(bottom_layout_config, {
                 line_width = 0.7
             }),
@@ -170,6 +120,13 @@ M.opts = function()
                 layout_config = {
                     preview_width = 0.5,
                 }
+            }),
+            lsp_references = mergeConfig(bottom_layout_config, {
+                layout_config = {
+                    preview_width = 0.5,
+                },
+                include_current_line = true,
+                trim_text = true,
             }),
             buffers = mergeConfig(horizontal_layout_config, {
                 attach_mappings = buffers_mapping
