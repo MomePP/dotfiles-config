@@ -11,6 +11,8 @@ local M = {
 }
 
 M.opts = function()
+    local defaults = require('config').defaults
+
     local utils = require('telescope.utils')
     local action_state = require('telescope.actions.state')
 
@@ -37,8 +39,7 @@ M.opts = function()
             height = 0.33,
             preview_width = 0.4,
             prompt_position = 'bottom'
-        },
-
+        }
     }
 
     local function mergeConfig(conf1, conf2)
@@ -102,8 +103,8 @@ M.opts = function()
             path_display = { 'tail', 'smart' },
             set_env = { ['COLORTERM'] = 'truecolor' },
             file_ignore_patterns = { 'node_module' },
-            borderchars = require('config').defaults.float_border,
             dynamic_preview_title = true,
+            borderchars = defaults.float_border,
         },
         pickers = {
             diagnostics = mergeConfig(bottom_layout_config, {

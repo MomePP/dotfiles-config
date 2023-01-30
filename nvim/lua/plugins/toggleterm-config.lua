@@ -4,21 +4,25 @@ local M = {
 	'akinsho/toggleterm.nvim',
 }
 
-M.opts = {
-	size = 20,
-	open_mapping = toggleterm_keymap.toggle,
-	shade_terminals = false,
-	direction = 'float',
-	float_opts = {
-		border = require('config').defaults.float_border,
-		width = function() return math.ceil(vim.o.columns * 0.9) end,
-		height = function() return math.ceil(vim.o.lines * 0.85) - 1 end,
-	},
-	highlights = {
-		FloatBorder = { link = 'NormalFloat' },
-		NormalFloat = { link = 'NormalFloat' }
+M.opts = function()
+	local defaults = require('config').defaults
+
+	return {
+		size = 20,
+		open_mapping = toggleterm_keymap.toggle,
+		shade_terminals = false,
+		direction = 'float',
+		float_opts = {
+			border = defaults.float_border,
+			width = function() return math.ceil(vim.o.columns * 0.9) end,
+			height = function() return math.ceil(vim.o.lines * 0.85) - 1 end,
+		},
+		highlights = {
+			FloatBorder = { link = 'NormalFloat' },
+			NormalFloat = { link = 'NormalFloat' }
+		}
 	}
-}
+end
 
 -- M.config = function()
 -- 	-- local Terminal = require('toggleterm.terminal').Terminal
