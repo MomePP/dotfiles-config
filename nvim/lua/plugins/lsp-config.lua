@@ -100,7 +100,7 @@ lsp_setup_module.config = function()
     }
 
     -- NOTE: manually injects unsupported lsp by mason.nvim
-    --  inject `esp-clang`, this is specific fork clang for espressif
+    --  inject `esp-clang`, use specific fork clang from espressif
     require('lspconfig').clangd.setup {
         cmd = {
             '/Users/momeppkt/Developments/toolchains/esp-clang/bin/clangd',
