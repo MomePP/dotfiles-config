@@ -99,16 +99,16 @@ lsp_setup_module.config = function()
         { ' ', 'NormalFloat' },
     }
 
-    -- manually injects unsupported lsp by mason.nvim
-    require('lspconfig')['ccls'].setup({
-        on_attach = lsp_on_attach,
-        settings = {
-            ['ccls'] = require('plugins.lsp-settings.ccls')
+    -- NOTE: manually injects unsupported lsp by mason.nvim
+    --  inject `esp-clang`, this is specific fork clang for espressif
+    require('lspconfig').clangd.setup {
+        cmd = {
+            '/Users/momeppkt/Developments/toolchains/esp-clang/bin/clangd',
+            '--background-index',
+            '--query-driver=/Users/momeppkt/.platformio/packages/toolchain-xtensa-esp32/bin/xtensa-esp32-elf-*'
         },
-        root_dir = function()
-            return vim.loop.cwd()
-        end,
-    })
+        on_attach = lsp_on_attach,
+    }
 end
 
 -- ----------------------------------------------------------------------
