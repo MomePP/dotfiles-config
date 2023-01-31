@@ -82,3 +82,4 @@ opt.completeopt   = { 'menuone', 'noinsert', 'noselect' }
 opt.wildmode      = 'list:longest'
 opt.formatoptions = 'jrqln1' -- see :h fo-table
 opt.shortmess     = 'fnxoOtTF'
+opt.jumpoptions   = { 'stack' }
