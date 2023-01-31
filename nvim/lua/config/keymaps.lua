@@ -183,6 +183,7 @@ keymaps.flit = {
     backward = 'F',
     till = 't',
     backtill = 'T',
+    leap = '<leader>F',
 }
 
 -- INFO: markdown preview keymap
