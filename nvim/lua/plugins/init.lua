@@ -1,7 +1,7 @@
 return {
-    'nvim-lua/plenary.nvim',
-    'MunifTanjim/nui.nvim',
-    'kyazdani42/nvim-web-devicons',
+    { 'nvim-lua/plenary.nvim', lazy = false },
+    { 'MunifTanjim/nui.nvim', lazy = false },
+    { 'nvim-tree/nvim-web-devicons', lazy = false },
 
     -- Utilities
     { 'nmac427/guess-indent.nvim', event = 'BufReadPost', config = true },
