@@ -50,7 +50,7 @@
     line-numbers-zero-style = "#928374" italic
     minus-style = "#ebdbb2" "#590f0d"
     minus-emph-style = "#282828" "#FB4934"
-    plus-style = "#ebdbb2" "#57570f"
+    plus-style = "#ebdbb2" "#505010"
     plus-emph-style = "#282828" "#B8BB26"
     zero-style = syntax
     blame-code-style = syntax
