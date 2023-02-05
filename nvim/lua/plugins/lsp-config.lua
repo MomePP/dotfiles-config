@@ -51,6 +51,36 @@ lsp_setup_module.config = function()
     -- ----------------------------------------------------------------------
     --  lsp configs
     --
+    local lspconfig = require('lspconfig')
+
+    -- TODO: config lsp per project by using `nlsp-settings.nvim`
+    -- INFO:  inject `esp-clang`, use specific fork clang from espressif
+    --  also add `query-driver` for specific toolchains not from builtin binary
+    lspconfig.util.on_setup = lspconfig.util.add_hook_before(
+        lspconfig.util.on_setup,
+        function(config)
+            if config.name == 'clangd' then
+                local working_dir = vim.fn.getcwd()
+                if working_dir == "/Users/momeppkt/Developments/gogoboard-6.x/esp32-firmware" then
+                    config.cmd = {
+                        '/Users/momeppkt/Developments/toolchains/esp-clang/bin/clangd',
+                        '--background-index',
+                        '--query-driver=/Users/momeppkt/.platformio/packages/toolchain-xtensa-esp32/bin/xtensa-esp32-elf-*'
+                    }
+                elseif working_dir == "/Users/momeppkt/Developments/gogoboard-6.x/stm32-firmware" then
+                    config.cmd = {
+                        'clangd',
+                        '--background-index',
+                        '--query-driver=/Users/momeppkt/.platformio/packages/toolchain-gccarmnoneeabi/bin/arm-none-eabi-*'
+                    }
+                end
+            end
+        end
+    )
+    -- INFO: config lsp log with formatting
+    vim.lsp.set_log_level 'off' --    Levels by name: "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "OFF"
+    -- require('vim.lsp.log').set_format_func(vim.inspect)
+
     local lsp_setup = require('lsp-setup')
 
     local function lsp_keymaps(bufnr, mapping)
@@ -83,7 +113,7 @@ lsp_setup_module.config = function()
             volar = require('plugins.lsp-settings.volar'),
             ltex = {},
             rust_analyzer = {},
-            -- clangd = {},
+            clangd = {},
         }
     })
 
@@ -100,15 +130,9 @@ lsp_setup_module.config = function()
     }
 
     -- NOTE: manually injects unsupported lsp by mason.nvim
-    --  inject `esp-clang`, use specific fork clang from espressif
-    require('lspconfig').clangd.setup {
-        cmd = {
-            '/Users/momeppkt/Developments/toolchains/esp-clang/bin/clangd',
-            '--background-index',
-            '--query-driver=/Users/momeppkt/.platformio/packages/toolchain-xtensa-esp32/bin/xtensa-esp32-elf-*'
-        },
-        on_attach = lsp_on_attach,
-    }
+    -- require('lspconfig').ccls.setup {
+    --     on_attach = lsp_on_attach,
+    -- }
 end
 
 -- ----------------------------------------------------------------------
