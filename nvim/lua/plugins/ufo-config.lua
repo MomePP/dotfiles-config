@@ -5,6 +5,7 @@ local M = {
     event = 'BufReadPost',
 
     dependencies = {
+        'nvim-treesitter',
         'kevinhwang91/promise-async'
     }
 }
