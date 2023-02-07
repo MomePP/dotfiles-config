@@ -53,30 +53,27 @@ lsp_setup_module.config = function()
     --
     local lspconfig = require('lspconfig')
 
-    -- TODO: config lsp per project by using `nlsp-settings.nvim`
+    local load_local_settings = function(path, server_name)
+        vim.validate { path = { path, 's' } }
+
+        local fname = string.format("%s/%s.json", path, server_name)
+        local ok, result = pcall(vim.fn.readfile, fname)
+        if not ok then return nil end
+
+        result = table.concat(result)
+        result = vim.json.decode(result)
+        return result
+    end
+
     -- INFO:  inject `esp-clang`, use specific fork clang from espressif
     --  also add `query-driver` for specific toolchains not from builtin binary
-    lspconfig.util.on_setup = lspconfig.util.add_hook_before(
-        lspconfig.util.on_setup,
-        function(config)
-            if config.name == 'clangd' then
-                local working_dir = vim.fn.getcwd()
-                if working_dir == "/Users/momeppkt/Developments/gogoboard-6.x/esp32-firmware" then
-                    config.cmd = {
-                        '/Users/momeppkt/Developments/toolchains/esp-clang/bin/clangd',
-                        '--background-index',
-                        '--query-driver=/Users/momeppkt/.platformio/packages/toolchain-xtensa-esp32/bin/xtensa-esp32-elf-*'
-                    }
-                elseif working_dir == "/Users/momeppkt/Developments/gogoboard-6.x/stm32-firmware" then
-                    config.cmd = {
-                        'clangd',
-                        '--background-index',
-                        '--query-driver=/Users/momeppkt/.platformio/packages/toolchain-gccarmnoneeabi/bin/arm-none-eabi-*'
-                    }
-                end
-            end
+    lspconfig.util.on_setup = lspconfig.util.add_hook_before(lspconfig.util.on_setup, function(config)
+        local new_default_config = load_local_settings(vim.fn.getcwd(), config.name)
+        if new_default_config ~= nil then
+            config.cmd = new_default_config.cmd
         end
-    )
+    end)
+
     -- INFO: config lsp log with formatting
     vim.lsp.set_log_level 'off' --    Levels by name: "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "OFF"
     -- require('vim.lsp.log').set_format_func(vim.inspect)
@@ -130,7 +127,7 @@ lsp_setup_module.config = function()
     }
 
     -- NOTE: manually injects unsupported lsp by mason.nvim
-    -- require('lspconfig').ccls.setup {
+    -- lspconfig.ccls.setup {
     --     on_attach = lsp_on_attach,
     -- }
 end
