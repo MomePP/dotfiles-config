@@ -1,7 +1,7 @@
 local M = {
     'folke/todo-comments.nvim',
     cmd = { 'TodoTelescope' },
-    event = 'BufReadPost'
+    event = { 'BufReadPost', 'BufNewFile' }
 }
 
 M.opts = {
@@ -56,7 +56,7 @@ M.keys = function()
     local todocomments_keymap = require('config.keymaps').todocomments
 
     return {
-        { todocomments_keymap.toggle, '<Cmd>TodoTelescope<CR>' },
+        { todocomments_keymap.toggle,    '<Cmd>TodoTelescope<CR>' },
         { todocomments_keymap.next_todo, function() require('todo-comments').jump_next() end },
         { todocomments_keymap.prev_todo, function() require('todo-comments').jump_prev() end },
     }

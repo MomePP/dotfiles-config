@@ -2,8 +2,7 @@ local ufo_keymap = require('config.keymaps').ufo
 
 local M = {
     'kevinhwang91/nvim-ufo',
-    event = 'BufReadPost',
-
+    event = { 'BufReadPost', 'BufNewFile' },
     dependencies = {
         'nvim-treesitter',
         'kevinhwang91/promise-async'
@@ -55,12 +54,11 @@ M.opts = {
 }
 
 M.keys = function()
-
     return {
-        { ufo_keymap.open_all, function() require('ufo').openAllFolds() end },
+        { ufo_keymap.open_all,    function() require('ufo').openAllFolds() end },
         { ufo_keymap.open_except, function() require('ufo').openFoldsExceptKinds() end },
-        { ufo_keymap.close_all, function() require('ufo').closeAllFolds() end },
-        { ufo_keymap.close_with, function() require('ufo').closeFoldsWith() end },
+        { ufo_keymap.close_all,   function() require('ufo').closeAllFolds() end },
+        { ufo_keymap.close_with,  function() require('ufo').closeFoldsWith() end },
     }
 end
 

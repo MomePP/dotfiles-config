@@ -1,8 +1,7 @@
 local M = {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
-    event = 'BufReadPost',
-
+    event = { 'BufReadPost', 'BufNewFile' },
     dependencies = {
         'windwp/nvim-ts-autotag',
         'mrjones2014/nvim-ts-rainbow',

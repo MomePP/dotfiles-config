@@ -19,8 +19,7 @@ mason_module.opts = {
 --
 local lsp_setup_module = {
     'junnplus/lsp-setup.nvim',
-    event = 'BufReadPre',
-
+    event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
         'mason.nvim',
         'cmp-nvim-lsp',
@@ -142,8 +141,7 @@ end
 --
 local null_ls_module = {
     'jose-elias-alvarez/null-ls.nvim',
-    event = 'BufReadPost',
-
+    event = { 'BufReadPost', 'BufNewFile' },
     dependencies = {
         'mason.nvim',
         'jayp0521/mason-null-ls.nvim',

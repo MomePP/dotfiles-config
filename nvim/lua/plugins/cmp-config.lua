@@ -35,9 +35,9 @@ M.opts = function()
     local icons = require('config').defaults.icons
 
     local function has_words_before()
-        if vim.api.nvim_buf_get_option(0, 'buftype') == 'prompt' then return false end
+        unpack = unpack or table.unpack
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-        return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match('^%s*$') == nil
+        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
     end
 
     local cmp_formatting = {
@@ -55,42 +55,37 @@ M.opts = function()
         ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(2), { 'i', 'c' }),
         ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-2), { 'i', 'c' }),
         ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
-        ['<C-y>'] = cmp.config.disable,
-        ['<C-e>'] = cmp.mapping {
-            i = cmp.mapping.abort(),
-            c = cmp.mapping.close()
-        },
-        ['<CR>'] = cmp.mapping.confirm({
-            behavior = cmp.ConfirmBehavior.Replace,
-            select = true
-        }),
-        ['<Tab>'] = cmp.mapping(vim.schedule_wrap(function(fallback)
-            if cmp.visible() and has_words_before() then
-                cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+        ['<C-e>'] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
+        ['<CR>'] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+        ['<Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_next_item()
             elseif luasnip.expand_or_jumpable() then
                 luasnip.expand_or_jump()
+            elseif has_words_before() then
+                cmp.complete()
             else
                 fallback()
             end
-        end), { 'i', 's' }),
-        ['<S-Tab>'] = cmp.mapping(vim.schedule_wrap(function(fallback)
+        end, { 'i', 's' }),
+        ['<S-Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
-                cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+                cmp.select_prev_item()
             elseif luasnip.jumpable(-1) then
                 luasnip.jump(-1)
             else
                 fallback()
             end
-        end), { 'i', 's' })
+        end, { 'i', 's' }),
     }
 
     local cmp_sources = cmp.config.sources({
-        { name = 'nvim_lsp' },
-        { name = 'luasnip' },
-        { name = 'buffer', keyword_length = 3 },
-        { name = 'path', keyword_length = 3 },
-        { name = 'rg', keyword_length = 3 },
-    })
+            { name = 'nvim_lsp' },
+            { name = 'luasnip' },
+            { name = 'buffer',  keyword_length = 3 },
+            { name = 'path',    keyword_length = 3 },
+            { name = 'rg',      keyword_length = 3 },
+        })
 
     return {
         snippet = { expand = function(args) luasnip.lsp_expand(args.body) end, },

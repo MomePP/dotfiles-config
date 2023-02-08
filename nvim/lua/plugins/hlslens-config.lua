@@ -1,6 +1,6 @@
 local M = {
     'kevinhwang91/nvim-hlslens',
-    event = 'BufReadPost'
+    event = { 'BufReadPost', 'BufNewFile' }
 }
 
 M.opts = {

@@ -1,6 +1,6 @@
 local M = {
     'echasnovski/mini.indentscope',
-    event = 'BufReadPre'
+    event = { 'BufReadPre', 'BufNewFile' }
 }
 
 M.init = function()

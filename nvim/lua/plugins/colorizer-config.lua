@@ -1,6 +1,6 @@
 local M = {
     'NvChad/nvim-colorizer.lua',
-    event = 'BufReadPost'
+    event = { 'BufReadPost', 'BufNewFile' }
 }
 
 M.opts = {

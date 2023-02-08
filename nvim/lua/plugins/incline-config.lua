@@ -1,6 +1,6 @@
 local M = {
     'b0o/incline.nvim',
-    event = 'BufReadPre'
+    event = { 'BufReadPre', 'BufNewFile' }
 }
 
 M.opts = {
@@ -17,7 +17,7 @@ M.opts = {
         local render_modified = vim.api.nvim_buf_get_option(props.buf, 'modified') and '  ' or ' '
 
         return {
-            { ' ', group = 'InclineSpacing' },
+            { ' ',             group = 'InclineSpacing' },
             { render_modified, group = 'InclineModified' },
             render_path
         }

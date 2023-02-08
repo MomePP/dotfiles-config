@@ -1,7 +1,7 @@
 local M = {
     -- 'chentoast/marks.nvim',
     'MomePP/marks.nvim',
-    event = 'BufReadPost'
+    event = { 'BufReadPost', 'BufNewFile' }
 }
 
 M.opts = {
@@ -39,9 +39,9 @@ M.keys = function()
 
     return {
         { marks_keymap.toggle, function() require('marks').toggle() end },
-        { marks_keymap.next, function() require('marks').next() end },
-        { marks_keymap.prev, function() require('marks').prev() end },
-        { marks_keymap.clear, function() require('marks').delete_buf() end },
+        { marks_keymap.next,   function() require('marks').next() end },
+        { marks_keymap.prev,   function() require('marks').prev() end },
+        { marks_keymap.clear,  function() require('marks').delete_buf() end },
 
         -- NOTE: preview marks in current buffer
         {
