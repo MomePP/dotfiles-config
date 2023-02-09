@@ -200,11 +200,18 @@ keymaps.bufremove = {
     delete = 'wQ',
 }
 
+-- INFO: mini.move keymap
 keymaps.move = {
     move_up = '<m-k>',
     move_down = '<m-j>',
     move_left = '<m-h>',
     move_right = '<m-l>',
+}
+
+-- INFO: vim-illuminate keymap
+keymaps.illuminate = {
+    next = ']]',
+    prev = '[[',
 }
 
 return keymaps
