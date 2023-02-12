@@ -215,4 +215,10 @@ keymaps.illuminate = {
     prev = '[[',
 }
 
+-- INFO: search-replace keymap
+keymaps.search_replace = {
+    single_open = '<leader>r',
+    multi_open = '<leader>R',
+}
+
 return keymaps
