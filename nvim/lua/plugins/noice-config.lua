@@ -22,6 +22,21 @@ M.opts = {
                 }
             },
         },
+        confirm = {
+            backend = 'popup',
+            position = {
+                row = '100%',
+                col = 0,
+            },
+            size = {
+                height = 'auto',
+                width = '100%',
+            },
+            border = {
+                style = 'none',
+            },
+            format = { ' {confirm}' },
+        }
     },
     messages = {
         view_search = false,

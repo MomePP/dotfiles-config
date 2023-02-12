@@ -121,6 +121,7 @@ keymaps.telescope = {
     help                 = '<leader>;',
     jumplist             = '<leader>j',
     oldfiles             = '<leader>?',
+    quickfix             = '<leader>q',
     file_browse          = '<leader>fb',
     action_buffer_delete = { n = 'd', i = '<m-d>' },
 }
