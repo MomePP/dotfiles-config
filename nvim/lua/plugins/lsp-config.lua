@@ -107,15 +107,7 @@ lsp_setup_module.config = function()
     lsp_setup.setup({
         default_mappings = false,
         on_attach = lsp_on_attach,
-        servers = {
-            pyright = require('plugins.lsp-settings.pyright'),
-            sumneko_lua = require('plugins.lsp-settings.sumneko_lua'),
-            volar = require('plugins.lsp-settings.volar'),
-            ltex = {},
-            rust_analyzer = {},
-            clangd = {},
-            jsonls = {},
-        }
+        servers = require('plugins.lsp-settings.lsp-list')
     })
 
     -- config `lspinfo` window border
