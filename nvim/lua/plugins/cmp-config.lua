@@ -23,9 +23,6 @@ local M = {
                 delete_check_events = 'TextChanged',
             }
         },
-
-        -- NOTE: utilities
-        { 'windwp/nvim-autopairs', config = true },
     },
 }
 
@@ -131,9 +128,6 @@ M.config = function(_, opts)
             { name = 'cmdline' }
         })
     })
-
-    -- INFO: setup utilities plugin
-    cmp.event:on('confirm_done', require('nvim-autopairs.completion.cmp').on_confirm_done())
 end
 
 return M
