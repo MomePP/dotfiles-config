@@ -22,6 +22,14 @@ return {
         opts = { separator = '  ', highlight = true }
     },
     {
+        'roobert/search-replace.nvim',
+        event = { 'BufReadPost', 'BufNewFile' },
+        opts = {
+            default_replace_single_buffer_options = 'gcI',
+            default_replace_multi_buffer_options = 'egcI',
+        },
+    },
+    {
         'hrsh7th/nvim-insx',
         event = 'InsertEnter',
         config = function() require('insx.preset.standard').setup {} end
