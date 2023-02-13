@@ -140,11 +140,15 @@ M.opts = function()
             buffers = mergeConfig(horizontal_layout_config, {
                 attach_mappings = buffers_mapping
             }),
+            quickfix = mergeConfig(vertical_layout_config, {
+                layout_config = {
+                    preview_height = 0.5,
+                }
+            }),
             help_tags = horizontal_layout_config,
             live_grep = vertical_layout_config,
             grep_string = vertical_layout_config,
             current_buffer_fuzzy_find = vertical_layout_config,
-            quickfix = bottom_layout_config,
         },
         extensions = {
             ['fzf'] = {
