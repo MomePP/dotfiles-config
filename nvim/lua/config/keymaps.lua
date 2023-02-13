@@ -69,7 +69,7 @@ keymaps.lsp = {
     ['gD']         = function() vim.lsp.buf.declaration({ on_list = open_telescope_qflist }) end,
     ['gx']         = vim.lsp.buf.code_action,
     ['gs']         = vim.lsp.buf.signature_help,
-    ['K']         = vim.lsp.buf.hover,
+    ['K']          = vim.lsp.buf.hover,
     ['<leader>lr'] = vim.lsp.buf.rename,
     ['<leader>ff'] = function() vim.lsp.buf.format({ async = true }) end,
 }

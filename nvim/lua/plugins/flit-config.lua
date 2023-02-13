@@ -1,6 +1,5 @@
 local M = {
     'ggandor/flit.nvim',
-
     dependencies = {
         'ggandor/leap.nvim',
     },
@@ -32,7 +31,7 @@ M.keys = function()
         { flit_keymap.backward },
         { flit_keymap.till },
         { flit_keymap.backtill },
-        { flit_keymap.leap, leap_all_windows },
+        { flit_keymap.leap,    leap_all_windows },
     }
 end
 

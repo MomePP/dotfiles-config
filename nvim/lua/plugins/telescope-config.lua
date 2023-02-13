@@ -3,7 +3,6 @@ local telescope_keymap = require('config.keymaps').telescope
 local M = {
     'nvim-telescope/telescope.nvim',
     cmd = 'Telescope',
-
     dependencies = {
         'nvim-telescope/telescope-file-browser.nvim',
         { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
@@ -52,8 +51,8 @@ M.opts = function()
             local multi_selections = current_picker:get_multi_selection()
 
             local buffers = vim.tbl_map(function(selection)
-                return utils.transform_path({}, selection.filename)
-            end, multi_selections)
+                    return utils.transform_path({}, selection.filename)
+                end, multi_selections)
 
             if next(buffers) == nil then
                 local selection = action_state.get_selected_entry()
@@ -178,16 +177,16 @@ M.config = function(_, opts)
 end
 
 M.keys = {
-    { telescope_keymap.grep_workspace, '<Cmd>Telescope grep_string<CR>' },
-    { telescope_keymap.buffers, '<Cmd>Telescope buffers<CR>' },
-    { telescope_keymap.help, '<Cmd>Telescope help_tags<CR>' },
-    { telescope_keymap.jumplist, '<Cmd>Telescope jumplist<CR>' },
+    { telescope_keymap.grep_workspace,   '<Cmd>Telescope grep_string<CR>' },
+    { telescope_keymap.buffers,          '<Cmd>Telescope buffers<CR>' },
+    { telescope_keymap.help,             '<Cmd>Telescope help_tags<CR>' },
+    { telescope_keymap.jumplist,         '<Cmd>Telescope jumplist<CR>' },
     { telescope_keymap.search_workspace, '<Cmd>Telescope live_grep<CR>' },
-    { telescope_keymap.oldfiles, '<Cmd>Telescope oldfiles<CR>' },
-    { telescope_keymap.search_buffer, '<Cmd>Telescope current_buffer_fuzzy_find<CR>' },
-    { telescope_keymap.quickfix, '<Cmd>Telescope quickfix<CR>' },
-    { telescope_keymap.file_browse, '<Cmd>Telescope file_browser<CR>' },
-    { telescope_keymap.find_files, '<Cmd>Telescope find_files<CR>' },
+    { telescope_keymap.oldfiles,         '<Cmd>Telescope oldfiles<CR>' },
+    { telescope_keymap.search_buffer,    '<Cmd>Telescope current_buffer_fuzzy_find<CR>' },
+    { telescope_keymap.quickfix,         '<Cmd>Telescope quickfix<CR>' },
+    { telescope_keymap.file_browse,      '<Cmd>Telescope file_browser<CR>' },
+    { telescope_keymap.find_files,       '<Cmd>Telescope find_files<CR>' },
 }
 
 return M

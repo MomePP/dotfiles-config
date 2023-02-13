@@ -15,8 +15,8 @@ M.keys = function()
     local session_manager_keymaps = require('config.keymaps').session_manager
 
     return {
-        { session_manager_keymaps.load, function() require('session_manager').load_session() end },
-        { session_manager_keymaps.save, function() require('session_manager').save_current_session() end },
+        { session_manager_keymaps.load,   function() require('session_manager').load_session() end },
+        { session_manager_keymaps.save,   function() require('session_manager').save_current_session() end },
         { session_manager_keymaps.delete, function() require('session_manager').delete_session() end },
     }
 end

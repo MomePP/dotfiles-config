@@ -58,21 +58,21 @@ M.opts = function()
         padding = { left = 1, right = 0 }
     }
 
-    local filetype = {
-        'filetype',
-        icon_only = true,
-        separator = '',
-        padding = { right = 0, left = 1 }
-    }
+    -- local filetype = {
+    --     'filetype',
+    --     icon_only = true,
+    --     separator = '',
+    --     padding = { right = 0, left = 1 }
+    -- }
 
-    local filename = {
-        'filename',
-        file_status = false, -- displays file status (readonly status, modified status)
-        path = 0, -- 0 = just filename, 1 = relative path, 2 = absolute path
-        color = { gui = 'bold' },
-        padding = { right = 0, left = 1 },
-        cond = conditions.buffer_not_empty
-    }
+    -- local filename = {
+    --     'filename',
+    --     file_status = false, -- displays file status (readonly status, modified status)
+    --     path = 0, -- 0 = just filename, 1 = relative path, 2 = absolute path
+    --     color = { gui = 'bold' },
+    --     padding = { right = 0, left = 1 },
+    --     cond = conditions.buffer_not_empty
+    -- }
 
     local branch = {
         'branch',

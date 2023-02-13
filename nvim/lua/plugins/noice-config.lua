@@ -88,7 +88,7 @@ M.keys = function()
         {
             noice_keymaps.docs_scroll_up,
             function()
-                if not require('noice.lsp').scroll(-4) then
+                if not require('noice.lsp').scroll( -4) then
                     return noice_keymaps.docs_scroll_up
                 end
             end,

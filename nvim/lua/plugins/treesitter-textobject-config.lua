@@ -1,6 +1,5 @@
 local M = {
     'echasnovski/mini.ai',
-
     dependencies = {
         {
             'nvim-treesitter/nvim-treesitter-textobjects',
