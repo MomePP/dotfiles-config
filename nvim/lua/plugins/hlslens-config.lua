@@ -39,12 +39,8 @@ M.config = function(_, opts)
     local hlslens_keymap = require('config.keymaps').hlslens
 
     local function hlsPeekKeys(char)
-        local ok, winid = hlslens.nNPeekWithUFO(char)
-        if ok and winid then
-            vim.keymap.set('n', '<CR>', function()
-                local keyCodes = vim.api.nvim_replace_termcodes('<Tab><CR>', true, false, true)
-                vim.api.nvim_feedkeys(keyCodes, 'im', false)
-            end, { buffer = true })
+        if pcall(vim.cmd, 'norm!' .. vim.v.count1 .. char) then
+            hlslens.start()
         end
     end
 
