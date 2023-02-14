@@ -337,7 +337,7 @@ M.config = function()
                 c = { fg = catppuccin_colors.text },
             }),
             visual = vim.tbl_deep_extend('force', lualine_defaults, {
-                a = { fg = catppuccin_colors.lavender },
+                a = { fg = catppuccin_colors.pink },
                 b = { fg = catppuccin_colors.text },
                 c = { fg = catppuccin_colors.text },
             }),
@@ -359,6 +359,7 @@ M.config = function()
             TelescopeResultsBorder = { bg = catppuccin_colors.mantle },
             TelescopePreviewBorder = { bg = catppuccin_colors.mantle },
             TelescopePromptBorder = { bg = catppuccin_colors.mantle },
+            TelescopeSelection = { bg = catppuccin_colors.mantle }
         }
 
         -- INFO: incline highlights
@@ -367,6 +368,13 @@ M.config = function()
             InclineNormalNC = { fg = catppuccin_colors.surface2, bg = catppuccin_colors.none, },
             InclineSpacing = { fg = catppuccin_colors.none, bg = catppuccin_colors.blue, },
             InclineModified = { fg = catppuccin_colors.red, bg = catppuccin_colors.none, }
+        }
+
+        noice_highlight = {
+            NoiceCmdlineIconCmdline = { bg = catppuccin_colors.none, fg = catppuccin_colors.sky, bold = true },
+            NoiceCmdlineIconSearch = { bg = catppuccin_colors.none, fg = catppuccin_colors.orange, bold = true },
+            NoiceCmdlineIconFilter = { bg = catppuccin_colors.none, fg = catppuccin_colors.peach, bold = true },
+            NoiceSplit = { bg = catppuccin_colors.base },
         }
 
         overrideHighlightConfig({
@@ -379,6 +387,7 @@ M.config = function()
         })
         overrideHighlightConfig(telescope_highlight)
         overrideHighlightConfig(incline_highlight)
+        overrideHighlightConfig(noice_highlight)
 
         catppuccin.setup {
             flavour = 'latte', -- latte, frappe, macchiato, mocha

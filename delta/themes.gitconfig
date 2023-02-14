@@ -85,10 +85,10 @@
     line-numbers-minus-style = red
     line-numbers-plus-style = green
     line-numbers-zero-style = black
-    minus-style = red
-    minus-emph-style = red bold
-    plus-style = green
-    plus-emph-style = green bold
+    minus-style = "#eff1f5" "#a70c2e"
+    minus-emph-style = "#eff1f5" "#d20f39"
+    plus-style = "#eff1f5" "#327d21"
+    plus-emph-style = "#eff1f5" "#40a02b"
     zero-style = syntax
     blame-code-style = syntax
     blame-format = "{author:<18} ({commit:>9}) {timestamp:^16}"
