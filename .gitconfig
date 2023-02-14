@@ -28,6 +28,6 @@
 	cmd = nvim -d $MERGED
 [delta]
     navigate = true
-	features = chameleon
+	features = chameleon-light
 [include]
 	path = /Users/momeppkt/.config/delta/themes.gitconfig

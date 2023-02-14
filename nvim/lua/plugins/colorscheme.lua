@@ -1,9 +1,9 @@
 local M = {
-    'rebelot/kanagawa.nvim',
+    -- 'rebelot/kanagawa.nvim',
     -- 'folke/tokyonight.nvim',
+    'catppuccin/nvim', name = 'catppuccin',
     lazy = false,
 }
-vim.opt.background = 'dark'
 
 M.colorset = {
     white       = '#d4be98',
@@ -228,6 +228,7 @@ M.config = function()
             },
             overrides = highlight_overrides,
         }
+        vim.opt.background = 'dark'
         vim.cmd.colorscheme 'kanagawa'
     end
 
@@ -315,7 +316,102 @@ M.config = function()
                 end
             end,
         }
+        vim.opt.background = 'dark'
         vim.cmd.colorscheme 'tokyonight'
+    end
+
+    local catppuccin_status, catppuccin = pcall(require, 'catppuccin')
+    if catppuccin_status then
+        local catppuccin_colors = require('catppuccin.palettes').get_palette 'latte'
+
+        -- INFO: lualine highlights
+        M.colorset.lualine = {
+            normal = vim.tbl_deep_extend('force', lualine_defaults, {
+                a = { fg = catppuccin_colors.blue },
+                b = { fg = catppuccin_colors.text },
+                c = { fg = catppuccin_colors.text },
+            }),
+            insert = vim.tbl_deep_extend('force', lualine_defaults, {
+                a = { fg = catppuccin_colors.green },
+                b = { fg = catppuccin_colors.text },
+                c = { fg = catppuccin_colors.text },
+            }),
+            visual = vim.tbl_deep_extend('force', lualine_defaults, {
+                a = { fg = catppuccin_colors.lavender },
+                b = { fg = catppuccin_colors.text },
+                c = { fg = catppuccin_colors.text },
+            }),
+            replace = vim.tbl_deep_extend('force', lualine_defaults, {
+                a = { fg = catppuccin_colors.yellow },
+                b = { fg = catppuccin_colors.text },
+                c = { fg = catppuccin_colors.text },
+            }),
+            command = vim.tbl_deep_extend('force', lualine_defaults, {
+                a = { fg = catppuccin_colors.sky },
+                b = { fg = catppuccin_colors.text },
+                c = { fg = catppuccin_colors.text },
+            }),
+        }
+
+        -- INFO: telescope highlights
+        telescope_highlight = {
+            TelescopeNormal = { bg = catppuccin_colors.mantle },
+            TelescopeResultsBorder = { bg = catppuccin_colors.mantle },
+            TelescopePreviewBorder = { bg = catppuccin_colors.mantle },
+            TelescopePromptBorder = { bg = catppuccin_colors.mantle },
+        }
+
+        -- INFO: incline highlights
+        incline_highlight = {
+            InclineNormal = { fg = catppuccin_colors.text, bg = catppuccin_colors.base, bold = true },
+            InclineNormalNC = { fg = catppuccin_colors.surface2, bg = catppuccin_colors.none, },
+            InclineSpacing = { fg = catppuccin_colors.none, bg = catppuccin_colors.blue, },
+            InclineModified = { fg = catppuccin_colors.red, bg = catppuccin_colors.none, }
+        }
+
+        overrideHighlightConfig({
+            PmenuSel = { fg = catppuccin_colors.none, bg = catppuccin_colors.mantle },
+            Pmenu = { fg = catppuccin_colors.text, bg = catppuccin_colors.base },
+            NormalFloat = { bg = catppuccin_colors.mantle },
+            FloatBorder = { link = 'NormalFloat' },
+            LeapBackdrop = { link = 'LspCodeLens' },
+            LocalHighlightText = { bg = catppuccin_colors.mantle, bold = true, nocombine = true },
+        })
+        overrideHighlightConfig(telescope_highlight)
+        overrideHighlightConfig(incline_highlight)
+
+        catppuccin.setup {
+            flavour = 'latte', -- latte, frappe, macchiato, mocha
+            transparent_background = false,
+            term_colors = true,
+            integrations = {
+                leap = true,
+                noice = true,
+                treesitter_context = true,
+                treesitter = true,
+                ts_rainbow = true,
+                mason = true,
+                markdown = true,
+                navic = {
+                    enabled = true,
+                    custom_bg = 'NONE',
+                },
+                native_lsp = {
+                    enabled = true,
+                    virtual_text = {
+                        errors = { 'italic' },
+                        hints = { 'italic' },
+                        warnings = { 'italic' },
+                        information = { 'italic' },
+                    },
+                },
+            },
+            highlight_overrides = {
+                all = highlight_overrides
+            }
+        }
+        vim.opt.background = 'light'
+        vim.cmd.colorscheme 'catppuccin'
     end
 end
 

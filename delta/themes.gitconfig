@@ -26,13 +26,50 @@
 # 4. Feel free to include a comment line indicating who is the author of the
 #    theme. E.g. a link to your github user page.
 
-[delta "chameleon"]
+# [delta "chameleon"]
+#     #author: https://github.com/AirOnSkin
+#     dark = true
+#     line-numbers = true
+#     side-by-side = false
+#     keep-plus-minus-markers = false
+#     syntax-theme = gruvbox-dark
+#     file-style = bold
+#     file-decoration-style = ul
+#     file-added-label = [+]
+#     file-copied-label = [==]
+#     file-modified-label = [*]
+#     file-removed-label = [-]
+#     file-renamed-label = [->]
+#     hunk-header-style = omit
+#     line-numbers-left-format = " {nm:>3} │"
+#     line-numbers-left-style = black
+#     line-numbers-right-format = " {np:>3} │"
+#     line-numbers-right-style = black
+#     line-numbers-minus-style = "#FB4934"
+#     line-numbers-plus-style = "#B8BB26"
+#     line-numbers-zero-style = "#928374" italic
+#     minus-style = "#ebdbb2" "#590f0d"
+#     minus-emph-style = "#282828" "#FB4934"
+#     plus-style = "#ebdbb2" "#505010"
+#     plus-emph-style = "#282828" "#B8BB26"
+#     zero-style = syntax
+#     blame-code-style = syntax
+#     blame-format = "{author:<18} ({commit:>9}) {timestamp:^16}"
+#     blame-palette = "#504945" "#665C54" "#7C6F64" "#928374"
+#     merge-conflict-begin-symbol = ~
+#     merge-conflict-end-symbol = ~
+#     merge-conflict-ours-diff-header-style = "#FABD2F" bold
+#     merge-conflict-ours-diff-header-decoration-style = "#928374" box
+#     merge-conflict-theirs-diff-header-style = "#FABD2F" bold
+#     merge-conflict-theirs-diff-header-decoration-style = "#928374" box
+
+[delta "chameleon-light"]
     #author: https://github.com/AirOnSkin
-    dark = true
+    light = true
     line-numbers = true
     side-by-side = false
     keep-plus-minus-markers = false
-    syntax-theme = gruvbox-dark
+    syntax-theme = OneHalfLight
     file-style = bold
     file-decoration-style = ul
     file-added-label = [+]
@@ -45,20 +82,20 @@
     line-numbers-left-style = black
     line-numbers-right-format = " {np:>3} │"
     line-numbers-right-style = black
-    line-numbers-minus-style = "#FB4934"
-    line-numbers-plus-style = "#B8BB26"
-    line-numbers-zero-style = "#928374" italic
-    minus-style = "#ebdbb2" "#590f0d"
-    minus-emph-style = "#282828" "#FB4934"
-    plus-style = "#ebdbb2" "#505010"
-    plus-emph-style = "#282828" "#B8BB26"
+    line-numbers-minus-style = red
+    line-numbers-plus-style = green
+    line-numbers-zero-style = black
+    minus-style = red
+    minus-emph-style = red bold
+    plus-style = green
+    plus-emph-style = green bold
     zero-style = syntax
     blame-code-style = syntax
     blame-format = "{author:<18} ({commit:>9}) {timestamp:^16}"
-    blame-palette = "#504945" "#665C54" "#7C6F64" "#928374"
+    blame-palette = black blue yellow magenta
     merge-conflict-begin-symbol = ~
     merge-conflict-end-symbol = ~
-    merge-conflict-ours-diff-header-style = "#FABD2F" bold
-    merge-conflict-ours-diff-header-decoration-style = "#928374" box
-    merge-conflict-theirs-diff-header-style = "#FABD2F" bold
-    merge-conflict-theirs-diff-header-decoration-style = "#928374" box
+    merge-conflict-ours-diff-header-style = yellow bold
+    merge-conflict-ours-diff-header-decoration-style = black box
+    merge-conflict-theirs-diff-header-style = yellow bold
+    merge-conflict-theirs-diff-header-decoration-style = black box
