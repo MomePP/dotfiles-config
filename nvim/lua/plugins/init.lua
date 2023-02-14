@@ -27,9 +27,9 @@ return {
         opts = { separator = '  ', highlight = true }
     },
     {
-        'hrsh7th/nvim-insx',
-        event = 'InsertEnter',
-        config = function() require('insx.preset.standard').setup {} end
+        'altermo/ultimate-autopair.nvim',
+        event = { 'InsertEnter', 'CmdlineEnter' },
+        config = true
     },
 
     -- Miscellaneous
