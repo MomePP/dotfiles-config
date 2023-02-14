@@ -322,7 +322,7 @@ M.config = function()
 
     local catppuccin_status, catppuccin = pcall(require, 'catppuccin')
     if catppuccin_status then
-        local catppuccin_colors = require('catppuccin.palettes').get_palette 'latte'
+        local catppuccin_colors = require('catppuccin.palettes').get_palette 'mocha'
 
         -- INFO: lualine highlights
         M.colorset.lualine = {
@@ -390,7 +390,7 @@ M.config = function()
         overrideHighlightConfig(noice_highlight)
 
         catppuccin.setup {
-            flavour = 'latte', -- latte, frappe, macchiato, mocha
+            flavour = 'mocha', -- latte, frappe, macchiato, mocha
             transparent_background = false,
             term_colors = true,
             integrations = {
@@ -419,7 +419,7 @@ M.config = function()
                 all = highlight_overrides
             }
         }
-        vim.opt.background = 'light'
+        vim.opt.background = 'dark'
         vim.cmd.colorscheme 'catppuccin'
     end
 end

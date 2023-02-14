@@ -63,13 +63,14 @@
 #     merge-conflict-theirs-diff-header-style = "#FABD2F" bold
 #     merge-conflict-theirs-diff-header-decoration-style = "#928374" box
 
-[delta "chameleon-light"]
+[delta "catppuccin"]
     #author: https://github.com/AirOnSkin
-    light = true
+    dark = true
+    # light = true
     line-numbers = true
     side-by-side = false
     keep-plus-minus-markers = false
-    syntax-theme = OneHalfLight
+    syntax-theme = OneHalfDark
     file-style = bold
     file-decoration-style = ul
     file-added-label = [+]
