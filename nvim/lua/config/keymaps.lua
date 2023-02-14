@@ -194,12 +194,6 @@ keymaps.move = {
     move_right = '<m-l>',
 }
 
--- INFO: vim-illuminate keymap
-keymaps.illuminate = {
-    next = ']]',
-    prev = '[[',
-}
-
 -- INFO: search-replace keymap
 keymaps.search_replace = {
     single_open = '<leader>r',

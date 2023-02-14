@@ -120,10 +120,8 @@ local marks_highlight = {
     -- MarkVirtTextHL = { fg = M.colorset.bright_blue, bg = M.colorset.transparent, nocombine = true },
 }
 
-local illuminate_highlight = {
-    IlluminatedWordText = { bg = M.colorset.bg1, bold = true, nocombine = true },
-    IlluminatedWordRead = { link = 'IlluminatedWordText' },
-    IlluminatedWordWrite = { link = 'IlluminatedWordText' },
+local local_highlight = {
+    LocalHighlightText = { bg = M.colorset.bg1, bold = true, nocombine = true },
 }
 
 local noice_highlight = {
@@ -215,7 +213,7 @@ M.config = function()
         overrideHighlightConfig(telescope_highlight)
         overrideHighlightConfig(flit_highlight)
         overrideHighlightConfig(marks_highlight)
-        overrideHighlightConfig(illuminate_highlight)
+        overrideHighlightConfig(local_highlight)
         overrideHighlightConfig(noice_highlight)
         overrideHighlightConfig(indentscope_highlight)
         overrideHighlightConfig(incline_highlight)

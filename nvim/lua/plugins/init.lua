@@ -5,6 +5,11 @@ return {
 
     -- Utilities
     {
+        'tzachar/local-highlight.nvim',
+        event = { 'BufReadPre', 'BufNewFile' },
+        opts = { hlgroup = 'LocalHighlightText', cw_hlgroup = 'LocalHighlightText' },
+    },
+    {
         'nmac427/guess-indent.nvim',
         event = { 'BufReadPost', 'BufNewFile' },
         config = true
