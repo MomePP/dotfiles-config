@@ -370,6 +370,7 @@ M.config = function()
             InclineModified = { fg = catppuccin_colors.red, bg = catppuccin_colors.none, }
         }
 
+        -- INFO: noice highlights
         noice_highlight = {
             NoiceCmdlineIconCmdline = { bg = catppuccin_colors.none, fg = catppuccin_colors.sky, bold = true },
             NoiceCmdlineIconSearch = { bg = catppuccin_colors.none, fg = catppuccin_colors.orange, bold = true },
@@ -398,7 +399,7 @@ M.config = function()
                 noice = true,
                 treesitter_context = true,
                 treesitter = true,
-                ts_rainbow = true,
+                ts_rainbow2 = true,
                 mason = true,
                 markdown = true,
                 navic = {

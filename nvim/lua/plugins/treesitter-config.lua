@@ -3,8 +3,9 @@ local M = {
     build = ':TSUpdate',
     event = { 'BufReadPost', 'BufNewFile' },
     dependencies = {
+        'nvim-ts-context-commentstring',
         'windwp/nvim-ts-autotag',
-        'mrjones2014/nvim-ts-rainbow',
+        'HiPhish/nvim-ts-rainbow2',
     }
 }
 
@@ -39,13 +40,12 @@ M.opts = {
     },
     rainbow = {
         enable = true,
-        extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
-        max_file_lines = nil, -- Do not enable for files with more than n lines, int
-        colors = require('plugins.colorscheme').colorset.bracket
+        -- max_file_lines = nil, -- Do not enable for files with more than n lines
+        -- colors = require('plugins.colorscheme').colorset.bracket
     },
     autotag = {
-        enable = true,
-    },
+        enable = true
+    }
 }
 
 M.config = function(_, opts)
