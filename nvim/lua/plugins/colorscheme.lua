@@ -359,7 +359,11 @@ M.config = function()
             TelescopeResultsBorder = { bg = catppuccin_colors.mantle },
             TelescopePreviewBorder = { bg = catppuccin_colors.mantle },
             TelescopePromptBorder = { bg = catppuccin_colors.mantle },
-            TelescopeSelection = { bg = catppuccin_colors.mantle }
+            TelescopeSelection = { bg = catppuccin_colors.mantle },
+            TelescopeResultsDiffAdd = { bg = catppuccin_colors.mantle },
+            TelescopeResultsDiffChange = { bg = catppuccin_colors.mantle  },
+            TelescopeResultsDiffDelete = { bg = catppuccin_colors.mantle  },
+            TelescopeResultsDiffUntracked = { bg = catppuccin_colors.mantle  }
         }
 
         -- INFO: incline highlights
@@ -383,19 +387,20 @@ M.config = function()
             Pmenu = { fg = catppuccin_colors.text, bg = catppuccin_colors.base },
             NormalFloat = { bg = catppuccin_colors.mantle },
             FloatBorder = { link = 'NormalFloat' },
-            LeapBackdrop = { link = 'LspCodeLens' },
-            LocalHighlightText = { bg = catppuccin_colors.mantle, bold = true, nocombine = true },
+            LocalHighlightText = { bg = catppuccin_colors.surface0, bold = true, nocombine = true },
         })
         overrideHighlightConfig(telescope_highlight)
         overrideHighlightConfig(incline_highlight)
         overrideHighlightConfig(noice_highlight)
+        overrideHighlightConfig(flit_highlight)
 
         catppuccin.setup {
             flavour = 'mocha', -- latte, frappe, macchiato, mocha
             transparent_background = false,
             term_colors = true,
             integrations = {
-                leap = true,
+                cmp = true,
+                gitsigns = true,
                 noice = true,
                 treesitter_context = true,
                 treesitter = true,
