@@ -28,6 +28,6 @@
 	cmd = nvim -d $MERGED
 [delta]
     navigate = true
-	features = catppuccin
+	features = tokyonight
 [include]
 	path = /Users/momeppkt/.config/delta/themes.gitconfig

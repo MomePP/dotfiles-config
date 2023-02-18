@@ -1,7 +1,7 @@
 local M = {
     -- 'rebelot/kanagawa.nvim',
-    -- 'folke/tokyonight.nvim',
-    'catppuccin/nvim', name = 'catppuccin',
+    'folke/tokyonight.nvim',
+    -- 'catppuccin/nvim', name = 'catppuccin',
     lazy = false,
 }
 
@@ -239,7 +239,7 @@ M.config = function()
         -- INFO: lualine highlights
         M.colorset.lualine = {
             normal = vim.tbl_deep_extend('force', lualine_defaults, {
-                a = { fg = tokyonight_colors.blue2 },
+                a = { fg = tokyonight_colors.cyan },
                 b = { fg = tokyonight_colors.fg },
                 c = { fg = tokyonight_colors.fg },
             }),
@@ -259,7 +259,7 @@ M.config = function()
                 c = { fg = tokyonight_colors.fg },
             }),
             command = vim.tbl_deep_extend('force', lualine_defaults, {
-                a = { fg = tokyonight_colors.red1 },
+                a = { fg = tokyonight_colors.blue2 },
                 b = { fg = tokyonight_colors.fg },
                 c = { fg = tokyonight_colors.fg },
             }),
@@ -271,45 +271,74 @@ M.config = function()
         M.colorset.todocomments.info = tokyonight_colors.info
         M.colorset.todocomments.hint = tokyonight_colors.hint
 
-        -- INFO: noice highlights
-        noice_highlight.NoiceSplit = { bg = M.colorset.bg_storm }
-        noice_highlight.NoiceCmdlineIconCmdline.fg = tokyonight_colors.red1
-        noice_highlight.NoiceCmdlineIconFilter.fg = tokyonight_colors.teal
-        noice_highlight.NoiceCmdlineIconSearch.fg = tokyonight_colors.yellow
-
         -- INFO: incline highlights
-        incline_highlight.InclineNormal.fg = tokyonight_colors.fg
-        incline_highlight.InclineNormalNC.fg = tokyonight_colors.fg_gutter
-        incline_highlight.InclineModified.fg = tokyonight_colors.red1
-        incline_highlight.InclineSpacing.bg = tokyonight_colors.blue2
+        incline_highlight = {
+            InclineNormal = { fg = tokyonight_colors.fg, bg = tokyonight_colors.bg_dark, bold = true },
+            InclineNormalNC = { fg = tokyonight_colors.comment, bg = tokyonight_colors.none, },
+            InclineSpacing = { fg = tokyonight_colors.none, bg = tokyonight_colors.blue2, },
+            InclineModified = { fg = tokyonight_colors.red, bg = tokyonight_colors.none, }
+        }
+
+        -- INFO: noice highlights
+        noice_highlight = {
+            NoiceCmdlineIconCmdline = { bg = tokyonight_colors.none, fg = tokyonight_colors.blue2, bold = true },
+            NoiceCmdlineIconSearch = { bg = tokyonight_colors.none, fg = tokyonight_colors.orange, bold = true },
+            NoiceCmdlineIconFilter = { bg = tokyonight_colors.none, fg = tokyonight_colors.teal, bold = true },
+            NoiceSplit = { bg = tokyonight_colors.bg },
+        }
 
         -- INFO: telescope highlights
         telescope_highlight = {
-            TelescopeNormal = { fg = tokyonight_colors.fg_dark, bg = M.colorset.bg_storm },
+            TelescopeNormal = { fg = tokyonight_colors.fg_dark, bg = tokyonight_colors.bg },
             TelescopePromptTitle = { fg = M.colorset.bg, bg = tokyonight_colors.blue2 },
             TelescopeResultsTitle = { fg = M.colorset.bg, bg = tokyonight_colors.blue2 },
             TelescopePreviewTitle = { fg = M.colorset.bg, bg = tokyonight_colors.blue2 },
+            TelescopeSelection = { bg = tokyonight_colors.bg, bold = true },
+            TelescopeResultsBorder = { bg = tokyonight_colors.bg },
+            TelescopePreviewBorder = { bg = tokyonight_colors.bg },
+            TelescopePromptBorder = { bg = tokyonight_colors.bg },
+            TelescopeResultsDiffAdd = { bg = tokyonight_colors.bg },
+            TelescopeResultsDiffChange = { bg = tokyonight_colors.bg },
+            TelescopeResultsDiffDelete = { bg = tokyonight_colors.bg },
+            TelescopeResultsDiffUntracked = { bg = tokyonight_colors.bg }
         }
 
-        -- INFO: default highlights
-        overrided_highlight_group.WinSeparator.fg = M.colorset.bg_storm
+        -- INFO: ts rainbow 2 highlight
+        local ts_rainbow_highlight = {
+            TSRainbowRed = { link = 'rainbowcol1' },
+            TSRainbowYellow = { link = 'rainbowcol2' },
+            TSRainbowBlue = { link = 'rainbowcol3' },
+            TSRainbowOrange = { link = 'rainbowcol4' },
+            TSRainbowGreen = { link = 'rainbowcol5' },
+            TSRainbowViolet = { link = 'rainbowcol6' },
+            TSRainbowCyan = { link = 'rainbowcol7' },
+        }
+
+        -- INFO: lsp diagnostics virtual text highlight
+        local lsp_diagnostic_virtual_text_highlight = {
+            DiagnosticVirtualTextError = { bg = '#322639', fg = '#c53b53', italic = true, },
+            DiagnosticVirtualTextHint = { bg = '#273644', fg = '#4fd6be', italic = true, },
+            DiagnosticVirtualTextInfo = { bg = '#203346', fg = '#0db9d7', italic = true, },
+            DiagnosticVirtualTextWarn = { bg = '#38343d', fg = '#ffc777', italic = true, },
+        }
 
         overrideHighlightConfig(noice_highlight)
         overrideHighlightConfig(incline_highlight)
         overrideHighlightConfig(telescope_highlight)
+        overrideHighlightConfig(ts_rainbow_highlight)
+        overrideHighlightConfig(lsp_diagnostic_virtual_text_highlight)
         overrideHighlightConfig(flit_highlight)
         overrideHighlightConfig(marks_highlight)
-        overrideHighlightConfig(overrided_highlight_group)
+        overrideHighlightConfig({
+            WinSeparator = { fg = tokyonight_colors.border_highlight },
+            NormalFloat = { bg = tokyonight_colors.bg },
+            FloatBorder = { link = 'NormalFloat' },
+            LocalHighlightText = { bg = tokyonight_colors.bg_highlight, bold = true, nocombine = true },
+        })
 
         tokyonight.setup {
-            style = 'storm',
-            terminal_colors = false,
-            on_colors = function(colors)
-                colors.bg = M.colorset.bg
-                colors.bg_dark = M.colorset.bg_storm
-                colors.bg_float = M.colorset.bg_storm
-            end,
-
+            style = 'moon',
+            terminal_colors = true,
             on_highlights = function(hl, _)
                 for key, value in pairs(highlight_overrides) do
                     hl[key] = value
@@ -361,9 +390,9 @@ M.config = function()
             TelescopePromptBorder = { bg = catppuccin_colors.mantle },
             TelescopeSelection = { bg = catppuccin_colors.mantle },
             TelescopeResultsDiffAdd = { bg = catppuccin_colors.mantle },
-            TelescopeResultsDiffChange = { bg = catppuccin_colors.mantle  },
-            TelescopeResultsDiffDelete = { bg = catppuccin_colors.mantle  },
-            TelescopeResultsDiffUntracked = { bg = catppuccin_colors.mantle  }
+            TelescopeResultsDiffChange = { bg = catppuccin_colors.mantle },
+            TelescopeResultsDiffDelete = { bg = catppuccin_colors.mantle },
+            TelescopeResultsDiffUntracked = { bg = catppuccin_colors.mantle }
         }
 
         -- INFO: incline highlights
