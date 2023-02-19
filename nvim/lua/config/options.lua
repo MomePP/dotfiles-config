@@ -56,8 +56,8 @@ opt.numberwidth   = 3
 opt.statuscolumn  = "%=%{v:virtnum < 1 ? (v:relnum ? v:relnum : v:lnum < 10 ? v:lnum . '  ' : v:lnum) : ''}%=%s"
 
 opt.pumheight     = 10 -- Make popup menu smaller
--- opt.pumblend  = 8 -- Make builtin completion menus slightly transparent
--- opt.winblend  = 8 -- Make floating windows slightly transparent
+opt.pumblend      = 8 -- Make builtin completion menus slightly transparent
+-- opt.winblend      = 8 -- Make floating windows slightly transparent
 
 -- Editing
 opt.ignorecase    = true -- Ignore case when searching (use `\C` to force not doing that)

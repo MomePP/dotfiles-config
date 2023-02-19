@@ -234,116 +234,97 @@ M.config = function()
 
     local tokyonight_status, tokyonight = pcall(require, 'tokyonight')
     if tokyonight_status then
-        local tokyonight_colors = require('tokyonight.colors').setup()
-
-        -- INFO: lualine highlights
-        M.colorset.lualine = {
-            normal = vim.tbl_deep_extend('force', lualine_defaults, {
-                a = { fg = tokyonight_colors.cyan },
-                b = { fg = tokyonight_colors.fg },
-                c = { fg = tokyonight_colors.fg },
-            }),
-            insert = vim.tbl_deep_extend('force', lualine_defaults, {
-                a = { fg = tokyonight_colors.green },
-                b = { fg = tokyonight_colors.fg },
-                c = { fg = tokyonight_colors.fg },
-            }),
-            visual = vim.tbl_deep_extend('force', lualine_defaults, {
-                a = { fg = tokyonight_colors.magenta },
-                b = { fg = tokyonight_colors.fg },
-                c = { fg = tokyonight_colors.fg },
-            }),
-            replace = vim.tbl_deep_extend('force', lualine_defaults, {
-                a = { fg = tokyonight_colors.yellow },
-                b = { fg = tokyonight_colors.fg },
-                c = { fg = tokyonight_colors.fg },
-            }),
-            command = vim.tbl_deep_extend('force', lualine_defaults, {
-                a = { fg = tokyonight_colors.blue2 },
-                b = { fg = tokyonight_colors.fg },
-                c = { fg = tokyonight_colors.fg },
-            }),
-        }
-
-        -- INFO: todo-comments highlights
-        M.colorset.todocomments.error = tokyonight_colors.error
-        M.colorset.todocomments.warn = tokyonight_colors.warning
-        M.colorset.todocomments.info = tokyonight_colors.info
-        M.colorset.todocomments.hint = tokyonight_colors.hint
-
-        -- INFO: incline highlights
-        incline_highlight = {
-            InclineNormal = { fg = tokyonight_colors.fg, bg = tokyonight_colors.bg_dark, bold = true },
-            InclineNormalNC = { fg = tokyonight_colors.comment, bg = tokyonight_colors.none, },
-            InclineSpacing = { fg = tokyonight_colors.none, bg = tokyonight_colors.blue2, },
-            InclineModified = { fg = tokyonight_colors.red, bg = tokyonight_colors.none, }
-        }
-
-        -- INFO: noice highlights
-        noice_highlight = {
-            NoiceCmdlineIconCmdline = { bg = tokyonight_colors.none, fg = tokyonight_colors.blue2, bold = true },
-            NoiceCmdlineIconSearch = { bg = tokyonight_colors.none, fg = tokyonight_colors.orange, bold = true },
-            NoiceCmdlineIconFilter = { bg = tokyonight_colors.none, fg = tokyonight_colors.teal, bold = true },
-            NoiceSplit = { bg = tokyonight_colors.bg },
-        }
-
-        -- INFO: telescope highlights
-        telescope_highlight = {
-            TelescopeNormal = { fg = tokyonight_colors.fg_dark, bg = tokyonight_colors.bg },
-            TelescopePromptTitle = { fg = M.colorset.bg, bg = tokyonight_colors.blue2 },
-            TelescopeResultsTitle = { fg = M.colorset.bg, bg = tokyonight_colors.blue2 },
-            TelescopePreviewTitle = { fg = M.colorset.bg, bg = tokyonight_colors.blue2 },
-            TelescopeSelection = { bg = tokyonight_colors.bg, bold = true },
-            TelescopeResultsBorder = { bg = tokyonight_colors.bg },
-            TelescopePreviewBorder = { bg = tokyonight_colors.bg },
-            TelescopePromptBorder = { bg = tokyonight_colors.bg },
-            TelescopeResultsDiffAdd = { bg = tokyonight_colors.bg },
-            TelescopeResultsDiffChange = { bg = tokyonight_colors.bg },
-            TelescopeResultsDiffDelete = { bg = tokyonight_colors.bg },
-            TelescopeResultsDiffUntracked = { bg = tokyonight_colors.bg }
-        }
-
-        -- INFO: ts rainbow 2 highlight
-        local ts_rainbow_highlight = {
-            TSRainbowRed = { link = 'rainbowcol1' },
-            TSRainbowYellow = { link = 'rainbowcol2' },
-            TSRainbowBlue = { link = 'rainbowcol3' },
-            TSRainbowOrange = { link = 'rainbowcol4' },
-            TSRainbowGreen = { link = 'rainbowcol5' },
-            TSRainbowViolet = { link = 'rainbowcol6' },
-            TSRainbowCyan = { link = 'rainbowcol7' },
-        }
-
-        -- INFO: lsp diagnostics virtual text highlight
-        local lsp_diagnostic_virtual_text_highlight = {
-            DiagnosticVirtualTextError = { bg = '#322639', fg = '#c53b53', italic = true, },
-            DiagnosticVirtualTextHint = { bg = '#273644', fg = '#4fd6be', italic = true, },
-            DiagnosticVirtualTextInfo = { bg = '#203346', fg = '#0db9d7', italic = true, },
-            DiagnosticVirtualTextWarn = { bg = '#38343d', fg = '#ffc777', italic = true, },
-        }
-
-        overrideHighlightConfig(noice_highlight)
-        overrideHighlightConfig(incline_highlight)
-        overrideHighlightConfig(telescope_highlight)
-        overrideHighlightConfig(ts_rainbow_highlight)
-        overrideHighlightConfig(lsp_diagnostic_virtual_text_highlight)
         overrideHighlightConfig(flit_highlight)
         overrideHighlightConfig(marks_highlight)
-        overrideHighlightConfig({
-            WinSeparator = { fg = tokyonight_colors.border_highlight },
-            NormalFloat = { bg = tokyonight_colors.bg },
-            FloatBorder = { link = 'NormalFloat' },
-            LocalHighlightText = { bg = tokyonight_colors.bg_highlight, bold = true, nocombine = true },
-        })
+
+        local function on_highlights(hl, c)
+            -- INFO: incline highlights
+            hl.InclineNormal = { fg = c.fg, bg = c.bg, bold = true }
+            hl.InclineNormalNC = { fg = c.comment, bg = c.bg, }
+            hl.InclineSpacing = { fg = c.none, bg = c.blue2, }
+            hl.InclineModified = { fg = c.red, bg = c.none, }
+
+            -- INFO: noice highlights
+            hl.NoiceCmdlineIconCmdline = { bg = c.none, fg = c.blue2, bold = true }
+            hl.NoiceCmdlineIconSearch = { bg = c.none, fg = c.orange, bold = true }
+            hl.NoiceCmdlineIconFilter = { bg = c.none, fg = c.teal, bold = true }
+            hl.NoiceSplit = { link = 'Normal' }
+
+            -- INFO: telescope highlights
+            hl.TelescopeNormal = { fg = c.fg_dark, bg = c.bg_dark }
+            hl.TelescopePromptTitle = { fg = c.bg_dark, bg = c.blue2, bold = true }
+            hl.TelescopeResultsTitle = { fg = c.bg_dark, bg = c.blue2, bold = true }
+            hl.TelescopePreviewTitle = { fg = c.bg_dark, bg = c.blue2, bold = true }
+            hl.TelescopeSelection = { fg = c.fg, bg = c.bg_dark, bold = true }
+            hl.TelescopeResultsDiffAdd = { bg = c.bg_dark }
+            hl.TelescopeResultsDiffChange = { bg = c.bg_dark }
+            hl.TelescopeResultsDiffDelete = { bg = c.bg_dark }
+            hl.TelescopeResultsDiffUntracked = { bg = c.bg_dark }
+
+            -- INFO: ts rainbow 2 highlight
+            hl.TSRainbowRed = { link = 'rainbowcol1' }
+            hl.TSRainbowYellow = { link = 'rainbowcol2' }
+            hl.TSRainbowBlue = { link = 'rainbowcol3' }
+            hl.TSRainbowOrange = { link = 'rainbowcol4' }
+            hl.TSRainbowGreen = { link = 'rainbowcol5' }
+            hl.TSRainbowViolet = { link = 'rainbowcol6' }
+            hl.TSRainbowCyan = { link = 'rainbowcol7' }
+
+            -- INFO: lsp diagnostics virtual text highlight
+            hl.DiagnosticVirtualTextError = { bg = '#322639', fg = '#c53b53', italic = true }
+            hl.DiagnosticVirtualTextWarn = { bg = '#38343d', fg = '#ffc777', italic = true }
+            hl.DiagnosticVirtualTextHint = { bg = '#273644', fg = '#4fd6be', italic = true }
+            hl.DiagnosticVirtualTextInfo = { bg = '#203346', fg = '#0db9d7', italic = true }
+
+            hl.WinSeparator = { fg = c.border_highlight }
+            hl.NormalFloat = { bg = c.bg_float }
+            hl.FloatBorder = { link = 'NormalFloat' }
+            hl.LocalHighlightText = { bg = c.bg_highlight, bold = true, nocombine = true }
+
+            -- INFO: lualine highlights
+            M.colorset.lualine = {
+                normal = vim.tbl_deep_extend('force', lualine_defaults, {
+                    a = { fg = c.cyan },
+                    b = { fg = c.fg },
+                    c = { fg = c.fg },
+                }),
+                insert = vim.tbl_deep_extend('force', lualine_defaults, {
+                    a = { fg = c.green },
+                    b = { fg = c.fg },
+                    c = { fg = c.fg },
+                }),
+                visual = vim.tbl_deep_extend('force', lualine_defaults, {
+                    a = { fg = c.magenta },
+                    b = { fg = c.fg },
+                    c = { fg = c.fg },
+                }),
+                replace = vim.tbl_deep_extend('force', lualine_defaults, {
+                    a = { fg = c.yellow },
+                    b = { fg = c.fg },
+                    c = { fg = c.fg },
+                }),
+                command = vim.tbl_deep_extend('force', lualine_defaults, {
+                    a = { fg = c.blue2 },
+                    b = { fg = c.fg },
+                    c = { fg = c.fg },
+                }),
+            }
+
+            -- INFO: todo-comments highlights
+            M.colorset.todocomments.error = c.error
+            M.colorset.todocomments.warn = c.warning
+            M.colorset.todocomments.info = c.info
+            M.colorset.todocomments.hint = c.hint
+
+            for key, value in pairs(highlight_overrides) do
+                hl[key] = value
+            end
+        end
 
         tokyonight.setup {
             style = 'moon',
             terminal_colors = true,
-            on_highlights = function(hl, _)
-                for key, value in pairs(highlight_overrides) do
-                    hl[key] = value
-                end
-            end,
+            on_highlights = on_highlights,
         }
         vim.opt.background = 'dark'
         vim.cmd.colorscheme 'tokyonight'
