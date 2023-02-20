@@ -69,9 +69,13 @@ keymaps.lsp = {
     ['gD']         = function() vim.lsp.buf.declaration({ on_list = open_telescope_qflist }) end,
     ['gx']         = vim.lsp.buf.code_action,
     ['gs']         = vim.lsp.buf.signature_help,
-    ['K']          = vim.lsp.buf.hover,
     ['<leader>lr'] = vim.lsp.buf.rename,
     ['<leader>ff'] = function() vim.lsp.buf.format({ async = true }) end,
+    ['K']          = function()
+        local ufo_loaded, ufo = pcall(require, 'ufo')
+        if ufo_loaded then if ufo.peekFoldedLinesUnderCursor() then return end end
+        vim.lsp.buf.hover()
+    end,
 }
 
 -- INFO: Lazy keymap
@@ -141,6 +145,14 @@ keymaps.marks = {
     preview = 'm"',
     clear   = 'md',
     list    = '<leader>m',
+}
+
+-- INFO: ufo keymap
+keymaps.ufo = {
+    open_all    = 'zR',
+    open_except = 'zr',
+    close_all   = 'zM',
+    close_with  = 'zm',
 }
 
 -- INFO: hlslens keymap
