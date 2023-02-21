@@ -181,11 +181,11 @@ keymaps.noice = {
 
 -- INFO: flit keymaps
 keymaps.flit = {
-    forward = 'f',
+    forward  = 'f',
     backward = 'F',
-    till = 't',
+    till     = 't',
     backtill = 'T',
-    leap = 's',
+    leap     = 's',
 }
 
 -- INFO: markdown preview keymap
@@ -200,16 +200,21 @@ keymaps.bufremove = {
 
 -- INFO: mini.move keymap
 keymaps.move = {
-    move_up = '<m-k>',
-    move_down = '<m-j>',
-    move_left = '<m-h>',
+    move_up    = '<m-k>',
+    move_down  = '<m-j>',
+    move_left  = '<m-h>',
     move_right = '<m-l>',
 }
 
 -- INFO: search-replace keymap
 keymaps.search_replace = {
     single_open = '<leader>r',
-    multi_open = '<leader>R',
+    multi_open  = '<leader>R',
+}
+
+-- INFO: treesj keymap
+keymaps.treesj = {
+    toggle = 'J',
 }
 
 return keymaps

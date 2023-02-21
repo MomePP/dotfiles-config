@@ -24,12 +24,22 @@ return {
         'SmiteshP/nvim-navic',
         dependencies = 'nvim-lspconfig',
         event = { 'BufReadPost', 'BufNewFile' },
-        opts = { separator = '  ', highlight = true }
+        opts = { separator = '  ', highlight = true },
     },
     {
         'altermo/ultimate-autopair.nvim',
         event = { 'InsertEnter', 'CmdlineEnter' },
         opts = { extensions = { { 'cmdtype', { '/', '?', '@', ':' } } } },
+    },
+    {
+        'Wansmer/treesj',
+        dependencies = { 'nvim-treesitter' },
+        opts = {
+            use_default_keymaps = false,
+        },
+        keys = {
+            { require('config.keymaps').treesj.toggle, '<Cmd>TSJToggle<CR>' },
+        }
     },
 
     -- Miscellaneous
