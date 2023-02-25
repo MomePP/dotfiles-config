@@ -27,11 +27,6 @@ return {
         opts = { separator = '  ', highlight = true },
     },
     {
-        'altermo/ultimate-autopair.nvim',
-        event = { 'InsertEnter', 'CmdlineEnter' },
-        opts = { extensions = { { 'cmdtype', { '/', '?', '@', ':' } } } },
-    },
-    {
         'Wansmer/treesj',
         dependencies = { 'nvim-treesitter' },
         opts = {

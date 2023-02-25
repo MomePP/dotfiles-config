@@ -23,6 +23,12 @@ local M = {
                 delete_check_events = 'TextChanged',
             }
         },
+
+        -- NOTE: autopairs plugin
+        {
+            'windwp/nvim-autopairs',
+            opts = { check_ts = true, fast_wrap = { map = '<C-e>' } },
+        },
     },
 }
 
@@ -52,7 +58,7 @@ M.opts = function()
         ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(2), { 'i', 'c' }),
         ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs( -2), { 'i', 'c' }),
         ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
-        ['<C-e>'] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
+        ['<C-w>'] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
         ['<CR>'] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
         ['<Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
@@ -77,12 +83,12 @@ M.opts = function()
     }
 
     local cmp_sources = cmp.config.sources({
-            { name = 'nvim_lsp' },
-            { name = 'luasnip' },
-            { name = 'buffer',  keyword_length = 3 },
-            { name = 'path',    keyword_length = 3 },
-            { name = 'rg',      keyword_length = 3 },
-        })
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' },
+        { name = 'buffer',  keyword_length = 3 },
+        { name = 'path',    keyword_length = 3 },
+        { name = 'rg',      keyword_length = 3 },
+    })
 
     return {
         snippet = { expand = function(args) luasnip.lsp_expand(args.body) end, },
@@ -104,7 +110,10 @@ M.opts = function()
         },
         completion = {
             keyword_length = 2,
-        }
+        },
+        matching = {
+            disallow_partial_fuzzy_matching = false
+        },
     }
 end
 
@@ -128,6 +137,9 @@ M.config = function(_, opts)
             { name = 'cmdline' }
         })
     })
+
+    -- NOTE: autopairs mapping on <CR>
+    cmp.event:on('confirm_done', require('nvim-autopairs.completion.cmp').on_confirm_done())
 end
 
 return M
