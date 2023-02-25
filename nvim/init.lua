@@ -1,7 +1,7 @@
 -- INFO: checking does nvim runs from `vscode-neovim` or not
 if not vim.g.vscode then
-    -- plugin config
-    require 'lazy-config'
+    -- init options and load plugins
+    require 'config'.init()
 
     -- loads user config
     require 'config'.setup()
