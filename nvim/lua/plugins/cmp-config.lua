@@ -23,6 +23,11 @@ local M = {
                 delete_check_events = 'TextChanged',
             }
         },
+        {
+            'jcdickinson/codeium.nvim',
+            dependecies = { 'plenary', 'nui' },
+            config = true,
+        },
 
         -- NOTE: autopairs plugin
         {
@@ -58,7 +63,7 @@ M.opts = function()
         ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(2), { 'i', 'c' }),
         ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs( -2), { 'i', 'c' }),
         ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
-        ['<C-w>'] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
+        ['<C-e>'] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
         ['<CR>'] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
         ['<Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
@@ -85,6 +90,7 @@ M.opts = function()
     local cmp_sources = cmp.config.sources({
         { name = 'nvim_lsp' },
         { name = 'luasnip' },
+        { name = 'codeium' },
         { name = 'buffer',  keyword_length = 3 },
         { name = 'path',    keyword_length = 3 },
         { name = 'rg',      keyword_length = 3 },
