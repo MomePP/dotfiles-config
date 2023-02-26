@@ -88,12 +88,12 @@ M.opts = function()
     }
 
     local cmp_sources = cmp.config.sources({
-        { name = 'nvim_lsp' },
-        { name = 'luasnip' },
+        { name = 'nvim_lsp', keyword_length = 2 },
+        { name = 'luasnip',  keyword_length = 2 },
         { name = 'codeium' },
-        { name = 'buffer',  keyword_length = 3 },
-        { name = 'path',    keyword_length = 3 },
-        { name = 'rg',      keyword_length = 3 },
+        { name = 'buffer' },
+        { name = 'path' },
+        { name = 'rg' },
     })
 
     return {
@@ -115,7 +115,7 @@ M.opts = function()
             ghost_text = true
         },
         completion = {
-            keyword_length = 2,
+            keyword_length = 3,
         },
         matching = {
             disallow_partial_fuzzy_matching = false

@@ -3,7 +3,7 @@ local M = {
     build = ':TSUpdate',
     event = { 'BufReadPost', 'BufNewFile' },
     dependencies = {
-        'nvim-ts-context-commentstring',
+        'JoosepAlviste/nvim-ts-context-commentstring',
         'windwp/nvim-ts-autotag',
         'HiPhish/nvim-ts-rainbow2',
     }
