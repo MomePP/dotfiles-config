@@ -95,7 +95,7 @@ M.opts = function()
 
     return {
         defaults = {
-            prompt_prefix = '   ', -- this still got an issue of prompt buffer bug, can be workaround by changes it to empty string
+            prompt_prefix = '   ', -- this still got an issue of prompt buffer bug, can be workaround by changes it to empty string
             entry_prefix = '  ',
             selection_caret = '  ',
             color_devicons = true,

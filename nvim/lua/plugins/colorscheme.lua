@@ -1,7 +1,8 @@
 local M = {
     -- 'rebelot/kanagawa.nvim',
-    'folke/tokyonight.nvim',
+    -- 'folke/tokyonight.nvim',
     -- 'catppuccin/nvim', name = 'catppuccin',
+    'nyoom-engineering/oxocarbon.nvim',
     lazy = false,
 }
 
@@ -26,10 +27,10 @@ M.colorset = {
     bg2         = '#504945',
     bg3         = '#665c54',
     transparent = 'NONE',
-    error       = '#e82424',
-    warn        = '#ff9e3b',
+    error       = '#c53b53',
+    warn        = '#ffc777',
     info        = '#0db9d7',
-    hint        = '#4fd699',
+    hint        = '#4fd6be',
 }
 
 M.colorset.bracket = {
@@ -271,10 +272,10 @@ M.config = function()
             hl.TSRainbowCyan = { link = 'rainbowcol7' }
 
             -- INFO: lsp diagnostics virtual text highlight
-            hl.DiagnosticVirtualTextError = { bg = '#322639', fg = '#c53b53', italic = true }
-            hl.DiagnosticVirtualTextWarn = { bg = '#38343d', fg = '#ffc777', italic = true }
-            hl.DiagnosticVirtualTextHint = { bg = '#273644', fg = '#4fd6be', italic = true }
-            hl.DiagnosticVirtualTextInfo = { bg = '#203346', fg = '#0db9d7', italic = true }
+            hl.DiagnosticVirtualTextError = { bg = '#322639', fg = M.colorset.error, italic = true }
+            hl.DiagnosticVirtualTextWarn = { bg = '#38343d', fg = M.colorset.warn, italic = true }
+            hl.DiagnosticVirtualTextInfo = { bg = '#203346', fg = M.colorset.info, italic = true }
+            hl.DiagnosticVirtualTextHint = { bg = '#273644', fg = M.colorset.hint, italic = true }
 
             hl.WinSeparator = { fg = c.border_highlight }
             hl.NormalFloat = { bg = c.bg_float }
@@ -437,6 +438,147 @@ M.config = function()
         }
         vim.opt.background = 'dark'
         vim.cmd.colorscheme 'catppuccin'
+    end
+
+    local oxocarbon_status, oxocarbon = pcall(require, 'oxocarbon')
+    if oxocarbon_status then
+        local c = oxocarbon.oxocarbon
+
+        M.colorset.lualine = {
+            normal = vim.tbl_deep_extend('force', lualine_defaults, {
+                a = { fg = c.base08 },
+                b = { fg = c.base04 },
+                c = { fg = c.base04 },
+            }),
+            insert = vim.tbl_deep_extend('force', lualine_defaults, {
+                a = { fg = c.base14 },
+                b = { fg = c.base04 },
+                c = { fg = c.base04 },
+            }),
+            visual = vim.tbl_deep_extend('force', lualine_defaults, {
+                a = { fg = c.base12 },
+                b = { fg = c.base04 },
+                c = { fg = c.base04 },
+            }),
+            replace = vim.tbl_deep_extend('force', lualine_defaults, {
+                a = { fg = c.base11 },
+                b = { fg = c.base04 },
+                c = { fg = c.base04 },
+            }),
+            command = vim.tbl_deep_extend('force', lualine_defaults, {
+                a = { fg = c.base05 },
+                b = { fg = c.base04 },
+                c = { fg = c.base04 },
+            }),
+        }
+        vim.opt.background = 'dark'
+        vim.cmd.colorscheme 'oxocarbon'
+
+        incline_highlight = {
+            InclineNormal = { bold = true },
+            InclineNormalNC = { fg = c.base03 },
+            InclineSpacing = { fg = c.none, bg = c.base14, },
+            InclineModified = { fg = c.base10, bg = c.none, },
+        }
+
+        noice_highlight = {
+            NoiceCmdlineIconCmdline = { link = 'lualine_a_command' },
+            NoiceCmdlineIconSearch = { link = 'lualine_a_command' },
+            NoiceCmdlineIconFilter = { link = 'lualine_a_command' },
+            NoiceMini = { bg = c.base01 },
+            NoiceCmdline = { bg = c.base01 },
+            NoiceSplit = { bg = c.base01 },
+        }
+
+        telescope_highlight = {
+            TelescopeNormal = { fg = c.base03, bg = c.base00 },
+            TelescopeSelection = { fg = c.base04, bold = true },
+            TelescopeResultsBorder = { bg = c.base00 },
+            TelescopePreviewBorder = { bg = c.base00 },
+            TelescopeResultsTitle = { fg = c.base00, bg = c.base00 },
+            TelescopeResultsDiffAdd = { bg = c.base00 },
+            TelescopeResultsDiffChange = { bg = c.base00 },
+            TelescopeResultsDiffDelete = { bg = c.base00 },
+            TelescopeResultsDiffUntracked = { bg = c.base00 },
+        }
+
+        flit_highlight = {
+            LeapBackdrop = { fg = c.base03, bg = c.none },
+            LeapLabelPrimary = { fg = 'cyan', bold = true, nocombine = true },
+            LeapLabelSecondary = { fg = M.colorset.purple, bold = true, nocombine = true },
+            LeapMatch = { fg = 'white', bold = true, nocombine = true },
+        }
+
+        local navic_highlight = {
+            NavicIconsFile = { bg = c.base01 },
+            NavicIconsModule = { bg = c.base01 },
+            NavicIconsNamespace = { bg = c.base01 },
+            NavicIconsPackage = { bg = c.base01 },
+            NavicIconsClass = { bg = c.base01 },
+            NavicIconsMethod = { bg = c.base01 },
+            NavicIconsProperty = { bg = c.base01 },
+            NavicIconsField = { bg = c.base01 },
+            NavicIconsConstructor = { bg = c.base01 },
+            NavicIconsEnum = { bg = c.base01 },
+            NavicIconsInterface = { bg = c.base01 },
+            NavicIconsFunction = { bg = c.base01 },
+            NavicIconsVariable = { bg = c.base01 },
+            NavicIconsConstant = { bg = c.base01 },
+            NavicIconsString = { bg = c.base01 },
+            NavicIconsNumber = { bg = c.base01 },
+            NavicIconsBoolean = { bg = c.base01 },
+            NavicIconsArray = { bg = c.base01 },
+            NavicIconsObject = { bg = c.base01 },
+            NavicIconsKey = { bg = c.base01 },
+            NavicIconsNull = { bg = c.base01 },
+            NavicIconsEnumMember = { bg = c.base01 },
+            NavicIconsStruct = { bg = c.base01 },
+            NavicIconsEvent = { bg = c.base01 },
+            NavicIconsOperator = { bg = c.base01 },
+            NavicIconsTypeParameter = { bg = c.base01 },
+            NavicText = { fg = c.base04, bg = c.base01 },
+            NavicSeparator = { fg = c.base04, bg = c.base01 },
+        }
+
+        local diagnostic_highlight = {
+            DiagnosticError = { fg = M.colorset.error },
+            DiagnosticWarn = { fg = M.colorset.warn },
+            DiagnosticInfo = { fg = M.colorset.info },
+            DiagnosticHint = { fg = M.colorset.hint },
+            DiagnosticUnderlineError = { fg = M.colorset.error, undercurl = true },
+            DiagnosticUnderlineWarn = { fg = M.colorset.warn, undercurl = true },
+            DiagnosticUnderlineInfo = { fg = M.colorset.info, undercurl = true },
+            DiagnosticUnderlineHint = { fg = M.colorset.hint, undercurl = true },
+            DiagnosticVirtualTextError = { bg = '#322639', fg = M.colorset.error, italic = true },
+            DiagnosticVirtualTextWarn = { bg = '#38343d', fg = M.colorset.warn, italic = true },
+            DiagnosticVirtualTextInfo = { bg = '#203346', fg = M.colorset.info, italic = true },
+            DiagnosticVirtualTextHint = { bg = '#273644', fg = M.colorset.hint, italic = true },
+        }
+
+        overrideHighlightConfig({
+            LocalHighlightText = { bg = c.base02, bold = true, nocombine = true },
+            Normal = { fg = c.base04, bg = c.base01 },
+            NormalNC = { fg = c.base05, bg = c.base01 },
+            LineNr = { fg = c.base03, bg = c.base01 },
+            FoldColumn = { fg = c.base02, bg = c.base01 },
+            SignColumn = { fg = c.base02, bg = c.base01 },
+            VertSplit = { fg = c.base02, bg = c.base01 },
+            NormalFloat = { bg = c.base00 },
+            FloatBorder = { link = 'NormalFloat' },
+        })
+        overrideHighlightConfig(telescope_highlight)
+        overrideHighlightConfig(incline_highlight)
+        overrideHighlightConfig(noice_highlight)
+        overrideHighlightConfig(flit_highlight)
+        overrideHighlightConfig(navic_highlight)
+        overrideHighlightConfig(diagnostic_highlight)
+
+        for hl_name, hl_value in pairs(highlight_overrides) do
+            vim.api.nvim_set_hl(0, hl_name, hl_value)
+        end
+
+        vim.g['terminal_color_3'] = c.base10
+        vim.g['terminal_color_11'] = c.base10
     end
 end
 

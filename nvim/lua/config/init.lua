@@ -49,7 +49,7 @@ M.defaults = {
                 Variable = '',
                 Value = '',
                 Unit = '塞',
-                Suggestion = ' ',
+                Suggestion = '',
             },
             source_format = '    '
         },

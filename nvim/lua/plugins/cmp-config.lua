@@ -102,11 +102,7 @@ M.opts = function()
         sources = cmp_sources,
         formatting = cmp_formatting,
         window = {
-            documentation = {
-                winhighlight = 'Normal:Pmenu,FloatBorder:Pmenu,Search:None',
-            },
             completion = {
-                winhighlight = 'Normal:Pmenu,FloatBorder:Pmenu,Search:None',
                 col_offset = -3,
                 side_padding = 0,
             },
