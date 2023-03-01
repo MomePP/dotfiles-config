@@ -23,11 +23,11 @@ local M = {
                 delete_check_events = 'TextChanged',
             }
         },
-        {
-            'jcdickinson/codeium.nvim',
-            dependecies = { 'plenary', 'nui' },
-            config = true,
-        },
+        -- {
+        --     'jcdickinson/codeium.nvim',
+        --     dependecies = { 'plenary', 'nui' },
+        --     config = true,
+        -- },
 
         -- NOTE: autopairs plugin
         {
@@ -90,7 +90,7 @@ M.opts = function()
     local cmp_sources = cmp.config.sources({
         { name = 'nvim_lsp', keyword_length = 2 },
         { name = 'luasnip',  keyword_length = 2 },
-        { name = 'codeium' },
+        -- { name = 'codeium' },
         { name = 'buffer' },
         { name = 'path' },
         { name = 'rg' },
