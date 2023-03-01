@@ -24,11 +24,11 @@ M.opts = function()
     }
 
     local horizontal_layout_config = {
-        -- sorting_strategy = 'ascending',
+        sorting_strategy = 'ascending',
         layout_strategy = 'horizontal',
         layout_config = {
             preview_width = 0.6,
-            -- prompt_position = 'top'
+            prompt_position = 'top'
         }
     }
 
