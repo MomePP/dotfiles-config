@@ -36,6 +36,16 @@ return {
             { require('config.keymaps').treesj.toggle, '<Cmd>TSJToggle<CR>' },
         }
     },
+    {
+        'lukas-reineke/indent-blankline.nvim',
+        event = { 'BufReadPre', 'BufNewFile' },
+        opts = {
+            char = '│',
+            show_trailing_blankline_indent = false,
+            show_current_context = true,
+        }
+    },
+
 
     -- Miscellaneous
     { 'RaafatTurki/hex.nvim', cmd = { 'HexToggle', 'HexDump', 'HexAssemble' }, config = true },

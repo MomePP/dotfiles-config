@@ -136,6 +136,10 @@ local indentscope_highlight = {
     MiniIndentscopeSymbol = { fg = M.colorset.orange, nocombine = true }
 }
 
+local indentblankline_highlight = {
+    IndentBlanklineContextChar = { fg = M.colorset.orange, nocombine = true }
+}
+
 local incline_highlight = {
     InclineNormal = { fg = vim.o.background ~= 'dark' and M.colorset.black or M.colorset.white,
         bg = M.colorset.transparent, bold = true },
@@ -555,6 +559,10 @@ M.config = function()
             DiagnosticVirtualTextHint = { bg = '#273644', fg = M.colorset.hint, italic = true },
         }
 
+        indentblankline_highlight = {
+            IndentBlanklineContextChar = { fg = c.base04, nocombine = true }
+        }
+
         overrideHighlightConfig({
             LocalHighlightText = { bg = c.base02, bold = true, nocombine = true },
             Normal = { fg = c.base04, bg = c.base01 },
@@ -572,6 +580,7 @@ M.config = function()
         overrideHighlightConfig(flit_highlight)
         overrideHighlightConfig(navic_highlight)
         overrideHighlightConfig(diagnostic_highlight)
+        overrideHighlightConfig(indentblankline_highlight)
 
         for hl_name, hl_value in pairs(highlight_overrides) do
             vim.api.nvim_set_hl(0, hl_name, hl_value)
