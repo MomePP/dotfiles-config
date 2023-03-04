@@ -42,6 +42,10 @@ M.opts = function()
     local luasnip = require('luasnip')
     local icons = require('config').defaults.icons
 
+    local ELLIPSIS_CHAR = ' …'
+    local MAX_LABEL_WIDTH = 50
+    local MIN_LABEL_WIDTH = 20
+
     local function has_words_before()
         unpack = unpack or table.unpack
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -52,7 +56,14 @@ M.opts = function()
         -- fields = { 'abbr', 'kind', 'menu' },
         fields = { 'kind', 'abbr', 'menu' },
         format = function(entry, vim_item)
-            -- vim_item.abbr = string.format('%s  ', vim_item.abbr)
+            local label = vim_item.abbr
+            local truncated_label = vim.fn.strcharpart(label, 0, MAX_LABEL_WIDTH)
+            if truncated_label ~= label then
+                vim_item.abbr = truncated_label .. ELLIPSIS_CHAR
+            elseif string.len(label) < MIN_LABEL_WIDTH then
+                local padding = string.rep(' ', MIN_LABEL_WIDTH - string.len(label))
+                vim_item.abbr = label .. padding
+            end
             vim_item.kind = string.format(' %s ', icons.cmp.kinds[vim_item.kind])
             vim_item.menu = string.format(icons.cmp.source_format .. '%s', entry.source.name)
             return vim_item
@@ -90,7 +101,7 @@ M.opts = function()
     local cmp_sources = cmp.config.sources({
         { name = 'nvim_lsp', keyword_length = 2 },
         { name = 'luasnip',  keyword_length = 2 },
-        -- { name = 'codeium' },
+        -- { name = 'codeium',  keyword_length = 2 },
         { name = 'buffer' },
         { name = 'path' },
         { name = 'rg' },
