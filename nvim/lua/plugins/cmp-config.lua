@@ -46,10 +46,9 @@ M.opts = function()
     local MAX_LABEL_WIDTH = 50
     local MIN_LABEL_WIDTH = 10
 
-    local function has_words_before()
-        unpack = unpack or table.unpack
-        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+    local function is_line_empty()
+        local col = vim.fn.col('.') - 1
+        return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s')
     end
 
     local cmp_formatting = {
@@ -81,10 +80,10 @@ M.opts = function()
                 cmp.select_next_item()
             elseif luasnip.expand_or_jumpable() then
                 luasnip.expand_or_jump()
-            elseif has_words_before() then
-                cmp.complete()
-            else
+            elseif is_line_empty() then
                 fallback()
+            else
+                cmp.complete()
             end
         end, { 'i', 's' }),
         ['<S-Tab>'] = cmp.mapping(function(fallback)
