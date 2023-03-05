@@ -55,13 +55,6 @@ local function overrideHighlightConfig(rhs)
     highlight_overrides = vim.tbl_deep_extend('force', highlight_overrides, rhs)
 end
 
-local overrided_highlight_group = {
-    WinSeparator = { fg = M.colorset.bg1, bg = M.colorset.transparent },
-    SignColumn = { fg = M.colorset.transparent, bg = M.colorset.transparent },
-    FloatBorder = { link = 'NormalFloat' },
-    MoreMsg = { fg = M.colorset.blue, bg = M.colorset.transparent },
-}
-
 local cmp_highlight = {
     PmenuSel = { bg = '#282C34', fg = 'NONE' },
     Pmenu = { fg = '#C5CDD9', bg = '#22252A' },
@@ -130,10 +123,6 @@ local noice_highlight = {
     NoiceCmdlineIconSearch = { bg = M.colorset.transparent, fg = M.colorset.orange, bold = true },
     NoiceCmdlineIconFilter = { bg = M.colorset.transparent, fg = M.colorset.teal, bold = true },
     NoiceSplit = { bg = M.colorset.bg },
-}
-
-local indentscope_highlight = {
-    MiniIndentscopeSymbol = { fg = M.colorset.orange, nocombine = true }
 }
 
 local indentblankline_highlight = {
@@ -214,7 +203,12 @@ M.config = function()
                 DiagnosticHint = { fg = M.colorset.hint },
             })
 
-            overrideHighlightConfig(overrided_highlight_group)
+            overrideHighlightConfig({
+                WinSeparator = { fg = M.colorset.bg1, bg = M.colorset.transparent },
+                SignColumn = { fg = M.colorset.transparent, bg = M.colorset.transparent },
+                FloatBorder = { link = 'NormalFloat' },
+                MoreMsg = { fg = M.colorset.blue, bg = M.colorset.transparent },
+            })
             overrideHighlightConfig(navic_highlight)
             overrideHighlightConfig(cmp_highlight)
             overrideHighlightConfig(telescope_highlight)
