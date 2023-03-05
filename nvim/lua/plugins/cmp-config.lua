@@ -3,7 +3,7 @@ local M = {
     event = 'InsertEnter',
     dependencies = {
         'hrsh7th/cmp-nvim-lsp',
-        'hrsh7th/cmp-buffer',
+        -- 'hrsh7th/cmp-buffer',
         'hrsh7th/cmp-cmdline',
         'hrsh7th/cmp-path',
         'saadparwaiz1/cmp_luasnip',
@@ -25,7 +25,7 @@ local M = {
         },
         -- {
         --     'jcdickinson/codeium.nvim',
-        --     dependecies = { 'plenary', 'nui' },
+        --     dependencies = { 'plenary', 'nui' },
         --     config = true,
         -- },
 
@@ -44,7 +44,7 @@ M.opts = function()
 
     local ELLIPSIS_CHAR = ' …'
     local MAX_LABEL_WIDTH = 50
-    local MIN_LABEL_WIDTH = 20
+    local MIN_LABEL_WIDTH = 10
 
     local function has_words_before()
         unpack = unpack or table.unpack
@@ -102,9 +102,9 @@ M.opts = function()
         { name = 'nvim_lsp', keyword_length = 2 },
         { name = 'luasnip',  keyword_length = 2 },
         -- { name = 'codeium',  keyword_length = 2 },
-        { name = 'buffer' },
-        { name = 'path' },
+        -- { name = 'buffer' },
         { name = 'rg' },
+        { name = 'path' },
     })
 
     return {
@@ -138,7 +138,8 @@ M.config = function(_, opts)
     cmp.setup.cmdline({ '/', '?' }, {
         mapping = cmp.mapping.preset.cmdline(),
         sources = {
-            { name = 'buffer' }
+            -- { name = 'buffer' }
+            { name = 'rg' }
         }
     })
 

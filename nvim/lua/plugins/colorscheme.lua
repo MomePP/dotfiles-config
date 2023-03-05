@@ -573,6 +573,8 @@ M.config = function()
             VertSplit = { fg = c.base02, bg = c.base01 },
             NormalFloat = { bg = c.base00 },
             FloatBorder = { link = 'NormalFloat' },
+            Pmenu = { fg = c.base04, bg = c.base00 },
+            PmenuSel = { fg = c.none, bg = c.base02 },
         })
         overrideHighlightConfig(telescope_highlight)
         overrideHighlightConfig(incline_highlight)
