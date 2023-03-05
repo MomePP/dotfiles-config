@@ -141,8 +141,11 @@ local indentblankline_highlight = {
 }
 
 local incline_highlight = {
-    InclineNormal = { fg = vim.o.background ~= 'dark' and M.colorset.black or M.colorset.white,
-        bg = M.colorset.transparent, bold = true },
+    InclineNormal = {
+        fg = vim.o.background ~= 'dark' and M.colorset.black or M.colorset.white,
+        bg = M.colorset.transparent,
+        bold = true
+    },
     InclineNormalNC = { fg = M.colorset.gray, bg = M.colorset.transparent, },
     InclineSpacing = { fg = M.colorset.white, bg = M.colorset.orange, },
     InclineModified = { fg = M.colorset.red, bg = M.colorset.transparent, }
@@ -171,70 +174,70 @@ M.config = function()
     -- INFO: kanagawa theme config
     local kanagawa_status, kanagawa = pcall(require, 'kanagawa')
     if kanagawa_status then
-        local kanagawa_colors = require('kanagawa.colors').setup()
+        local function kanagawaOverrided(c)
+            local navic_highlight = {
+                NavicIconsFile = { fg = c.palette.springViolet2 },
+                NavicIconsModule = { fg = c.palette.boatYellow2 },
+                NavicIconsNamespace = { fg = c.palette.springViolet2 },
+                NavicIconsPackage = { fg = c.palette.springViolet1 },
+                NavicIconsClass = { fg = c.palette.surimiOrange },
+                NavicIconsMethod = { fg = c.palette.crystalBlue },
+                NavicIconsProperty = { fg = c.palette.waveAqua2 },
+                NavicIconsField = { fg = c.palette.waveAqua1 },
+                NavicIconsConstructor = { fg = c.palette.surimiOrange },
+                NavicIconsEnum = { fg = c.palette.boatYellow2 },
+                NavicIconsInterface = { fg = c.palette.carpYellow },
+                NavicIconsFunction = { fg = c.palette.crystalBlue },
+                NavicIconsVariable = { fg = c.palette.oniViolet },
+                NavicIconsConstant = { fg = c.palette.oniViolet },
+                NavicIconsString = { fg = c.palette.springGreen },
+                NavicIconsNumber = { fg = c.palette.sakuraPink },
+                NavicIconsBoolean = { fg = c.palette.surimiOrange },
+                NavicIconsArray = { fg = c.palette.waveAqua2 },
+                NavicIconsObject = { fg = c.palette.surimiOrange },
+                NavicIconsKey = { fg = c.palette.oniViolet },
+                NavicIconsNull = { fg = c.palette.carpYellow },
+                NavicIconsEnumMember = { fg = c.palette.carpYellow },
+                NavicIconsStruct = { fg = c.palette.surimiOrange },
+                NavicIconsEvent = { fg = c.palette.surimiOrange },
+                NavicIconsOperator = { fg = c.palette.springViolet2 },
+                NavicIconsTypeParameter = { fg = c.palette.springBlue },
+                NavicText = { fg = M.colorset.white },
+                NavicSeparator = { fg = M.colorset.orange },
+            }
 
-        local navic_highlight = {
-            NavicIconsFile = { fg = kanagawa_colors.springViolet2 },
-            NavicIconsModule = { fg = kanagawa_colors.boatYellow2 },
-            NavicIconsNamespace = { fg = kanagawa_colors.springViolet2 },
-            NavicIconsPackage = { fg = kanagawa_colors.springViolet1 },
-            NavicIconsClass = { fg = kanagawa_colors.surimiOrange },
-            NavicIconsMethod = { fg = kanagawa_colors.crystalBlue },
-            NavicIconsProperty = { fg = kanagawa_colors.waveAqua2 },
-            NavicIconsField = { fg = kanagawa_colors.waveAqua1 },
-            NavicIconsConstructor = { fg = kanagawa_colors.surimiOrange },
-            NavicIconsEnum = { fg = kanagawa_colors.boatYellow2 },
-            NavicIconsInterface = { fg = kanagawa_colors.carpYellow },
-            NavicIconsFunction = { fg = kanagawa_colors.crystalBlue },
-            NavicIconsVariable = { fg = kanagawa_colors.oniViolet },
-            NavicIconsConstant = { fg = kanagawa_colors.oniViolet },
-            NavicIconsString = { fg = kanagawa_colors.springGreen },
-            NavicIconsNumber = { fg = kanagawa_colors.sakuraPink },
-            NavicIconsBoolean = { fg = kanagawa_colors.surimiOrange },
-            NavicIconsArray = { fg = kanagawa_colors.waveAqua2 },
-            NavicIconsObject = { fg = kanagawa_colors.surimiOrange },
-            NavicIconsKey = { fg = kanagawa_colors.oniViolet },
-            NavicIconsNull = { fg = kanagawa_colors.carpYellow },
-            NavicIconsEnumMember = { fg = kanagawa_colors.carpYellow },
-            NavicIconsStruct = { fg = kanagawa_colors.surimiOrange },
-            NavicIconsEvent = { fg = kanagawa_colors.surimiOrange },
-            NavicIconsOperator = { fg = kanagawa_colors.springViolet2 },
-            NavicIconsTypeParameter = { fg = kanagawa_colors.springBlue },
-            NavicText = { fg = M.colorset.white },
-            NavicSeparator = { fg = M.colorset.orange },
-        }
+            overrideHighlightConfig({
+                NormalFloat = { bg = M.colorset.bg0 },
+                DiagnosticError = { fg = M.colorset.error },
+                DiagnosticWarn = { fg = M.colorset.warn },
+                DiagnosticInfo = { fg = M.colorset.info },
+                DiagnosticHint = { fg = M.colorset.hint },
+            })
 
-        overrideHighlightConfig({
-            NormalFloat = { bg = M.colorset.bg0 },
-            DiagnosticError = { fg = M.colorset.error },
-            DiagnosticWarn = { fg = M.colorset.warn },
-            DiagnosticInfo = { fg = M.colorset.info },
-            DiagnosticHint = { fg = M.colorset.hint },
-        })
+            overrideHighlightConfig(overrided_highlight_group)
+            overrideHighlightConfig(navic_highlight)
+            overrideHighlightConfig(cmp_highlight)
+            overrideHighlightConfig(telescope_highlight)
+            overrideHighlightConfig(flit_highlight)
+            overrideHighlightConfig(marks_highlight)
+            overrideHighlightConfig(local_highlight)
+            overrideHighlightConfig(noice_highlight)
+            overrideHighlightConfig(incline_highlight)
 
-        overrideHighlightConfig(overrided_highlight_group)
-        overrideHighlightConfig(navic_highlight)
-        overrideHighlightConfig(cmp_highlight)
-        overrideHighlightConfig(telescope_highlight)
-        overrideHighlightConfig(flit_highlight)
-        overrideHighlightConfig(marks_highlight)
-        overrideHighlightConfig(local_highlight)
-        overrideHighlightConfig(noice_highlight)
-        overrideHighlightConfig(indentscope_highlight)
-        overrideHighlightConfig(incline_highlight)
+            return highlight_overrides
+        end
 
         kanagawa.setup {
             transparent = false,
             globalStatus = true,
             terminalColors = false,
             colors = {
-                fg_border = M.colorset.white,
-                bg = M.colorset.bg,
+                theme = { all = { ui = { bg = M.colorset.bg, } } }
             },
-            overrides = highlight_overrides,
+            overrides = kanagawaOverrided,
         }
         vim.opt.background = 'dark'
-        vim.cmd.colorscheme 'kanagawa'
+        vim.cmd.colorscheme 'kanagawa-wave'
     end
 
     local tokyonight_status, tokyonight = pcall(require, 'tokyonight')
