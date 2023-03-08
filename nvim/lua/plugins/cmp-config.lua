@@ -3,7 +3,6 @@ local M = {
     event = 'InsertEnter',
     dependencies = {
         'hrsh7th/cmp-nvim-lsp',
-        -- 'hrsh7th/cmp-buffer',
         'hrsh7th/cmp-cmdline',
         'hrsh7th/cmp-path',
         'saadparwaiz1/cmp_luasnip',
@@ -23,11 +22,6 @@ local M = {
                 delete_check_events = 'TextChanged',
             }
         },
-        -- {
-        --     'jcdickinson/codeium.nvim',
-        --     dependencies = { 'plenary', 'nui' },
-        --     config = true,
-        -- },
 
         -- NOTE: autopairs plugin
         {
@@ -100,8 +94,6 @@ M.opts = function()
     local cmp_sources = cmp.config.sources({
         { name = 'nvim_lsp', keyword_length = 2 },
         { name = 'luasnip',  keyword_length = 2 },
-        -- { name = 'codeium',  keyword_length = 2 },
-        -- { name = 'buffer' },
         { name = 'rg' },
         { name = 'path' },
     })

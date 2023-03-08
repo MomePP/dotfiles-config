@@ -164,39 +164,56 @@ M.config = function()
     local kanagawa_status, kanagawa = pcall(require, 'kanagawa')
     if kanagawa_status then
         local function kanagawaOverrided(c)
+            local palette = c.palette
+            local theme = c.theme
+
             local navic_highlight = {
-                NavicIconsFile = { fg = c.palette.springViolet2 },
-                NavicIconsModule = { fg = c.palette.boatYellow2 },
-                NavicIconsNamespace = { fg = c.palette.springViolet2 },
-                NavicIconsPackage = { fg = c.palette.springViolet1 },
-                NavicIconsClass = { fg = c.palette.surimiOrange },
-                NavicIconsMethod = { fg = c.palette.crystalBlue },
-                NavicIconsProperty = { fg = c.palette.waveAqua2 },
-                NavicIconsField = { fg = c.palette.waveAqua1 },
-                NavicIconsConstructor = { fg = c.palette.surimiOrange },
-                NavicIconsEnum = { fg = c.palette.boatYellow2 },
-                NavicIconsInterface = { fg = c.palette.carpYellow },
-                NavicIconsFunction = { fg = c.palette.crystalBlue },
-                NavicIconsVariable = { fg = c.palette.oniViolet },
-                NavicIconsConstant = { fg = c.palette.oniViolet },
-                NavicIconsString = { fg = c.palette.springGreen },
-                NavicIconsNumber = { fg = c.palette.sakuraPink },
-                NavicIconsBoolean = { fg = c.palette.surimiOrange },
-                NavicIconsArray = { fg = c.palette.waveAqua2 },
-                NavicIconsObject = { fg = c.palette.surimiOrange },
-                NavicIconsKey = { fg = c.palette.oniViolet },
-                NavicIconsNull = { fg = c.palette.carpYellow },
-                NavicIconsEnumMember = { fg = c.palette.carpYellow },
-                NavicIconsStruct = { fg = c.palette.surimiOrange },
-                NavicIconsEvent = { fg = c.palette.surimiOrange },
-                NavicIconsOperator = { fg = c.palette.springViolet2 },
-                NavicIconsTypeParameter = { fg = c.palette.springBlue },
+                NavicIconsFile = { fg = palette.springViolet2 },
+                NavicIconsModule = { fg = palette.boatYellow2 },
+                NavicIconsNamespace = { fg = palette.springViolet2 },
+                NavicIconsPackage = { fg = palette.springViolet1 },
+                NavicIconsClass = { fg = palette.surimiOrange },
+                NavicIconsMethod = { fg = palette.crystalBlue },
+                NavicIconsProperty = { fg = palette.waveAqua2 },
+                NavicIconsField = { fg = palette.waveAqua1 },
+                NavicIconsConstructor = { fg = palette.surimiOrange },
+                NavicIconsEnum = { fg = palette.boatYellow2 },
+                NavicIconsInterface = { fg = palette.carpYellow },
+                NavicIconsFunction = { fg = palette.crystalBlue },
+                NavicIconsVariable = { fg = palette.oniViolet },
+                NavicIconsConstant = { fg = palette.oniViolet },
+                NavicIconsString = { fg = palette.springGreen },
+                NavicIconsNumber = { fg = palette.sakuraPink },
+                NavicIconsBoolean = { fg = palette.surimiOrange },
+                NavicIconsArray = { fg = palette.waveAqua2 },
+                NavicIconsObject = { fg = palette.surimiOrange },
+                NavicIconsKey = { fg = palette.oniViolet },
+                NavicIconsNull = { fg = palette.carpYellow },
+                NavicIconsEnumMember = { fg = palette.carpYellow },
+                NavicIconsStruct = { fg = palette.surimiOrange },
+                NavicIconsEvent = { fg = palette.surimiOrange },
+                NavicIconsOperator = { fg = palette.springViolet2 },
+                NavicIconsTypeParameter = { fg = palette.springBlue },
                 NavicText = { fg = M.colorset.white },
                 NavicSeparator = { fg = M.colorset.orange },
             }
 
+            telescope_highlight = {
+                TelescopeTitle = { fg = theme.ui.special, bold = true },
+                TelescopePromptNormal = { bg = theme.ui.bg_p1 },
+                TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
+                TelescopeResultsNormal = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m1 },
+                TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
+                TelescopePreviewNormal = { bg = theme.ui.bg_dim },
+                TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
+                TelescopeSelection = { bg = theme.ui.bg_dim, bold = true },
+                TelescopeResultsDiffAdd = { bg = theme.ui.bg_dim },
+                TelescopeResultsDiffChange = { bg = theme.ui.bg_dim },
+                TelescopeResultsDiffDelete = { bg = theme.ui.bg_dim },
+                TelescopeResultsDiffUntracked = { bg = theme.ui.bg_dim },
+            }
+
             overrideHighlightConfig({
-                NormalFloat = { bg = M.colorset.bg0 },
                 DiagnosticError = { fg = M.colorset.error },
                 DiagnosticWarn = { fg = M.colorset.warn },
                 DiagnosticInfo = { fg = M.colorset.info },
@@ -204,10 +221,7 @@ M.config = function()
             })
 
             overrideHighlightConfig({
-                WinSeparator = { fg = M.colorset.bg1, bg = M.colorset.transparent },
-                SignColumn = { fg = M.colorset.transparent, bg = M.colorset.transparent },
-                FloatBorder = { link = 'NormalFloat' },
-                MoreMsg = { fg = M.colorset.blue, bg = M.colorset.transparent },
+                WinSeparator = { fg = palette.sumiInk4, bg = M.colorset.transparent },
             })
             overrideHighlightConfig(navic_highlight)
             overrideHighlightConfig(cmp_highlight)
@@ -222,16 +236,22 @@ M.config = function()
         end
 
         kanagawa.setup {
+            compile = false,
             transparent = false,
             globalStatus = true,
             terminalColors = false,
             colors = {
-                theme = { all = { ui = { bg = M.colorset.bg, } } }
+                theme = {
+                    all = {
+                        ui = {
+                            bg_gutter = 'none',
+                        }
+                    }
+                }
             },
             overrides = kanagawaOverrided,
         }
-        vim.opt.background = 'dark'
-        vim.cmd.colorscheme 'kanagawa-wave'
+        kanagawa.load('wave')
     end
 
     local tokyonight_status, tokyonight = pcall(require, 'tokyonight')
@@ -478,7 +498,7 @@ M.config = function()
         incline_highlight = {
             InclineNormal = { bold = true },
             InclineNormalNC = { fg = c.base03 },
-            InclineSpacing = { fg = c.none, bg = c.base14, },
+            InclineSpacing = { fg = c.none, bg = c.base10, },
             InclineModified = { fg = c.base10, bg = c.none, },
         }
 
@@ -556,6 +576,16 @@ M.config = function()
             DiagnosticVirtualTextHint = { bg = '#273644', fg = M.colorset.hint, italic = true },
         }
 
+        local ts_rainbow_highlight = {
+            TSRainbowRed = { fg = c.base10 },
+            TSRainbowBlue = { fg = c.base11 },
+            TSRainbowCyan = { fg = c.base08 },
+            TSRainbowGreen = { fg = c.base13 },
+            TSRainbowYellow = { fg = '#FFAB91' },
+            TSRainbowOrange = { fg = '#FF6F00' },
+            TSRainbowViolet = { fg = c.base14 },
+        }
+
         indentblankline_highlight = {
             IndentBlanklineContextChar = { fg = c.base04, nocombine = true }
         }
@@ -579,6 +609,7 @@ M.config = function()
         overrideHighlightConfig(flit_highlight)
         overrideHighlightConfig(navic_highlight)
         overrideHighlightConfig(diagnostic_highlight)
+        overrideHighlightConfig(ts_rainbow_highlight)
         overrideHighlightConfig(indentblankline_highlight)
 
         for hl_name, hl_value in pairs(highlight_overrides) do
