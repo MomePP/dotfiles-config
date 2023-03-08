@@ -45,6 +45,11 @@ return {
             show_current_context = true,
         }
     },
+    {
+        'utilyre/sentiment.nvim',
+        event = 'VeryLazy',
+        config = true,
+    },
 
 
     -- Miscellaneous
