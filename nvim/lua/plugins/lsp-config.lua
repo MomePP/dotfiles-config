@@ -67,15 +67,15 @@ lsp_setup_module.config = function()
     -- INFO:  inject `esp-clang`, use specific fork clang from espressif
     --  also add `query-driver` for specific toolchains not from builtin binary
     lspconfig.util.default_config = vim.tbl_extend('force', lspconfig.util.default_config, {
-            on_new_config = lspconfig.util.add_hook_before(lspconfig.util.default_config.on_new_config,
-                function(config, root_dir)
-                    local new_default_config = load_local_settings(root_dir, config.name)
-                    if new_default_config ~= nil then
-                        config.cmd = new_default_config.cmd
-                        -- config = vim.tbl_deep_extend('force', config, new_default_config) -- BUG: not sure why its cannot extended table, shallow copy ?
-                    end
-                end)
-        })
+        on_new_config = lspconfig.util.add_hook_before(lspconfig.util.default_config.on_new_config,
+            function(config, root_dir)
+                local new_default_config = load_local_settings(root_dir, config.name)
+                if new_default_config ~= nil then
+                    config.cmd = new_default_config.cmd
+                    -- config = vim.tbl_deep_extend('force', config, new_default_config) -- BUG: not sure why its cannot extended table, shallow copy ?
+                end
+            end)
+    })
 
     -- INFO: config lsp log with formatting
     vim.lsp.set_log_level 'off' --    Levels by name: "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "OFF"
