@@ -4,23 +4,34 @@ local M = {
 	'akinsho/toggleterm.nvim',
 }
 
+M.init = function()
+	-- INFO: setup terminal keymaps
+	function _G.set_terminal_keymaps()
+		local key_opts = { buffer = 0 }
+		vim.keymap.set('t', '<esc>', [[<C-\><C-n>]], key_opts)
+		vim.keymap.set('t', '<C-w>', [[<C-\><C-n><C-w>]], key_opts)
+	end
+
+	vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
+end
+
 M.opts = function()
-	local defaults = require('config').defaults
+	-- local defaults = require('config').defaults
 
 	return {
 		size = 20,
 		open_mapping = toggleterm_keymap.toggle,
 		shade_terminals = false,
-		direction = 'float',
-		float_opts = {
-			border = defaults.float_border,
-			width = function() return math.ceil(vim.o.columns * 0.9) - 1 end,
-			height = function() return math.ceil(vim.o.lines * 0.85) - 1 end,
-		},
-		highlights = {
-			FloatBorder = { link = 'NormalFloat' },
-			NormalFloat = { link = 'NormalFloat' }
-		}
+		direction = 'tab',
+		-- float_opts = {
+		-- 	border = defaults.float_border,
+		-- 	width = function() return math.ceil(vim.o.columns * 0.9) - 1 end,
+		-- 	height = function() return math.ceil(vim.o.lines * 0.85) - 1 end,
+		-- },
+		-- highlights = {
+		-- 	FloatBorder = { link = 'NormalFloat' },
+		-- 	NormalFloat = { link = 'NormalFloat' }
+		-- },
 	}
 end
 
