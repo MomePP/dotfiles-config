@@ -81,7 +81,6 @@ keymaps.lsp = {
 -- INFO: Lazy keymap
 keymaps.lazy = {
     open    = '<leader>P',
-    lazygit = '<leader>g',
 }
 
 -- INFO: Focus keymap
@@ -135,6 +134,7 @@ keymaps.todocomments = {
 -- INFO: Terminal & ToggleTerm keymap
 keymaps.toggleterm = {
     toggle = '<leader>t',
+    lazygit = '<leader>g',
 }
 
 -- INFO: Marks keymap

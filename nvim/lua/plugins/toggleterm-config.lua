@@ -5,14 +5,13 @@ local M = {
 }
 
 M.init = function()
-	-- INFO: setup terminal keymaps
-	function _G.set_terminal_keymaps()
+	function _G.setup_terminal_config()
+		-- set terminal keymap
 		local key_opts = { buffer = 0 }
-		vim.keymap.set('t', '<esc>', [[<C-\><C-n>]], key_opts)
-		vim.keymap.set('t', '<C-w>', [[<C-\><C-n><C-w>]], key_opts)
+		vim.keymap.set('t', '<C-w>', [[<C-\><C-n>]], key_opts)
 	end
 
-	vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
+	vim.cmd('autocmd! TermOpen term://* lua setup_terminal_config()')
 end
 
 M.opts = function()
@@ -35,26 +34,29 @@ M.opts = function()
 	}
 end
 
--- M.config = function()
--- 	-- local Terminal = require('toggleterm.terminal').Terminal
--- 	--
--- 	-- local lazygit = Terminal:new({ cmd = 'lazygit', count = 20, hidden = true })
--- 	-- vim.api.nvim_create_user_command('ToggleLazyGit',
--- 	-- 	function()
--- 	-- 		lazygit:toggle()
--- 	-- 	end,
--- 	-- 	{ desc = 'Toggle `lazygit` terminal using toggleterm' }
--- 	-- )
--- 	--
--- 	-- local gotop = Terminal:new({ cmd = 'gotop', count = 21, hidden = true })
--- 	-- local node = Terminal:new({ cmd = 'node', hidden = true })
--- 	-- local ncdu = Terminal:new({ cmd = 'ncdu', hidden = true })
--- 	-- local python = Terminal:new({ cmd = 'python', hidden = true })
--- 	-- local spotify = Terminal:new({ cmd = 'spt', hidden = true })
--- end
+M.config = function(_, opts)
+	require('toggleterm').setup(opts)
+
+	local Terminal = require('toggleterm.terminal').Terminal
+
+	local lazygit = Terminal:new({ cmd = 'lazygit', count = 20 })
+	vim.api.nvim_create_user_command('ToggleLazyGit',
+		function()
+			lazygit:toggle()
+		end,
+		{ desc = 'Toggle `lazygit` terminal using toggleterm' }
+	)
+
+	-- local gotop = Terminal:new({ cmd = 'gotop', count = 21, hidden = true })
+	-- local node = Terminal:new({ cmd = 'node', hidden = true })
+	-- local ncdu = Terminal:new({ cmd = 'ncdu', hidden = true })
+	-- local python = Terminal:new({ cmd = 'python', hidden = true })
+	-- local spotify = Terminal:new({ cmd = 'spt', hidden = true })
+end
 
 M.keys = {
 	{ toggleterm_keymap.toggle },
+	{ toggleterm_keymap.lazygit, '<Cmd>ToggleLazyGit<CR>', silent = true, noremap = true },
 }
 
 return M
