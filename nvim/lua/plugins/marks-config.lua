@@ -23,9 +23,7 @@ M.opts = {
     excluded_filetypes = {
         'toggleterm',
         'lspinfo',
-        'lsp-installer',
         'terminal',
-        'packer',
         'help',
         'TelescopePrompt',
         'TelescopeResults',
