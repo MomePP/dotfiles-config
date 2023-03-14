@@ -8,10 +8,10 @@ Runs `neovim-installer.sh` script to install neovim with MomePP's configuration.
 ```
 
 ### Keybindings
-Most of the keybindings can be modified in [keymaps.lua](nvim/lua/keymaps.lua).
+Most of the keybindings can be modified in [keymaps.lua](nvim/lua/config/keymaps.lua).
 
 ### Plugins
-All the installed plugins are listed in [plugins.lua](nvim/lua/plugins.lua) or [plugins/](nvim/lua/plugins/)
+All the installed plugins are listed in [plugins/init.lua](nvim/lua/plugins/init.lua) or [plugins/](nvim/lua/plugins/)
 
 ---
 
