@@ -78,6 +78,15 @@ keymaps.lsp = {
     end,
 }
 
+-- INFO: Treesitter
+keymaps.treesitter = {
+    incremental_selection = {
+        init_selection = 'gl',
+        node_incremental = 'gl',
+        node_decremental = 'gh',
+    },
+}
+
 -- INFO: Lazy keymap
 keymaps.lazy = {
     open    = '<leader>P',
