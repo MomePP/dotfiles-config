@@ -4,15 +4,15 @@ local M = {
 	'akinsho/toggleterm.nvim',
 }
 
-M.init = function()
-	function _G.setup_terminal_config()
-		-- set terminal keymap
-		local key_opts = { buffer = 0 }
-		vim.keymap.set('t', '<C-w>', [[<C-\><C-n>]], key_opts)
-	end
-
-	vim.cmd('autocmd! TermOpen term://* lua setup_terminal_config()')
-end
+-- M.init = function()
+-- 	function _G.setup_terminal_config()
+-- 		-- set terminal keymap
+-- 		local key_opts = { buffer = 0 }
+-- 		vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], key_opts)
+-- 	end
+--
+-- 	vim.cmd('autocmd! TermOpen term://* lua setup_terminal_config()')
+-- end
 
 M.opts = function()
 	-- local defaults = require('config').defaults
