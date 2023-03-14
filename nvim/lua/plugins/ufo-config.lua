@@ -11,7 +11,7 @@ M.opts = {
     close_fold_kinds = { 'imports', 'comment' },
     preview = {
         win_config = {
-            border = { '', '─', '', '', '', '─', '', '' },
+            border = require('config').defaults.float_border,
             winhighlight = 'Normal:NormalFold',
             winblend = 0,
         },
