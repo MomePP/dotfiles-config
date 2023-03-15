@@ -144,6 +144,7 @@ keymaps.todocomments = {
 keymaps.toggleterm = {
     toggle = '<leader>t',
     lazygit = '<leader>g',
+    lazygit_file_history = '<leader>G',
 }
 
 -- INFO: Marks keymap

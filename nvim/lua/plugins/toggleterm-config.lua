@@ -39,12 +39,18 @@ M.config = function(_, opts)
 
 	local Terminal = require('toggleterm.terminal').Terminal
 
-	local lazygit = Terminal:new({ cmd = 'lazygit', count = 20 })
 	vim.api.nvim_create_user_command('ToggleLazyGit',
 		function()
-			lazygit:toggle()
+			Terminal:new({ cmd = 'lazygit', count = 20 }):toggle()
 		end,
 		{ desc = 'Toggle `lazygit` terminal using toggleterm' }
+	)
+
+	vim.api.nvim_create_user_command('ToggleLazyGitFileHistory',
+		function()
+			Terminal:new({ cmd = 'lazygit -f ' .. vim.fn.expand('%'), count = 21 }):toggle()
+		end,
+		{ desc = 'Toggle `lazygit` with filter opened file in current buffer' }
 	)
 
 	-- local gotop = Terminal:new({ cmd = 'gotop', count = 21, hidden = true })
@@ -56,7 +62,8 @@ end
 
 M.keys = {
 	{ toggleterm_keymap.toggle },
-	{ toggleterm_keymap.lazygit, '<Cmd>ToggleLazyGit<CR>', silent = true, noremap = true },
+	{ toggleterm_keymap.lazygit,              '<Cmd>ToggleLazyGit<CR>',            silent = true, noremap = true },
+	{ toggleterm_keymap.lazygit_file_history, '<Cmd>ToggleLazyGitFileHistory<CR>', silent = true, noremap = true },
 }
 
 return M
