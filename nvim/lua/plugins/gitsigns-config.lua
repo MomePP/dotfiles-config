@@ -4,8 +4,7 @@ local M = {
 }
 
 M.opts = {
-    signcolumn = false,
-    numhl = true,
+    signcolumn = true,
     on_attach = function(bufnr)
         local gitsigns_keymap = require('config.keymaps').gitsigns
         local gitsigns_actions = package.loaded.gitsigns
