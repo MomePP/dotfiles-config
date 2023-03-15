@@ -26,3 +26,7 @@ keybinding:
   universal:
     confirm-alt1: null
     copyToClipboard: 'y'
+customCommands:
+  - key: 'w'
+    command: "nvim --server $NVIM --remote-send '<S-q><C-\\><C-n>:lua _OpenDiffView(\"{{.SelectedLocalCommit.Sha}}\")<CR>'"
+    context: 'commits'
