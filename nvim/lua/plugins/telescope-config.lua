@@ -51,8 +51,8 @@ M.opts = function()
             local multi_selections = current_picker:get_multi_selection()
 
             local buffers = vim.tbl_map(function(selection)
-                    return utils.transform_path({}, selection.filename)
-                end, multi_selections)
+                return utils.transform_path({}, selection.filename)
+            end, multi_selections)
 
             if next(buffers) == nil then
                 local selection = action_state.get_selected_entry()
@@ -151,10 +151,10 @@ M.opts = function()
         },
         extensions = {
             ['fzf'] = {
-                fuzzy = true, -- false will only do exact matching
+                fuzzy = true,                   -- false will only do exact matching
                 override_generic_sorter = true, -- override the generic sorter
-                override_file_sorter = true, -- override the file sorter
-                case_mode = 'smart_case', -- or 'ignore_case' or 'respect_case'
+                override_file_sorter = true,    -- override the file sorter
+                case_mode = 'smart_case',       -- or 'ignore_case' or 'respect_case'
             },
             ['file_browser'] = mergeConfig(horizontal_layout_config, {
                 path = '%:p:h',
