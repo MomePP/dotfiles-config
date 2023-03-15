@@ -49,7 +49,6 @@ return {
         'utilyre/sentiment.nvim',
         event = { 'BufReadPost', 'BufNewFile' },
         opts = {
-            delay = 200,
             excluded_filetypes = {
                 [''] = true,
                 ['toggleterm'] = true,
