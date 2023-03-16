@@ -600,7 +600,7 @@ M.config = function()
         overrideHighlightConfig({
             LocalHighlightText = { bg = c.base02, bold = true, nocombine = true },
             Normal = { fg = c.base04, bg = c.base01 },
-            NormalNC = { fg = c.base05, bg = c.base01 },
+            NormalNC = { fg = c.base04, bg = c.base01 },
             LineNr = { fg = c.base03, bg = c.base01 },
             FoldColumn = { fg = c.base02, bg = c.base01 },
             SignColumn = { fg = c.base02, bg = c.base01 },
