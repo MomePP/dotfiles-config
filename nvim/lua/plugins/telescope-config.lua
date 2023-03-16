@@ -176,17 +176,35 @@ M.config = function(_, opts)
     telescope.load_extension('file_browser')
 end
 
-M.keys = {
-    { telescope_keymap.grep_workspace,   '<Cmd>Telescope grep_string<CR>' },
-    { telescope_keymap.buffers,          '<Cmd>Telescope buffers<CR>' },
-    { telescope_keymap.help,             '<Cmd>Telescope help_tags<CR>' },
-    { telescope_keymap.jumplist,         '<Cmd>Telescope jumplist<CR>' },
-    { telescope_keymap.search_workspace, '<Cmd>Telescope live_grep<CR>' },
-    { telescope_keymap.oldfiles,         '<Cmd>Telescope oldfiles<CR>' },
-    { telescope_keymap.search_buffer,    '<Cmd>Telescope current_buffer_fuzzy_find<CR>' },
-    { telescope_keymap.quickfix,         '<Cmd>Telescope quickfix<CR>' },
-    { telescope_keymap.file_browse,      '<Cmd>Telescope file_browser<CR>' },
-    { telescope_keymap.find_files,       '<Cmd>Telescope find_files<CR>' },
-}
+M.keys = function()
+    local function getVisualSelection()
+        vim.cmd('noau normal! "vy"')
+        local text = vim.fn.getreg('v')
+        vim.fn.setreg('v', {})
+
+        text = string.gsub(text, '\n', '')
+        if #text > 0 then return text else return '' end
+    end
+
+    return {
+        { telescope_keymap.buffers,          '<Cmd>Telescope buffers<CR>' },
+        { telescope_keymap.help,             '<Cmd>Telescope help_tags<CR>' },
+        { telescope_keymap.jumplist,         '<Cmd>Telescope jumplist<CR>' },
+        { telescope_keymap.search_workspace, '<Cmd>Telescope live_grep<CR>' },
+        { telescope_keymap.oldfiles,         '<Cmd>Telescope oldfiles<CR>' },
+        { telescope_keymap.search_buffer,    '<Cmd>Telescope current_buffer_fuzzy_find<CR>' },
+        { telescope_keymap.quickfix,         '<Cmd>Telescope quickfix<CR>' },
+        { telescope_keymap.file_browse,      '<Cmd>Telescope file_browser<CR>' },
+        { telescope_keymap.find_files,       '<Cmd>Telescope find_files<CR>' },
+        { telescope_keymap.grep_workspace,   '<Cmd>Telescope grep_string<CR>' },
+        {
+            telescope_keymap.grep_workspace,
+            function()
+                require('telescope.builtin').grep_string({ default_text = getVisualSelection() })
+            end,
+            mode = 'v',
+        }
+    }
+end
 
 return M
