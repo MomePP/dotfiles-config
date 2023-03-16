@@ -1,0 +1,20 @@
+SKETCHYBAR_CONFIG="$HOME/.config/sketchybar"
+# MAIN_DISPLAY=$(system_profiler SPDisplaysDataType | grep -B 3 'Main Display:' ')
+# MAIN_DISPLAY=$(system_profiler SPDisplaysDataType | grep -B 3 'Main Display:' | awk '/Display Type/ {print $3}')
+
+# if [ -z $MAIN_DISPLAY ]; then
+#     defaults write com.knollsoft.Rectangle screenEdgeGapTop -int 24
+#     source "$SKETCHYBAR_CONFIG/sketchybarrc-desktop"
+# elif [ $MAIN_DISPLAY = "Built-in" ]; then
+    # defaults write com.knollsoft.Rectangle screenEdgeGapTop -int 32
+    # source "$SKETCHYBAR_CONFIG/sketchybarrc-laptop"
+# else
+#     defaults write com.knollsoft.Rectangle screenEdgeGapTop -int 24
+    # source "$SKETCHYBAR_CONFIG/sketchybarrc-desktop"
+# fi
+
+source "$SKETCHYBAR_CONFIG/sketchybarrc-laptop"
+
+# defaults write com.knollsoft.Rectangle screenEdgeGapTop -int 32
+# osascript -e 'quit app "Rectangle"'
+# open -a Rectangle
