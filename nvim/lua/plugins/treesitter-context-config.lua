@@ -1,9 +1,6 @@
 local M = {
     'nvim-treesitter/nvim-treesitter-context',
     event = { 'BufReadPost', 'BufNewFile' },
-    dependencies = {
-        'JoosepAlviste/nvim-ts-context-commentstring',
-    }
 }
 
 M.opts = {
