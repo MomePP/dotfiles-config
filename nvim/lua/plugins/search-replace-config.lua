@@ -13,6 +13,7 @@ M.keys = function()
     return {
         { search_replace_keymap.single_open, '<Cmd>SearchReplaceSingleBufferCWord<CR>' },
         { search_replace_keymap.multi_open,  '<Cmd>SearchReplaceMultiBufferCWord<CR>' },
+        { search_replace_keymap.visual_open, '<CMD>SearchReplaceWithinVisualSelectionCWord<CR>', mode = { 'v' } }
     }
 end
 

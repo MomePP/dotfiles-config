@@ -220,6 +220,7 @@ keymaps.move = {
 keymaps.search_replace = {
     single_open = '<leader>r',
     multi_open  = '<leader>R',
+    visual_open = '<C-r>',
 }
 
 -- INFO: treesj keymap
