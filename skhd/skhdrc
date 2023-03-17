@@ -71,8 +71,8 @@ ctrl + lalt - g : yabai -m space --toggle padding; yabai -m space --toggle gap
 # lalt - t : kitty msg create-window
 
 # New window in hor./ vert. splits for all applications with yabai
-lalt - s : yabai -m window --insert east;  skhd -k "cmd - n"
-lalt - v : yabai -m window --insert south; skhd -k "cmd - n"
+lalt - s : yabai -m window --insert south;  skhd -k "cmd - n"
+lalt - v : yabai -m window --insert east; skhd -k "cmd - n"
 
 # Toggle sketchybar
 shift + lalt - space : sketchybar --bar hidden=toggle
