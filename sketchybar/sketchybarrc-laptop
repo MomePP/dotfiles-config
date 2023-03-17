@@ -5,7 +5,7 @@ FONT_FACE="Hack Nerd Font"
 # https://felixkratz.github.io/SketchyBar/config/bar
 
 sketchybar	--bar \
-                height=32 \
+                height=36 \
                 blur_radius=20 \
                 position=top \
                 sticky=on \
@@ -13,7 +13,7 @@ sketchybar	--bar \
                 padding_right=23 \
                 color=0x6624273a \
                 hidden=off \
-                corner_radius=8 \
+                corner_radius=8
 
 sketchybar	--default \
                 updates=when_shown \
@@ -42,7 +42,8 @@ do
                               background.corner_radius=5                 \
                               background.drawing=off                     \
                               label.drawing=off                          \
-                              script="$PLUGIN_DIR/current_space.sh"
+                              script="$PLUGIN_DIR/current_space.sh"      \
+                              click_script="yabai -m space --focus $sid"
 done
 
 sketchybar 	--add item front_app left \

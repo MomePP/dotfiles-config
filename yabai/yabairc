@@ -13,7 +13,7 @@ yabai -m signal --add event=window_focused action="sketchybar --trigger window_f
 
 $HOME/.config/yabai/create_spaces.sh
 
-yabai -m config external_bar               all:32:0     \
+yabai -m config external_bar               all:34:0     \
                 mouse_follows_focus        off          \
                 focus_follows_mouse        off          \
                 window_zoom_persist        off          \

@@ -3,9 +3,9 @@
 case "$SENDER" in
   "mouse.clicked") 
     if [ $MODIFIER = "shift" ]; then
-      open "https://www.lichess.org/"
+      open "https://www.gitlab.com/"
     else
-      open "https://www.reddit.com/r/all/"
+      open "https://www.github.com/"
     fi
 esac
 
