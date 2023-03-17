@@ -1,6 +1,7 @@
 local M = {
     'nvim-treesitter/nvim-treesitter-context',
     event = { 'BufReadPost', 'BufNewFile' },
+    dependencies = { 'nvim-treesitter' },
 }
 
 M.opts = {
