@@ -200,7 +200,7 @@ M.keys = function()
         {
             telescope_keymap.grep_workspace,
             function()
-                require('telescope.builtin').grep_string({ default_text = getVisualSelection() })
+                require('telescope.builtin').grep_string({ default_text = ("'%s"):format(getVisualSelection()), use_regex = false })
             end,
             mode = 'v',
         }
