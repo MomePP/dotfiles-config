@@ -35,10 +35,14 @@ ctrl + lalt + shift - 0x24 : yabai -m window --toggle zoom-parent; sketchybar --
 ctrl + lalt + shift - s : yabai -m window --toggle split
 
 # Moving windows in spaces
-shift + lalt - h : yabai -m window --warp west || $(yabai -m window --display west && sketchybar --trigger windows_on_spaces && yabai -m display --focus west && yabai -m window --warp last) || yabai -m window --move rel:-10:0
-shift + lalt - j : yabai -m window --warp south || $(yabai -m window --display south && sketchybar --trigger windows_on_spaces && yabai -m display --focus south) || yabai -m window --move rel:0:10
-shift + lalt - k : yabai -m window --warp north || $(yabai -m window --display north && sketchybar --trigger windows_on_spaces && yabai -m display --focus north) || yabai -m window --move rel:0:-10
-shift + lalt - l : yabai -m window --warp east || $(yabai -m window --display east && sketchybar --trigger windows_on_spaces && yabai -m display --focus east && yabai -m window --warp first) || yabai -m window --move rel:10:0
+ctrl + shift + lalt - h : yabai -m window --warp west || set -l move_left (yabai -m window --display west && sketchybar --trigger windows_on_spaces && yabai -m display --focus west && yabai -m window --warp last) || yabai -m window --move rel:-10:0
+ctrl + shift + lalt - j : yabai -m window --warp south || set -l move_down (yabai -m window --display south && sketchybar --trigger windows_on_spaces && yabai -m display --focus south) || yabai -m window --move rel:0:10
+ctrl + shift + lalt - k : yabai -m window --warp north || set -l move_up (yabai -m window --display north && sketchybar --trigger windows_on_spaces && yabai -m display --focus north) || yabai -m window --move rel:0:-10
+ctrl + shift + lalt - l : yabai -m window --warp east || set -l move_right (yabai -m window --display east && sketchybar --trigger windows_on_spaces && yabai -m display --focus east && yabai -m window --warp first) || yabai -m window --move rel:10:0
+# ctrl + shift + lalt - h : yabai -m window --warp west
+# ctrl + shift + lalt - j : yabai -m window --warp south
+# ctrl + shift + lalt - k : yabai -m window --warp north
+# ctrl + shift + lalt - l : yabai -m window --warp east
 
 # Moving windows between spaces: shift + lalt - {1, 2, 3, 4, p, n } (Assumes 4 Spaces Max per Display)
 ctrl + shift + lalt - 1 : yabai -m window --space 1; sketchybar --trigger windows_on_spaces
