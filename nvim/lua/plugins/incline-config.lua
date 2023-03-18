@@ -9,7 +9,7 @@ M.opts = {
             horizontal = 0,
             vertical = 0,
         },
-        zindex = 10,
+        zindex = 50,
     },
     render = function(props)
         local bufname = vim.api.nvim_buf_get_name(props.buf)
