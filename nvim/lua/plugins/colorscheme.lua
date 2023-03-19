@@ -609,6 +609,7 @@ M.config = function()
             LineNr = { fg = c.base03, bg = c.base01 },
             FoldColumn = { fg = c.base02, bg = c.base01 },
             SignColumn = { fg = c.base02, bg = c.base01 },
+            CursorLine = { bg = c.base02 },
             VertSplit = { fg = c.base02, bg = c.base01 },
             NormalFloat = { bg = c.base00 },
             FloatBorder = { link = 'NormalFloat' },

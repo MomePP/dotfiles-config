@@ -1,5 +1,6 @@
 local M = {
     'beauwilliams/focus.nvim',
+    event = { 'BufReadPost', 'BufNewFile' }
 }
 
 M.opts = {
@@ -18,6 +19,7 @@ M.opts = {
     autoresize = true,
     number = false,
     signcolumn = false,
+    cursorline = true,
 }
 
 M.keys = function()
