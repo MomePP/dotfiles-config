@@ -597,6 +597,11 @@ M.config = function()
             IndentBlanklineContextChar = { fg = c.base04, nocombine = true }
         }
 
+        local ts_context_highlight = {
+            TreesitterContext = { bg = c.base02, italic = true },
+            TreesitterContextLineNumber = { link = 'TreesitterContext' },
+        }
+
         overrideHighlightConfig({
             LocalHighlightText = { bg = c.base02, bold = true, nocombine = true },
             Normal = { fg = c.base04, bg = c.base01 },
@@ -618,6 +623,7 @@ M.config = function()
         overrideHighlightConfig(diagnostic_highlight)
         overrideHighlightConfig(ts_rainbow_highlight)
         overrideHighlightConfig(indentblankline_highlight)
+        overrideHighlightConfig(ts_context_highlight)
 
         for hl_name, hl_value in pairs(highlight_overrides) do
             vim.api.nvim_set_hl(0, hl_name, hl_value)
