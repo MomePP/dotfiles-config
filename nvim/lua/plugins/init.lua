@@ -5,11 +5,6 @@ return {
 
     -- Utilities
     {
-        'tzachar/local-highlight.nvim',
-        event = { 'BufReadPre', 'BufNewFile' },
-        opts = { hlgroup = 'LocalHighlightText', cw_hlgroup = 'LocalHighlightText' },
-    },
-    {
         'nmac427/guess-indent.nvim',
         event = { 'BufReadPost', 'BufNewFile' },
         config = true
@@ -18,6 +13,17 @@ return {
         'Maan2003/lsp_lines.nvim',
         dependencies = 'nvim-lspconfig',
         event = { 'BufReadPost', 'BufNewFile' },
+        config = true
+    },
+    {
+        'tzachar/local-highlight.nvim',
+        event = { 'BufReadPre', 'BufNewFile' },
+        opts = { hlgroup = 'LocalHighlightText', cw_hlgroup = 'LocalHighlightText' },
+    },
+    {
+        'kylechui/nvim-surround',
+        dependencies = { 'nvim-treesitter-textobjects' },
+        event = 'VeryLazy',
         config = true
     },
     {
