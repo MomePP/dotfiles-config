@@ -23,7 +23,7 @@ yabai -m config external_bar               all:34:0     \
                 window_opacity             on           \
                 window_opacity_duration    0.15         \
                 active_window_opacity      1.0          \
-                normal_window_opacity      0.9          \
+                normal_window_opacity      0.95         \
                 window_animation_duration  0.1          \
                 insert_feedback_color      0xff9dd274   \
                 split_ratio                0.50         \

@@ -4,143 +4,146 @@ FONT_FACE="Hack Nerd Font"
 ##### Bar Appearance #####
 # https://felixkratz.github.io/SketchyBar/config/bar
 
-sketchybar	--bar \
-                height=36 \
-                blur_radius=20 \
-                position=top \
-                sticky=on \
-                padding_left=23 \
-                padding_right=23 \
-                color=0x6624273a \
-                hidden=off \
-                corner_radius=8
+sketchybar	--bar                   \
+                height=36           \
+                blur_radius=30      \
+                position=top        \
+                topmost=on          \
+                sticky=off          \
+                padding_left=20     \
+                padding_right=20    \
+                color=0x6624273a
 
-sketchybar	--default \
-                updates=when_shown \
-                background.color=0xff24273a \
-                background.padding_left=2 \
-                background.padding_right=2 \
-                background.corner_radius=5 \
-                background.height=24 \
-                icon.color=0xffffffff \
-                icon.font="$FONT_FACE:Bold:17.0" \
-                icon.padding_left=8 \
-                icon.padding_right=7 \
-                label.font="$FONT_FACE:Bold:12.0" \
-                label.color=0xffcad3f5 \
-                label.padding_left=0 \
+sketchybar	--default                               \
+                updates=when_shown                  \
+                background.color=0xff24273a         \
+                background.padding_left=2           \
+                background.padding_right=2          \
+                background.corner_radius=5          \
+                background.height=24                \
+                icon.color=0xffffffff               \
+                icon.font="$FONT_FACE:Bold:17.0"    \
+                icon.padding_left=8                 \
+                icon.padding_right=7                \
+                label.font="$FONT_FACE:Bold:12.0"   \
+                label.color=0xffcad3f5              \
+                label.padding_left=0                \
                 label.padding_right=7
 
-SPACE_ICONS=("1" "2" "3" "4" "5" "6" "7" "8" "9" "10")
-for i in "${!SPACE_ICONS[@]}"
+# INFO: left-side bar components
+# INFO: add space config at maximum for 10 spaces
+for i in {0..9};
 do
   sid=$(($i+1))
   sketchybar --add space space.$sid left                                 \
              --set space.$sid associated_space=$sid                      \
-                              icon=${SPACE_ICONS[i]}                     \
+                              icon=$sid                                  \
+                              icon.font="$FONT_FACE:Bold:13.0"           \
                               background.color=0xff24273a                \
                               background.corner_radius=5                 \
+                              background.padding_right=5                 \
                               background.drawing=off                     \
                               label.drawing=off                          \
                               script="$PLUGIN_DIR/current_space.sh"      \
                               click_script="yabai -m space --focus $sid"
 done
 
-sketchybar 	--add item front_app left \
-            --set   front_app \
-                          background.color=0xffa6da95 \
-                          background.padding_left=0 \
-                          background.padding_right=0 \
-                          icon.y_offset=1 \
-                          icon.color=0xff24273a \
-                          label.drawing=no \
+sketchybar 	--add item front_app left                       \
+            --set   front_app                               \
+                          background.color=0xffa6da95       \
+                          background.padding_left=0         \
+                          background.padding_right=0        \
+                          icon.y_offset=1                   \
+                          icon.color=0xff24273a             \
+                          label.drawing=no                  \
                           script="$PLUGIN_DIR/front_app.sh" \
-            --add item front_app.name left \
-            --set front_app.name \
-                          icon.drawing=off \
-                          label="Hello" \
-                          label.drawing=yes \
-                          background.padding_right=8
+                                                            \
+            --add item front_app.name left                  \
+            --set front_app.name                            \
+                          icon.drawing=off                  \
+                          label="MomePP"                    \
+                          label.drawing=yes                 \
+                          background.padding_right=8        \
+                                                            \
+            --add   bracket front_app_bracket               \
+                    front_app                               \
+                    front_app.name                          \
+            --subscribe	front_app front_app_switched        \
 
-sketchybar  --add   bracket front_app_bracket \
-                    front_app \
-                    front_app.name \
-            --subscribe	front_app front_app_switched \
-
-sketchybar	--add	item weather center \
-            --set	weather \
-                    	background.padding_right=4 \
-                    	icon= \
-                    	icon.color=0xfff5bde6 \
-                        icon.font="$FONT_FACE:Bold:15.0" \
-                    	update_freq=1800 \
-                    	script="$PLUGIN_DIR/weather.sh" \
-            --subscribe weather system_woke
-
-sketchybar	--add	item weather.moon center \
-            --set	weather.moon \
-                    	background.color=0x667dc4e4 \
-                    	background.padding_right=4 \
-                    	icon.color=0xff181926 \
-                    	icon.font="$FONT_FACE:Bold:22.0" \
-                    	label.drawing=off \
-                    	script="$PLUGIN_DIR/moon.sh" \
+# INFO: center bar components
+sketchybar	--add	item weather center                     \
+            --set	weather                                 \
+                    	background.padding_right=4          \
+                    	icon=                              \
+                    	icon.color=0xfff5bde6               \
+                        icon.font="$FONT_FACE:Bold:15.0"    \
+                    	update_freq=1800                    \
+                    	script="$PLUGIN_DIR/weather.sh"     \
+            --subscribe weather system_woke                 \
+                                                            \
+    	    --add	item weather.moon center                \
+            --set	weather.moon                            \
+                    	background.color=0x667dc4e4         \
+                    	background.padding_right=4          \
+                    	icon.color=0xff181926               \
+                    	icon.font="$FONT_FACE:Bold:22.0"    \
+                    	label.drawing=off                   \
+                    	script="$PLUGIN_DIR/moon.sh"        \
             --subscribe weather.moon mouse.clicked
 
 SPOTIFY_EVENT="com.spotify.client.PlaybackStateChanged"
-sketchybar  --add   event spotify_change $SPOTIFY_EVENT \
-            --add   item spotify center \
-            --set   spotify \
-                        background.padding_left=2 \
-                        icon= \
-                    	icon.font="$FONT_FACE:Bold:20.0" \
-                    	icon.y_offset=1 \
-                        label.drawing=off \
-                    	label.padding_left=2 \
-                        script="$PLUGIN_DIR/spotify.sh" \
-            --subscribe spotify spotify_change mouse.clicked
-
-sketchybar	--add	item spotify_playlist center \
-            --set	spotify_playlist \
-                        background.color=0xaa24273a \
-                        icon= \
-                        icon.color=0xffc6a0f6 \
-                        icon.font="$FONT_FACE:Bold:19.0" \
-                        label.drawing=off \
-                        script="$PLUGIN_DIR/spotify_playlist.sh" \
+sketchybar  --add   event spotify_change $SPOTIFY_EVENT         \
+            --add   item spotify center                         \
+            --set   spotify                                     \
+                        background.padding_left=2               \
+                        icon=                                  \
+                    	icon.font="$FONT_FACE:Bold:20.0"        \
+                    	icon.y_offset=1                         \
+                        label.drawing=off                       \
+                    	label.padding_left=2                    \
+                        script="$PLUGIN_DIR/spotify.sh"         \
+            --subscribe spotify spotify_change mouse.clicked    \
+                                                                \
+    	    --add	item spotify_playlist center                \
+            --set	spotify_playlist                            \
+                        background.color=0xaa24273a             \
+                        icon=                                  \
+                        icon.color=0xffc6a0f6                   \
+                        icon.font="$FONT_FACE:Bold:19.0"        \
+                        label.drawing=off                       \
+                        script="$PLUGIN_DIR/spotify_playlist.sh"\
             --subscribe spotify_playlist mouse.clicked
 
-sketchybar  --add   item clock right \
-            --set   clock \
-                        icon= \
-                        icon.y_offset=1 \
-                        icon.color=0xffed8796 \
-                        update_freq=10 \
-                        script="$PLUGIN_DIR/clock.sh"
-
-sketchybar	--add	item	volume right \
-            --set volume \
-                      icon.y_offset=1 \
-                      icon.color=0xff8aadf4 \
-                      script="$PLUGIN_DIR/volume.sh" \
-           --subscribe volume volume_change
-
-sketchybar  --add   item battery right \
-            --set   battery \
-                        icon.y_offset=1 \
-                        update_freq=10 \
-                        script="$PLUGIN_DIR/battery.sh" \
-           --subscribe battery system_woke
-
-sketchybar --add event input_change 'AppleSelectedInputSourcesChangedNotification' \
-           --add item keyboard right   \
-           --set keyboard \
-                        icon.y_offset=1 \
-                        icon=󰧹 \
-                        script="$PLUGIN_DIR/keyboard.sh" \
-           --subscribe keyboard input_change
+# INFO: right-side bar components
+sketchybar  --add item clock right                      \
+            --set clock                                 \
+                  icon=                                \
+                  icon.y_offset=1                       \
+                  icon.color=0xffed8796                 \
+                  update_freq=10                        \
+                  script="$PLUGIN_DIR/clock.sh"         \
+                                                        \
+            --add item battery right                    \
+            --set battery                               \
+                  icon.y_offset=1                       \
+                  update_freq=120                       \
+                  script="$PLUGIN_DIR/battery.sh"       \
+            --subscribe battery system_woke power_source_change \
+                                                        \
+            --add item wifi right                       \
+            --set wifi                                  \
+                  icon.y_offset=1                       \
+                  script="$PLUGIN_DIR/wifi.sh"          \
+            --subscribe wifi wifi_change                \
+                                                        \
+            --add event input_change 'AppleSelectedInputSourcesChangedNotification' \
+            --add item keyboard right                   \
+            --set keyboard                              \
+                  icon.y_offset=1                       \
+                  icon=󰧹                                \
+                  script="$PLUGIN_DIR/keyboard.sh"      \
+            --subscribe keyboard input_change
 
 
 ##### Finalizing Setup #####
 sketchybar --update
-sketchybar --trigger space_change
