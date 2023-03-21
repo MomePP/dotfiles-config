@@ -32,7 +32,7 @@ ctrl + lalt - 0x24 : yabai -m window --toggle zoom-fullscreen; sketchybar --trig
 ctrl + lalt + shift - 0x24 : yabai -m window --toggle zoom-parent; sketchybar --trigger window_focus
 
 # Toggle split orientation of the selected windows node: shift + lalt - s
-ctrl + lalt + shift - s : yabai -m window --toggle split
+ctrl + lalt - s : yabai -m window --toggle split
 
 # Moving windows in spaces
 ctrl + shift + lalt - h : yabai -m window --warp west || set -l move_left (yabai -m window --display west && sketchybar --trigger windows_on_spaces && yabai -m display --focus west && yabai -m window --warp last) || yabai -m window --move rel:-10:0
@@ -57,7 +57,7 @@ ctrl + shift + lalt - 6 : yabai -m window --space 6; sketchybar --trigger window
 
 # Mirror Space on X and Y Axis: ctrl + lalt - {-, |}
 ctrl + lalt - 0x1B : yabai -m space --mirror x-axis # -
-ctrl + lalt - 0x2A : yabai -m space --mirror y-axis # \
+ctrl + lalt - 0x2A : yabai -m space --mirror y-axis # |
 
 ## Resize (ctrl + lalt - ...)
 # Resize windows: ctrl + lalt - {<, >}
