@@ -44,6 +44,11 @@ lsp_setup_module.config = function()
         update_in_insert = false,
         virtual_text = false,
         severity_sort = true,
+        virtual_lines = {
+            severity = {
+                min = vim.diagnostic.severity.HINT
+            }
+        }
     }
     vim.diagnostic.config(diagnostic_config)
 
@@ -152,8 +157,37 @@ null_ls_module.config = function()
     mason_null_ls.setup_handlers {}
 end
 
+local lsp_lines_module = {
+    'MomePP/lsp_lines.nvim',
+    dependencies = 'nvim-lspconfig',
+    event = { 'BufReadPost', 'BufNewFile' },
+    config = true,
+    keys = {
+        { require('config.keymaps').lsp_lines.toggle, '<Cmd>LspLinesToggleSeverity<CR>' }
+    }
+}
+
+lsp_lines_module.init = function()
+    local current_filter_status = false
+    local function setSeverityConfig(min_severity)
+        vim.diagnostic.config({ virtual_lines = { severity = { min = min_severity } } })
+    end
+
+    vim.api.nvim_create_user_command('LspLinesToggleSeverity', function()
+            if current_filter_status then
+                setSeverityConfig(vim.diagnostic.severity.HINT)
+            else
+                setSeverityConfig(vim.diagnostic.severity.WARN)
+            end
+            current_filter_status = not current_filter_status
+        end,
+        { nargs = 0 }
+    )
+end
+
 return {
     mason_module,
     lsp_setup_module,
     null_ls_module,
+    lsp_lines_module,
 }

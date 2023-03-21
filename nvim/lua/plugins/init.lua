@@ -10,12 +10,6 @@ return {
         config = true
     },
     {
-        'Maan2003/lsp_lines.nvim',
-        dependencies = 'nvim-lspconfig',
-        event = { 'BufReadPost', 'BufNewFile' },
-        config = true
-    },
-    {
         'tzachar/local-highlight.nvim',
         event = { 'BufReadPre', 'BufNewFile' },
         opts = { hlgroup = 'LocalHighlightText', cw_hlgroup = 'LocalHighlightText' },
