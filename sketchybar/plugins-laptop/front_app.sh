@@ -2,7 +2,7 @@
 
 # echo $INFO
 
-ICON_PADDING_RIGHT=10
+ICON_PADDING_RIGHT=6
 
 case $INFO in
   "kitty")
@@ -10,11 +10,10 @@ case $INFO in
     ICON=
     ;;
   "Calendar")
-    ICON_PADDING_RIGHT=8
     ICON=
     ;;
   "Discord")
-    ICON=ﭮ
+    ICON=󰙯
     ;;
   "FaceTime")
     ICON_PADDING_RIGHT=11
@@ -24,25 +23,42 @@ case $INFO in
     ICON=
     ;;
   "Microsoft Edge")
-    ICON_PADDING_RIGHT=7
     ICON=󰇩
     ;;
-  "Messages")
-    ICON=
+  "Microsoft Teams")
+    ICON=󰊻
+    ;;
+  "Microsoft Word")
+    ICON=󱎒
+    ;;
+  "Microsoft Excel")
+    ICON=󱎏
+    ;;
+  "Microsoft PowerPoint")
+    ICON=󱎐
     ;;
   "Notion")
-    ICON_PADDING_RIGHT=12
+    ICON_PADDING_RIGHT=9
     ICON=
     ;;
-  "PS Remote Play")
-    ICON_PADDING_RIGHT=6
-    ICON=
+  "Fork")
+    ICON_PADDING_RIGHT=8
+    ICON=
+    ;;
+  "Basecamp 3")
+    ICON=
+    ;;
+  "Slack")
+    ICON_PADDING_RIGHT=7
+    ICON=󰒱
     ;;
   "Spotify")
+    ICON_PADDING_RIGHT=5
     ICON=
     ;;
   *)
-    ICON=﯂
+    ICON_PADDING_RIGHT=7
+    ICON=ﬓ
     ;;
 esac
 
