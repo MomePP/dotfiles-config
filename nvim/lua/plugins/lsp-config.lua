@@ -168,18 +168,20 @@ local lsp_lines_module = {
 }
 
 lsp_lines_module.init = function()
-    local current_filter_status = false
+    local current_severity = 1
     local function setSeverityConfig(min_severity)
-        vim.diagnostic.config({ virtual_lines = { severity = { min = min_severity } } })
+        local config = {}
+        if min_severity == 0 then
+            config.virtual_lines = false
+        else
+            config.virtual_lines = { severity = { min = min_severity } }
+        end
+        vim.diagnostic.config(config)
     end
 
     vim.api.nvim_create_user_command('LspLinesToggleSeverity', function()
-            if current_filter_status then
-                setSeverityConfig(vim.diagnostic.severity.HINT)
-            else
-                setSeverityConfig(vim.diagnostic.severity.WARN)
-            end
-            current_filter_status = not current_filter_status
+        current_severity = (current_severity + 1) % 5
+        setSeverityConfig(current_severity)
         end,
         { nargs = 0 }
     )
