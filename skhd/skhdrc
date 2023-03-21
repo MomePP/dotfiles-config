@@ -65,10 +65,13 @@ ctrl + lalt - 0x2B : yabai -m window --resize right:-100:0 || yabai -m window --
 ctrl + lalt - 0x2F : yabai -m window --resize right:100:0 || yabai -m window --resize left:100:0
 
 # Equalize size of windows: ctrl + lalt - e
-ctrl + lalt - b : yabai -m space --balance
+ctrl + lalt - e : yabai -m space --balance
 
 # Enable / Disable gaps in current workspace: ctrl + lalt - g
 ctrl + lalt - g : yabai -m space --toggle padding; yabai -m space --toggle gap
+
+# Toggle layout of the space (bsp, float)
+ctrl + lalt - x : yabai -m space --layout "$(if [ $(yabai -m query --spaces --space | jq -r '.type') = 'bsp' ]; echo 'float'; else; echo 'bsp'; end)"
 
 ## Misc
 # Open new kitty window
