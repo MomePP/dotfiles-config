@@ -145,6 +145,12 @@ local null_ls_module = {
     },
 }
 
+null_ls_module.init = function()
+    vim.api.nvim_create_user_command('NullLsToggle', function()
+        require('null-ls').toggle({})
+    end, {})
+end
+
 null_ls_module.config = function()
     local mason_null_ls = require('mason-null-ls')
     mason_null_ls.setup { automatic_setup = true }
