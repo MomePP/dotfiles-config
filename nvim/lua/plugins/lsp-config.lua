@@ -180,7 +180,7 @@ lsp_lines_module.init = function()
     end
 
     vim.api.nvim_create_user_command('LspLinesToggleSeverity', function()
-        current_severity = (current_severity + 1) % 5
+        current_severity = (current_severity + 1) % (#vim.diagnostic.severity + 1)
         setSeverityConfig(current_severity)
         end,
         { nargs = 0 }
