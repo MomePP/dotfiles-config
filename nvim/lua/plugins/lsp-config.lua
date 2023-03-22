@@ -168,7 +168,7 @@ local lsp_lines_module = {
 }
 
 lsp_lines_module.init = function()
-    local current_severity = 1
+    local current_severity = vim.diagnostic.severity.HINT
     local function setSeverityConfig(min_severity)
         local config = {}
         if min_severity == 0 then
