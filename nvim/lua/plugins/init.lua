@@ -47,7 +47,7 @@ return {
     },
     {
         'utilyre/sentiment.nvim',
-        event = { 'BufReadPost', 'BufNewFile' },
+        event = { 'BufReadPre', 'BufNewFile' },
         opts = {
             excluded_filetypes = {
                 [''] = true,
