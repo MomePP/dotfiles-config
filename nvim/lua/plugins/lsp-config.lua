@@ -28,11 +28,7 @@ local lsp_setup_module = {
     },
 }
 
-lsp_setup_module.config = function()
-    -- ----------------------------------------------------------------------
-    --  diagnostics configs
-    --
-
+lsp_setup_module.init = function()
     -- setup diagnostic signs
     for name, icon in pairs(default_config.icons.diagnostics) do
         name = 'DiagnosticSign' .. name
@@ -46,12 +42,14 @@ lsp_setup_module.config = function()
         severity_sort = true,
         virtual_lines = {
             severity = {
-                min = vim.diagnostic.severity.HINT
+                min = vim.diagnostic.severity.INFO
             }
         }
     }
     vim.diagnostic.config(diagnostic_config)
+end
 
+lsp_setup_module.config = function()
     -- ----------------------------------------------------------------------
     --  lsp configs
     --
@@ -166,15 +164,17 @@ end
 local lsp_lines_module = {
     'MomePP/lsp_lines.nvim',
     dependencies = 'nvim-lspconfig',
-    event = { 'BufReadPost', 'BufNewFile' },
-    config = true,
+    event = 'VeryLazy',
     keys = {
         { require('config.keymaps').lsp_lines.toggle, '<Cmd>LspLinesToggleSeverity<CR>' }
     }
 }
 
-lsp_lines_module.init = function()
-    local current_severity = vim.diagnostic.severity.HINT
+lsp_lines_module.config = function()
+    -- INFO: store user severity config as a limit, if exist
+    local user_severity_limit = (vim.diagnostic.config().virtual_lines.severity.min or vim.diagnostic.severity.HINT)
+    local current_severity = user_severity_limit
+
     local function setSeverityConfig(min_severity)
         local config = {}
         if min_severity == 0 then
@@ -186,11 +186,14 @@ lsp_lines_module.init = function()
     end
 
     vim.api.nvim_create_user_command('LspLinesToggleSeverity', function()
-        current_severity = (current_severity + 1) % (#vim.diagnostic.severity + 1)
-        setSeverityConfig(current_severity)
+            current_severity = (current_severity + 1) % (user_severity_limit + 1)
+            setSeverityConfig(current_severity)
+            vim.notify(string.format('[virtual lines] diagnostic level: %d', current_severity), vim.log.levels.INFO)
         end,
         { nargs = 0 }
     )
+
+    require('lsp_lines').setup()
 end
 
 return {
