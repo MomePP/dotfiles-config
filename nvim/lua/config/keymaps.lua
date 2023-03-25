@@ -36,12 +36,12 @@ keymaps.setup = function()
     -- INFO: misc. keymap
     vim.keymap.set({ 'n', 'i' }, '<Esc>', '<Cmd>noh<CR><Esc>')
     vim.keymap.set({ 'n', 'i' }, '<C-l>', '<Cmd>noh<CR>')
-    vim.keymap.set('n', 'dw', 'vb"_d') -- delete a word backward
+    vim.keymap.set('n', 'dw', 'vb"_d')      -- delete a word backward
     vim.keymap.set('n', '<leader>d', '"_d') -- delete without yank
     vim.keymap.set('n', 'x', '"_x')
-    vim.keymap.set('v', 'p', '"_dP') -- replace-paste without yank
+    vim.keymap.set('v', 'p', '"_dP')        -- replace-paste without yank
     vim.keymap.set('i', '<S-Tab>', '<C-d>') -- de-tab while in insert mode
-    vim.keymap.set('n', 'Y', 'y$') -- Yank line after cursor
+    vim.keymap.set('n', 'Y', 'y$')          -- Yank line after cursor
     vim.keymap.set('n', 'P', '<cmd>pu<CR>') -- Paste on new line
     vim.keymap.set('v', '<', '<gv')
     vim.keymap.set('v', '>', '>gv')
@@ -73,8 +73,12 @@ keymaps.lsp = {
     ['<leader>ff'] = function() vim.lsp.buf.format({ async = true }) end,
     ['K']          = function()
         local ufo_loaded, ufo = pcall(require, 'ufo')
-        if ufo_loaded then if ufo.peekFoldedLinesUnderCursor() then return end end
-        return vim.lsp.buf.hover() or vim.diagnostic.open_float({ scope = 'c' })
+        if ufo_loaded then
+            if ufo.peekFoldedLinesUnderCursor() then
+                return
+            end
+        end
+        return vim.diagnostic.open_float({ scope = 'cursor' }) or vim.lsp.buf.hover()
     end,
 }
 
@@ -94,7 +98,7 @@ keymaps.treesitter = {
 
 -- INFO: Lazy keymap
 keymaps.lazy = {
-    open    = '<leader>P',
+    open = '<leader>P',
 }
 
 -- INFO: Focus keymap
