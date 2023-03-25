@@ -47,6 +47,21 @@ lsp_setup_module.init = function()
         }
     }
     vim.diagnostic.config(diagnostic_config)
+
+    -- INFO: overrides globally default of `open_floating_preview`
+    local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+    function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+        opts = opts or {}
+        opts.pad_top = opts.pad_top or 1
+        opts.pad_bottom = opts.pad_bottom or 1
+        opts.focus = opts.focusable or false
+
+        -- NOTE: padding contents
+        for index, message in ipairs(contents) do
+            contents[index] = string.format(' %s ', message)
+        end
+        return orig_util_open_floating_preview(contents, syntax, opts, ...)
+    end
 end
 
 lsp_setup_module.config = function()
