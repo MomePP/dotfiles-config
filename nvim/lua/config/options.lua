@@ -65,6 +65,7 @@ opt.incsearch     = true -- Show search results while typing
 opt.infercase     = true -- Infer letter cases for a richer built-in keyword completion
 opt.smartcase     = true -- Don't ignore case when searching if pattern has upper case
 opt.smartindent   = true -- Make indenting smart
+opt.shiftround    = true
 
 opt.expandtab     = true
 opt.showmatch     = true

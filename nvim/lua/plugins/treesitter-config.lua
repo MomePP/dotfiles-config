@@ -34,8 +34,8 @@ M.opts = function()
             additional_vim_regex_highlighting = false,
         },
         indent = {
-            enable = false,
-            -- disable = { 'python' },
+            enable = true,
+            disable = { 'c', 'cpp' }
         },
         context_commentstring = {
             enable = true,
