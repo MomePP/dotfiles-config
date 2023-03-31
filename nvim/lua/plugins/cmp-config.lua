@@ -28,6 +28,16 @@ local M = {
             'windwp/nvim-autopairs',
             opts = { check_ts = true, fast_wrap = { map = '<C-e>' } },
         },
+
+        -- NOTE: copilot plugin
+        {
+            'zbirenbaum/copilot-cmp',
+            dependencies = {
+                'zbirenbaum/copilot.lua',
+                opts = { panel = { enabled = false }, suggestion = { enabled = false } }
+            },
+            config = true
+        },
     },
 }
 
@@ -92,17 +102,35 @@ M.opts = function()
     }
 
     local cmp_sources = cmp.config.sources({
+        { name = 'copilot' },
         { name = 'nvim_lsp', keyword_length = 2 },
         { name = 'luasnip',  keyword_length = 2 },
         { name = 'rg' },
         { name = 'path' },
     })
 
+    local cmp_sorting = {
+        priority_weight = 2,
+        comparators = {
+            require('copilot_cmp.comparators').prioritize,
+            cmp.config.compare.offset,
+            cmp.config.compare.exact,
+            cmp.config.compare.score,
+            cmp.config.compare.recently_used,
+            cmp.config.compare.locality,
+            cmp.config.compare.kind,
+            cmp.config.compare.sort_text,
+            cmp.config.compare.length,
+            cmp.config.compare.order,
+        },
+    }
+
     return {
         snippet = { expand = function(args) luasnip.lsp_expand(args.body) end, },
         mapping = cmp_mapping,
         sources = cmp_sources,
         formatting = cmp_formatting,
+        sorting = cmp_sorting,
         window = {
             completion = {
                 col_offset = -3,
@@ -129,7 +157,6 @@ M.config = function(_, opts)
     cmp.setup.cmdline({ '/', '?' }, {
         mapping = cmp.mapping.preset.cmdline(),
         sources = {
-            -- { name = 'buffer' }
             { name = 'rg' }
         }
     })

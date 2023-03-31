@@ -50,6 +50,7 @@ M.defaults = {
                 Value = '',
                 Unit = '塞',
                 Suggestion = '',
+                Copilot = '',
             },
             source_format = '    '
         },
