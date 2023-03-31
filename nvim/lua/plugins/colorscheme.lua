@@ -615,6 +615,9 @@ M.config = function()
             FloatBorder = { link = 'NormalFloat' },
             Pmenu = { fg = c.base04, bg = c.base00 },
             PmenuSel = { fg = c.none, bg = c.base02 },
+
+            -- INFO: copilot cmp highlight
+            CmpItemKindCopilot = { fg = c.base01, bg = '#ffab91' },
         })
         overrideHighlightConfig(telescope_highlight)
         overrideHighlightConfig(incline_highlight)
@@ -635,7 +638,10 @@ M.config = function()
 
         -- INFO: overrided some terminal colors
         vim.g['terminal_color_3'] = c.base10
-        vim.g['terminal_color_11'] = c.base10
+        vim.g['terminal_color_5'] = '#ffab91'
+        vim.g['terminal_color_9'] = c.base15
+        vim.g['terminal_color_11'] = c.base12
+        vim.g['terminal_color_13'] = '#ff6f00'
     end
 end
 
