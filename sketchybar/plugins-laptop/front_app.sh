@@ -56,9 +56,13 @@ case $INFO in
     ICON_PADDING_RIGHT=5
     ICON=
     ;;
-  *)
+  "Arc")
     ICON_PADDING_RIGHT=7
-    ICON=ﬓ
+    ICON=󰾔
+    ;;
+  *)
+    ICON_PADDING_RIGHT=4
+    ICON=󱟲
     ;;
 esac
 
