@@ -51,6 +51,8 @@ ctrl + shift + lalt - 3 : yabai -m window --space 3; sketchybar --trigger window
 ctrl + shift + lalt - 4 : yabai -m window --space 4; sketchybar --trigger windows_on_spaces
 ctrl + shift + lalt - 5 : yabai -m window --space 5; sketchybar --trigger windows_on_spaces
 ctrl + shift + lalt - 6 : yabai -m window --space 6; sketchybar --trigger windows_on_spaces
+ctrl + shift + lalt - 7 : yabai -m window --space 7; sketchybar --trigger windows_on_spaces
+ctrl + shift + lalt - 8 : yabai -m window --space 8; sketchybar --trigger windows_on_spaces
 
 # shift + lalt - p : yabai -m window --space prev; yabai -m space --focus prev; sketchybar --trigger windows_on_spaces
 # shift + lalt - n : yabai -m window --space next; yabai -m space --focus next; sketchybar --trigger windows_on_spaces
