@@ -29,15 +29,8 @@ local M = {
             opts = { check_ts = true, fast_wrap = { map = '<C-e>' } },
         },
 
-        -- NOTE: copilot plugin
-        {
-            'zbirenbaum/copilot-cmp',
-            dependencies = {
-                'zbirenbaum/copilot.lua',
-                opts = { panel = { enabled = false }, suggestion = { enabled = false } }
-            },
-            config = true
-        },
+        -- NOTE: github copilot if available
+        'copilot.lua'
     },
 }
 
@@ -45,6 +38,7 @@ M.opts = function()
     local cmp = require('cmp')
     local luasnip = require('luasnip')
     local icons = require('config').defaults.icons
+    local copilot_status, copilot_suggestion = pcall(require, 'copilot.suggestion')
 
     local ELLIPSIS_CHAR = ' …'
     local MAX_LABEL_WIDTH = 50
@@ -76,9 +70,25 @@ M.opts = function()
     local cmp_mapping = {
         ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(2), { 'i', 'c' }),
         ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-2), { 'i', 'c' }),
-        ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
-        ['<C-e>'] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
-        ['<CR>'] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+        ['<C-e>'] = cmp.mapping {
+            i = function()
+                if cmp.visible() then
+                    cmp.abort()
+                elseif copilot_status and copilot_suggestion.is_visible() then
+                    copilot_suggestion.dismiss()
+                end
+            end,
+            c = cmp.mapping.close(),
+        },
+        ['<CR>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true })
+            elseif copilot_status and copilot_suggestion.is_visible() then
+                copilot_suggestion.accept()
+            else
+                fallback()
+            end
+        end),
         ['<Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_next_item()
@@ -102,35 +112,17 @@ M.opts = function()
     }
 
     local cmp_sources = cmp.config.sources({
-        { name = 'copilot' },
         { name = 'nvim_lsp', keyword_length = 2 },
         { name = 'luasnip',  keyword_length = 2 },
         { name = 'rg' },
         { name = 'path' },
     })
 
-    local cmp_sorting = {
-        priority_weight = 2,
-        comparators = {
-            require('copilot_cmp.comparators').prioritize,
-            cmp.config.compare.offset,
-            cmp.config.compare.exact,
-            cmp.config.compare.score,
-            cmp.config.compare.recently_used,
-            cmp.config.compare.locality,
-            cmp.config.compare.kind,
-            cmp.config.compare.sort_text,
-            cmp.config.compare.length,
-            cmp.config.compare.order,
-        },
-    }
-
     return {
-        snippet = { expand = function(args) luasnip.lsp_expand(args.body) end, },
+        snippet = { expand = function(args) luasnip.lsp_expand(args.body) end },
         mapping = cmp_mapping,
         sources = cmp_sources,
         formatting = cmp_formatting,
-        sorting = cmp_sorting,
         window = {
             completion = {
                 col_offset = -3,
@@ -142,6 +134,7 @@ M.opts = function()
         },
         completion = {
             keyword_length = 3,
+            autocomplete   = false,
         },
         matching = {
             disallow_partial_fuzzy_matching = false
