@@ -5,16 +5,9 @@ local M = {
 
 M.opts = {
     excluded_filetypes = {
-        '',
-        'TelescopePrompt',
+        'telescopeprompt',
         'toggleterm',
         'noice',
-    },
-    excluded_buftypes = {
-        'nofile',
-        'prompt',
-        'popup',
-        'terminal'
     },
     autoresize = true,
     number = false,
