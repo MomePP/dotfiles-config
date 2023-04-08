@@ -35,7 +35,6 @@ M.opts = function()
         },
         indent = {
             enable = true,
-            disable = { 'c', 'cpp' }
         },
         context_commentstring = {
             enable = true,
