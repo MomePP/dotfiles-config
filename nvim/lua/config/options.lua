@@ -79,7 +79,6 @@ opt.grepprg       = 'rg --vimgrep'
 opt.grepformat    = '%f:%l:%c:%m'
 
 opt.iskeyword:append { '-' } -- consider string-string as whole word
-opt.completeopt   = { 'menuone', 'noinsert', 'noselect' }
 opt.wildmode      = 'list:longest'
 opt.formatoptions = 'jrqln1' -- see :h fo-table
 opt.shortmess     = 'fnxoOtTF'

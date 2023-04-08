@@ -132,9 +132,11 @@ M.opts = function()
         experimental = {
             ghost_text = true
         },
+        preselect = cmp.PreselectMode.Item,
         completion = {
             keyword_length = 3,
             autocomplete   = false,
+            completeopt    = 'menuone',
         },
         matching = {
             disallow_partial_fuzzy_matching = false
