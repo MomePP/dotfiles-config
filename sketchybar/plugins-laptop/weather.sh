@@ -1,7 +1,6 @@
 #!/usr/bin/env zsh
 
-IP=$(curl -s https://ipinfo.io/ip)
-LOCATION_JSON=$(curl -s https://ipinfo.io/$IP/json)
+LOCATION_JSON=$(curl -s https://ipinfo.io/json)
 
 LOCATION="$(echo $LOCATION_JSON | jq '.city' | tr -d '"')"
 REGION="$(echo $LOCATION_JSON | jq '.region' | tr -d '"')"
