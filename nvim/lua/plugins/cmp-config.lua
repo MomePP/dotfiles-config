@@ -1,6 +1,6 @@
 local M = {
     'hrsh7th/nvim-cmp',
-    event = 'InsertEnter',
+    event = { 'InsertEnter', 'CmdlineEnter' },
     dependencies = {
         'hrsh7th/cmp-nvim-lsp',
         'hrsh7th/cmp-cmdline',
@@ -151,6 +151,9 @@ M.config = function(_, opts)
 
     cmp.setup.cmdline({ '/', '?' }, {
         mapping = cmp.mapping.preset.cmdline(),
+        completion = {
+            completeopt = 'menuone,noselect',
+        },
         sources = {
             { name = 'rg' }
         }
@@ -158,6 +161,9 @@ M.config = function(_, opts)
 
     cmp.setup.cmdline(':', {
         mapping = cmp.mapping.preset.cmdline(),
+        completion = {
+            completeopt = 'menuone,noselect',
+        },
         sources = cmp.config.sources({
             { name = 'path' }
         }, {
