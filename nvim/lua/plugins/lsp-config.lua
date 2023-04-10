@@ -150,12 +150,12 @@ end
 -- INFO: formatters config
 --
 local null_ls_module = {
-    'jose-elias-alvarez/null-ls.nvim',
-    event = { 'BufReadPost', 'BufNewFile' },
+    'jay-babu/mason-null-ls.nvim',
     dependencies = {
+        'jose-elias-alvarez/null-ls.nvim',
         'mason.nvim',
-        'jay-babu/mason-null-ls.nvim',
     },
+    event = { 'BufReadPre', 'BufNewFile' },
 }
 
 null_ls_module.init = function()
@@ -165,16 +165,11 @@ null_ls_module.init = function()
 end
 
 null_ls_module.config = function()
-    local mason_null_ls = require('mason-null-ls')
-    mason_null_ls.setup { automatic_setup = true }
-
-    local null_ls = require('null-ls')
-    null_ls.setup {
+    require('mason-null-ls').setup { handlers = {} }
+    require('null-ls').setup {
         border = default_config.float_border,
         sources = require('plugins.null-ls-settings.null-ls-list')
     }
-
-    mason_null_ls.setup_handlers {}
 end
 
 local lsp_lines_module = {
