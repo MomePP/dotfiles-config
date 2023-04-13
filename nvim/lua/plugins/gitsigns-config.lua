@@ -5,6 +5,11 @@ local M = {
 
 M.opts = {
     signcolumn = true,
+    preview_config = {
+        border = require('config').defaults.float_border,
+        row    = 1,
+        col    = -1,
+    },
     on_attach = function(bufnr)
         local gitsigns_keymap = require('config.keymaps').gitsigns
         local gitsigns_actions = package.loaded.gitsigns
