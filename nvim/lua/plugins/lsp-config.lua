@@ -101,13 +101,6 @@ lsp_setup_module.config = function()
 
     local lsp_setup = require('lsp-setup')
 
-    local function lsp_keymaps(bufnr, mapping)
-        local opts = { buffer = bufnr, silent = true, noremap = true }
-        for key, cmd in pairs(mapping or {}) do
-            vim.keymap.set('n', key, cmd, opts)
-        end
-    end
-
     local function lsp_navic(client, bufnr)
         local loaded_plugin, navic = pcall(require, 'nvim-navic')
         if not loaded_plugin then return end
@@ -118,13 +111,13 @@ lsp_setup_module.config = function()
     end
 
     local function lsp_on_attach(client, bufnr)
-        lsp_keymaps(bufnr, require('config.keymaps').lsp)
         lsp_navic(client, bufnr)
     end
 
     lsp_setup.setup({
         default_mappings = false,
         on_attach = lsp_on_attach,
+        mappings = require('config.keymaps').lsp,
         servers = require('plugins.lsp-settings.lsp-list')
     })
 
@@ -165,10 +158,12 @@ null_ls_module.init = function()
 end
 
 null_ls_module.config = function()
-    require('mason-null-ls').setup { handlers = {} }
+    require('mason-null-ls').setup {
+        ensure_installed = require('plugins.null-ls-settings.null-ls-list'),
+        handlers = {}
+    }
     require('null-ls').setup {
         border = default_config.float_border,
-        sources = require('plugins.null-ls-settings.null-ls-list')
     }
 end
 
