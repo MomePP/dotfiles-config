@@ -47,6 +47,9 @@ local lazy_config = {
                 'zipPlugin',
             },
         },
+    },
+    dev = {
+        path = '~/Developments/nvim_plugins'
     }
 }
 require('lazy').setup('plugins', lazy_config)
