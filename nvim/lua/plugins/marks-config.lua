@@ -73,7 +73,7 @@ M.keys = function()
             end
         },
 
-        -- NOTE: used `telescope.nvim` quickfix to show all marks
+        -- NOTE: use quickfix to show all marks
         {
             marks_keymap.list,
             function()
@@ -82,7 +82,7 @@ M.keys = function()
                     vim.notify('There is no marks -  ', vim.log.levels.WARN)
                     return
                 end
-                vim.cmd 'Telescope quickfix'
+                vim.cmd 'TroubleToggle quickfix'
             end
         },
     }

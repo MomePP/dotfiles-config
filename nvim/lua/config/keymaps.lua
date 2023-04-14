@@ -1,9 +1,9 @@
 local keymaps = {}
 
 -- NOTE: helper functions
-local function open_telescope_qflist(options)
+local function open_with_qflist(options)
     vim.fn.setqflist({}, ' ', options)
-    vim.cmd 'Telescope quickfix'
+    vim.cmd 'TroubleToggle quickfix'
 end
 
 keymaps.setup = function()
@@ -55,21 +55,25 @@ keymaps.setup = function()
     -- INFO: remap jump keys
     vim.keymap.set('n', '<C-j>', '<C-i>')
     vim.keymap.set('n', '<C-k>', '<C-o>')
+
+    -- INFO: quickfix keys
+    vim.keymap.set('n', '<leader>q', '<Cmd>TroubleToggle quickfix<CR>')
+    vim.keymap.set('n', '<leader>Q', '<Cmd>cexpr []<CR>')
 end
 
 -- INFO: LSP keymap
 keymaps.lsp = {
-    ['gd']         = '<Cmd>Telescope lsp_definitions<CR>',
-    ['gt']         = '<Cmd>Telescope lsp_type_definitions<CR>',
-    ['gr']         = '<Cmd>Telescope lsp_references<CR>',
-    ['<leader>ls'] = '<Cmd>Telescope lsp_document_symbols<CR>',
-    ['<leader>ld'] = '<Cmd>Telescope diagnostics<CR>',
-    [']d']         = function() vim.diagnostic.goto_next({ float = false }) end,
-    ['[d']         = function() vim.diagnostic.goto_prev({ float = false }) end,
-    ['gD']         = function() vim.lsp.buf.declaration({ on_list = open_telescope_qflist }) end,
+    ['gd']         = '<Cmd>TroubleToggle lsp_definitions<CR>',
+    ['gt']         = '<Cmd>TroubleToggle lsp_type_definitions<CR>',
+    ['gr']         = '<Cmd>TroubleToggle lsp_references<CR>',
+    ['<leader>ld'] = '<Cmd>TroubleToggle workspace_diagnostics<CR>',
+    ['<leader>lr'] = vim.lsp.buf.rename,
     ['gx']         = vim.lsp.buf.code_action,
     ['gs']         = vim.lsp.buf.signature_help,
-    ['<leader>lr'] = vim.lsp.buf.rename,
+    [']d']         = function() vim.diagnostic.goto_next({ float = false }) end,
+    ['[d']         = function() vim.diagnostic.goto_prev({ float = false }) end,
+    ['gD']         = function() vim.lsp.buf.declaration({ on_list = open_with_qflist }) end,
+    ['<leader>ls'] = function() vim.lsp.buf.document_symbol({ on_list = open_with_qflist }) end,
     ['<leader>ff'] = function() vim.lsp.buf.format({ async = true }) end,
     ['K']          = function()
         local ufo_loaded, ufo = pcall(require, 'ufo')
@@ -137,7 +141,6 @@ keymaps.telescope = {
     help                 = '<leader>;',
     jumplist             = '<leader>j',
     oldfiles             = '<leader>?',
-    quickfix             = '<leader>q',
     file_browse          = '<leader>fb',
     action_buffer_delete = { n = 'd', i = '<m-d>' },
 }
