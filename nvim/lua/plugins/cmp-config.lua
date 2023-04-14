@@ -112,10 +112,10 @@ M.opts = function()
     }
 
     local cmp_sources = cmp.config.sources({
-        { name = 'nvim_lsp', keyword_length = 2 },
-        { name = 'luasnip',  keyword_length = 2 },
-        { name = 'rg' },
         { name = 'path' },
+        { name = 'nvim_lsp' },
+        { name = 'rg',      keyword_length = 3 },
+        { name = 'luasnip', keyword_length = 2 },
     })
 
     return {
@@ -134,9 +134,8 @@ M.opts = function()
         },
         preselect = cmp.PreselectMode.Item,
         completion = {
-            keyword_length = 3,
-            autocomplete   = false,
-            completeopt    = 'menuone',
+            autocomplete = false,
+            completeopt  = 'menuone',
         },
         matching = {
             disallow_partial_fuzzy_matching = false
