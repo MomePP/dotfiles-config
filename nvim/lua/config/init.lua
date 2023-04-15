@@ -3,10 +3,10 @@ local M = {}
 M.defaults = {
     icons = {
         diagnostics = {
-            Error = ' ',
-            Warn = ' ',
-            Hint = '󰄮 ',
-            Info = ' ',
+            error = ' ',
+            warn = ' ',
+            hint = '󰄮 ',
+            info = ' ',
         },
         git = {
             added = ' ',
@@ -63,7 +63,7 @@ M.defaults = {
 }
 
 M.setup = function()
-    if vim.fn.argc( -1) == 0 then
+    if vim.fn.argc(-1) == 0 then
         -- setup autocommands to load user opts with VeryLazy event
         vim.api.nvim_create_autocmd('User', {
             group = vim.api.nvim_create_augroup('UserConfig', { clear = true }),

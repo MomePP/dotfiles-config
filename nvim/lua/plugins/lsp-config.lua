@@ -5,7 +5,7 @@ local default_config = require('config').defaults
 --
 local mason_module = {
     'williamboman/mason.nvim',
-    cmd = 'Mason',
+    cmd = { 'Mason', 'MasonUpdate' },
 }
 
 mason_module.opts = {
@@ -18,7 +18,7 @@ mason_module.opts = {
 -- INFO: LSP config
 --
 local lsp_setup_module = {
-    'junnplus/lsp-setup.nvim',
+    'VonHeikemen/lsp-zero.nvim',
     event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
         'mason.nvim',
@@ -29,13 +29,7 @@ local lsp_setup_module = {
 }
 
 lsp_setup_module.init = function()
-    -- setup diagnostic signs
-    for name, icon in pairs(default_config.icons.diagnostics) do
-        name = 'DiagnosticSign' .. name
-        vim.fn.sign_define(name, { texthl = name, text = icon, numhl = '' })
-    end
-
-    -- setup diagnostic configs
+    -- INFO: setup diagnostic configs
     local diagnostic_config = {
         update_in_insert = false,
         virtual_text = false,
@@ -99,8 +93,7 @@ lsp_setup_module.config = function()
     vim.lsp.set_log_level 'off' --    Levels by name: "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "OFF"
     -- require('vim.lsp.log').set_format_func(vim.inspect)
 
-    local lsp_setup = require('lsp-setup')
-
+    -- INFO: config lsp navigation
     local function lsp_navic(client, bufnr)
         local loaded_plugin, navic = pcall(require, 'nvim-navic')
         if not loaded_plugin then return end
@@ -110,33 +103,49 @@ lsp_setup_module.config = function()
         end
     end
 
-    local function lsp_on_attach(client, bufnr)
-        lsp_navic(client, bufnr)
+    -- INFO: config lsp keymaps
+    local function lsp_keymaps(bufnr, mapping)
+        local opts = { buffer = bufnr, silent = true, noremap = true }
+        for key, cmd in pairs(mapping or {}) do
+            vim.keymap.set('n', key, cmd, opts)
+        end
     end
 
-    lsp_setup.setup({
-        default_mappings = false,
-        on_attach = lsp_on_attach,
-        mappings = require('config.keymaps').lsp,
-        servers = require('plugins.lsp-settings.lsp-list')
-    })
+    local function lsp_on_attach(client, bufnr)
+        lsp_navic(client, bufnr)
+        lsp_keymaps(bufnr, require('config.keymaps').lsp)
+    end
 
-    -- config `lspinfo` window border
-    require('lspconfig.ui.windows').default_options.border = {
-        { ' ', 'NormalFloat' },
-        { ' ', 'NormalFloat' },
-        { ' ', 'NormalFloat' },
-        { ' ', 'NormalFloat' },
-        { ' ', 'NormalFloat' },
-        { ' ', 'NormalFloat' },
-        { ' ', 'NormalFloat' },
-        { ' ', 'NormalFloat' },
+    local lsp = require('lsp-zero').preset {
+        name = 'minimal',
+        float_border = require('config').defaults.float_border,
+        manage_nvim_cmp = {
+            set_sources = 'lsp',
+            set_basic_mappings = false,
+            set_extra_mappings = false,
+            use_luasnip = false,
+            set_format = false,
+            documentation_window = false,
+        }
     }
 
+    lsp.set_sign_icons(require('config').defaults.icons.diagnostics)
+
+    lsp.on_attach(function(client, bufnr)
+        lsp_on_attach(client, bufnr)
+    end)
+
+    -- INFO: config lsp servers in lsp-list
+    for name, config in pairs(require('plugins.lsp-settings.lsp-list')) do
+        lsp.configure(name, config)
+    end
+
     -- NOTE: manually injects unsupported lsp by mason.nvim
-    -- lspconfig.ccls.setup {
+    -- lsp.configure('ccls', {
     --     on_attach = lsp_on_attach,
-    -- }
+    -- })
+
+    lsp.setup()
 end
 
 -- ----------------------------------------------------------------------

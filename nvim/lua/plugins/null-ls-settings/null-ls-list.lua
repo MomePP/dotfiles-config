@@ -1,1 +1,3 @@
-return {}
+return {
+    'eslint_d',
+}
