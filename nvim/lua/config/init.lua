@@ -51,7 +51,13 @@ M.defaults = {
                 Unit = '塞',
                 Suggestion = '',
             },
-            source_format = '    '
+            source_format = '    ',
+            source_menu = {
+                nvim_lsp = 'LSP',
+                luasnip = 'Snippet',
+                rg = 'Buffer',
+                path = 'Path',
+            },
         },
         lualine = {
             lsp = '',

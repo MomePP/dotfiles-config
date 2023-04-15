@@ -62,7 +62,7 @@ M.opts = function()
                 vim_item.abbr = label .. padding
             end
             vim_item.kind = string.format(' %s ', icons.cmp.kinds[vim_item.kind])
-            vim_item.menu = string.format(icons.cmp.source_format .. '%s', entry.source.name)
+            vim_item.menu = string.format(icons.cmp.source_format .. '%s', icons.cmp.source_menu[entry.source.name])
             return vim_item
         end,
     }
