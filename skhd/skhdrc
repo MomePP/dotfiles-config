@@ -1,5 +1,5 @@
 # disable MacOS default cmd - h
-# cmd - h : []
+cmd - h : []
 
 # Space Navigation (four spaces per display): cmd - {1, 2, 3, 4}
 cmd - 1 : yabai -m space --focus 1
