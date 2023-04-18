@@ -16,11 +16,11 @@ M.opts = function()
             'regex',
             'lua',
             'vim',
+            'vimdoc',
             'markdown',
             'markdown_inline',
             'bash',
             'fish',
-            'help',
             'yaml',
         },
         ignore_install = {
