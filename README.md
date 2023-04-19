@@ -7,13 +7,11 @@ Runs `neovim-installer.sh` script to install neovim with MomePP's configuration.
 ./neovim-installer.sh
 ```
 
-### Keybindings
+#### Keybindings
 Most of the keybindings can be modified in [keymaps.lua](nvim/lua/config/keymaps.lua).
 
-### Plugins
+#### Plugins
 All the installed plugins are listed in [plugins/init.lua](nvim/lua/plugins/init.lua) or [plugins/](nvim/lua/plugins/)
-
----
 
 ## Fish shell
 Need to install `fish` and `fisher`(packages manager)
@@ -29,8 +27,6 @@ chsh -s /bin/fish   # set default shell to fish
 curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher   # install fisher
 fisher update   # install all listed plugins in `fish_plugins`
 ```
-
----
 
 ## tmux
 Needs to install `tmux` and `tmp`(tmux plugins manager)
@@ -63,3 +59,18 @@ brew install ncurses
 sudo tic -xe tmux-256color ~/tmux-256color.info
 ```
 
+
+## fyabai : window tilling manager
+Using `yabai` forked by `FelixKratz`
+
+To remove old installed `yabai` : [issue-comment](https://github.com/FelixKratz/yabai/issues/10#issuecomment-1374409628)
+``` bash
+brew services stop yabai
+brew uninstall yabai
+killall yabai
+brew tap FelixKratz/formulae
+brew install fyabai --head
+sudo yabai --uninstall-sa # don't forgot to unload old sa
+sudo yabai --load-sa
+brew services start fyabai
+```
