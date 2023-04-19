@@ -14,20 +14,30 @@ yabai -m signal --add event=window_focused action="sketchybar --trigger window_f
 $HOME/.config/yabai/create_spaces.sh
 
 yabai -m config external_bar               all:34:0     \
-                mouse_follows_focus        on           \
+                mouse_follows_focus        off          \
                 focus_follows_mouse        off          \
+                                                        \
                 window_zoom_persist        off          \
                 window_placement           second_child \
                 window_topmost             off          \
                 window_shadow              float        \
-                window_opacity             on           \
-                window_animation_duration  0.1          \
-                window_opacity_duration    0.15         \
+                                                        \
+                window_opacity             off          \
                 active_window_opacity      1.0          \
-                normal_window_opacity      0.96         \
+                normal_window_opacity      1.0          \
+                                                        \
+                window_border              on           \
+                window_border_hidpi        on           \
+                window_border_blur         off          \
+                window_border_width        3            \
+                window_border_radius       10           \
+                active_window_border_color 0x99798286   \
+                normal_window_border_color 0x9936384a   \
+                                                        \
                 insert_feedback_color      0xff9dd274   \
                 split_ratio                0.50         \
                 auto_balance               off          \
+                                                        \
                 mouse_modifier             alt          \
                 mouse_action1              move         \
                 mouse_action2              resize       \
