@@ -47,6 +47,11 @@ M.opts = function()
 
     local navic_location = {
         'navic',
+        -- color_correction = 'dynamic',
+        navic_opts = {
+            separator = icons.lualine.navic_separator,
+            highlight = false,
+        }
         -- padding = { right = 0 }
     }
 
