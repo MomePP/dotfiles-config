@@ -64,6 +64,12 @@ return {
         event = 'VeryLazy',
         config = true,
     },
+    {
+        'chrishrb/gx.nvim',
+        dependencies = { 'plenary.nvim' },
+        event = 'VeryLazy',
+        config = true
+    },
 
 
     -- Miscellaneous

@@ -68,7 +68,7 @@ keymaps.lsp = {
     ['gr']         = '<Cmd>TroubleToggle lsp_references<CR>',
     ['<leader>ld'] = '<Cmd>TroubleToggle workspace_diagnostics<CR>',
     ['<leader>lr'] = vim.lsp.buf.rename,
-    ['gx']         = vim.lsp.buf.code_action,
+    ['<leader>lx'] = vim.lsp.buf.code_action,
     ['gs']         = vim.lsp.buf.signature_help,
     [']d']         = function() vim.diagnostic.goto_next({ float = false }) end,
     ['[d']         = function() vim.diagnostic.goto_prev({ float = false }) end,
