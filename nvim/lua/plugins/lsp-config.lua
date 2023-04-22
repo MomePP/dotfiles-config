@@ -93,16 +93,6 @@ lsp_setup_module.config = function()
     vim.lsp.set_log_level 'off' --    Levels by name: "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "OFF"
     -- require('vim.lsp.log').set_format_func(vim.inspect)
 
-    -- INFO: config lsp navigation
-    local function lsp_navic(client, bufnr)
-        local loaded_plugin, navic = pcall(require, 'nvim-navic')
-        if not loaded_plugin then return end
-
-        if client.server_capabilities.documentSymbolProvider then
-            navic.attach(client, bufnr)
-        end
-    end
-
     -- INFO: config lsp keymaps
     local function lsp_keymaps(bufnr, mapping)
         local opts = { buffer = bufnr, silent = true, noremap = true }
@@ -111,8 +101,7 @@ lsp_setup_module.config = function()
         end
     end
 
-    local function lsp_on_attach(client, bufnr)
-        lsp_navic(client, bufnr)
+    local function lsp_on_attach(_, bufnr)
         lsp_keymaps(bufnr, require('config.keymaps').lsp)
     end
 
