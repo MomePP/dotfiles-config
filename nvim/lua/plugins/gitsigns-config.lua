@@ -34,10 +34,18 @@ M.opts = {
                 return '<Ignore>'
             end, { expr = true })
 
-        map('n', gitsigns_keymap.blame_line, function() gitsigns_actions.blame_line { full = true } end)
+        map('n', gitsigns_keymap.stage_hunk, gitsigns_actions.stage_hunk)
+        map('v', gitsigns_keymap.stage_hunk, function() gitsigns_actions.stage_hunk { vim.fn.line('.'), vim.fn.line('v')} end)
+
+        map('n', gitsigns_keymap.reset_hunk, gitsigns_actions.reset_hunk)
+        map('v', gitsigns_keymap.reset_hunk, function() gitsigns_actions.reset_hunk { vim.fn.line('.'), vim.fn.line('v')} end)
+
         map('n', gitsigns_keymap.preview_hunk, gitsigns_actions.preview_hunk_inline)
+
+        map('n', gitsigns_keymap.blame_line, function() gitsigns_actions.blame_line { full = true } end)
         map('n', gitsigns_keymap.toggle_blame, gitsigns_actions.toggle_current_line_blame)
-        map({ 'n', 'v' }, gitsigns_keymap.reset_hunk, gitsigns_actions.reset_hunk)
+
+        map('n', gitsigns_keymap.diff_this, gitsigns_actions.diffthis)
     end
 }
 

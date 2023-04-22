@@ -120,10 +120,12 @@ keymaps.focus = {
 keymaps.gitsigns = {
     next_hunk    = ']c',
     prev_hunk    = '[c',
+    stage_hunk   = '<leader>hs',
     reset_hunk   = '<leader>hr',
     preview_hunk = '<leader>hp',
     blame_line   = '<leader>hb',
     toggle_blame = '<leader>hB',
+    diff_this    = '<leader>hd',
 }
 
 -- INFO: git-conflict keymap
