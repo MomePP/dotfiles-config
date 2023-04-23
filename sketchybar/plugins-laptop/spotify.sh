@@ -8,21 +8,13 @@ MAX_LENGTH=35
 # Logic starts here, do not modify
 HALF_LENGTH=$(((MAX_LENGTH + 1) / 2))
 
-# Spotify JSON / $INFO comes in malformed, line below sanitizes it
-
 update_track() {
-  SPOTIFY_JSON="$INFO"
 
-  if [[ -z $SPOTIFY_JSON ]]; then
-    sketchybar --set $NAME icon.color=0xffeed49f label.drawing=no
-    return
-  fi
+  PLAYER_STATE=$(osascript -e 'tell application "Spotify" to get player state')
 
-  PLAYER_STATE=$(echo "$SPOTIFY_JSON" | jq -r '.["Player State"]')
-
-  if [ $PLAYER_STATE = "Playing" ]; then
-    TRACK="$(echo "$SPOTIFY_JSON" | jq -r .Name)"
-    ARTIST="$(echo "$SPOTIFY_JSON" | jq -r .Artist)"
+  if [ $PLAYER_STATE = "playing" ]; then
+    TRACK="$(osascript -e 'tell application "Spotify" to name of current track')"
+    ARTIST="$(osascript -e 'tell application "Spotify" to artist of current track')"
 
     # Calculations so it fits nicely
     TRACK_LENGTH=${#TRACK}
@@ -46,9 +38,7 @@ update_track() {
     fi
     sketchybar --set $NAME label="${TRACK}  ${ARTIST}" label.drawing=yes icon.color=0xffa6da95
 
-  elif [ $PLAYER_STATE = "Paused" ]; then
-    sketchybar --set $NAME icon.color=0xffeed49f
-  elif [ $PLAYER_STATE = "Stopped" ]; then
+  elif [ $PLAYER_STATE = "stopped" ]; then
     sketchybar --set $NAME icon.color=0xffeed49f label.drawing=no
   else
     sketchybar --set $NAME icon.color=0xffeed49f
