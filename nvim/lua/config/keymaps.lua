@@ -230,11 +230,10 @@ keymaps.move = {
     move_right = '<m-l>',
 }
 
--- INFO: search-replace keymap
-keymaps.search_replace = {
-    single_open = '<leader>r',
-    multi_open  = '<leader>R',
-    visual_open = '<C-r>',
+-- INFO: muren search-replace keymap
+keymaps.muren = {
+    toggle = '<leader>r',
+    unique  = '<leader>R',
 }
 
 -- INFO: treesj keymap
