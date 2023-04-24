@@ -2,15 +2,11 @@
 
 # Max number of characters so it fits nicely to the right of the notch
 # MAY NOT WORK WITH NON-ENGLISH CHARACTERS
-
 MAX_LENGTH=35
-
-# Logic starts here, do not modify
 HALF_LENGTH=$(((MAX_LENGTH + 1) / 2))
 
-# Spotify JSON / $INFO comes in malformed, line below sanitizes it
-
 update_track() {
+  # Spotify JSON / $INFO comes in malformed, line below sanitizes it
   SPOTIFY_JSON="$INFO"
 
   if [[ -z $SPOTIFY_JSON ]]; then
@@ -46,8 +42,6 @@ update_track() {
     fi
     sketchybar --set $NAME label="${TRACK}  ${ARTIST}" label.drawing=yes icon.color=0xffa6da95
 
-  elif [ $PLAYER_STATE = "Paused" ]; then
-    sketchybar --set $NAME icon.color=0xffeed49f
   elif [ $PLAYER_STATE = "Stopped" ]; then
     sketchybar --set $NAME icon.color=0xffeed49f label.drawing=no
   else
@@ -63,7 +57,7 @@ case "$SENDER" in
       osascript -e 'tell application "Spotify" to play next track'
     fi
     ;;
-  *)
+  "spotify_change")
     update_track
     ;;
 esac
