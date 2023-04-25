@@ -582,6 +582,7 @@ M.config = function()
             VertSplit = { fg = c.base02, bg = c.base01 },
             NormalFloat = { bg = c.base00 },
             FloatBorder = { link = 'NormalFloat' },
+            NuiFloat = { fg = c.base10, bg = c.base00 },
             Pmenu = { fg = c.base04, bg = c.base00 },
             PmenuSel = { fg = c.none, bg = c.base02 },
         })

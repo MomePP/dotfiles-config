@@ -73,7 +73,6 @@ opt.showmatch     = true
 opt.shiftwidth    = 4
 opt.tabstop       = 4
 opt.scrolloff     = 8
-opt.sidescrolloff = 8
 
 opt.grepprg       = 'rg --vimgrep'
 opt.grepformat    = '%f:%l:%c:%m'
