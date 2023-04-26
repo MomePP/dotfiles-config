@@ -14,11 +14,11 @@ update_track() {
     return
   fi
 
-  PLAYER_STATE=$(echo "$SPOTIFY_JSON" | jq -r '.["Player State"]')
+  PLAYER_STATE=$(echo "$SPOTIFY_JSON" | jq -r .state)
 
-  if [ $PLAYER_STATE = "Playing" ]; then
-    TRACK="$(echo "$SPOTIFY_JSON" | jq -r .Name)"
-    ARTIST="$(echo "$SPOTIFY_JSON" | jq -r .Artist)"
+  if [ $PLAYER_STATE = "playing" ]; then
+    TRACK="$(echo "$SPOTIFY_JSON" | jq -r .title)"
+    ARTIST="$(echo "$SPOTIFY_JSON" | jq -r .artist)"
 
     # Calculations so it fits nicely
     TRACK_LENGTH=${#TRACK}
@@ -42,9 +42,7 @@ update_track() {
     fi
     sketchybar --set $NAME label="${TRACK}  ${ARTIST}" label.drawing=yes icon.color=0xffa6da95
 
-  elif [ $PLAYER_STATE = "Stopped" ]; then
-    sketchybar --set $NAME icon.color=0xffeed49f label.drawing=no
-  else
+  elif [ $PLAYER_STATE = "paused" ]; then
     sketchybar --set $NAME icon.color=0xffeed49f
   fi
 }
@@ -57,7 +55,7 @@ case "$SENDER" in
       osascript -e 'tell application "Spotify" to play next track'
     fi
     ;;
-  "spotify_change")
+  "media_change")
     update_track
     ;;
 esac

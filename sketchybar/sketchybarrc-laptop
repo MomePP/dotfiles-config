@@ -88,7 +88,6 @@ weather=(
     update_freq=1800
     script="$PLUGIN_DIR/weather.sh"
 )
-SPOTIFY_EVENT="com.spotify.client.PlaybackStateChanged"
 spotify=(
     background.padding_left=2
     icon=
@@ -102,10 +101,9 @@ sketchybar --add item weather center                         \
            --set weather "${weather[@]}"                     \
            --subscribe weather system_woke                   \
                                                              \
-           --add event spotify_change $SPOTIFY_EVENT         \
            --add item spotify center                         \
            --set spotify "${spotify[@]}"                     \
-           --subscribe spotify mouse.clicked spotify_change
+           --subscribe spotify mouse.clicked media_change
 
 # INFO: right-side bar components
 clock=(
