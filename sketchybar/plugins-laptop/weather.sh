@@ -1,19 +1,20 @@
 #!/usr/bin/env zsh
 
-LOCATION_JSON=$(curl -s https://ipinfo.io/json)
+# LOCATION_JSON=$(curl -s https://ipinfo.io/json)
 
-LOCATION="$(echo $LOCATION_JSON | jq '.city' | tr -d '"')"
-REGION="$(echo $LOCATION_JSON | jq '.region' | tr -d '"')"
-COUNTRY="$(echo $LOCATION_JSON | jq '.country' | tr -d '"')"
+# LOCATION="$(echo $LOCATION_JSON | jq '.city' | tr -d '"')"
+# REGION="$(echo $LOCATION_JSON | jq '.region' | tr -d '"')"
+# COUNTRY="$(echo $LOCATION_JSON | jq '.country' | tr -d '"')"
 
 # Line below replaces spaces with +
-LOCATION_ESCAPED="${LOCATION// /+}+${REGION// /+}"
-WEATHER_JSON=$(curl -s "https://wttr.in/$LOCATION_ESCAPED?format=j1")
+# LOCATION_ESCAPED="${LOCATION// /+}+${REGION// /+}"
+# WEATHER_JSON=$(curl -s "https://wttr.in/$LOCATION_ESCAPED?format=j1")
+WEATHER_JSON=$(curl -s "https://wttr.in?format=j2")
 
 # Fallback if empty
 if [ -z $WEATHER_JSON ]; then
 
-  sketchybar --set $NAME label=$LOCATION
+  sketchybar --set $NAME label="no weather info"
   # sketchybar --set $NAME.moon icon=
   
   return
@@ -21,6 +22,7 @@ fi
 
 # echo $WEATHER_JSON
 
+LOCATION=$(echo $WEATHER_JSON | jq '.nearest_area[0].areaName[0].value' | tr -d '"')
 TEMPERATURE=$(echo $WEATHER_JSON | jq '.current_condition[0].temp_C' | tr -d '"')
 WEATHER_DESCRIPTION=$(echo $WEATHER_JSON | jq '.current_condition[0].weatherDesc[0].value' | tr -d '"' | sed 's/\(.\{25\}\).*/\1.../')
 # MOON_PHASE=$(echo $WEATHER_JSON | jq '.weather[0].astronomy[0].moon_phase' | tr -d '"')
