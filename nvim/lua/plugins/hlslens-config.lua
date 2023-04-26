@@ -42,8 +42,7 @@ M.config = function(_, opts)
         local ok, winid = hlslens.nNPeekWithUFO(char)
         if ok and winid then
             vim.keymap.set('n', '<CR>', function()
-                local keyCodes = vim.api.nvim_replace_termcodes('<Tab><CR>', true, false, true)
-                vim.api.nvim_feedkeys(keyCodes, 'im', false)
+                vim.api.nvim_feedkeys(vim.keycode('<Tab><CR>'), 'im', false)
             end, { buffer = true })
         end
     end
