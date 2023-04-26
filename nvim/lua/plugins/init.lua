@@ -62,8 +62,8 @@ return {
     {
         'chrishrb/gx.nvim',
         dependencies = { 'plenary.nvim' },
-        event = 'VeryLazy',
-        config = true
+        keys = { { 'gx' } },
+        config = true,
     },
 
     -- Miscellaneous
