@@ -1,6 +1,12 @@
 local M = {
     'AckslD/muren.nvim',
-    config = true,
+}
+
+M.opts = {
+    keys = {
+        scroll_preview_up = '<C-u>',
+        scroll_preview_down = '<C-d>',
+    },
 }
 
 M.keys = function()
