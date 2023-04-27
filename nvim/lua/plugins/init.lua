@@ -62,7 +62,11 @@ return {
     {
         'chrisgrieser/nvim-early-retirement',
         event = 'VeryLazy',
-        config = true,
+        opts = {
+            retirementAgeMins = 30,
+            minimumBufferNum = 5,
+            notificationOnAutoClose = true,
+        },
     },
     {
         'chrishrb/gx.nvim',
