@@ -23,7 +23,12 @@ return {
         'SmiteshP/nvim-navic',
         dependencies = 'nvim-lspconfig',
         event = { 'BufReadPost', 'BufNewFile' },
-        opts = { lsp = { auto_attach = true } },
+        opts = {
+            lsp = {
+                auto_attach = true,
+                preference = { 'volar', 'jsonls' },
+            },
+        },
     },
     {
         'Wansmer/treesj',
