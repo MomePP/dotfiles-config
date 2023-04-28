@@ -44,6 +44,7 @@ M.config = function()
                 win_options = {
                     winhighlight = 'Normal:NuiFloat,FloatBorder:FloatBorder',
                 },
+                zindex = 999,
             }, {
                 default_value = default_value,
                 on_close = function()
