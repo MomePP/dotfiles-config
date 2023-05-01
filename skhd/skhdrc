@@ -1,6 +1,10 @@
 # disable MacOS default cmd - h
 cmd - h : [ ]
 
+# overrided MacOS default spaces navigation
+ctrl - left : yabai -m space --focus prev
+ctrl - right : yabai -m space --focus next
+
 # Space Navigation (four spaces per display): cmd - {1, 2, 3, 4}
 cmd - 1 : set -l SPACES (yabai -m query --displays --display | jq '.spaces[]') && [ -n $SPACES[1] ] && yabai -m space --focus $SPACES[1]
 cmd - 2 : set -l SPACES (yabai -m query --displays --display | jq '.spaces[]') && [ -n $SPACES[2] ] && yabai -m space --focus $SPACES[2]
