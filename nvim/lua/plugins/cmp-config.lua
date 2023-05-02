@@ -7,6 +7,7 @@ local M = {
         'hrsh7th/cmp-path',
         'saadparwaiz1/cmp_luasnip',
         'lukas-reineke/cmp-rg',
+        'onsails/lspkind.nvim',
 
         -- NOTE: snippet plugins
         {
@@ -39,12 +40,13 @@ local M = {
 M.opts = function()
     local cmp = require('cmp')
     local luasnip = require('luasnip')
-    local icons = require('config').defaults.icons
     local copilot_status, copilot_suggestion = pcall(require, 'copilot.suggestion')
 
-    local ELLIPSIS_CHAR = ' …'
-    local MAX_LABEL_WIDTH = 50
-    local MIN_LABEL_WIDTH = 10
+    local lspkind_format = require('lspkind').cmp_format({
+        mode = 'symbol_text',
+        preset = 'codicons',
+        maxwidth = 50,
+    })
 
     local function is_line_empty()
         local col = vim.fn.col('.') - 1
@@ -52,20 +54,17 @@ M.opts = function()
     end
 
     local cmp_formatting = {
-        -- fields = { 'abbr', 'kind', 'menu' },
         fields = { 'kind', 'abbr', 'menu' },
         format = function(entry, vim_item)
-            local label = vim_item.abbr
-            local truncated_label = vim.fn.strcharpart(label, 0, MAX_LABEL_WIDTH)
-            if truncated_label ~= label then
-                vim_item.abbr = truncated_label .. ELLIPSIS_CHAR
-            elseif string.len(label) < MIN_LABEL_WIDTH then
-                local padding = string.rep(' ', MIN_LABEL_WIDTH - string.len(label))
-                vim_item.abbr = label .. padding
-            end
-            vim_item.kind = string.format(' %s ', icons.cmp.kinds[vim_item.kind])
-            vim_item.menu = string.format(icons.cmp.source_format .. '%s', icons.cmp.source_menu[entry.source.name])
-            return vim_item
+            local original_kind = vim_item.kind
+            local kind = lspkind_format(entry, vim_item)
+            local strings = vim.split(kind.kind, '%s', { trimempty = true })
+
+            kind.kind = ' ' .. strings[1] .. ' '
+            kind.menu = '   ' .. strings[2]
+            kind.menu_hl_group = 'CmpItemKind' .. original_kind
+
+            return kind
         end,
     }
 
