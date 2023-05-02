@@ -34,7 +34,7 @@ M.opts = function()
     local diagnostics = {
         'diagnostics',
         sections = { 'error', 'warn' },
-        symbols = { error = icons.diagnostics.Error, warn = icons.diagnostics.Warn },
+        symbols = { error = icons.diagnostics.error, warn = icons.diagnostics.warn },
         update_in_insert = false,
         always_visible = true,
     }

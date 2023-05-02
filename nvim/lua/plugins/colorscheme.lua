@@ -122,7 +122,7 @@ local marks_highlight = {
 }
 
 local local_highlight = {
-    LocalHighlightText = { bg = M.colorset.bg1, bold = true, nocombine = true },
+    LocalHighlight = { bg = M.colorset.bg1, bold = true, nocombine = true },
 }
 
 local noice_highlight = {
@@ -571,8 +571,43 @@ M.config = function()
             TreesitterContextLineNumber = { link = 'TreesitterContext' },
         }
 
+        cmp_highlight = {
+            CmpItemAbbrDeprecated = { fg = c.base03, bg = c.none, strikethrough = true },
+            CmpItemAbbrMatch = { fg = c.base05, bg = c.none, bold = true },
+            CmpItemAbbrMatchFuzzy = { fg = c.base05, bg = c.none, bold = true },
+            CmpItemMenu = { fg = c.base10, bg = c.none, italic = true },
+            CmpItemKindInterface = { fg = c.base08, bg = c.none },
+            CmpItemKindColor = { fg = c.base08, bg = c.none },
+            CmpItemKindTypeParameter = { fg = c.base08, bg = c.none },
+            CmpItemKindText = { fg = c.base09, bg = c.none },
+            CmpItemKindEnum = { fg = c.base09, bg = c.none },
+            CmpItemKindKeyword = { fg = c.base09, bg = c.none },
+            CmpItemKindConstant = { fg = c.base10, bg = c.none },
+            CmpItemKindConstructor = { fg = c.base10, bg = c.none },
+            CmpItemKindReference = { fg = c.base10, bg = c.none },
+            CmpItemKindFunction = { fg = c.base11, bg = c.none },
+            CmpItemKindStruct = { fg = c.base11, bg = c.none },
+            CmpItemKindClass = { fg = c.base11, bg = c.none },
+            CmpItemKindModule = { fg = c.base11, bg = c.none },
+            CmpItemKindOperator = { fg = c.base11, bg = c.none },
+            CmpItemKindField = { fg = c.base12, bg = c.none },
+            CmpItemKindProperty = { fg = c.base12, bg = c.none },
+            CmpItemKindEvent = { fg = c.base12, bg = c.none },
+            CmpItemKindUnit = { fg = c.base13, bg = c.none },
+            CmpItemKindSnippet = { fg = c.base13, bg = c.none },
+            CmpItemKindFolder = { fg = c.base13, bg = c.none },
+            CmpItemKindVariable = { fg = c.base14, bg = c.none },
+            CmpItemKindFile = { fg = c.base14, bg = c.none },
+            CmpItemKindMethod = { fg = c.base15, bg = c.none },
+            CmpItemKindValue = { fg = c.base15, bg = c.none },
+            CmpItemKindEnumMember = { fg = c.base15, bg = c.none },
+        }
+
+        local_highlight = {
+            LocalHighlight = { bg = c.base02, bold = true, nocombine = true },
+        }
+
         overrideHighlightConfig({
-            LocalHighlightText = { bg = c.base02, bold = true, nocombine = true },
             Normal = { fg = c.base04, bg = c.base01 },
             NormalNC = { fg = c.base04, bg = c.base01 },
             LineNr = { fg = c.base03, bg = c.base01 },
@@ -594,6 +629,8 @@ M.config = function()
         overrideHighlightConfig(ts_rainbow_highlight)
         overrideHighlightConfig(indentblankline_highlight)
         overrideHighlightConfig(ts_context_highlight)
+        overrideHighlightConfig(cmp_highlight)
+        overrideHighlightConfig(local_highlight)
 
         for hl_name, hl_value in pairs(highlight_overrides) do
             vim.api.nvim_set_hl(0, hl_name, hl_value)
