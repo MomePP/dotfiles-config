@@ -17,9 +17,8 @@ git:
   # branchLogCmd: "git log --graph --color --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%n%C(reset)%C(dim cyan)%an <%ae>%n%C(reset)%C(white)%w(0,4,4)%B%C(reset)' {{branchName}} --"
   # allBranchesLogCmd: "git log --graph --all --color=always --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim cyan)- %an%C(reset)%C(bold yellow)%d%C(reset)'"
 os:
-  editCommand: "nvim"
-  # openCommand: "nvr -cc q -c ':e' --remote-silent {{filename}}"
-  openCommand: "nvim --server $NVIM --remote-send '<S-q><C-\\><C-n>:lua _OpenFile({{filename}})<CR>'"
+  editPreset: "nvim"
+  open: "nvim --server $NVIM --remote-send '<S-q><C-\\><C-n>:lua _OpenFile({{filename}})<CR>'"
 notARepository: 'quit'
 promptToReturnFromSubprocess: false
 keybinding:
