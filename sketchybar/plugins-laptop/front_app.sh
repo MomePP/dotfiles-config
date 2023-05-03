@@ -61,8 +61,8 @@ case $INFO in
     ICON=󰾔
     ;;
   *)
-    ICON_PADDING_RIGHT=4
-    ICON=󱟲
+    ICON_PADDING_RIGHT=7
+    ICON=󰵆
     ;;
 esac
 

@@ -14,7 +14,7 @@ M.defaults = {
             removed = ' ',
         },
         lualine = {
-            lsp = '󰂼',
+            lsp = '󰘸',
             git = '',
             session = '',
             navic_separator = '  ',

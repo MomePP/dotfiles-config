@@ -67,5 +67,5 @@ WEATHER_DESCRIPTION=$(echo $WEATHER_JSON | jq '.current_condition[0].weatherDesc
 #
 # echo "WEATHER CODE $WEATHER_CODE"
 
-sketchybar --set $NAME label="$LOCATION  $TEMPERATURE糖 $WEATHER_DESCRIPTION"
+sketchybar --set $NAME label="$LOCATION  $TEMPERATURE󰔄 $WEATHER_DESCRIPTION"
 # sketchybar --set $NAME.moon icon=$ICON

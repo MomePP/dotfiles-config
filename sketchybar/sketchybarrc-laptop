@@ -81,8 +81,7 @@ sketchybar --add item front_app left                    \
 # INFO: center bar components
 weather=(
     background.padding_right=4
-    icon=
-    icon.y_offset=1
+    icon=
     icon.color=0xfff5bde6
     icon.font="$FONT_FACE:Bold:16.0"
     update_freq=1800
@@ -107,25 +106,22 @@ sketchybar --add item weather center                         \
 
 # INFO: right-side bar components
 clock=(
-    icon=
-    icon.y_offset=1
+    icon=󰨲
     icon.color=0xffed8796
     update_freq=10
     script="$PLUGIN_DIR/clock.sh"
 )
 battery=(
-    icon.y_offset=1
     update_freq=120
     script="$PLUGIN_DIR/battery.sh"
 )
 wifi=(
-    icon.y_offset=1
     script="$PLUGIN_DIR/wifi.sh"
 )
 KEYBOARD_EVENT="AppleSelectedInputSourcesChangedNotification"
 keyboard=(
     icon=󰧹
-    icon.y_offset=1
+    icon.y_offset=-1
     script="$PLUGIN_DIR/keyboard.sh"
 )
 sketchybar  --add item clock right                              \
