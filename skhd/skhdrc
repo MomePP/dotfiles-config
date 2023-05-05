@@ -66,10 +66,18 @@ alt + shift - 4 :  set -l DISPLAY_INFO (yabai -m query --displays) \
                         && set -l SPACES (echo $DISPLAY_INFO | jq --argjson index $TARGET_DISPLAY 'nth($index) | .spaces[]') \
                         && [ -n $SPACES[4] ] && yabai -m window --space $SPACES[4] && yabai -m space --focus $SPACES[4]
 
-# cycle through all windows sorted by: coordinates -> space index -> display index
-# ctrl + lalt - n : yabai -m window --focus "$(yabai -m query --windows | jq -re "sort_by(.display, .space, .frame.x, .frame.y, .id) | map(select(.\"is-visible\" == true and .role != \"AXUnknown\")) | reverse | nth(index(map(select(.\"has-focus\" == true))) - 1).id")"
-# cycle through all visible windows sorted by: coordinates -> display index
-# ctrl + lalt - m : yabai -m window --focus "$(yabai -m query --windows | jq -re "sort_by(.display, .frame.x, .frame.y, .id) | map(select(.\"is-visible\" == true and .role != \"AXUnknown\")) | reverse | nth(index(map(select(.\"has-focus\" == true))) - 1).id")"
+## Stacks (ctrl + lalt - ...)
+# Add the active window to the window or stack to the {direction}: shift + ctrl - {j, k, l, h, p, n}
+ctrl + lalt - j : yabai -m window  west --stack $(yabai -m query --windows --window | jq -r '.id') && sketchybar --trigger window_focus
+ctrl + lalt - k : yabai -m window south --stack $(yabai -m query --windows --window | jq -r '.id') && sketchybar --trigger window_focus
+ctrl + lalt - l : yabai -m window north --stack $(yabai -m query --windows --window | jq -r '.id') && sketchybar --trigger window_focus
+ctrl + lalt - h : yabai -m window  east --stack $(yabai -m query --windows --window | jq -r '.id') && sketchybar --trigger window_focus
+
+ctrl + lalt - n : yabai -m window --focus stack.next
+ctrl + lalt - p : yabai -m window --focus stack.prev
+
+# Toggle layout of the space (bsp, stack)
+ctrl + lalt - x : yabai -m space --layout "$(if [ $(yabai -m query --spaces --space | jq -r '.type') = 'bsp' ]; echo 'stack'; else; echo 'bsp'; end)"; sketchybar --trigger window_focus
 
 # Float / Unfloat window: ctrl + lalt - space
 ctrl + lalt - space : yabai -m window --toggle float; sketchybar --trigger window_focus
@@ -97,9 +105,6 @@ ctrl + lalt - e : yabai -m space --balance
 
 # Enable / Disable gaps in current workspace: ctrl + lalt - g
 ctrl + lalt - g : yabai -m space --toggle padding; yabai -m space --toggle gap
-
-# Toggle layout of the space (bsp, float)
-ctrl + lalt - x : yabai -m space --layout "$(if [ $(yabai -m query --spaces --space | jq -r '.type') = 'bsp' ]; echo 'float'; else; echo 'bsp'; end)"
 
 ## Misc
 # Open new kitty window
