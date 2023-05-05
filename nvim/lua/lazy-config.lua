@@ -49,7 +49,7 @@ local lazy_config = {
         },
     },
     dev = {
-        path = '~/Developments/nvim_plugins'
+        path = '~/Developments/nvim-plugins'
     }
 }
 require('lazy').setup('plugins', lazy_config)
