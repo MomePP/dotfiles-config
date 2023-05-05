@@ -1,5 +1,8 @@
+CONFIG_DIR="$HOME/.config/sketchybar"
 PLUGIN_DIR="$HOME/.config/sketchybar/plugins-laptop"
 FONT_FACE="Hack Nerd Font"
+
+source "$CONFIG_DIR/colors.sh"
 
 ##### Bar Appearance #####
 # https://felixkratz.github.io/SketchyBar/config/bar
@@ -11,23 +14,22 @@ bar=(
     sticky=on
     padding_left=20
     padding_right=20
-    color=0x6624273a
+    color=$BAR_COLOR
 )
 sketchybar --bar "${bar[@]}"
 
 default=(
     updates=when_shown
-    # background.color=0xff24273a
     background.padding_left=2
     background.padding_right=2
     background.corner_radius=5
     background.height=24
-    icon.color=0xffffffff
+    icon.color=$ICON_COLOR
     icon.font="$FONT_FACE:Bold:17.0"
     icon.padding_left=8
     icon.padding_right=7
     label.font="$FONT_FACE:Bold:12.0"
-    label.color=0xffcad3f5
+    label.color=$LABEL_COLOR
     label.padding_left=0
     label.padding_right=7
 )
@@ -42,7 +44,7 @@ do
         associated_space=$sid
         icon=$sid
         icon.font="$FONT_FACE:Bold:13.0"
-        background.color=0xff24273a
+        background.color=$BAR_BORDER_COLOR
         background.corner_radius=5
         background.padding_right=5
         background.drawing=off
@@ -54,35 +56,35 @@ do
                --set space.$sid "${space[@]}"
 done
 
+yabai=(
+  icon="􀧍"
+  icon.width=34
+  icon.y_offset=1
+  icon.color=$GREY
+  label.width=0
+  script="$PLUGIN_DIR/yabai.sh"
+  associated_display=active
+)
 front_app=(
-    background.color=0xffa6da95
-    background.padding_left=0
-    background.padding_right=0
-    icon.y_offset=1
-    icon.color=0xff24273a
-    label.drawing=no
-    script="$PLUGIN_DIR/front_app.sh"
+  icon.drawing=off
+  label.font="$FONT_FACE:Bold:12.0"
+  associated_display=active
+  script="$PLUGIN_DIR/front_app.sh"
 )
-front_app_name=(
-    icon.drawing=off
-    label.drawing=yes
-    background.padding_right=8
-)
-sketchybar --add item front_app left                    \
+sketchybar --add event window_focus                     \
+           --add item yabai left                        \
+           --set yabai "${yabai[@]}"                    \
+           --subscribe yabai window_focus mouse.clicked \
+                                                        \
+           --add item front_app left                    \
            --set front_app "${front_app[@]}"            \
-                                                        \
-           --add item front_app.name left               \
-           --set front_app.name "${front_app_name[@]}"  \
-                                                        \
-           --add bracket front_app_bracket              \
-                 front_app front_app.name               \
            --subscribe front_app front_app_switched
 
 # INFO: center bar components
 weather=(
     background.padding_right=4
     icon=
-    icon.color=0xfff5bde6
+    icon.color=$PINK
     icon.font="$FONT_FACE:Bold:16.0"
     update_freq=1800
     script="$PLUGIN_DIR/weather.sh"
@@ -90,7 +92,7 @@ weather=(
 spotify=(
     background.padding_left=2
     icon=
-    icon.color=0xffeed49f
+    icon.color=$YELLOW
     icon.font="$FONT_FACE:Bold:20.0"
     label.drawing=off
     label.padding_left=3
@@ -107,11 +109,12 @@ sketchybar --add item weather center                         \
 # INFO: right-side bar components
 clock=(
     icon=󰨲
-    icon.color=0xffed8796
+    icon.color=$RED
     update_freq=10
     script="$PLUGIN_DIR/clock.sh"
 )
 battery=(
+    icon.y_offset=1
     update_freq=120
     script="$PLUGIN_DIR/battery.sh"
 )

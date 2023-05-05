@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+source "$CONFIG_DIR/colors.sh"
+
 # Max number of characters so it fits nicely to the right of the notch
 # MAY NOT WORK WITH NON-ENGLISH CHARACTERS
 MAX_LENGTH=35
@@ -9,7 +11,7 @@ update_track() {
   # $INFO comes in malformed or not Spotify app, line below sanitizes it
   CURRENT_APP=$(echo $INFO | jq -r .app)
   if [ $CURRENT_APP != "Spotify" ]; then
-    sketchybar --set $NAME icon.color=0xffeed49f
+    sketchybar --set $NAME icon.color=$YELLOW
     return
   fi
 
@@ -37,10 +39,10 @@ update_track() {
         ARTIST="${ARTIST:0:$((MAX_LENGTH - TRACK_LENGTH - 1))}…"
       fi
     fi
-    sketchybar --set $NAME label="${TRACK}  ${ARTIST}" label.drawing=yes icon.color=0xffa6da95
+    sketchybar --set $NAME label="${TRACK}  ${ARTIST}" label.drawing=yes icon.color=$GREEN
 
   elif [ $PLAYER_STATE = "paused" ]; then
-    sketchybar --set $NAME icon.color=0xffeed49f
+    sketchybar --set $NAME icon.color=$YELLOW
   fi
 }
 

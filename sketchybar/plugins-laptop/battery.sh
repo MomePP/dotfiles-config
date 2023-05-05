@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+source "$CONFIG_DIR/colors.sh"
+
 PERCENTAGE=$(pmset -g batt | grep -Eo "\d+%" | cut -d% -f1)
 CHARGING=$(pmset -g batt | grep 'AC Power')
 
@@ -9,30 +11,30 @@ fi
 
 case ${PERCENTAGE} in
   [8-9][0-9]|100) 
-    ICON=""
-    ICON_COLOR=0xffa6da95
+    ICON="􀛨"
+    ICON_COLOR=$BATTERY_LEVEL5_COLOR
     ;;
   [6-7][0-9])
-    ICON=""
-    ICON_COLOR=0xffd7da95
+    ICON="􀺸"
+    ICON_COLOR=$BATTERY_LEVEL4_COLOR
     ;;
   [3-5][0-9]) 
-    ICON=""
-    ICON_COLOR=0xffdac295
+    ICON="􀺶"
+    ICON_COLOR=$BATTERY_LEVEL3_COLOR
     ;;
   [1-2][0-9]) 
-    ICON=""
-    ICON_COLOR=0xffdaa295
+    ICON="􀛩"
+    ICON_COLOR=$BATTERY_LEVEL2_COLOR
     ;;
   [0-9])
-    ICON=""
-    ICON_COLOR=0xffda9595
+    ICON="􀛪"
+    ICON_COLOR=$BATTERY_LEVEL1_COLOR
     ;;
 esac
 
 if [[ $CHARGING != "" ]]; then
-  ICON="󱐋"
-  ICON_COLOR=0xffeed49f
+  ICON="􀢋"
+  ICON_COLOR=$BATTERY_CHARGING_COLOR
 fi
 
 sketchybar --set $NAME icon=$ICON label="${PERCENTAGE}%" icon.color=${ICON_COLOR}

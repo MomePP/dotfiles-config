@@ -72,13 +72,13 @@ alt + shift - 4 :  set -l DISPLAY_INFO (yabai -m query --displays) \
 # ctrl + lalt - m : yabai -m window --focus "$(yabai -m query --windows | jq -re "sort_by(.display, .frame.x, .frame.y, .id) | map(select(.\"is-visible\" == true and .role != \"AXUnknown\")) | reverse | nth(index(map(select(.\"has-focus\" == true))) - 1).id")"
 
 # Float / Unfloat window: ctrl + lalt - space
-ctrl + lalt - space : yabai -m window --toggle float
+ctrl + lalt - space : yabai -m window --toggle float; sketchybar --trigger window_focus
 
 # Make window zoom to fullscreen: ctrl + lalt + enter
-ctrl + lalt - 0x24 : yabai -m window --toggle zoom-fullscreen
+ctrl + lalt - 0x24 : yabai -m window --toggle zoom-fullscreen; sketchybar --trigger window_focus
 
 # Make window zoom to parent node
-ctrl + lalt + shift - 0x24 : yabai -m window --toggle zoom-parent
+ctrl + lalt + shift - 0x24 : yabai -m window --toggle zoom-parent; sketchybar --trigger window_focus
 
 # Toggle split orientation of the selected windows node: ctrl + lalt - s
 ctrl + lalt - s : yabai -m window --toggle split
