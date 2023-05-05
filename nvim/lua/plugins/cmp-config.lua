@@ -44,7 +44,6 @@ M.opts = function()
 
     local lspkind_format = require('lspkind').cmp_format({
         mode = 'symbol_text',
-        preset = 'codicons',
         maxwidth = 50,
     })
 
