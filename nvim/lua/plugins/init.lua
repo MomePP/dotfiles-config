@@ -12,7 +12,7 @@ return {
     {
         'tzachar/local-highlight.nvim',
         event = { 'BufReadPre', 'BufNewFile' },
-        opts = { hlgroup = 'LocalHighlightText', cw_hlgroup = 'LocalHighlightText' },
+        config = true,
     },
     {
         'kylechui/nvim-surround',
