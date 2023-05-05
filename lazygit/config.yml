@@ -6,6 +6,7 @@ gui:
       - default
     selectedRangeBgColor:
       - default
+  experimentalShowBranchHeads: true
 git:
   paging:
     colorArg: always
