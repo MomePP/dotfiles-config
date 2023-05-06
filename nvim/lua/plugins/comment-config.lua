@@ -1,22 +1,17 @@
 local M = {
-    'numToStr/Comment.nvim',
+    'lucastavaresa/SingleComment.nvim',
     dependencies = {
+        'nvim-treesitter',
         'nvim-ts-context-commentstring',
-    },
+    }
 }
 
-M.opts = function()
-    return {
-        mappings = { extra = false },
-        pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook()
-    }
-end
-
 M.keys = {
-    { 'gc', mode = { 'n', 'v', 'o' } },
-    { 'gb', mode = { 'n', 'v', 'o' } },
-    { 'gcc' },
-    { 'gbc' }
+    { mode = { 'n' },      'gcc', function() return require('SingleComment').SingleComment() end, expr = true },
+    { mode = { 'v' },      'gcc', function() require('SingleComment').Comment() end },
+    { mode = { 'n' },      'gca', function() require('SingleComment').ToggleCommentAhead() end },
+    { mode = { 'n' },      'gcA', function() require('SingleComment').CommentAhead() end },
+    { mode = { 'n', 'v' }, 'gcb', function() require('SingleComment').BlockComment() end },
 }
 
 return M
