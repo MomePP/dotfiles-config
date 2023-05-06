@@ -22,8 +22,8 @@ return {
     },
     {
         'SmiteshP/nvim-navic',
-        dependencies = 'nvim-lspconfig',
-        event = { 'BufReadPost', 'BufNewFile' },
+        dependencies = { 'nvim-lspconfig' },
+        event = 'LspAttach',
         opts = {
             lsp = {
                 auto_attach = true,
