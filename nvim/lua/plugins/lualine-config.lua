@@ -1,6 +1,6 @@
 local M = {
     'nvim-lualine/lualine.nvim',
-    event = 'VimEnter'
+    event = 'UIEnter'
 }
 
 M.opts = function()

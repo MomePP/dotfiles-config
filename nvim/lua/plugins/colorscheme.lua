@@ -3,7 +3,7 @@ local M = {
     -- 'folke/tokyonight.nvim',
     -- 'catppuccin/nvim', name = 'catppuccin',
     'nyoom-engineering/oxocarbon.nvim',
-    lazy = false,
+    event = 'UIEnter'
 }
 
 M.colorset = {
@@ -62,91 +62,6 @@ local function overrideHighlightConfig(rhs)
     highlight_overrides = vim.tbl_deep_extend('force', highlight_overrides, rhs)
 end
 
-local cmp_highlight = {
-    PmenuSel = { bg = '#282C34', fg = 'NONE' },
-    Pmenu = { fg = '#C5CDD9', bg = '#22252A' },
-    CmpItemAbbrDeprecated = { fg = '#7E8294', bg = 'NONE', strikethrough = true },
-    CmpItemAbbrMatch = { fg = '#82AAFF', bg = 'NONE', bold = true },
-    CmpItemAbbrMatchFuzzy = { fg = '#82AAFF', bg = 'NONE', bold = true },
-    CmpItemMenu = { fg = '#C792EA', bg = 'NONE', italic = true },
-    CmpItemKindField = { fg = '#EED8DA', bg = '#B5585F' },
-    CmpItemKindProperty = { fg = '#EED8DA', bg = '#B5585F' },
-    CmpItemKindEvent = { fg = '#EED8DA', bg = '#B5585F' },
-    CmpItemKindText = { fg = '#C3E88D', bg = '#9FBD73' },
-    CmpItemKindEnum = { fg = '#C3E88D', bg = '#9FBD73' },
-    CmpItemKindKeyword = { fg = '#C3E88D', bg = '#9FBD73' },
-    CmpItemKindConstant = { fg = '#FFE082', bg = '#D4BB6C' },
-    CmpItemKindConstructor = { fg = '#FFE082', bg = '#D4BB6C' },
-    CmpItemKindReference = { fg = '#FFE082', bg = '#D4BB6C' },
-    CmpItemKindFunction = { fg = '#EADFF0', bg = '#A377BF' },
-    CmpItemKindStruct = { fg = '#EADFF0', bg = '#A377BF' },
-    CmpItemKindClass = { fg = '#EADFF0', bg = '#A377BF' },
-    CmpItemKindModule = { fg = '#EADFF0', bg = '#A377BF' },
-    CmpItemKindOperator = { fg = '#EADFF0', bg = '#A377BF' },
-    CmpItemKindVariable = { fg = '#C5CDD9', bg = '#7E8294' },
-    CmpItemKindFile = { fg = '#C5CDD9', bg = '#7E8294' },
-    CmpItemKindUnit = { fg = '#F5EBD9', bg = '#D4A959' },
-    CmpItemKindSnippet = { fg = '#F5EBD9', bg = '#D4A959' },
-    CmpItemKindFolder = { fg = '#F5EBD9', bg = '#D4A959' },
-    CmpItemKindMethod = { fg = '#DDE5F5', bg = '#6C8ED4' },
-    CmpItemKindValue = { fg = '#DDE5F5', bg = '#6C8ED4' },
-    CmpItemKindEnumMember = { fg = '#DDE5F5', bg = '#6C8ED4' },
-    CmpItemKindInterface = { fg = '#D8EEEB', bg = '#58B5A8' },
-    CmpItemKindColor = { fg = '#D8EEEB', bg = '#58B5A8' },
-    CmpItemKindTypeParameter = { fg = '#D8EEEB', bg = '#58B5A8' },
-}
-
-local telescope_highlight = {
-    TelescopeSelection = { bg = M.colorset.bg1 },
-    TelescopeNormal = { bg = M.colorset.bg0 },
-    TelescopePromptNormal = { bg = M.colorset.bg0 },
-    TelescopeResultsBorder = { fg = M.colorset.bright_blue, bg = M.colorset.bg0 },
-    TelescopePreviewBorder = { fg = M.colorset.bright_blue, bg = M.colorset.bg0 },
-    TelescopePromptBorder = { fg = M.colorset.bright_blue, bg = M.colorset.bg0 },
-    TelescopePromptTitle = { fg = M.colorset.bg, bg = M.colorset.bright_blue },
-    TelescopeResultsTitle = { fg = M.colorset.bg, bg = M.colorset.bright_blue },
-    TelescopePreviewTitle = { fg = M.colorset.bg, bg = M.colorset.bright_blue },
-}
-
-local flit_highlight = {
-    -- greyout search area of `flit.nvim` by configures `leap.nvim` highlight
-    LeapBackdrop = { link = 'LspCodeLens' },
-    LeapLabelPrimary = { fg = 'cyan', bold = true, nocombine = true },
-    LeapLabelSecondary = { fg = M.colorset.purple, bold = true, nocombine = true },
-    LeapMatch = { fg = 'white', bold = true, nocombine = true },
-}
-
-local marks_highlight = {
-    MarkSignHL = { fg = M.colorset.bright_blue },
-    -- MarkVirtTextHL = { fg = M.colorset.bright_blue, bg = M.colorset.transparent, nocombine = true },
-}
-
-local local_highlight = {
-    LocalHighlight = { bg = M.colorset.bg1, bold = true, nocombine = true },
-}
-
-local noice_highlight = {
-    NoiceCmdlineIconCmdline = { bg = M.colorset.transparent, fg = M.colorset.red, bold = true },
-    NoiceCmdlineIconSearch = { bg = M.colorset.transparent, fg = M.colorset.orange, bold = true },
-    NoiceCmdlineIconFilter = { bg = M.colorset.transparent, fg = M.colorset.teal, bold = true },
-    NoiceSplit = { bg = M.colorset.bg },
-}
-
-local indentblankline_highlight = {
-    IndentBlanklineContextChar = { fg = M.colorset.orange, nocombine = true }
-}
-
-local incline_highlight = {
-    InclineNormal = {
-        fg = vim.o.background ~= 'dark' and M.colorset.black or M.colorset.white,
-        bg = M.colorset.transparent,
-        bold = true
-    },
-    InclineNormalNC = { fg = M.colorset.gray, bg = M.colorset.transparent, },
-    InclineSpacing = { fg = M.colorset.white, bg = M.colorset.orange, },
-    InclineModified = { fg = M.colorset.red, bg = M.colorset.transparent, }
-}
-
 local lualine_defaults = {
     a = { bg = M.colorset.transparent, gui = 'bold' },
     b = { fg = M.colorset.white, bg = M.colorset.transparent },
@@ -173,6 +88,87 @@ M.config = function()
         local function kanagawaOverrided(c)
             local palette = c.palette
             local theme = c.theme
+
+            local cmp_highlight = {
+                PmenuSel = { bg = '#282C34', fg = 'NONE' },
+                Pmenu = { fg = '#C5CDD9', bg = '#22252A' },
+                CmpItemAbbrDeprecated = { fg = '#7E8294', bg = 'NONE', strikethrough = true },
+                CmpItemAbbrMatch = { fg = '#82AAFF', bg = 'NONE', bold = true },
+                CmpItemAbbrMatchFuzzy = { fg = '#82AAFF', bg = 'NONE', bold = true },
+                CmpItemMenu = { fg = '#C792EA', bg = 'NONE', italic = true },
+                CmpItemKindField = { fg = '#EED8DA', bg = '#B5585F' },
+                CmpItemKindProperty = { fg = '#EED8DA', bg = '#B5585F' },
+                CmpItemKindEvent = { fg = '#EED8DA', bg = '#B5585F' },
+                CmpItemKindText = { fg = '#C3E88D', bg = '#9FBD73' },
+                CmpItemKindEnum = { fg = '#C3E88D', bg = '#9FBD73' },
+                CmpItemKindKeyword = { fg = '#C3E88D', bg = '#9FBD73' },
+                CmpItemKindConstant = { fg = '#FFE082', bg = '#D4BB6C' },
+                CmpItemKindConstructor = { fg = '#FFE082', bg = '#D4BB6C' },
+                CmpItemKindReference = { fg = '#FFE082', bg = '#D4BB6C' },
+                CmpItemKindFunction = { fg = '#EADFF0', bg = '#A377BF' },
+                CmpItemKindStruct = { fg = '#EADFF0', bg = '#A377BF' },
+                CmpItemKindClass = { fg = '#EADFF0', bg = '#A377BF' },
+                CmpItemKindModule = { fg = '#EADFF0', bg = '#A377BF' },
+                CmpItemKindOperator = { fg = '#EADFF0', bg = '#A377BF' },
+                CmpItemKindVariable = { fg = '#C5CDD9', bg = '#7E8294' },
+                CmpItemKindFile = { fg = '#C5CDD9', bg = '#7E8294' },
+                CmpItemKindUnit = { fg = '#F5EBD9', bg = '#D4A959' },
+                CmpItemKindSnippet = { fg = '#F5EBD9', bg = '#D4A959' },
+                CmpItemKindFolder = { fg = '#F5EBD9', bg = '#D4A959' },
+                CmpItemKindMethod = { fg = '#DDE5F5', bg = '#6C8ED4' },
+                CmpItemKindValue = { fg = '#DDE5F5', bg = '#6C8ED4' },
+                CmpItemKindEnumMember = { fg = '#DDE5F5', bg = '#6C8ED4' },
+                CmpItemKindInterface = { fg = '#D8EEEB', bg = '#58B5A8' },
+                CmpItemKindColor = { fg = '#D8EEEB', bg = '#58B5A8' },
+                CmpItemKindTypeParameter = { fg = '#D8EEEB', bg = '#58B5A8' },
+            }
+
+            local telescope_highlight = {
+                TelescopeSelection = { bg = M.colorset.bg1 },
+                TelescopeNormal = { bg = M.colorset.bg0 },
+                TelescopePromptNormal = { bg = M.colorset.bg0 },
+                TelescopeResultsBorder = { fg = M.colorset.bright_blue, bg = M.colorset.bg0 },
+                TelescopePreviewBorder = { fg = M.colorset.bright_blue, bg = M.colorset.bg0 },
+                TelescopePromptBorder = { fg = M.colorset.bright_blue, bg = M.colorset.bg0 },
+                TelescopePromptTitle = { fg = M.colorset.bg, bg = M.colorset.bright_blue },
+                TelescopeResultsTitle = { fg = M.colorset.bg, bg = M.colorset.bright_blue },
+                TelescopePreviewTitle = { fg = M.colorset.bg, bg = M.colorset.bright_blue },
+            }
+
+            local flit_highlight = {
+                -- greyout search area of `flit.nvim` by configures `leap.nvim` highlight
+                LeapBackdrop = { link = 'LspCodeLens' },
+                LeapLabelPrimary = { fg = 'cyan', bold = true, nocombine = true },
+                LeapLabelSecondary = { fg = M.colorset.purple, bold = true, nocombine = true },
+                LeapMatch = { fg = 'white', bold = true, nocombine = true },
+            }
+
+            local marks_highlight = {
+                MarkSignHL = { fg = M.colorset.bright_blue },
+                -- MarkVirtTextHL = { fg = M.colorset.bright_blue, bg = M.colorset.transparent, nocombine = true },
+            }
+
+            local local_highlight = {
+                LocalHighlight = { bg = M.colorset.bg1, bold = true, nocombine = true },
+            }
+
+            local noice_highlight = {
+                NoiceCmdlineIconCmdline = { bg = M.colorset.transparent, fg = M.colorset.red, bold = true },
+                NoiceCmdlineIconSearch = { bg = M.colorset.transparent, fg = M.colorset.orange, bold = true },
+                NoiceCmdlineIconFilter = { bg = M.colorset.transparent, fg = M.colorset.teal, bold = true },
+                NoiceSplit = { bg = M.colorset.bg },
+            }
+
+            local incline_highlight = {
+                InclineNormal = {
+                    fg = vim.o.background ~= 'dark' and M.colorset.black or M.colorset.white,
+                    bg = M.colorset.transparent,
+                    bold = true
+                },
+                InclineNormalNC = { fg = M.colorset.gray, bg = M.colorset.transparent, },
+                InclineSpacing = { fg = M.colorset.white, bg = M.colorset.orange, },
+                InclineModified = { fg = M.colorset.red, bg = M.colorset.transparent, }
+            }
 
             local navic_highlight = {
                 NavicIconsFile = { fg = palette.springViolet2 },
@@ -263,6 +259,19 @@ M.config = function()
 
     local tokyonight_status, tokyonight = pcall(require, 'tokyonight')
     if tokyonight_status then
+        local flit_highlight = {
+            -- greyout search area of `flit.nvim` by configures `leap.nvim` highlight
+            LeapBackdrop = { link = 'LspCodeLens' },
+            LeapLabelPrimary = { fg = 'cyan', bold = true, nocombine = true },
+            LeapLabelSecondary = { fg = M.colorset.purple, bold = true, nocombine = true },
+            LeapMatch = { fg = 'white', bold = true, nocombine = true },
+        }
+
+        local marks_highlight = {
+            MarkSignHL = { fg = M.colorset.bright_blue },
+            -- MarkVirtTextHL = { fg = M.colorset.bright_blue, bg = M.colorset.transparent, nocombine = true },
+        }
+
         overrideHighlightConfig(flit_highlight)
         overrideHighlightConfig(marks_highlight)
 
@@ -393,7 +402,7 @@ M.config = function()
         }
 
         -- INFO: telescope highlights
-        telescope_highlight = {
+        local telescope_highlight = {
             TelescopeNormal = { bg = catppuccin_colors.mantle },
             TelescopeResultsBorder = { bg = catppuccin_colors.mantle },
             TelescopePreviewBorder = { bg = catppuccin_colors.mantle },
@@ -406,7 +415,7 @@ M.config = function()
         }
 
         -- INFO: incline highlights
-        incline_highlight = {
+        local incline_highlight = {
             InclineNormal = { fg = catppuccin_colors.text, bg = catppuccin_colors.base, bold = true },
             InclineNormalNC = { fg = catppuccin_colors.surface2, bg = catppuccin_colors.none, },
             InclineSpacing = { fg = catppuccin_colors.none, bg = catppuccin_colors.blue, },
@@ -414,11 +423,19 @@ M.config = function()
         }
 
         -- INFO: noice highlights
-        noice_highlight = {
+        local noice_highlight = {
             NoiceCmdlineIconCmdline = { bg = catppuccin_colors.none, fg = catppuccin_colors.sky, bold = true },
             NoiceCmdlineIconSearch = { bg = catppuccin_colors.none, fg = catppuccin_colors.orange, bold = true },
             NoiceCmdlineIconFilter = { bg = catppuccin_colors.none, fg = catppuccin_colors.peach, bold = true },
             NoiceSplit = { bg = catppuccin_colors.base },
+        }
+
+        local flit_highlight = {
+            -- greyout search area of `flit.nvim` by configures `leap.nvim` highlight
+            LeapBackdrop = { link = 'LspCodeLens' },
+            LeapLabelPrimary = { fg = 'cyan', bold = true, nocombine = true },
+            LeapLabelSecondary = { fg = M.colorset.purple, bold = true, nocombine = true },
+            LeapMatch = { fg = 'white', bold = true, nocombine = true },
         }
 
         overrideHighlightConfig({
@@ -502,14 +519,14 @@ M.config = function()
         vim.opt.background = 'dark'
         vim.cmd.colorscheme 'oxocarbon'
 
-        incline_highlight = {
+        local incline_highlight = {
             InclineNormal = { bold = true },
             InclineNormalNC = { fg = c.base03 },
             InclineSpacing = { fg = c.none, bg = c.base10, },
             InclineModified = { fg = c.base10, bg = c.none, },
         }
 
-        noice_highlight = {
+        local noice_highlight = {
             NoiceCmdlineIconCmdline = { link = 'lualine_a_command' },
             NoiceCmdlineIconSearch = { link = 'lualine_a_command' },
             NoiceCmdlineIconFilter = { link = 'lualine_a_command' },
@@ -518,7 +535,7 @@ M.config = function()
             NoiceSplit = { bg = c.base01 },
         }
 
-        telescope_highlight = {
+        local telescope_highlight = {
             TelescopeNormal = { fg = c.base03, bg = c.base00 },
             TelescopeSelection = { fg = c.base04, bold = true },
             TelescopeResultsBorder = { bg = c.base00 },
@@ -530,7 +547,7 @@ M.config = function()
             TelescopeResultsDiffUntracked = { bg = c.base00 },
         }
 
-        flit_highlight = {
+        local flit_highlight = {
             LeapBackdrop = { fg = c.base03, bg = c.none },
             LeapLabelPrimary = { fg = 'cyan', bold = true, nocombine = true },
             LeapLabelSecondary = { fg = M.colorset.purple, bold = true, nocombine = true },
@@ -562,7 +579,7 @@ M.config = function()
             TSRainbowViolet = { fg = c.base14 },
         }
 
-        indentblankline_highlight = {
+        local indentblankline_highlight = {
             IndentBlanklineContextChar = { fg = c.base04, nocombine = true }
         }
 
@@ -571,7 +588,7 @@ M.config = function()
             TreesitterContextLineNumber = { link = 'TreesitterContext' },
         }
 
-        cmp_highlight = {
+        local cmp_highlight = {
             CmpItemAbbrDeprecated = { fg = c.base03, bg = c.none, strikethrough = true },
             CmpItemAbbrMatch = { fg = c.base05, bg = c.none, bold = true },
             CmpItemAbbrMatchFuzzy = { fg = c.base05, bg = c.none, bold = true },
@@ -603,7 +620,7 @@ M.config = function()
             CmpItemKindEnumMember = { fg = c.base15, bg = c.none },
         }
 
-        local_highlight = {
+        local local_highlight = {
             LocalHighlight = { bg = c.base02, bold = true, nocombine = true },
         }
 
