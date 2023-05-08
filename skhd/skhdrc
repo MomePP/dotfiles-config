@@ -2,8 +2,8 @@
 cmd - h : [ ]
 
 # overrided MacOS default spaces navigation
-ctrl - left : yabai -m space --focus prev
-ctrl - right : yabai -m space --focus next
+ctrl - right : yabai -m space --focus next || yabai -m space --focus first
+ctrl - left  : yabai -m space --focus prev || yabai -m space --focus last
 
 # Space Navigation (four spaces per display): cmd - {1, 2, 3, 4}
 cmd - 1 : set -l SPACES (yabai -m query --displays --display | jq '.spaces[]') && [ -n $SPACES[1] ] && yabai -m space --focus $SPACES[1]
@@ -11,70 +11,55 @@ cmd - 2 : set -l SPACES (yabai -m query --displays --display | jq '.spaces[]') &
 cmd - 3 : set -l SPACES (yabai -m query --displays --display | jq '.spaces[]') && [ -n $SPACES[3] ] && yabai -m space --focus $SPACES[3]
 cmd - 4 : set -l SPACES (yabai -m query --displays --display | jq '.spaces[]') && [ -n $SPACES[4] ] && yabai -m space --focus $SPACES[4]
 
-# Window Navigation (through display borders)
-alt - h    : yabai -m window --focus west  || yabai -m display --focus west
-alt - j    : yabai -m window --focus south || yabai -m display --focus south
-alt - k    : yabai -m window --focus north || yabai -m display --focus north
-alt - l    : yabai -m window --focus east  || yabai -m display --focus east
+# Window Navigation
+cmd - j : yabai -m window --focus $(yabai -m query --windows --space | jq 'sort_by(.id) | .[(to_entries | .[] | select(.value."has-focus") | .key + 1) % length] | .id')
+cmd - k : yabai -m window --focus $(yabai -m query --windows --space | jq 'sort_by(.id) | .[(to_entries | .[] | select(.value."has-focus") | .key - 1) % length] | .id')
 
-# Moving windows in spaces
-alt + shift - h : yabai -m window --warp west  \
-                        || begin; yabai -m window --display west && yabai -m display --focus west && yabai -m window --warp last; end \
-                        || yabai -m window --move rel:-10:0
-alt + shift - j : yabai -m window --warp south \
-                        || begin; yabai -m window --display south && yabai -m display --focus south; end \
-                        || yabai -m window --move rel:0:10
-alt + shift - k : yabai -m window --warp north \
-                        || begin; yabai -m window --display north && yabai -m display --focus north; end \
-                        || yabai -m window --move rel:0:-10
-alt + shift - l : yabai -m window --warp east  \
-                        || begin; yabai -m window --display east && yabai -m display --focus east && yabai -m window --warp first; end \
-                        || yabai -m window --move rel:10:0
+# Display Navigation
+cmd + shift - j : yabai -m display --focus next || yabai -m display --focus first
+cmd + shift - k : yabai -m display --focus prev || yabai -m display --focus last
 
-# Moving windows between spaces: alt - {1, 2, 3, 4, p, n } (Assumes 4 Spaces Max per Display)
+# Moving windows between spaces: alt - {1, 2, 3, 4} (Assumes 4 Spaces Max per Display)
 alt - 1 : set -l SPACES (yabai -m query --displays --display | jq '.spaces[]') && [ -n $SPACES[1] ] \
                   && yabai -m window --space $SPACES[1] && yabai -m space --focus $SPACES[1] 
-
 alt - 2 : set -l SPACES (yabai -m query --displays --display | jq '.spaces[]') && [ -n $SPACES[2] ] \
                   && yabai -m window --space $SPACES[2] && yabai -m space --focus $SPACES[2]
-
 alt - 3 : set -l SPACES (yabai -m query --displays --display | jq '.spaces[]') && [ -n $SPACES[3] ] \
                   && yabai -m window --space $SPACES[3] && yabai -m space --focus $SPACES[3]
-
 alt - 4 : set -l SPACES (yabai -m query --displays --display | jq '.spaces[]') && [ -n $SPACES[4] ] \
                   && yabai -m window --space $SPACES[4] && yabai -m space --focus $SPACES[4]
 
-# Moving windows between spaces on next display: alt + shift - {1, 2, 3, 4, p, n } (Assumes 4 Spaces Max per Display)
+# Moving windows between spaces on next display: alt + shift - {1, 2, 3, 4} (Assumes 4 Spaces Max per Display)
 #   query display then (display id % display number) to move window to next display spaces
-alt + shift - 1 :  set -l DISPLAY_INFO (yabai -m query --displays) \
-                        && set -l TARGET_DISPLAY (math (yabai -m query --displays --display | jq '.id') % (echo $DISPLAY_INFO | jq '. | length')) \
-                        && set -l SPACES (echo $DISPLAY_INFO | jq --argjson index $TARGET_DISPLAY 'nth($index) | .spaces[]') \
+alt + shift - 1 : set -l CURRENT_DISPLAY_ID (yabai -m query --displays --space | jq '.id') \
+                        && set -l SPACES (yabai -m query --displays | jq --argjson current_id $CURRENT_DISPLAY_ID '.[(to_entries | .[] | select(.value."id" == ($current_id % length) + 1) | .key)] | .spaces[]') \
                         && [ -n $SPACES[1] ] && yabai -m window --space $SPACES[1] && yabai -m space --focus $SPACES[1]
-
-alt + shift - 2 :  set -l DISPLAY_INFO (yabai -m query --displays) \
-                        && set -l TARGET_DISPLAY (math (yabai -m query --displays --display | jq '.id') % (echo $DISPLAY_INFO | jq '. | length')) \
-                        && set -l SPACES (echo $DISPLAY_INFO | jq --argjson index $TARGET_DISPLAY 'nth($index) | .spaces[]') \
+alt + shift - 2 : set -l CURRENT_DISPLAY_ID (yabai -m query --displays --space | jq '.id') \
+                        && set -l SPACES (yabai -m query --displays | jq --argjson current_id $CURRENT_DISPLAY_ID '.[(to_entries | .[] | select(.value."id" == ($current_id % length) + 1) | .key)] | .spaces[]') \
                         && [ -n $SPACES[2] ] && yabai -m window --space $SPACES[2] && yabai -m space --focus $SPACES[2]
-
-alt + shift - 3 :  set -l DISPLAY_INFO (yabai -m query --displays) \
-                        && set -l TARGET_DISPLAY (math (yabai -m query --displays --display | jq '.id') % (echo $DISPLAY_INFO | jq '. | length')) \
-                        && set -l SPACES (echo $DISPLAY_INFO | jq --argjson index $TARGET_DISPLAY 'nth($index) | .spaces[]') \
+alt + shift - 3 : set -l CURRENT_DISPLAY_ID (yabai -m query --displays --space | jq '.id') \
+                        && set -l SPACES (yabai -m query --displays | jq --argjson current_id $CURRENT_DISPLAY_ID '.[(to_entries | .[] | select(.value."id" == ($current_id % length) + 1) | .key)] | .spaces[]') \
                         && [ -n $SPACES[3] ] && yabai -m window --space $SPACES[3] && yabai -m space --focus $SPACES[3]
-
-alt + shift - 4 :  set -l DISPLAY_INFO (yabai -m query --displays) \
-                        && set -l TARGET_DISPLAY (math (yabai -m query --displays --display | jq '.id') % (echo $DISPLAY_INFO | jq '. | length')) \
-                        && set -l SPACES (echo $DISPLAY_INFO | jq --argjson index $TARGET_DISPLAY 'nth($index) | .spaces[]') \
+alt + shift - 4 : set -l CURRENT_DISPLAY_ID (yabai -m query --displays --space | jq '.id') \
+                        && set -l SPACES (yabai -m query --displays | jq --argjson current_id $CURRENT_DISPLAY_ID '.[(to_entries | .[] | select(.value."id" == ($current_id % length) + 1) | .key)] | .spaces[]') \
                         && [ -n $SPACES[4] ] && yabai -m window --space $SPACES[4] && yabai -m space --focus $SPACES[4]
 
-## Stacks (ctrl + lalt - ...)
-# Add the active window to the window or stack to the {direction}: shift + ctrl - {j, k, l, h, p, n}
-ctrl + lalt - j : yabai -m window  west --stack $(yabai -m query --windows --window | jq -r '.id') && sketchybar --trigger window_focus
-ctrl + lalt - k : yabai -m window south --stack $(yabai -m query --windows --window | jq -r '.id') && sketchybar --trigger window_focus
-ctrl + lalt - l : yabai -m window north --stack $(yabai -m query --windows --window | jq -r '.id') && sketchybar --trigger window_focus
-ctrl + lalt - h : yabai -m window  east --stack $(yabai -m query --windows --window | jq -r '.id') && sketchybar --trigger window_focus
+# Moving windows in spaces
+ctrl + lalt - h : yabai -m window --warp west  \
+                        || begin; yabai -m window --display west && yabai -m display --focus west && yabai -m window --warp last; end
+ctrl + lalt - j : yabai -m window --warp south \
+                        || begin; yabai -m window --display south && yabai -m display --focus south; end
+ctrl + lalt - k : yabai -m window --warp north \
+                        || begin; yabai -m window --display north && yabai -m display --focus north; end
+ctrl + lalt - l : yabai -m window --warp east  \
+                        || begin; yabai -m window --display east && yabai -m display --focus east && yabai -m window --warp first; end
 
-ctrl + lalt - n : yabai -m window --focus stack.next
-ctrl + lalt - p : yabai -m window --focus stack.prev
+## Stacks (ctrl + lalt - ...)
+# Add the active window to the window or stack to the {direction}: shift + ctrl - {h, j, k, l}
+# ctrl + lalt - h : yabai -m window  west --stack $(yabai -m query --windows --window | jq -r '.id') && sketchybar --trigger window_focus
+# ctrl + lalt - j : yabai -m window south --stack $(yabai -m query --windows --window | jq -r '.id') && sketchybar --trigger window_focus
+# ctrl + lalt - k : yabai -m window north --stack $(yabai -m query --windows --window | jq -r '.id') && sketchybar --trigger window_focus
+# ctrl + lalt - l : yabai -m window  east --stack $(yabai -m query --windows --window | jq -r '.id') && sketchybar --trigger window_focus
 
 # Toggle layout of the space (bsp, stack)
 ctrl + lalt - x : yabai -m space --layout "$(if [ $(yabai -m query --spaces --space | jq -r '.type') = 'bsp' ]; echo 'stack'; else; echo 'bsp'; end)"; sketchybar --trigger window_focus
