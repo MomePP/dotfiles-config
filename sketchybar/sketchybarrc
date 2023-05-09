@@ -1,5 +1,5 @@
 CONFIG_DIR="$HOME/.config/sketchybar"
-PLUGIN_DIR="$HOME/.config/sketchybar/plugins-laptop"
+PLUGIN_DIR="$HOME/.config/sketchybar/plugins"
 FONT_FACE="Hack Nerd Font"
 
 source "$CONFIG_DIR/colors.sh"
