@@ -1,18 +1,29 @@
 local M = {
-    'beauwilliams/focus.nvim',
-    event = { 'BufReadPost', 'BufNewFile' }
+    'cryptomilk/focus.nvim',
+    event = 'VeryLazy'
 }
 
+M.init = function()
+    local ignore_buftypes = { 'nofile', 'prompt', 'popup' }
+
+    vim.api.nvim_create_autocmd('WinEnter', {
+        group = vim.api.nvim_create_augroup('FocusDisable', { clear = true }),
+        callback = function(_)
+            if vim.tbl_contains(ignore_buftypes, vim.bo.buftype) then
+                vim.b.focus_disable = true
+            end
+        end,
+        desc = 'Disable focus autoresize for BufType',
+    })
+end
+
 M.opts = {
-    excluded_filetypes = {
-        'telescopeprompt',
-        'toggleterm',
-        'noice',
+    autoresize = {
+        height_quickfix = 12,
     },
-    autoresize = true,
-    number = false,
-    signcolumn = false,
-    cursorline = true,
+    ui = {
+        signcolumn = false,
+    },
 }
 
 M.keys = function()
