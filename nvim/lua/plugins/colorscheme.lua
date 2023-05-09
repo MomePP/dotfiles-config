@@ -497,12 +497,12 @@ M.config = function()
                 c = { fg = c.base04 },
             }),
             insert = vim.tbl_deep_extend('force', lualine_defaults, {
-                a = { fg = c.base14 },
+                a = { fg = c.base10 },
                 b = { fg = c.base04 },
                 c = { fg = c.base04 },
             }),
             visual = vim.tbl_deep_extend('force', lualine_defaults, {
-                a = { fg = c.base12 },
+                a = { fg = c.base14 },
                 b = { fg = c.base04 },
                 c = { fg = c.base04 },
             }),
@@ -512,7 +512,7 @@ M.config = function()
                 c = { fg = c.base04 },
             }),
             command = vim.tbl_deep_extend('force', lualine_defaults, {
-                a = { fg = c.base05 },
+                a = { fg = c.base12 },
                 b = { fg = c.base04 },
                 c = { fg = c.base04 },
             }),
