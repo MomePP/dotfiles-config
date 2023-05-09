@@ -1,5 +1,6 @@
 local M = {
     'nvim-lualine/lualine.nvim',
+    dependencies = 'nvim-colorscheme',
     event = 'UIEnter'
 }
 

@@ -1,8 +1,9 @@
 local M = {
     -- 'rebelot/kanagawa.nvim',
     -- 'folke/tokyonight.nvim',
-    -- 'catppuccin/nvim', name = 'catppuccin',
+    -- 'catppuccin/nvim',
     'nyoom-engineering/oxocarbon.nvim',
+    name = 'nvim-colorscheme',
     event = 'UIEnter'
 }
 
