@@ -318,7 +318,7 @@ M.config = function()
             hl.WinSeparator = { fg = c.border_highlight }
             hl.NormalFloat = { bg = c.bg_float }
             hl.FloatBorder = { link = 'NormalFloat' }
-            hl.LocalHighlightText = { bg = c.bg_highlight, bold = true, nocombine = true }
+            hl.LocalHighlight = { bg = c.bg_highlight, bold = true, nocombine = true }
 
             -- INFO: lualine highlights
             M.colorset.lualine = {
@@ -444,7 +444,7 @@ M.config = function()
             Pmenu = { fg = catppuccin_colors.text, bg = catppuccin_colors.base },
             NormalFloat = { bg = catppuccin_colors.mantle },
             FloatBorder = { link = 'NormalFloat' },
-            LocalHighlightText = { bg = catppuccin_colors.surface0, bold = true, nocombine = true },
+            LocalHighlight = { bg = catppuccin_colors.surface0, bold = true, nocombine = true },
         })
         overrideHighlightConfig(telescope_highlight)
         overrideHighlightConfig(incline_highlight)
