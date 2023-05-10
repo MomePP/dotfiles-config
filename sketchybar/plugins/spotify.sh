@@ -51,7 +51,7 @@ case "$SENDER" in
     if [ $BUTTON = "left" ]; then
       osascript -e 'tell application "Spotify" to playpause'
     else
-      osascript -e 'tell application "Spotify" to play next track'
+      osascript -e 'tell application "Spotify" to next track'
     fi
     ;;
   "media_change")
