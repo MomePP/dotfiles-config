@@ -546,6 +546,7 @@ M.config = function()
             TelescopeResultsDiffChange = { bg = c.base00 },
             TelescopeResultsDiffDelete = { bg = c.base00 },
             TelescopeResultsDiffUntracked = { bg = c.base00 },
+            TelescopeMatching = { link = 'Search' },
         }
 
         local flit_highlight = {
@@ -638,6 +639,7 @@ M.config = function()
             FloatTitle = { fg = c.base10, bg = c.base00, bold = true },
             Pmenu = { fg = c.base04, bg = c.base00 },
             PmenuSel = { fg = c.none, bg = c.base02 },
+            Search = { fg = c.base01, bg = c.base12, bold = true },
         })
         overrideHighlightConfig(telescope_highlight)
         overrideHighlightConfig(incline_highlight)
