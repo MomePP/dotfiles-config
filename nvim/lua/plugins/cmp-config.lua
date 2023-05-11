@@ -130,7 +130,7 @@ M.opts = function()
             },
         },
         experimental = {
-            ghost_text = true
+            ghost_text = { hl_group = 'Comment' }
         },
         preselect = cmp.PreselectMode.Item,
         completion = {
