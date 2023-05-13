@@ -1,6 +1,6 @@
 local M = {
     'beauwilliams/focus.nvim',
-    event = { 'BufReadPost', 'BufNewFile' }
+    event = 'VeryLazy'
 }
 
 M.opts = {
