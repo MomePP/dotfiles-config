@@ -41,7 +41,7 @@ return {
     },
     {
         'lukas-reineke/indent-blankline.nvim',
-        event = { 'BufReadPre', 'BufNewFile' },
+        event = 'VeryLazy',
         opts = {
             char = '│',
             show_trailing_blankline_indent = false,
@@ -50,7 +50,7 @@ return {
     },
     {
         'utilyre/sentiment.nvim',
-        event = { 'BufReadPre', 'BufNewFile' },
+        event = 'VeryLazy',
         opts = {
             excluded_filetypes = {
                 [''] = true,

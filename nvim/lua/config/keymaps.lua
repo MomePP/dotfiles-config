@@ -78,9 +78,7 @@ keymaps.lsp = {
     ['K']          = function()
         local ufo_loaded, ufo = pcall(require, 'ufo')
         if ufo_loaded then
-            if ufo.peekFoldedLinesUnderCursor() then
-                return
-            end
+            if ufo.peekFoldedLinesUnderCursor() then return end
         end
         return vim.diagnostic.open_float({ scope = 'cursor' }) or vim.lsp.buf.hover()
     end,
@@ -233,7 +231,7 @@ keymaps.move = {
 -- INFO: muren search-replace keymap
 keymaps.muren = {
     toggle = '<leader>r',
-    unique  = '<leader>R',
+    unique = '<leader>R',
 }
 
 -- INFO: treesj keymap
