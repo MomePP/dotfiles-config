@@ -627,13 +627,13 @@ M.config = function()
         }
 
         overrideHighlightConfig({
-            Normal = { fg = c.base04, bg = c.base01 },
-            NormalNC = { fg = c.base04, bg = c.base01 },
-            LineNr = { fg = c.base03, bg = c.base01 },
-            FoldColumn = { fg = c.base02, bg = c.base01 },
-            SignColumn = { fg = c.base02, bg = c.base01 },
+            Normal = { fg = c.base04, bg = c.none },
+            NormalNC = { fg = c.base04, bg = c.none },
+            LineNr = { fg = c.base03, bg = c.none },
+            FoldColumn = { fg = c.base02, bg = c.none },
+            SignColumn = { fg = c.base02, bg = c.none },
             CursorLine = { bg = c.base02 },
-            VertSplit = { fg = c.base02, bg = c.base01 },
+            VertSplit = { fg = c.base02, bg = c.none },
             NormalFloat = { bg = c.base00 },
             FloatBorder = { link = 'NormalFloat' },
             FloatTitle = { fg = c.base10, bg = c.base00, bold = true },

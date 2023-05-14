@@ -20,6 +20,9 @@ local lazy_config = {
         lazy = true
     },
     performance = {
+        install = {
+            colorscheme = { 'nvim-colorscheme', 'habamax' }
+        },
         ui = {
             border = default_config.float_border
         },
