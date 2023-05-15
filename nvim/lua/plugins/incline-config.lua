@@ -13,20 +13,14 @@ M.opts = function()
             falling = 100
         },
         window = {
-            margin = {
-                horizontal = 0,
-                vertical = 0,
-            },
+            padding = { left = 0, right = 1 },
+            margin = { horizontal = 0, vertical = 0 },
             zindex = 40,
         },
         render = function(props)
             local bufname = vim.api.nvim_buf_get_name(props.buf)
-            local render_path = truncate_utils(
-                (bufname ~= '' and vim.fn.fnamemodify(bufname, ':.') or '[No Name]'),
-                MAX_PATH_WIDTH,
-                nil,
-                -1)
-
+            local render_path = truncate_utils((bufname ~= '' and vim.fn.fnamemodify(bufname, ':.') or '[No Name]'),
+                MAX_PATH_WIDTH, nil, -1)
             local render_modified = vim.api.nvim_buf_get_option(props.buf, 'modified') and '  ' or ' '
 
             return {

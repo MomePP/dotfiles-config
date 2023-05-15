@@ -521,8 +521,8 @@ M.config = function()
         vim.cmd.colorscheme 'oxocarbon'
 
         local incline_highlight = {
-            InclineNormal = { bold = true },
-            InclineNormalNC = { fg = c.base03 },
+            InclineNormal = { bg = c.base01, bold = true },
+            InclineNormalNC = { fg = c.base03, bg = c.base01 },
             InclineSpacing = { fg = c.none, bg = c.base10, },
             InclineModified = { fg = c.base10, bg = c.none, },
         }
@@ -531,7 +531,7 @@ M.config = function()
             NoiceCmdlineIconCmdline = { link = 'lualine_a_command' },
             NoiceCmdlineIconSearch = { link = 'lualine_a_command' },
             NoiceCmdlineIconFilter = { link = 'lualine_a_command' },
-            NoiceMini = { bg = c.base01 },
+            NoiceMini = { bg = c.base02 },
             NoiceCmdline = { bg = c.base01 },
             NoiceSplit = { bg = c.base01 },
         }
