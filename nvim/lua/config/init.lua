@@ -5,7 +5,7 @@ M.defaults = {
         diagnostics = {
             error = ' ',
             warn = ' ',
-            hint = '󰄮 ',
+            hint = '󰞋 ',
             info = ' ',
         },
         git = {
