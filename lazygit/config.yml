@@ -1,11 +1,11 @@
 gui:
-  showIcons: true
+  showIcons: false
   showBottomLine: false
   theme:
     selectedLineBgColor:
       - default
     selectedRangeBgColor:
-      - default
+      - '#393939'
   experimentalShowBranchHeads: true
 git:
   paging:
