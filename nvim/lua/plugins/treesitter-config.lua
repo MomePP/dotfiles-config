@@ -6,6 +6,8 @@ local M = {
         'JoosepAlviste/nvim-ts-context-commentstring',
         'windwp/nvim-ts-autotag',
         'HiPhish/nvim-ts-rainbow2',
+        'yioneko/nvim-yati',
+        'yioneko/vim-tmindent'
     }
 }
 
@@ -34,7 +36,7 @@ M.opts = function()
             additional_vim_regex_highlighting = false,
         },
         indent = {
-            enable = true,
+            enable = false,
         },
         context_commentstring = {
             enable = true,
@@ -52,6 +54,12 @@ M.opts = function()
             enable = true,
             keymaps = keymaps.incremental_selection,
         },
+        yati = {
+            enable = true,
+            default_fallback = function (lnum, computed, bufnr)
+                return require('tmindent').get_indent(lnum, bufnr) + computed
+            end
+        }
     }
 end
 
