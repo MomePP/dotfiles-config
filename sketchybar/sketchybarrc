@@ -71,13 +71,13 @@ front_app=(
   associated_display=active
   script="$PLUGIN_DIR/front_app.sh"
 )
-sketchybar --add event window_focus                     \
-           --add item yabai left                        \
-           --set yabai "${yabai[@]}"                    \
-           --subscribe yabai window_focus mouse.clicked \
-                                                        \
-           --add item front_app left                    \
-           --set front_app "${front_app[@]}"            \
+sketchybar --add event window_focus                                     \
+           --add item yabai left                                        \
+           --set yabai "${yabai[@]}"                                    \
+           --subscribe yabai window_focus space_change mouse.clicked    \
+                                                                        \
+           --add item front_app left                                    \
+           --set front_app "${front_app[@]}"                            \
            --subscribe front_app front_app_switched
 
 # INFO: center bar components
