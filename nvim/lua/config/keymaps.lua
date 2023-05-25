@@ -63,25 +63,28 @@ end
 
 -- INFO: LSP keymap
 keymaps.lsp = {
-    ['gd']         = '<Cmd>TroubleToggle lsp_definitions<CR>',
-    ['gt']         = '<Cmd>TroubleToggle lsp_type_definitions<CR>',
-    ['gr']         = '<Cmd>TroubleToggle lsp_references<CR>',
-    ['<leader>ld'] = '<Cmd>TroubleToggle workspace_diagnostics<CR>',
-    ['<leader>lr'] = vim.lsp.buf.rename,
-    ['<leader>lx'] = vim.lsp.buf.code_action,
-    ['gs']         = vim.lsp.buf.signature_help,
-    [']d']         = function() vim.diagnostic.goto_next({ float = false }) end,
-    ['[d']         = function() vim.diagnostic.goto_prev({ float = false }) end,
-    ['gD']         = function() vim.lsp.buf.declaration({ on_list = open_with_qflist }) end,
-    ['<leader>ls'] = function() vim.lsp.buf.document_symbol({ on_list = open_with_qflist }) end,
-    ['<leader>ff'] = function() vim.lsp.buf.format({ async = true }) end,
-    ['K']          = function()
-        local ufo_loaded, ufo = pcall(require, 'ufo')
-        if ufo_loaded then
-            if ufo.peekFoldedLinesUnderCursor() then return end
+    definitions      = { key = 'gd', cmd = '<Cmd>TroubleToggle lsp_definitions<CR>' },
+    type_definitions = { key = 'gt', cmd = '<Cmd>TroubleToggle lsp_type_definitions<CR>' },
+    reference        = { key = 'gr', cmd = '<Cmd>TroubleToggle lsp_references<CR>' },
+    signature_help   = { key = 'gs', cmd = vim.lsp.buf.signature_help },
+    rename           = { key = '<leader>lr', cmd = vim.lsp.buf.rename },
+    code_action      = { key = '<leader>lx', cmd = vim.lsp.buf.code_action },
+    diagnostic       = { key = '<leader>ld', cmd = '<Cmd>TroubleToggle workspace_diagnostics<CR>' },
+    diagnostic_next  = { key = ']d', cmd = function() vim.diagnostic.goto_next({ float = false }) end },
+    diagnostic_prev  = { key = '[d', cmd = function() vim.diagnostic.goto_prev({ float = false }) end },
+    declaration      = { key = 'gD', cmd = function() vim.lsp.buf.declaration({ on_list = open_with_qflist }) end },
+    format           = { key = '<leader>ff', cmd = function() vim.lsp.buf.format({ async = true }) end },
+    document_symbol  = { key = '<leader>ls', cmd = function() vim.lsp.buf.document_symbol({ on_list = open_with_qflist }) end },
+    hover            = {
+        key = 'K',
+        cmd = function()
+            local ufo_loaded, ufo = pcall(require, 'ufo')
+            if ufo_loaded then
+                if ufo.peekFoldedLinesUnderCursor() then return end
+            end
+            return vim.diagnostic.open_float({ scope = 'cursor' }) or vim.lsp.buf.hover()
         end
-        return vim.diagnostic.open_float({ scope = 'cursor' }) or vim.lsp.buf.hover()
-    end,
+    },
 }
 
 -- INFO: lsp_lines keymap
