@@ -33,23 +33,33 @@ local M = {
         },
 
         -- NOTE: github copilot if available
-        'copilot.lua'
+        {
+            'zbirenbaum/copilot-cmp',
+            dependencies = {
+                'zbirenbaum/copilot.lua',
+                opts = {
+                    suggestion = { enabled = false },
+                    panel = { enabled = false },
+                }
+            },
+            config = true
+        },
     },
 }
 
 M.opts = function()
     local cmp = require('cmp')
     local luasnip = require('luasnip')
-    local copilot_status, copilot_suggestion = pcall(require, 'copilot.suggestion')
 
     local lspkind_format = require('lspkind').cmp_format({
         mode = 'symbol_text',
         maxwidth = 50,
+        symbol_map = { Copilot = '' },
     })
 
-    local function is_line_empty()
-        local col = vim.fn.col('.') - 1
-        return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s')
+    local function has_word_before()
+        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match('%s') == nil
     end
 
     local cmp_formatting = {
@@ -70,21 +80,10 @@ M.opts = function()
     local cmp_mapping = {
         ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(2), { 'i', 'c' }),
         ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-2), { 'i', 'c' }),
-        ['<C-e>'] = cmp.mapping {
-            i = function()
-                if cmp.visible() then
-                    cmp.abort()
-                elseif copilot_status and copilot_suggestion.is_visible() then
-                    copilot_suggestion.dismiss()
-                end
-            end,
-            c = cmp.mapping.close(),
-        },
+        ['<C-e>'] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
         ['<CR>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true })
-            elseif copilot_status and copilot_suggestion.is_visible() then
-                copilot_suggestion.accept()
             else
                 fallback()
             end
@@ -94,10 +93,10 @@ M.opts = function()
                 cmp.select_next_item()
             elseif luasnip.expand_or_jumpable() then
                 luasnip.expand_or_jump()
-            elseif is_line_empty() then
-                fallback()
-            else
+            elseif has_word_before() then
                 cmp.complete()
+            else
+                fallback()
             end
         end, { 'i', 's' }),
         ['<S-Tab>'] = cmp.mapping(function(fallback)
@@ -111,7 +110,25 @@ M.opts = function()
         end, { 'i', 's' }),
     }
 
+    local cmp_sorting = {
+        priority_weight = 2,
+        comparators = {
+            require('copilot_cmp.comparators').prioritize,
+
+            cmp.config.compare.offset,
+            cmp.config.compare.exact,
+            cmp.config.compare.score,
+            cmp.config.compare.recently_used,
+            cmp.config.compare.locality,
+            cmp.config.compare.kind,
+            cmp.config.compare.sort_text,
+            cmp.config.compare.length,
+            cmp.config.compare.order,
+        },
+    }
+
     local cmp_sources = cmp.config.sources({
+        { name = 'copilot' },
         { name = 'path' },
         { name = 'nvim_lsp' },
         { name = 'rg',      keyword_length = 3 },
@@ -121,6 +138,7 @@ M.opts = function()
     return {
         snippet = { expand = function(args) luasnip.lsp_expand(args.body) end },
         mapping = cmp_mapping,
+        sorting = cmp_sorting,
         sources = cmp_sources,
         formatting = cmp_formatting,
         window = {
@@ -134,8 +152,7 @@ M.opts = function()
         },
         preselect = cmp.PreselectMode.Item,
         completion = {
-            autocomplete = false,
-            completeopt  = 'menuone',
+            completeopt = 'menuone',
         },
         matching = {
             disallow_partial_fuzzy_matching = false
