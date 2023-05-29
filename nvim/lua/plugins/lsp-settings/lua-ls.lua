@@ -20,7 +20,6 @@ return {
                 preloadFileSize = 10000,
                 checkThirdParty = false,
             },
-            telemetry = { enable = false },
         },
     },
 }
