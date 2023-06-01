@@ -15,6 +15,9 @@ M.keys = function()
     return {
         { muren_keymap.toggle, '<Cmd>MurenToggle<CR>' },
         { muren_keymap.unique, '<Cmd>MurenUnique<CR>' },
+
+        { muren_keymap.toggle, "<Esc><Cmd>'<,'>MurenToggle<CR>", mode = 'v' },
+        { muren_keymap.unique, "<Esc><Cmd>'<,'>MurenUnique<CR>", mode = 'v' },
     }
 end
 
