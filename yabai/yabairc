@@ -24,6 +24,8 @@ yabai -m config external_bar               all:34:0     \
                 active_window_opacity      1.0          \
                 normal_window_opacity      1.0          \
                                                         \
+                window_animation_duration  0.0          \
+                                                        \
                 window_border              on           \
                 window_border_hidpi        on           \
                 window_border_blur         off          \
