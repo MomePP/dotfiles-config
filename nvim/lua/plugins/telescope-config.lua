@@ -187,8 +187,8 @@ M.keys = function()
     end
 
     return {
+        { telescope_keymap.resume,           '<Cmd>Telescope resume<CR>' },
         { telescope_keymap.buffers,          '<Cmd>Telescope buffers<CR>' },
-        { telescope_keymap.help,             '<Cmd>Telescope help_tags<CR>' },
         { telescope_keymap.jumplist,         '<Cmd>Telescope jumplist<CR>' },
         { telescope_keymap.search_workspace, '<Cmd>Telescope live_grep<CR>' },
         { telescope_keymap.oldfiles,         '<Cmd>Telescope oldfiles<CR>' },
