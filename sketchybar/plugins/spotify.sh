@@ -10,7 +10,7 @@ HALF_LENGTH=$(((MAX_LENGTH + 1) / 2))
 update_track() {
   # $INFO comes in malformed or not Spotify app, line below sanitizes it
   CURRENT_APP=$(echo $INFO | jq -r .app)
-  if [ $CURRENT_APP != "Spotify" ]; then
+  if [ "$CURRENT_APP" != "Spotify" ]; then
     sketchybar --set $NAME icon.color=$YELLOW
     return
   fi
