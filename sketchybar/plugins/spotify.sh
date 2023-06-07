@@ -16,7 +16,7 @@ update_track() {
   fi
 
   PLAYER_STATE=$(echo "$INFO" | jq -r .state)
-  if [ $PLAYER_STATE = "playing" ]; then
+  if [ "$PLAYER_STATE" = "playing" ]; then
     TRACK="$(echo "$INFO" | jq -r .title)"
     ARTIST="$(echo "$INFO" | jq -r .artist)"
 
@@ -41,7 +41,7 @@ update_track() {
     fi
     sketchybar --set $NAME label="${TRACK}  ${ARTIST}" label.drawing=yes icon.color=$GREEN
 
-  elif [ $PLAYER_STATE = "paused" ]; then
+  elif [ "$PLAYER_STATE" = "paused" ]; then
     sketchybar --set $NAME icon.color=$YELLOW
   fi
 }
