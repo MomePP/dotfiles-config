@@ -52,13 +52,6 @@ M.colorset.todocomments = {
 
 local highlight_overrides = {}
 
-local function lspDisableHighlight()
-    for _, group in ipairs(vim.fn.getcompletion('@lsp', 'highlight')) do
-        vim.api.nvim_set_hl(0, group, {})
-    end
-end
-
-
 local function overrideHighlightConfig(rhs)
     highlight_overrides = vim.tbl_deep_extend('force', highlight_overrides, rhs)
 end
@@ -655,9 +648,6 @@ M.config = function()
         for hl_name, hl_value in pairs(highlight_overrides) do
             vim.api.nvim_set_hl(0, hl_name, hl_value)
         end
-
-        -- INFO: disable lsp semantic token highlighting
-        lspDisableHighlight()
 
         -- INFO: overrided some terminal colors
         vim.g['terminal_color_3'] = c.base10
