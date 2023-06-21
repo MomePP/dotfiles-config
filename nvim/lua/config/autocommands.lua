@@ -19,7 +19,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 vim.api.nvim_create_autocmd('OptionSet', {
     desc = 'assign q to quit when in diff mode',
     pattern = 'diff',
-    callback = function () vim.keymap.set('n', 'q', '<c-w>h:q<cr>', { buffer = true }) end
+    callback = function() vim.keymap.set('n', 'q', '<c-w>h:q<cr>', { buffer = true }) end
 })
 
 -- check if we need to reload file when it changed
@@ -38,6 +38,14 @@ vim.api.nvim_create_autocmd('TermLeave', {
     desc = 'enable hlsearch when leave terminal mode',
     group = 'TermHLSearch',
     command = ':setlocal hlsearch'
+})
+
+-- enable inlay hints when enter insert mode and disable when leave
+vim.api.nvim_create_autocmd({ 'InsertEnter' }, {
+    callback = function() vim.lsp.buf.inlay_hint(0, true) end,
+})
+vim.api.nvim_create_autocmd({ 'InsertLeave' }, {
+    callback = function() vim.lsp.buf.inlay_hint(0, false) end,
 })
 
 -- INFO: global lua func for lazygit remoted to open file
