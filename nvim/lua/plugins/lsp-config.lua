@@ -116,6 +116,19 @@ lsp_setup_module.config = function()
         end
     end
 
+    -- INFO: config lsp inlay hints
+    local function lsp_inlayhint(client, bufnr)
+        if client.server_capabilities.inlayHintProvider then
+            -- enable inlay hints when enter insert mode and disable when leave
+            vim.api.nvim_create_autocmd({ 'InsertEnter' }, {
+                callback = function() vim.lsp.buf.inlay_hint(bufnr, true) end,
+            })
+            vim.api.nvim_create_autocmd({ 'InsertLeave' }, {
+                callback = function() vim.lsp.buf.inlay_hint(bufnr, false) end,
+            })
+        end
+    end
+
     local lsp = require('lsp-zero').preset {
         name = 'minimal',
         float_border = require('config').defaults.float_border,
@@ -133,6 +146,7 @@ lsp_setup_module.config = function()
 
     lsp.on_attach(function(client, bufnr)
         lsp_keymap(client, bufnr, require('config.keymaps').lsp)
+        lsp_inlayhint(client, bufnr)
     end)
 
     -- INFO: config lsp servers in lsp-list

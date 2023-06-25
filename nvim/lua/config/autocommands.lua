@@ -40,14 +40,6 @@ vim.api.nvim_create_autocmd('TermLeave', {
     command = ':setlocal hlsearch'
 })
 
--- enable inlay hints when enter insert mode and disable when leave
-vim.api.nvim_create_autocmd({ 'InsertEnter' }, {
-    callback = function() vim.lsp.buf.inlay_hint(0, true) end,
-})
-vim.api.nvim_create_autocmd({ 'InsertLeave' }, {
-    callback = function() vim.lsp.buf.inlay_hint(0, false) end,
-})
-
 -- INFO: global lua func for lazygit remoted to open file
 function _OpenFile(filePath)
     local exec_cmd = "edit " .. filePath
