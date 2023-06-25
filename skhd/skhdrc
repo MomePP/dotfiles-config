@@ -70,6 +70,9 @@ ctrl + shift - l : yabai -m window  east --stack $(yabai -m query --windows --wi
 # Toggle layout of the space (bsp, stack)
 ctrl + lalt - x : yabai -m space --layout "$(if [ $(yabai -m query --spaces --space | jq -r '.type') = 'bsp' ]; echo 'stack'; else; echo 'bsp'; end)"; sketchybar --trigger window_focus
 
+# toggle sticky(+float), topmost, picture-in-picture
+ctrl + lalt - p : yabai -m window --toggle sticky --toggle topmost; sketchybar --trigger window_focus
+
 # Float / Unfloat window: ctrl + lalt - space
 ctrl + lalt - space : yabai -m window --toggle float; sketchybar --trigger window_focus
 
