@@ -5,7 +5,7 @@ local M = {
 
 M.opts = {
     user_default_options = {
-        RGB = true,          -- #RGB hex codes
+        RGB = false,          -- #RGB hex codes
         RRGGBB = true,       -- #RRGGBB hex codes
         RRGGBBAA = true,     -- #RRGGBBAA hex codes
         AARRGGBB = false,    -- 0xAARRGGBB hex codes
