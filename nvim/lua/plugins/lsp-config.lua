@@ -121,10 +121,10 @@ lsp_setup_module.config = function()
         if client.server_capabilities.inlayHintProvider then
             -- enable inlay hints when enter insert mode and disable when leave
             vim.api.nvim_create_autocmd({ 'InsertEnter' }, {
-                callback = function() vim.lsp.buf.inlay_hint(bufnr, true) end,
+                callback = function() vim.lsp.inlay_hint(bufnr, true) end,
             })
             vim.api.nvim_create_autocmd({ 'InsertLeave' }, {
-                callback = function() vim.lsp.buf.inlay_hint(bufnr, false) end,
+                callback = function() vim.lsp.inlay_hint(bufnr, false) end,
             })
         end
     end
