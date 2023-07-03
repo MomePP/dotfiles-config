@@ -12,7 +12,7 @@ M.opts = {
     preview = {
         win_config = {
             border = require('config').defaults.float_border,
-            winhighlight = 'Normal:NormalFold',
+            winhighlight = 'Normal:FloatBorder',
             winblend = 0,
         },
     },
