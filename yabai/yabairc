@@ -53,7 +53,7 @@ yabai -m config external_bar               all:34:0     \
 # Exclude problematic apps from being managed:
 yabai -m rule --add app="^(Calculator|Software Update|Dictionary|System Settings|System Information|zoom.us|Photo Booth|Archive Utility|Python|App Store|Steam|Activity Monitor|Spotify|Numi|Finder|KiCad)$" manage=off
 yabai -m rule --add label="Safari" app="^Safari$" title="^(General|(Tab|Password|Website|Extension)s|AutoFill|Se(arch|curity)|Privacy|Advance)$" manage=off
-yabai -m rule --add label="Arc browser" app="^Arc$" title="^(Peeranut|General|Shortcuts|Little Arc|Advanced|Space [0-9])$" manage=off
+yabai -m rule --add label="Arc browser" app="^Arc$" title="^(Peeranut|General|Shortcuts|Advanced)$" manage=off
 yabai -m rule --add label="Arc PiP" app="^Arc$" subrole="^AXSystemDialog$" manage=off mouse_follows_focus=off
 
 # default layout (can be bsp, stack or float)
