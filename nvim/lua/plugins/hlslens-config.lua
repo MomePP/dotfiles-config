@@ -9,24 +9,20 @@ M.opts = {
         local indicator, text, chunks
         local absRelIdx = math.abs(relIdx)
         if absRelIdx > 1 then
-            indicator = ('%d%s'):format(absRelIdx, sfw ~= (relIdx > 1) and '▲' or '▼')
+            indicator = ('%s %d'):format(sfw ~= (relIdx > 1) and '' or '', absRelIdx)
         elseif absRelIdx == 1 then
-            indicator = sfw ~= (relIdx == 1) and '▲' or '▼'
+            indicator = sfw ~= (relIdx == 1) and '' or ''
         else
-            indicator = ''
+            indicator = ''
         end
 
         local lnum, col = unpack(posList[idx])
         if nearest then
             local cnt = #posList
-            if indicator ~= '' then
-                text = ('[%s %d/%d]'):format(indicator, idx, cnt)
-            else
-                text = ('[%d/%d]'):format(idx, cnt)
-            end
+            text = (' %s [%d/%d] '):format(indicator, idx, cnt)
             chunks = { { ' ', 'Ignore' }, { text, 'HlSearchLensNear' } }
         else
-            text = ('[%s %d]'):format(indicator, idx)
+            text = (' %s '):format(indicator)
             chunks = { { ' ', 'Ignore' }, { text, 'HlSearchLens' } }
         end
         render.setVirt(0, lnum - 1, col - 1, chunks, nearest)
