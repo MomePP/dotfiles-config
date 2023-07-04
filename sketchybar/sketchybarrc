@@ -91,12 +91,12 @@ weather=(
 )
 spotify=(
     background.padding_left=2
-    icon=
+    icon=󰫔
     icon.color=$YELLOW
     icon.font="$FONT_FACE:Bold:20.0"
     label.drawing=off
     label.padding_left=3
-    script="$PLUGIN_DIR/spotify.sh"
+    script="$PLUGIN_DIR/media_info.sh"
 )
 sketchybar --add item weather center                         \
            --set weather "${weather[@]}"                     \

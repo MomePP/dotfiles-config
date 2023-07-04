@@ -9,16 +9,20 @@ HALF_LENGTH=$(((MAX_LENGTH + 1) / 2))
 
 update_track() {
   # $INFO comes in malformed or not Spotify app, line below sanitizes it
-  CURRENT_APP=$(echo $INFO | jq -r .app)
-  if [ "$CURRENT_APP" != "Spotify" ]; then
-    sketchybar --set $NAME icon.color=$YELLOW
-    return
-  fi
+  # CURRENT_APP=$(echo $INFO | jq -r .app)
+  # if [ "$CURRENT_APP" != "Spotify" ]; then
+  #   sketchybar --set $NAME icon.color=$YELLOW
+  #   return
+  # fi
 
   PLAYER_STATE=$(echo "$INFO" | jq -r .state)
   if [ "$PLAYER_STATE" = "playing" ]; then
     TRACK="$(echo "$INFO" | jq -r .title)"
     ARTIST="$(echo "$INFO" | jq -r .artist)"
+    if [ -z "$TRACK" ] && [ -z "$ARTIST" ]; then
+      sketchybar --set $NAME icon.color=$GREEN
+      return
+    fi
 
     # Calculations so it fits nicely
     TRACK_LENGTH=${#TRACK}
@@ -39,7 +43,7 @@ update_track() {
         ARTIST="${ARTIST:0:$((MAX_LENGTH - TRACK_LENGTH - 1))}…"
       fi
     fi
-    sketchybar --set $NAME label="${TRACK}  ${ARTIST}" label.drawing=yes icon.color=$GREEN
+    sketchybar --set $NAME label="${TRACK}  ${ARTIST}" label.drawing=yes icon.color=$GREEN
 
   elif [ "$PLAYER_STATE" = "paused" ]; then
     sketchybar --set $NAME icon.color=$YELLOW
@@ -47,13 +51,13 @@ update_track() {
 }
 
 case "$SENDER" in
-  "mouse.clicked") 
-    if [ $BUTTON = "left" ]; then
-      osascript -e 'tell application "Spotify" to playpause'
-    else
-      osascript -e 'tell application "Spotify" to next track'
-    fi
-    ;;
+  # "mouse.clicked") 
+  #   if [ $BUTTON = "left" ]; then
+  #     osascript -e 'tell application "Spotify" to playpause'
+  #   else
+  #     osascript -e 'tell application "Spotify" to next track'
+  #   fi
+  #   ;;
   "media_change")
     update_track
     ;;
