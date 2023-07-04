@@ -2,14 +2,14 @@ local M = {
     'ggandor/flit.nvim',
     dependencies = {
         'ggandor/leap.nvim',
+        opts = {
+            highlight_unlabeled_phase_one_targets = true,
+        },
     },
 }
 
 M.opts = {
     labeled_modes = 'nv',
-    opts = {
-        highlight_unlabeled_phase_one_targets = true,
-    },
 }
 
 M.keys = function()
