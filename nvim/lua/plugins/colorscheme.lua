@@ -574,10 +574,6 @@ M.config = function()
             TSRainbowViolet = { fg = c.base14 },
         }
 
-        local indentblankline_highlight = {
-            IndentBlanklineContextChar = { fg = c.base04, nocombine = true }
-        }
-
         local ts_context_highlight = {
             TreesitterContext = { bg = c.base02, italic = true },
             TreesitterContextLineNumber = { link = 'TreesitterContext' },
@@ -645,7 +641,6 @@ M.config = function()
         overrideHighlightConfig(flit_highlight)
         overrideHighlightConfig(diagnostic_highlight)
         overrideHighlightConfig(ts_rainbow_highlight)
-        overrideHighlightConfig(indentblankline_highlight)
         overrideHighlightConfig(ts_context_highlight)
         overrideHighlightConfig(cmp_highlight)
         overrideHighlightConfig(local_highlight)
