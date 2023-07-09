@@ -34,11 +34,6 @@ lsp_setup_module.init = function()
         update_in_insert = false,
         virtual_text = false,
         severity_sort = true,
-        virtual_lines = {
-            severity = {
-                min = vim.diagnostic.severity.INFO
-            }
-        }
     }
     vim.diagnostic.config(diagnostic_config)
 
@@ -190,44 +185,24 @@ null_ls_module.config = function()
     }
 end
 
-local lsp_lines_module = {
-    'MomePP/lsp_lines.nvim',
+local diagflow_module = {
+    'dgagn/diagflow.nvim',
     dependencies = 'nvim-lspconfig',
     event = 'VeryLazy',
-    keys = {
-        { require('config.keymaps').lsp_lines.toggle, '<Cmd>LspLinesToggleSeverity<CR>' }
-    }
 }
 
-lsp_lines_module.config = function()
-    -- INFO: store user severity config as a limit, if exist
-    local user_severity_limit = (vim.diagnostic.config().virtual_lines.severity.min or vim.diagnostic.severity.HINT)
-    local current_severity = user_severity_limit
-
-    local function setSeverityConfig(min_severity)
-        local config = {}
-        if min_severity == 0 then
-            config.virtual_lines = false
-        else
-            config.virtual_lines = { severity = { min = min_severity } }
-        end
-        vim.diagnostic.config(config)
-    end
-
-    vim.api.nvim_create_user_command('LspLinesToggleSeverity', function()
-            current_severity = (current_severity + 1) % (user_severity_limit + 1)
-            setSeverityConfig(current_severity)
-            vim.notify(string.format('[virtual lines] diagnostic level: %d', current_severity), vim.log.levels.INFO)
-        end,
-        { nargs = 0 }
-    )
-
-    require('lsp_lines').setup()
-end
+diagflow_module.opts = {
+    severity_colors = {
+        error = 'DiagnosticFloatingError',
+        warn = 'DiagnosticFloatingWarn',
+        info = 'DiagnosticFloatingInfo',
+        hint = 'DiagnosticFloatingHint',
+    }
+}
 
 return {
     mason_module,
     lsp_setup_module,
     null_ls_module,
-    lsp_lines_module,
+    diagflow_module,
 }

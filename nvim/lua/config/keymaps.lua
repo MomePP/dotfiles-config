@@ -91,11 +91,6 @@ keymaps.lsp = {
     },
 }
 
--- INFO: lsp_lines keymap
-keymaps.lsp_lines = {
-    toggle = '<leader>ll'
-}
-
 -- INFO: Treesitter
 keymaps.treesitter = {
     incremental_selection = {
