@@ -14,7 +14,7 @@ M.opts = function()
         },
         window = {
             padding = { left = 0, right = 1 },
-            margin = { horizontal = 0, vertical = 0 },
+            margin = { horizontal = 0, vertical = 1 },
             zindex = 40,
         },
         render = function(props)

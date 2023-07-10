@@ -514,7 +514,7 @@ M.config = function()
         vim.cmd.colorscheme 'oxocarbon'
 
         local incline_highlight = {
-            InclineNormal = { bg = c.base01, bold = true },
+            InclineNormal = { bg = c.base02, bold = true },
             InclineNormalNC = { fg = c.base03, bg = c.base01 },
             InclineSpacing = { fg = c.none, bg = c.base10, },
             InclineModified = { fg = c.base10, bg = c.none, },
