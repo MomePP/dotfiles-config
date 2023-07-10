@@ -197,7 +197,8 @@ diagflow_module.opts = {
         warn = 'DiagnosticFloatingWarn',
         info = 'DiagnosticFloatingInfo',
         hint = 'DiagnosticFloatingHint',
-    }
+    },
+    padding_top = 1
 }
 
 return {
