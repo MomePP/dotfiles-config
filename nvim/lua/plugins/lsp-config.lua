@@ -198,7 +198,8 @@ diagflow_module.opts = {
         info = 'DiagnosticFloatingInfo',
         hint = 'DiagnosticFloatingHint',
     },
-    padding_top = 1
+    padding_top = 1,
+    toggle_event = { 'InsertEnter' },
 }
 
 return {
