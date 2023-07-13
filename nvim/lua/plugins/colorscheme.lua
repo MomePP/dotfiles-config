@@ -293,14 +293,14 @@ M.config = function()
             hl.TelescopeResultsDiffDelete = { bg = c.bg_dark }
             hl.TelescopeResultsDiffUntracked = { bg = c.bg_dark }
 
-            -- INFO: ts rainbow 2 highlight
-            hl.TSRainbowRed = { link = 'rainbowcol1' }
-            hl.TSRainbowYellow = { link = 'rainbowcol2' }
-            hl.TSRainbowBlue = { link = 'rainbowcol3' }
-            hl.TSRainbowOrange = { link = 'rainbowcol4' }
-            hl.TSRainbowGreen = { link = 'rainbowcol5' }
-            hl.TSRainbowViolet = { link = 'rainbowcol6' }
-            hl.TSRainbowCyan = { link = 'rainbowcol7' }
+            -- INFO: rainbow delimiter highlight
+            hl.RainbowDelimiterRed = { link = 'rainbowcol1' }
+            hl.RainbowDelimiterYellow = { link = 'rainbowcol2' }
+            hl.RainbowDelimiterBlue = { link = 'rainbowcol3' }
+            hl.RainbowDelimiterOrange = { link = 'rainbowcol4' }
+            hl.RainbowDelimiterGreen = { link = 'rainbowcol5' }
+            hl.RainbowDelimiterViolet = { link = 'rainbowcol6' }
+            hl.RainbowDelimiterCyan = { link = 'rainbowcol7' }
 
             -- INFO: lsp diagnostics virtual text highlight
             hl.DiagnosticVirtualTextError = { bg = '#322639', fg = M.colorset.error, italic = true }
@@ -454,7 +454,7 @@ M.config = function()
                 noice = true,
                 treesitter_context = true,
                 treesitter = true,
-                ts_rainbow2 = true,
+                rainbow_delimiters = true,
                 mason = true,
                 markdown = true,
                 navic = {
@@ -564,14 +564,14 @@ M.config = function()
             DiagnosticVirtualTextHint = { bg = '#273644', fg = M.colorset.hint, italic = true },
         }
 
-        local ts_rainbow_highlight = {
-            TSRainbowRed = { fg = c.base10 },
-            TSRainbowBlue = { fg = c.base11 },
-            TSRainbowCyan = { fg = c.base08 },
-            TSRainbowGreen = { fg = c.base13 },
-            TSRainbowYellow = { fg = '#FFAB91' },
-            TSRainbowOrange = { fg = '#FF6F00' },
-            TSRainbowViolet = { fg = c.base14 },
+        local rainbow_delimiter_highlight = {
+            RainbowDelimiterRed = { fg = c.base10 },
+            RainbowDelimiterBlue = { fg = c.base11 },
+            RainbowDelimiterCyan = { fg = c.base08 },
+            RainbowDelimiterGreen = { fg = c.base13 },
+            RainbowDelimiterYellow = { fg = '#FFAB91' },
+            RainbowDelimiterOrange = { fg = '#FF6F00' },
+            RainbowDelimiterViolet = { fg = c.base14 },
         }
 
         local ts_context_highlight = {
@@ -640,7 +640,7 @@ M.config = function()
         overrideHighlightConfig(noice_highlight)
         overrideHighlightConfig(flit_highlight)
         overrideHighlightConfig(diagnostic_highlight)
-        overrideHighlightConfig(ts_rainbow_highlight)
+        overrideHighlightConfig(rainbow_delimiter_highlight)
         overrideHighlightConfig(ts_context_highlight)
         overrideHighlightConfig(cmp_highlight)
         overrideHighlightConfig(local_highlight)

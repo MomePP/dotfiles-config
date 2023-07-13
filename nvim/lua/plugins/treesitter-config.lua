@@ -5,7 +5,6 @@ local M = {
     dependencies = {
         'JoosepAlviste/nvim-ts-context-commentstring',
         'windwp/nvim-ts-autotag',
-        'HiPhish/nvim-ts-rainbow2',
         'yioneko/nvim-yati',
         'yioneko/vim-tmindent'
     }
@@ -41,11 +40,6 @@ M.opts = function()
         context_commentstring = {
             enable = true,
             enable_autocmd = false,
-        },
-        rainbow = {
-            enable = true,
-            -- max_file_lines = nil, -- Do not enable for files with more than n lines
-            -- colors = require('plugins.colorscheme').colorset.bracket
         },
         autotag = {
             enable = true,
