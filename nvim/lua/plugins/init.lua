@@ -69,24 +69,6 @@ return {
         keys = { { 'gx' } },
         config = true,
     },
-    {
-        'hiphish/rainbow-delimiters.nvim',
-        dependencies = { 'nvim-treesitter' },
-        event = 'VeryLazy',
-        init = function()
-            local rainbow_delimiters = require 'rainbow-delimiters'
-            vim.g.rainbow_delimiters = {
-                strategy = {
-                    [''] = rainbow_delimiters.strategy['global'],
-                    commonlisp = rainbow_delimiters.strategy['local'],
-                },
-                query = {
-                    [''] = 'rainbow-delimiters',
-                    lua = 'rainbow-blocks',
-                },
-            }
-        end,
-    },
 
     -- Miscellaneous
     { 'RaafatTurki/hex.nvim', cmd = { 'HexToggle', 'HexDump', 'HexAssemble' }, config = true },

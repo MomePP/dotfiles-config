@@ -1,10 +1,7 @@
 local M = {
     'kevinhwang91/nvim-ufo',
     event = { 'BufReadPost', 'BufNewFile' },
-    dependencies = {
-        'nvim-treesitter',
-        'kevinhwang91/promise-async'
-    }
+    dependencies = { 'kevinhwang91/promise-async' }
 }
 
 M.opts = {

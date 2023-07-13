@@ -3,10 +3,13 @@ local M = {
     build = ':TSUpdate',
     event = { 'BufReadPost', 'BufNewFile' },
     dependencies = {
+        'nvim-treesitter/nvim-treesitter-context',
         'JoosepAlviste/nvim-ts-context-commentstring',
         'windwp/nvim-ts-autotag',
         'yioneko/nvim-yati',
-        'yioneko/vim-tmindent'
+        'yioneko/vim-tmindent',
+
+        'rainbow-delimiters.nvim',
     }
 }
 
