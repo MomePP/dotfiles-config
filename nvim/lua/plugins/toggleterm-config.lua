@@ -5,38 +5,9 @@ local M = {
 }
 
 -- M.init = function()
--- 	function _G.setup_terminal_config()
--- 		-- set terminal keymap
--- 		local key_opts = { buffer = 0 }
--- 		vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], key_opts)
--- 	end
---
--- 	vim.cmd('autocmd! TermOpen term://* lua setup_terminal_config()')
 -- end
 
-M.opts = function()
-	-- local defaults = require('config').defaults
-
-	return {
-		size = 20,
-		open_mapping = toggleterm_keymap.toggle,
-		shade_terminals = false,
-		direction = 'tab',
-		-- float_opts = {
-		-- 	border = defaults.float_border,
-		-- 	width = function() return math.ceil(vim.o.columns * 0.9) - 1 end,
-		-- 	height = function() return math.ceil(vim.o.lines * 0.85) - 1 end,
-		-- },
-		-- highlights = {
-		-- 	FloatBorder = { link = 'NormalFloat' },
-		-- 	NormalFloat = { link = 'NormalFloat' }
-		-- },
-	}
-end
-
-M.config = function(_, opts)
-	require('toggleterm').setup(opts)
-
+M.init = function()
 	local Terminal = require('toggleterm.terminal').Terminal
 
 	vim.api.nvim_create_user_command('ToggleLazyGit',
@@ -58,6 +29,34 @@ M.config = function(_, opts)
 	-- local ncdu = Terminal:new({ cmd = 'ncdu', hidden = true })
 	-- local python = Terminal:new({ cmd = 'python', hidden = true })
 	-- local spotify = Terminal:new({ cmd = 'spt', hidden = true })
+
+	-- 	function _G.setup_terminal_config()
+	-- 		-- set terminal keymap
+	-- 		local key_opts = { buffer = 0 }
+	-- 		vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], key_opts)
+	-- 	end
+	--
+	-- 	vim.cmd('autocmd! TermOpen term://* lua setup_terminal_config()')
+end
+
+M.opts = function()
+	-- local defaults = require('config').defaults
+
+	return {
+		size = 20,
+		open_mapping = toggleterm_keymap.toggle,
+		shade_terminals = false,
+		direction = 'tab',
+		-- float_opts = {
+		-- 	border = defaults.float_border,
+		-- 	width = function() return math.ceil(vim.o.columns * 0.9) - 1 end,
+		-- 	height = function() return math.ceil(vim.o.lines * 0.85) - 1 end,
+		-- },
+		-- highlights = {
+		-- 	FloatBorder = { link = 'NormalFloat' },
+		-- 	NormalFloat = { link = 'NormalFloat' }
+		-- },
+	}
 end
 
 M.keys = {

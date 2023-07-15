@@ -1,10 +1,8 @@
 local M = {
     'echasnovski/mini.move',
+    main = 'mini.move',
+    config = true,
 }
-
-M.config = function()
-    require('mini.move').setup {}
-end
 
 M.keys = function()
     local move_keymap = require('config.keymaps').move

@@ -1,5 +1,6 @@
 local M = {
     'echasnovski/mini.ai',
+    main = 'mini.ai',
     dependencies = {
         {
             'nvim-treesitter/nvim-treesitter-textobjects',
@@ -25,10 +26,6 @@ M.opts = function()
             c = ai.gen_spec.treesitter({ a = '@class.outer', i = '@class.inner' }, {}),
         },
     }
-end
-
-M.config = function(_, opts)
-    require('mini.ai').setup(opts)
 end
 
 M.keys = {

@@ -10,7 +10,8 @@ local M = {
         'yioneko/vim-tmindent',
 
         'rainbow-delimiters.nvim',
-    }
+    },
+    main = 'nvim-treesitter.configs'
 }
 
 M.opts = function()
@@ -58,10 +59,6 @@ M.opts = function()
             end
         }
     }
-end
-
-M.config = function(_, opts)
-    require('nvim-treesitter.configs').setup(opts)
 end
 
 return M
