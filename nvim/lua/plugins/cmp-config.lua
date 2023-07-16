@@ -48,6 +48,8 @@ local M = {
 }
 
 M.opts = function()
+    local default_border = require('config').defaults.float_border
+
     local cmp = require('cmp')
     local luasnip = require('luasnip')
 
@@ -69,7 +71,7 @@ M.opts = function()
             local kind = lspkind_format(entry, vim_item)
             local strings = vim.split(kind.kind, '%s', { trimempty = true })
 
-            kind.kind = ' ' .. strings[1] .. ' '
+            kind.kind = strings[1] .. ' '
             kind.menu = '   ' .. strings[2]
             kind.menu_hl_group = 'CmpItemKind' .. original_kind
 
@@ -154,9 +156,13 @@ M.opts = function()
         formatting = cmp_formatting,
         window = {
             completion = {
-                col_offset = -3,
-                side_padding = 0,
+                col_offset = -4,
+                side_padding = 1,
+                border = default_border,
             },
+            documentation = {
+                border = default_border,
+            }
         },
         experimental = {
             ghost_text = { hl_group = 'Comment' }
