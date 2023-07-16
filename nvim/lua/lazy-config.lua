@@ -13,7 +13,7 @@ end
 vim.opt.runtimepath:prepend(lazypath)
 
 -- INFO: lazy.nvim configs
-local default_config = require('config').defaults
+local default_border = require('config').defaults.float_border
 
 local lazy_config = {
     defaults = {
@@ -24,7 +24,7 @@ local lazy_config = {
             colorscheme = { 'nvim-colorscheme', 'habamax' }
         },
         ui = {
-            border = default_config.float_border
+            border = default_border
         },
         rtp = {
             disabled_plugins = {

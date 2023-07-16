@@ -1,4 +1,4 @@
-local default_config = require('config').defaults
+local default_border = require('config').defaults.float_border
 
 -- ----------------------------------------------------------------------
 -- INFO: lsp server manager config
@@ -10,7 +10,7 @@ local mason_module = {
 
 mason_module.opts = {
     ui = {
-        border = default_config.float_border
+        border = default_border
     }
 }
 
@@ -19,6 +19,7 @@ mason_module.opts = {
 --
 local lsp_setup_module = {
     'VonHeikemen/lsp-zero.nvim',
+    branch = 'dev-v3',
     event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
         'mason.nvim',
@@ -44,6 +45,7 @@ lsp_setup_module.init = function()
         opts.focus = opts.focusable or false
         opts.offset_x = opts.offset_x or -2
         opts.offset_y = opts.offset_y or 0
+        opts.border = default_border
 
         -- NOTE: padding contents
         for index, message in ipairs(contents) do
@@ -124,17 +126,12 @@ lsp_setup_module.config = function()
         end
     end
 
+
+    -- ----------------------------------------------------------------------
+    --  lsp-zero configs
+    --
     local lsp = require('lsp-zero').preset {
-        name = 'minimal',
         float_border = require('config').defaults.float_border,
-        manage_nvim_cmp = {
-            set_sources = 'lsp',
-            set_basic_mappings = false,
-            set_extra_mappings = false,
-            use_luasnip = false,
-            set_format = false,
-            documentation_window = false,
-        }
     }
 
     lsp.set_sign_icons(require('config').defaults.icons.diagnostics)
@@ -181,7 +178,7 @@ null_ls_module.config = function()
         handlers = {}
     }
     require('null-ls').setup {
-        border = default_config.float_border,
+        border = default_border,
     }
 end
 
