@@ -154,34 +154,6 @@ lsp_setup_module.config = function()
     lsp.setup()
 end
 
--- ----------------------------------------------------------------------
--- INFO: formatters config
---
-local null_ls_module = {
-    'jay-babu/mason-null-ls.nvim',
-    dependencies = {
-        'jose-elias-alvarez/null-ls.nvim',
-        'mason.nvim',
-    },
-    event = { 'BufReadPre', 'BufNewFile' },
-}
-
-null_ls_module.init = function()
-    vim.api.nvim_create_user_command('NullLsToggle', function()
-        require('null-ls').toggle({})
-    end, {})
-end
-
-null_ls_module.config = function()
-    require('mason-null-ls').setup {
-        ensure_installed = require('plugins.null-ls-settings.null-ls-list'),
-        handlers = {}
-    }
-    require('null-ls').setup {
-        border = default_border,
-    }
-end
-
 local diagflow_module = {
     'dgagn/diagflow.nvim',
     dependencies = 'nvim-lspconfig',
@@ -202,6 +174,5 @@ diagflow_module.opts = {
 return {
     mason_module,
     lsp_setup_module,
-    null_ls_module,
     diagflow_module,
 }
