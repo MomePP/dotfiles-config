@@ -151,7 +151,10 @@ lsp_setup_module.config = function()
     --     on_attach = lsp_on_attach,
     -- })
 
-    lsp.setup()
+    -- INFO: automatically setup lsp from default config installed via mason.nvim
+    require('mason-lspconfig').setup {
+        handlers = { lsp.default_setup }
+    }
 end
 
 local diagflow_module = {
