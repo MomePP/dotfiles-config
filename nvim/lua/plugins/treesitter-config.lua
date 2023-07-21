@@ -3,7 +3,7 @@ local M = {
     build = ':TSUpdate',
     event = { 'BufReadPost', 'BufNewFile' },
     dependencies = {
-        'nvim-treesitter/nvim-treesitter-context',
+        { 'nvim-treesitter/nvim-treesitter-context', config = true },
         'JoosepAlviste/nvim-ts-context-commentstring',
         'windwp/nvim-ts-autotag',
         'yioneko/nvim-yati',
@@ -54,7 +54,7 @@ M.opts = function()
         },
         yati = {
             enable = true,
-            default_fallback = function (lnum, computed, bufnr)
+            default_fallback = function(lnum, computed, bufnr)
                 return require('tmindent').get_indent(lnum, bufnr) + computed
             end
         }
