@@ -2,12 +2,15 @@ local M = {
     'hrsh7th/nvim-cmp',
     event = { 'InsertEnter', 'CmdlineEnter' },
     dependencies = {
+        -- NOTE: cmp sources
         'hrsh7th/cmp-nvim-lsp',
         'hrsh7th/cmp-cmdline',
-        'hrsh7th/cmp-path',
+        'FelipeLema/cmp-async-path',
         'saadparwaiz1/cmp_luasnip',
-        'lukas-reineke/cmp-rg',
-        'onsails/lspkind.nvim',
+        {
+            'tzachar/cmp-fuzzy-buffer',
+            dependencies = { 'tzachar/fuzzy.nvim' },
+        },
 
         -- NOTE: snippet plugins
         {
@@ -44,6 +47,9 @@ local M = {
             },
             config = true
         },
+
+        -- NOTE: misc. plugins
+        'onsails/lspkind.nvim',
     },
 }
 
@@ -113,14 +119,16 @@ M.opts = function()
     }
 
     local cmp_sorting = {
+        priority_weight = 2,
         comparators = {
             require('copilot_cmp.comparators').prioritize,
+            require('cmp_fuzzy_buffer.compare'),
+
             cmp.config.compare.offset,
             cmp.config.compare.exact,
             cmp.config.compare.score,
 
-            -- copied from cmp-under, but I don't think I need the plugin for this.
-            -- I might add some more of my own.
+            -- INFO: sort by number of underscores
             function(entry1, entry2)
                 local _, entry1_under = entry1.completion_item.label:find "^_+"
                 local _, entry2_under = entry2.completion_item.label:find "^_+"
@@ -142,10 +150,10 @@ M.opts = function()
 
     local cmp_sources = cmp.config.sources({
         { name = 'copilot' },
-        { name = 'path' },
+        { name = 'async_path' },
         { name = 'nvim_lsp' },
-        { name = 'rg',      keyword_length = 3 },
-        { name = 'luasnip', keyword_length = 2 },
+        { name = 'fuzzy_buffer', option = { min_match_length = 2 } },
+        { name = 'luasnip',      keyword_length = 2 },
     })
 
     return {
@@ -188,7 +196,7 @@ M.config = function(_, opts)
             completeopt = 'menuone,noselect',
         },
         sources = {
-            { name = 'rg' }
+            { name = 'fuzzy_buffer', option = { min_match_length = 2 } },
         }
     })
 
@@ -198,7 +206,7 @@ M.config = function(_, opts)
             completeopt = 'menuone,noselect',
         },
         sources = cmp.config.sources({
-            { name = 'path' }
+            { name = 'async_path' }
         }, {
             { name = 'cmdline' }
         })
