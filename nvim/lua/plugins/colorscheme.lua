@@ -514,8 +514,8 @@ M.config = function()
         vim.cmd.colorscheme 'oxocarbon'
 
         local incline_highlight = {
-            InclineNormal = { bg = c.base02, bold = true },
-            InclineNormalNC = { fg = c.base03, bg = c.base01 },
+            InclineNormal = { bg = c.none, bold = true },
+            InclineNormalNC = { fg = c.base03, bg = c.none },
             InclineSpacing = { fg = c.none, bg = c.base10, },
             InclineModified = { fg = c.base10, bg = c.none, },
         }
@@ -575,7 +575,7 @@ M.config = function()
         }
 
         local ts_context_highlight = {
-            TreesitterContext = { bg = c.base02, italic = true },
+            TreesitterContext = { bg = c.none, bold = true, italic = true },
             TreesitterContextLineNumber = { link = 'TreesitterContext' },
         }
 
