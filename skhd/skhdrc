@@ -39,16 +39,16 @@ alt - 4 : set -l SPACES (yabai -m query --displays --display | jq '.spaces[]') &
 #   query display then (display id % display number) to move window to next display spaces
 alt + shift - 1 : set -l CURRENT_DISPLAY_ID (yabai -m query --displays --space | jq '.id') \
                         && set -l SPACES (yabai -m query --displays | jq --argjson current_id $CURRENT_DISPLAY_ID '.[(to_entries | .[] | select(.value."id" == ($current_id % length) + 1) | .key)] | .spaces[]') \
-                        && [ -n $SPACES[1] ] && yabai -m window --space $SPACES[1] && yabai -m space --focus $SPACES[1]
+                        && [ -n $SPACES[1] ] && yabai -m window --space $SPACES[1] && yabai -m space --focus $SPACES[1] && yabai -m space --balance
 alt + shift - 2 : set -l CURRENT_DISPLAY_ID (yabai -m query --displays --space | jq '.id') \
                         && set -l SPACES (yabai -m query --displays | jq --argjson current_id $CURRENT_DISPLAY_ID '.[(to_entries | .[] | select(.value."id" == ($current_id % length) + 1) | .key)] | .spaces[]') \
-                        && [ -n $SPACES[2] ] && yabai -m window --space $SPACES[2] && yabai -m space --focus $SPACES[2]
+                        && [ -n $SPACES[2] ] && yabai -m window --space $SPACES[2] && yabai -m space --focus $SPACES[2] && yabai -m space --balance
 alt + shift - 3 : set -l CURRENT_DISPLAY_ID (yabai -m query --displays --space | jq '.id') \
                         && set -l SPACES (yabai -m query --displays | jq --argjson current_id $CURRENT_DISPLAY_ID '.[(to_entries | .[] | select(.value."id" == ($current_id % length) + 1) | .key)] | .spaces[]') \
-                        && [ -n $SPACES[3] ] && yabai -m window --space $SPACES[3] && yabai -m space --focus $SPACES[3]
+                        && [ -n $SPACES[3] ] && yabai -m window --space $SPACES[3] && yabai -m space --focus $SPACES[3] && yabai -m space --balance
 alt + shift - 4 : set -l CURRENT_DISPLAY_ID (yabai -m query --displays --space | jq '.id') \
                         && set -l SPACES (yabai -m query --displays | jq --argjson current_id $CURRENT_DISPLAY_ID '.[(to_entries | .[] | select(.value."id" == ($current_id % length) + 1) | .key)] | .spaces[]') \
-                        && [ -n $SPACES[4] ] && yabai -m window --space $SPACES[4] && yabai -m space --focus $SPACES[4]
+                        && [ -n $SPACES[4] ] && yabai -m window --space $SPACES[4] && yabai -m space --focus $SPACES[4] && yabai -m space --balance
 
 # Moving windows in spaces
 ctrl + lalt - h : yabai -m window --warp west  \
