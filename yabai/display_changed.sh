@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# INFO: update spaces number to matched with display count
 DESIRED_SPACES_PER_DISPLAY=4
 CURRENT_SPACES="$(yabai -m query --displays | jq -r '.[].spaces | @sh')"
 
@@ -27,3 +28,12 @@ do
 done <<< "$CURRENT_SPACES"
 
 sketchybar --trigger space_change
+
+# INFO: update kitty terminal font size
+DISPLAY_COUNT="$(yabai -m query --displays | jq -r '. | length')"
+
+if [ "$DISPLAY_COUNT" -gt 1 ]; then
+  kitty @ --to unix:/tmp/mykitty set-font-size 13.5
+else
+  kitty @ --to unix:/tmp/mykitty set-font-size 13.0
+fi

@@ -6,11 +6,11 @@ launchctl unload -F /System/Library/LaunchAgents/com.apple.WindowManager.plist >
 sudo yabai --load-sa
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
 yabai -m signal --add event=window_focused action="sketchybar --trigger window_focus"
-yabai -m signal --add event=display_added action="sleep 2 && $HOME/.config/yabai/create_spaces.sh"
-yabai -m signal --add event=display_removed action="sleep 1 && $HOME/.config/yabai/create_spaces.sh"
+yabai -m signal --add event=display_added action="sleep 2 && $HOME/.config/yabai/display_changed.sh"
+yabai -m signal --add event=display_removed action="$HOME/.config/yabai/display_changed.sh"
 yabai -m signal --add event=space_changed action="$HOME/.config/yabai/msteams.sh"
 
-$HOME/.config/yabai/create_spaces.sh
+$HOME/.config/yabai/display_changed.sh
 
 yabai -m config external_bar               all:34:0     \
                 mouse_follows_focus        off          \
@@ -25,13 +25,10 @@ yabai -m config external_bar               all:34:0     \
                 active_window_opacity      1.0          \
                 normal_window_opacity      1.0          \
                                                         \
-                window_animation_duration  0.0          \
-                                                        \
                 window_border              on           \
                 window_border_hidpi        off          \
                 window_border_blur         off          \
                 window_border_width        3            \
-                window_border_radius       10           \
                 active_window_border_color 0x99798286   \
                 normal_window_border_color 0x6624273a   \
                                                         \
