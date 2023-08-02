@@ -152,8 +152,8 @@ M.opts = function()
         { name = 'copilot' },
         { name = 'async_path' },
         { name = 'nvim_lsp' },
-        { name = 'fuzzy_buffer', option = { min_match_length = 2 } },
         { name = 'luasnip',      keyword_length = 2 },
+        { name = 'fuzzy_buffer', option = { min_match_length = 2 } },
     })
 
     return {
