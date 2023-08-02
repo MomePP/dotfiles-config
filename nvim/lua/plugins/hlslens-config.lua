@@ -4,6 +4,7 @@ local M = {
 
 M.opts = {
     calm_down = true,
+    nearest_float_when = 'never',
     override_lens = function(render, posList, nearest, idx, relIdx)
         local sfw = vim.v.searchforward == 1
         local indicator, text, chunks
