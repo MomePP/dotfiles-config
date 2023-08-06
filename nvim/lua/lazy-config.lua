@@ -60,15 +60,3 @@ require('lazy').setup('plugins', lazy_config)
 -- INFO: lazy.nvim keybinding
 local lazy_keymap = require('config.keymaps').lazy
 vim.keymap.set('n', lazy_keymap.open, '<Cmd>Lazy<CR>')
-
--- INFO: fix double virtual texts
-vim.api.nvim_create_autocmd('FileType', {
-    pattern = 'lazy',
-    callback = function()
-        local floating = vim.api.nvim_win_get_config(0).relative ~= ''
-        vim.diagnostic.config({
-            virtual_text = floating,
-            virtual_lines = not floating,
-        })
-    end,
-})
