@@ -39,8 +39,8 @@ lsp_setup_module.init = function()
     vim.diagnostic.config(diagnostic_config)
 
     -- INFO: overrides globally default of `open_floating_preview`
-    local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
-    function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+    local base_open_floating_preview = vim.lsp.util.open_floating_preview
+    vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
         opts = opts or {}
         opts.focus = opts.focusable or false
         opts.offset_x = opts.offset_x or -2
@@ -51,7 +51,7 @@ lsp_setup_module.init = function()
         for index, message in ipairs(contents) do
             contents[index] = string.format(' %s ', message)
         end
-        return orig_util_open_floating_preview(contents, syntax, opts, ...)
+        return base_open_floating_preview(contents, syntax, opts, ...)
     end
 end
 
