@@ -196,10 +196,14 @@ M.keys = function()
         { telescope_keymap.file_browse,      '<Cmd>Telescope file_browser<CR>' },
         { telescope_keymap.find_files,       '<Cmd>Telescope find_files<CR>' },
         { telescope_keymap.grep_workspace,   '<Cmd>Telescope grep_string<CR>' },
+        { telescope_keymap.help_tags,        '<Cmd>Telescope help_tags<CR>' },
         {
             telescope_keymap.grep_workspace,
             function()
-                require('telescope.builtin').grep_string({ default_text = ("'%s"):format(getVisualSelection()), use_regex = false })
+                require('telescope.builtin').grep_string({
+                    default_text = ("'%s"):format(getVisualSelection()),
+                    use_regex = false,
+                })
             end,
             mode = 'v',
         }

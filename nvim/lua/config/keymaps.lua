@@ -136,14 +136,15 @@ keymaps.gitconflict = {
 -- INFO: Telescope keymap
 keymaps.telescope = {
     grep_workspace       = 'gw',
-    search_buffer        = '<leader>/',
-    search_workspace     = '<leader>fw',
+    search_buffer        = '<leader>fw',
+    search_workspace     = '<leader>/',
     buffers              = '<leader>\\',
     find_files           = '<leader>fs',
     resume               = '<leader>;',
     jumplist             = '<leader>j',
-    oldfiles             = '<leader>?',
+    oldfiles             = '<leader>fr',
     file_browse          = '<leader>fb',
+    help_tags            = '<leader>?',
     action_buffer_delete = { n = 'd', i = '<m-d>' },
 }
 
