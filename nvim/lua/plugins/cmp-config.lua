@@ -148,13 +148,17 @@ M.opts = function()
         },
     }
 
-    local cmp_sources = cmp.config.sources({
-        { name = 'copilot' },
-        { name = 'async_path' },
-        { name = 'nvim_lsp' },
-        { name = 'luasnip',      keyword_length = 2 },
-        { name = 'fuzzy_buffer', option = { min_match_length = 2 } },
-    })
+    local cmp_sources = cmp.config.sources(
+        {
+            { name = 'copilot' },
+            { name = 'async_path' },
+            { name = 'nvim_lsp' },
+            { name = 'luasnip',   keyword_length = 2 },
+        },
+        {
+            { name = 'fuzzy_buffer', option = { min_match_length = 2 } },
+        }
+    )
 
     return {
         snippet = { expand = function(args) luasnip.lsp_expand(args.body) end },
