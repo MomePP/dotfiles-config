@@ -150,17 +150,20 @@ lsp_setup_module.config = function()
     end)
 
     -- INFO: config lsp servers in lsp-list
+    local lsp_list = {}
     for name, config in pairs(require('plugins.lsp-settings.lsp-list')) do
         lsp.configure(name, config)
+        table.insert(lsp_list, name)
     end
 
-    -- NOTE: manually injects unsupported lsp by mason.nvim
+    -- NOTE: manually injects unsupported lsp by mason.nvim, need to manually update lsp list to be automatically installed
     -- lsp.configure('ccls', {
     --     on_attach = lsp_on_attach,
     -- })
 
     -- INFO: automatically setup lsp from default config installed via mason.nvim
     require('mason-lspconfig').setup {
+        ensure_installed = lsp_list,
         handlers = { lsp.default_setup }
     }
 end

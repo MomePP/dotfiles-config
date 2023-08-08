@@ -5,4 +5,5 @@ return {
     marksman = {},
     rust_analyzer = {},
     jsonls = {},
+    eslint = {},
 }
