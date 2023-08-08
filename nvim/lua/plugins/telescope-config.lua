@@ -4,8 +4,8 @@ local M = {
     'nvim-telescope/telescope.nvim',
     cmd = 'Telescope',
     dependencies = {
-        'nvim-telescope/telescope-file-browser.nvim',
-        { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+        { 'nvim-telescope/telescope-file-browser.nvim' },
+        { 'nvim-telescope/telescope-fzf-native.nvim',  build = 'make' },
     },
 }
 
@@ -101,7 +101,7 @@ M.opts = function()
             color_devicons = true,
             path_display = { 'tail', 'smart' },
             set_env = { ['COLORTERM'] = 'truecolor' },
-            file_ignore_patterns = { 'node_module' },
+            file_ignore_patterns = { 'node_modules' },
             dynamic_preview_title = true,
             borderchars = defaults.float_border,
             mappings = {
@@ -187,26 +187,42 @@ M.keys = function()
     end
 
     return {
-        { telescope_keymap.resume,           '<Cmd>Telescope resume<CR>' },
-        { telescope_keymap.buffers,          '<Cmd>Telescope buffers<CR>' },
-        { telescope_keymap.jumplist,         '<Cmd>Telescope jumplist<CR>' },
-        { telescope_keymap.search_workspace, '<Cmd>Telescope live_grep<CR>' },
-        { telescope_keymap.oldfiles,         '<Cmd>Telescope oldfiles<CR>' },
-        { telescope_keymap.search_buffer,    '<Cmd>Telescope current_buffer_fuzzy_find<CR>' },
-        { telescope_keymap.file_browse,      '<Cmd>Telescope file_browser<CR>' },
-        { telescope_keymap.find_files,       '<Cmd>Telescope find_files<CR>' },
-        { telescope_keymap.grep_workspace,   '<Cmd>Telescope grep_string<CR>' },
-        { telescope_keymap.help_tags,        '<Cmd>Telescope help_tags<CR>' },
+        { telescope_keymap.resume,         '<Cmd>Telescope resume<CR>' },
+        { telescope_keymap.buffers,        '<Cmd>Telescope buffers<CR>' },
+        { telescope_keymap.jumplist,       '<Cmd>Telescope jumplist<CR>' },
+        { telescope_keymap.help_tags,      '<Cmd>Telescope help_tags<CR>' },
+        { telescope_keymap.file_browse,    '<Cmd>Telescope file_browser<CR>' },
+        { telescope_keymap.find_files,     '<Cmd>Telescope find_files<CR>' },
+        { telescope_keymap.oldfiles,       '<Cmd>Telescope oldfiles<CR>' },
+        { telescope_keymap.grep_workspace, '<Cmd>Telescope grep_string<CR>' },
+        { telescope_keymap.search_buffer,  '<Cmd>Telescope current_buffer_fuzzy_find<CR>' },
         {
             telescope_keymap.grep_workspace,
             function()
-                require('telescope.builtin').grep_string({
+                require('telescope.builtin').grep_string {
                     default_text = ("'%s"):format(getVisualSelection()),
                     use_regex = false,
-                })
+                }
             end,
             mode = 'v',
-        }
+        },
+        {
+            telescope_keymap.search_workspace,
+            function()
+                require('telescope.builtin').grep_string {
+                    path_display = { 'smart' },
+                    only_sort_text = true,
+                    word_match = '-w',
+                    search = '',
+                    file_ignore_patterns = {
+                        'static',
+                        '.svg',
+                        '.min.js',
+                        '.lock',
+                    },
+                }
+            end
+        },
     }
 end
 
