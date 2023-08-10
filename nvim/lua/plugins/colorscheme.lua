@@ -516,8 +516,7 @@ M.config = function()
         local incline_highlight = {
             InclineNormal = { bg = c.none, bold = true },
             InclineNormalNC = { fg = c.base03, bg = c.none },
-            InclineSpacing = { fg = c.none, bg = c.base10, },
-            InclineModified = { fg = c.base10, bg = c.none, },
+            InclineModified = { fg = '#FF6F00', bg = c.none, },
         }
 
         local noice_highlight = {

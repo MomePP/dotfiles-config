@@ -1,7 +1,7 @@
 return {
-    { 'nvim-lua/plenary.nvim',       lazy = false },
-    { 'nvim-tree/nvim-web-devicons', lazy = false },
-    { 'MunifTanjim/nui.nvim',        lazy = false },
+    { 'nvim-lua/plenary.nvim',        lazy = false },
+    { 'DaikyXendo/nvim-web-devicons', lazy = false },
+    { 'MunifTanjim/nui.nvim',         lazy = false },
 
     -- Utilities
     {
