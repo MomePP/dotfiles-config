@@ -65,7 +65,7 @@ M.opts = function()
             vim.notify(string.format('[buffers.actions.remove] %s', message), vim.log.levels.INFO,
                 { title = 'Telescope builtin' })
 
-            vim.ui.input({ prompt = 'Remove selections [y/N]: ' }, function(input)
+            vim.ui.input({ prompt = 'Remove selections ? [y/n] ' }, function(input)
                 vim.cmd [[ redraw ]] -- redraw to clear out vim.ui.prompt to avoid hit-enter prompt
                 if input and input:lower() == 'y' then
                     -- INFO: lazy loads `mini.bufremove` for handles buffer deletion
@@ -195,7 +195,6 @@ M.keys = function()
         { telescope_keymap.find_files,     '<Cmd>Telescope find_files<CR>' },
         { telescope_keymap.oldfiles,       '<Cmd>Telescope oldfiles<CR>' },
         { telescope_keymap.grep_workspace, '<Cmd>Telescope grep_string<CR>' },
-        { telescope_keymap.search_buffer,  '<Cmd>Telescope current_buffer_fuzzy_find<CR>' },
         {
             telescope_keymap.grep_workspace,
             function()
