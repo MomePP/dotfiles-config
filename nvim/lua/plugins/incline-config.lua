@@ -16,7 +16,7 @@ M.opts = function()
         window = {
             padding = { left = 0, right = 1 },
             margin = { horizontal = 0, vertical = 1 },
-            zindex = 40,
+            zindex = 10,
         },
         render = function(props)
             local bufname = vim.api.nvim_buf_get_name(props.buf)
