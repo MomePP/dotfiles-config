@@ -82,17 +82,27 @@ M.opts = function()
         function()
             local msg = 'no active lsp'
             local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
-            local clients = vim.lsp.get_active_clients()
-            if next(clients) == nil then
+            local clients = vim.lsp.get_clients()
+
+            if not clients then
                 return msg
             end
+
+            local matching_clients = {}
+
             for _, client in ipairs(clients) do
                 local filetypes = client.config.filetypes
+
                 if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-                    return client.name
+                    table.insert(matching_clients, client.name)
                 end
             end
-            return msg
+
+            if #matching_clients > 0 then
+                return table.concat(matching_clients, ', ')
+            else
+                return msg
+            end
         end,
         icon = icons.lualine.lsp,
     }

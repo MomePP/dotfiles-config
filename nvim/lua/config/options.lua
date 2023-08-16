@@ -56,7 +56,7 @@ opt.signcolumn    = 'yes'
 -- opt.statuscolumn  = "%=%{v:virtnum < 1 ? (v:relnum ? v:relnum : v:lnum < 10 ? v:lnum . '  ' : v:lnum) : ''}%=%s"
 
 opt.pumheight     = 10 -- Make popup menu smaller
-opt.pumblend      = 8 -- Make builtin completion menus slightly transparent
+opt.pumblend      = 8  -- Make builtin completion menus slightly transparent
 -- opt.winblend      = 5 -- Make floating windows slightly transparent
 
 -- Editing
