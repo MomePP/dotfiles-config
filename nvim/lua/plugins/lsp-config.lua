@@ -1,5 +1,3 @@
-local default_border = require('config').defaults.float_border
-
 -- ----------------------------------------------------------------------
 -- INFO: lsp server manager config
 --
@@ -10,7 +8,7 @@ local mason_module = {
 
 mason_module.opts = {
     ui = {
-        border = default_border
+        border = require('config').defaults.float_border
     }
 }
 
@@ -37,22 +35,6 @@ lsp_setup_module.init = function()
         severity_sort = true,
     }
     vim.diagnostic.config(diagnostic_config)
-
-    -- INFO: overrides globally default of `open_floating_preview`
-    local base_open_floating_preview = vim.lsp.util.open_floating_preview
-    vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
-        opts = opts or {}
-        opts.focus = opts.focusable or false
-        opts.offset_x = opts.offset_x or -2
-        opts.offset_y = opts.offset_y or 0
-        opts.border = default_border
-
-        -- NOTE: padding contents
-        for index, message in ipairs(contents) do
-            contents[index] = string.format(' %s ', message)
-        end
-        return base_open_floating_preview(contents, syntax, opts, ...)
-    end
 end
 
 lsp_setup_module.config = function()
