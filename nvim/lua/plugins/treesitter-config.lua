@@ -6,8 +6,6 @@ local M = {
         { 'nvim-treesitter/nvim-treesitter-context', opts = { zindex = 5 } },
         'JoosepAlviste/nvim-ts-context-commentstring',
         'windwp/nvim-ts-autotag',
-        'yioneko/nvim-yati',
-        'yioneko/vim-tmindent',
     },
     main = 'nvim-treesitter.configs'
 }
@@ -37,7 +35,8 @@ M.opts = function()
             additional_vim_regex_highlighting = false,
         },
         indent = {
-            enable = false,
+            enable = true,
+            disable = { 'cpp' }
         },
         context_commentstring = {
             enable = true,
@@ -50,12 +49,6 @@ M.opts = function()
             enable = true,
             keymaps = keymaps.incremental_selection,
         },
-        yati = {
-            enable = true,
-            default_fallback = function(lnum, computed, bufnr)
-                return require('tmindent').get_indent(lnum, bufnr) + computed
-            end
-        }
     }
 end
 
