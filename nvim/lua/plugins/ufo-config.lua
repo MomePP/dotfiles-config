@@ -5,7 +5,6 @@ local M = {
 }
 
 M.opts = {
-    close_fold_kinds = { 'imports', 'comment' },
     preview = {
         win_config = {
             border = require('config').defaults.float_border,
@@ -13,9 +12,6 @@ M.opts = {
             winblend = 0,
         },
     },
-    provider_selector = function(_, _, _)
-        return { 'treesitter', 'indent' }
-    end,
     fold_virt_text_handler = function(virtText, lnum, endLnum, width, truncate)
         local newVirtText = {}
         local suffix = ('  %d '):format(endLnum - lnum)
