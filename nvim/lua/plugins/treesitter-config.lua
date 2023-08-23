@@ -8,8 +8,6 @@ local M = {
         'windwp/nvim-ts-autotag',
         'yioneko/nvim-yati',
         'yioneko/vim-tmindent',
-
-        'rainbow-delimiters.nvim',
     },
     main = 'nvim-treesitter.configs'
 }
