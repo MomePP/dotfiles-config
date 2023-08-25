@@ -573,7 +573,7 @@ M.config = function()
             RainbowDelimiterViolet = { fg = c.base14 },
         }
 
-        local ts_context_highlight = {
+        local treesitter_context_highlight = {
             TreesitterContext = { bg = c.none, bold = true, italic = true },
             TreesitterContextLineNumber = { link = 'TreesitterContext' },
         }
@@ -610,12 +610,14 @@ M.config = function()
             CmpItemKindEnumMember = { fg = c.base15, bg = c.none },
         }
 
-        local local_highlight = {
-            LocalHighlight = { bg = c.base02, bold = true, nocombine = true },
-        }
-
         local hlslens_highlight = {
             HlSearchLens = { link = 'PmenuSel' },
+        }
+
+        local illuminate_highlight = {
+            IlluminatedWordText = { bg = c.base02, bold = true, nocombine = true },
+            IlluminatedWordRead = { link = 'IlluminatedWordText' },
+            IlluminatedWordWrite = { link = 'IlluminatedWordText' },
         }
 
         overrideHighlightConfig({
@@ -640,10 +642,10 @@ M.config = function()
         overrideHighlightConfig(flit_highlight)
         overrideHighlightConfig(diagnostic_highlight)
         overrideHighlightConfig(rainbow_delimiter_highlight)
-        overrideHighlightConfig(ts_context_highlight)
+        overrideHighlightConfig(treesitter_context_highlight)
         overrideHighlightConfig(cmp_highlight)
-        overrideHighlightConfig(local_highlight)
         overrideHighlightConfig(hlslens_highlight)
+        overrideHighlightConfig(illuminate_highlight)
 
         for hl_name, hl_value in pairs(highlight_overrides) do
             vim.api.nvim_set_hl(0, hl_name, hl_value)

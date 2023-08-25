@@ -7,11 +7,6 @@ return {
     {
         'nmac427/guess-indent.nvim',
         event = { 'BufReadPost', 'BufNewFile' },
-        config = true
-    },
-    {
-        'tzachar/local-highlight.nvim',
-        event = { 'BufReadPre', 'BufNewFile' },
         config = true,
     },
     {
