@@ -12,10 +12,10 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.runtimepath:prepend(lazypath)
 
--- INFO: lazy.nvim configs
-local default_border = require('config').defaults.float_border
-
-local lazy_config = {
+require('lazy').setup {
+    spec = {
+        { import = 'plugins' },
+    },
     defaults = {
         lazy = true
     },
@@ -24,7 +24,7 @@ local lazy_config = {
             colorscheme = { 'nvim-colorscheme', 'habamax' }
         },
         ui = {
-            border = default_border
+            border = require('config').defaults.float_border
         },
         rtp = {
             disabled_plugins = {
@@ -55,7 +55,6 @@ local lazy_config = {
         path = '~/Developments/nvim-plugins'
     }
 }
-require('lazy').setup('plugins', lazy_config)
 
 -- INFO: lazy.nvim keybinding
 local lazy_keymap = require('config.keymaps').lazy

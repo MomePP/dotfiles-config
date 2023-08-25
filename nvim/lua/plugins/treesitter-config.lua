@@ -6,6 +6,7 @@ local M = {
         { 'nvim-treesitter/nvim-treesitter-context', opts = { zindex = 5 } },
         'JoosepAlviste/nvim-ts-context-commentstring',
         'windwp/nvim-ts-autotag',
+        'nvim-treesitter-textobjects',
     },
     main = 'nvim-treesitter.configs'
 }
@@ -23,6 +24,10 @@ M.opts = function()
             'bash',
             'fish',
             'yaml',
+            'tsx',
+            'javascript',
+            'css',
+            'scss',
         },
         ignore_install = {
             'norg',
