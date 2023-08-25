@@ -1,6 +1,6 @@
 local M = {
     'b0o/incline.nvim',
-    event = { 'BufReadPre', 'BufNewFile' },
+    event = { 'BufReadPost', 'BufNewFile' },
     dependencies = { 'nvim-web-devicons' },
 }
 

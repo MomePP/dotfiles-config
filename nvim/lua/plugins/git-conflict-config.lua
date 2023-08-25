@@ -1,6 +1,6 @@
 local M = {
     'akinsho/git-conflict.nvim',
-    event = { 'BufReadPre', 'BufNewFile' }
+    event = 'VeryLazy'
 }
 
 M.opts = {

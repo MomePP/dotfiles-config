@@ -1,6 +1,6 @@
 local M = {
     'folke/noice.nvim',
-    event = { 'BufReadPre', 'BufNewFile' },
+    event = 'VeryLazy',
 }
 
 M.opts = {
