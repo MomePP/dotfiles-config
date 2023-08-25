@@ -3,7 +3,7 @@ local M = {
     build = ':TSUpdate',
     event = { 'BufReadPost', 'BufNewFile' },
     dependencies = {
-        { 'nvim-treesitter/nvim-treesitter-context', opts = { zindex = 5 } },
+        { 'nvim-treesitter/nvim-treesitter-context', branch = 'feat/multictx', opts = { zindex = 5 } },
         'JoosepAlviste/nvim-ts-context-commentstring',
         'windwp/nvim-ts-autotag',
         'nvim-treesitter-textobjects',
