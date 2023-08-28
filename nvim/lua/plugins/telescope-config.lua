@@ -187,14 +187,15 @@ M.keys = function()
     end
 
     return {
-        { telescope_keymap.resume,         '<Cmd>Telescope resume<CR>' },
-        { telescope_keymap.buffers,        '<Cmd>Telescope buffers<CR>' },
-        { telescope_keymap.jumplist,       '<Cmd>Telescope jumplist<CR>' },
-        { telescope_keymap.help_tags,      '<Cmd>Telescope help_tags<CR>' },
-        { telescope_keymap.file_browse,    '<Cmd>Telescope file_browser<CR>' },
-        { telescope_keymap.find_files,     '<Cmd>Telescope find_files<CR>' },
-        { telescope_keymap.oldfiles,       '<Cmd>Telescope oldfiles<CR>' },
-        { telescope_keymap.grep_workspace, '<Cmd>Telescope grep_string<CR>' },
+        { telescope_keymap.resume,           '<Cmd>Telescope resume<CR>' },
+        { telescope_keymap.buffers,          '<Cmd>Telescope buffers<CR>' },
+        { telescope_keymap.jumplist,         '<Cmd>Telescope jumplist<CR>' },
+        { telescope_keymap.help_tags,        '<Cmd>Telescope help_tags<CR>' },
+        { telescope_keymap.file_browse,      '<Cmd>Telescope file_browser<CR>' },
+        { telescope_keymap.find_files,       '<Cmd>Telescope find_files<CR>' },
+        { telescope_keymap.oldfiles,         '<Cmd>Telescope oldfiles<CR>' },
+        { telescope_keymap.search_workspace, '<Cmd>Telescope live_grep<CR>' },
+        { telescope_keymap.grep_workspace,   '<Cmd>Telescope grep_string<CR>', mode = 'n' },
         {
             telescope_keymap.grep_workspace,
             function()
@@ -204,23 +205,6 @@ M.keys = function()
                 }
             end,
             mode = 'v',
-        },
-        {
-            telescope_keymap.search_workspace,
-            function()
-                require('telescope.builtin').grep_string {
-                    path_display = { 'smart' },
-                    only_sort_text = true,
-                    word_match = '-w',
-                    search = '',
-                    file_ignore_patterns = {
-                        'static',
-                        '.svg',
-                        '.min.js',
-                        '.lock',
-                    },
-                }
-            end
         },
     }
 end
