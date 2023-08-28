@@ -9,6 +9,7 @@ opt.backup         = false
 opt.writebackup    = false
 opt.swapfile       = false
 opt.updatetime     = 200 -- Save swap file and trigger CursorHold
+opt.undolevels     = 5000
 
 opt.title          = true
 opt.mouse          = 'a'
