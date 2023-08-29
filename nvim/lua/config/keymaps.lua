@@ -59,6 +59,10 @@ keymaps.setup = function()
     -- INFO: quickfix keys
     vim.keymap.set('n', '<leader>q', '<Cmd>TroubleToggle quickfix<CR>')
     vim.keymap.set('n', '<leader>Q', '<Cmd>cexpr []<CR>')
+
+    -- INFO: search word under cursor (recursive called `hlslens`)
+    vim.keymap.set('n', ']]', '*', { remap = true })
+    vim.keymap.set('n', '[[', '#', { remap = true })
 end
 
 -- INFO: LSP keymap

@@ -610,14 +610,12 @@ M.config = function()
             CmpItemKindEnumMember = { fg = c.base15, bg = c.none },
         }
 
-        local hlslens_highlight = {
-            HlSearchLens = { link = 'PmenuSel' },
+        local local_highlight = {
+            LocalHighlight = { bg = c.base02, bold = true, nocombine = true },
         }
 
-        local illuminate_highlight = {
-            IlluminatedWordText = { bg = c.base02, bold = true, nocombine = true },
-            IlluminatedWordRead = { link = 'IlluminatedWordText' },
-            IlluminatedWordWrite = { link = 'IlluminatedWordText' },
+        local hlslens_highlight = {
+            HlSearchLens = { link = 'PmenuSel' },
         }
 
         overrideHighlightConfig({
@@ -644,8 +642,8 @@ M.config = function()
         overrideHighlightConfig(rainbow_delimiter_highlight)
         overrideHighlightConfig(treesitter_context_highlight)
         overrideHighlightConfig(cmp_highlight)
+        overrideHighlightConfig(local_highlight)
         overrideHighlightConfig(hlslens_highlight)
-        overrideHighlightConfig(illuminate_highlight)
 
         for hl_name, hl_value in pairs(highlight_overrides) do
             vim.api.nvim_set_hl(0, hl_name, hl_value)
