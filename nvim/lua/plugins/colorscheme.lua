@@ -531,14 +531,15 @@ M.config = function()
         local telescope_highlight = {
             TelescopeNormal = { fg = c.base03, bg = c.base00 },
             TelescopeSelection = { fg = c.base04, bold = true },
-            TelescopeResultsBorder = { bg = c.base00 },
-            TelescopePreviewBorder = { bg = c.base00 },
-            TelescopeResultsTitle = { fg = c.base00, bg = c.base00 },
-            TelescopeResultsDiffAdd = { bg = c.base00 },
-            TelescopeResultsDiffChange = { bg = c.base00 },
-            TelescopeResultsDiffDelete = { bg = c.base00 },
-            TelescopeResultsDiffUntracked = { bg = c.base00 },
-            TelescopeMatching = { link = 'Search' },
+            TelescopePromptNormal = { fg = c.base04, bg = c.base02 },
+            TelescopePromptPrefix = { fg = c.base08, bg = c.base02 },
+            TelescopePromptBorder = { bg = c.base02 },
+            TelescopeResultsNormal = { bg = c.base01 },
+            TelescopeResultsBorder = { bg = c.base01 },
+            TelescopePreviewNormal = { bg = c.base01 },
+            TelescopePreviewBorder = { bg = c.base01 },
+            TelescopeResultsTitle = { fg = c.base03 },
+            TelescopeMatching = { fg = c.base12, bold = true },
         }
 
         local flit_highlight = {

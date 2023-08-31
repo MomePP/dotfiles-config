@@ -19,17 +19,22 @@ M.opts = function()
         layout_strategy = 'vertical',
         layout_config = {
             preview_height = 0.75,
-            prompt_position = 'bottom'
-        }
+            prompt_position = 'bottom',
+            width = 0.85,
+            height = 0.8,
+        },
+        sorting_strategy = 'descending',
     }
 
     local horizontal_layout_config = {
-        -- sorting_strategy = 'ascending',
         layout_strategy = 'horizontal',
         layout_config = {
-            preview_width = 0.6,
-            -- prompt_position = 'top'
-        }
+            preview_width = 0.55,
+            prompt_position = 'top',
+            width = 0.85,
+            height = 0.8,
+        },
+        sorting_strategy = 'ascending',
     }
 
     local bottom_layout_config = {
@@ -95,9 +100,10 @@ M.opts = function()
 
     return {
         defaults = {
-            prompt_prefix = '   ', -- this still got an issue of prompt buffer bug, can be workaround by changes it to empty string
+            prompt_prefix = '   ',
             entry_prefix = '  ',
-            selection_caret = '  ',
+            selection_caret = '   ',
+            results_title = '',
             color_devicons = true,
             path_display = { 'tail', 'smart' },
             set_env = { ['COLORTERM'] = 'truecolor' },
@@ -111,6 +117,11 @@ M.opts = function()
                         vim.cmd 'TroubleToggle quickfix'
                     end
                 },
+            },
+            sorting_strategy = 'ascending',
+            layout_strategy = 'flex',
+            layout_config = {
+                prompt_position = 'top',
             },
         },
         pickers = {
