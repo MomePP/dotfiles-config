@@ -46,7 +46,7 @@ lsp_setup_module.config = function()
     local load_local_settings = function(path, server_name)
         vim.validate { path = { path, 's' } }
 
-        local fname = string.format("%s/%s.json", path, server_name)
+        local fname = string.format('%s/%s.json', path, server_name)
         local ok, result = pcall(vim.fn.readfile, fname)
         if not ok then return nil end
 
@@ -120,13 +120,13 @@ lsp_setup_module.config = function()
     -- ----------------------------------------------------------------------
     --  lsp-zero configs
     --
-    local lsp = require('lsp-zero').preset {
-        float_border = require('config').defaults.float_border,
-    }
+    vim.g.lsp_zero_ui_float_border = 0
 
-    lsp.set_sign_icons(require('config').defaults.icons.diagnostics)
+    local lsp_zero = require('lsp-zero')
 
-    lsp.on_attach(function(client, bufnr)
+    lsp_zero.set_sign_icons(require('config').defaults.icons.diagnostics)
+
+    lsp_zero.on_attach(function(client, bufnr)
         lsp_keymap(client, bufnr, require('config.keymaps').lsp)
         lsp_inlayhint(client, bufnr)
     end)
@@ -134,7 +134,7 @@ lsp_setup_module.config = function()
     -- INFO: config lsp servers in lsp-list
     local lsp_list = {}
     for name, config in pairs(require('plugins.lsp-settings.lsp-list')) do
-        lsp.configure(name, config)
+        lsp_zero.configure(name, config)
         table.insert(lsp_list, name)
     end
 
@@ -146,7 +146,7 @@ lsp_setup_module.config = function()
     -- INFO: automatically setup lsp from default config installed via mason.nvim
     require('mason-lspconfig').setup {
         ensure_installed = lsp_list,
-        handlers = { lsp.default_setup }
+        handlers = { lsp_zero.default_setup }
     }
 end
 
@@ -157,12 +157,6 @@ local diagflow_module = {
 }
 
 diagflow_module.opts = {
-    severity_colors = {
-        error = 'DiagnosticFloatingError',
-        warn = 'DiagnosticFloatingWarn',
-        info = 'DiagnosticFloatingInfo',
-        hint = 'DiagnosticFloatingHint',
-    },
     padding_top = 1,
     toggle_event = { 'InsertEnter' },
 }
