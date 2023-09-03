@@ -538,6 +538,7 @@ M.config = function()
             TelescopeResultsBorder = { bg = c.base01 },
             TelescopePreviewNormal = { bg = c.base01 },
             TelescopePreviewBorder = { bg = c.base01 },
+            TelescopePreviewLine = { bg = c.base02 },
             TelescopeResultsTitle = { fg = c.base03 },
             TelescopeMatching = { fg = c.base12, bold = true },
         }
