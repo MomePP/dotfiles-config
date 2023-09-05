@@ -40,11 +40,6 @@ return {
         }
     },
     {
-        'shellRaining/hlchunk.nvim',
-        event = 'VeryLazy',
-        config = true,
-    },
-    {
         'utilyre/sentiment.nvim',
         event = 'VeryLazy',
         opts = {
