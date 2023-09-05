@@ -531,6 +531,7 @@ M.config = function()
         local telescope_highlight = {
             TelescopeNormal = { fg = c.base03, bg = c.base00 },
             TelescopeSelection = { fg = c.base04, bold = true },
+            TelescopeMultiSelection = { fg = c.base13, bold = true },
             TelescopePromptNormal = { fg = c.base04, bg = c.base02 },
             TelescopePromptPrefix = { fg = c.base08, bg = c.base02 },
             TelescopePromptBorder = { bg = c.base02 },
