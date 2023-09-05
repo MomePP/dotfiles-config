@@ -40,25 +40,6 @@ return {
         }
     },
     {
-        'utilyre/sentiment.nvim',
-        event = 'VeryLazy',
-        opts = {
-            excluded_filetypes = {
-                [''] = true,
-                ['toggleterm'] = true,
-            }
-        }
-    },
-    {
-        'chrisgrieser/nvim-early-retirement',
-        event = 'VeryLazy',
-        opts = {
-            retirementAgeMins = 30,
-            minimumBufferNum = 5,
-            notificationOnAutoClose = true,
-        },
-    },
-    {
         'chrishrb/gx.nvim',
         dependencies = { 'plenary.nvim' },
         keys = { { 'gx' } },

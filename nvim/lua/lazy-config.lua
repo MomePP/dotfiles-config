@@ -38,7 +38,7 @@ require('lazy').setup {
                 'netrwSettings',
                 'netrwFileHandlers',
                 'matchit',
-                'matchparen',
+                -- 'matchparen',
                 'tar',
                 'tarPlugin',
                 'tohtml',
