@@ -17,11 +17,12 @@ mason_module.opts = {
 --
 local lsp_setup_module = {
     'VonHeikemen/lsp-zero.nvim',
-    branch = 'dev-v3',
+    branch = 'v3.x',
     event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
         'mason.nvim',
         'cmp-nvim-lsp',
+        'diagflow.nvim',
         'neovim/nvim-lspconfig',
         'williamboman/mason-lspconfig.nvim',
     },
@@ -35,6 +36,9 @@ lsp_setup_module.init = function()
         severity_sort = true,
     }
     vim.diagnostic.config(diagnostic_config)
+
+    -- INFO: setup lsp-zero configs
+    vim.g.lsp_zero_ui_float_border = 0
 end
 
 lsp_setup_module.config = function()
@@ -120,8 +124,6 @@ lsp_setup_module.config = function()
     -- ----------------------------------------------------------------------
     --  lsp-zero configs
     --
-    vim.g.lsp_zero_ui_float_border = 0
-
     local lsp_zero = require('lsp-zero')
 
     lsp_zero.set_sign_icons(require('config').defaults.icons.diagnostics)
@@ -152,8 +154,6 @@ end
 
 local diagflow_module = {
     'dgagn/diagflow.nvim',
-    dependencies = 'nvim-lspconfig',
-    event = 'VeryLazy',
 }
 
 diagflow_module.opts = {
