@@ -16,7 +16,6 @@ return {
     },
     {
         'kylechui/nvim-surround',
-        dependencies = { 'nvim-treesitter-textobjects' },
         event = 'VeryLazy',
         config = true
     },
