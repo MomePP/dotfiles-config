@@ -4,7 +4,7 @@ local M = {
 }
 
 M.init = function()
-    local ignore_filetypes = { 'telescopeprompt', 'toggleterm', 'noice' }
+    local ignore_filetypes = { 'toggleterm' }
     local ignore_buftypes = { 'nofile', 'prompt', 'popup' }
 
     local augroup = vim.api.nvim_create_augroup('FocusDisable', { clear = true })
