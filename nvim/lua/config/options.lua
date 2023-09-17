@@ -36,15 +36,6 @@ opt.foldlevelstart = 99
 opt.foldenable     = true
 -- opt.foldcolumn     = '1'
 
-opt.list           = true
-opt.listchars:append {
-    tab = '▸ ',
-    space = '·',
-    trail = '·',
-    precedes = '←',
-    extends = '→',
-}
-
 opt.fillchars:append {
     horiz     = '━',
     horizup   = '┻',
