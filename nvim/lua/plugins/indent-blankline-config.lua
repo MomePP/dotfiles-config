@@ -25,7 +25,8 @@ M.config = function()
             show_start = false,
             show_end = false,
             highlight = rainbow_highlight,
-        }
+        },
+        debounce = 500,
     }
 
     local hooks = require('ibl.hooks')
