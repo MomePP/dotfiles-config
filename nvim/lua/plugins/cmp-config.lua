@@ -7,6 +7,10 @@ local M = {
         'hrsh7th/cmp-cmdline',
         'FelipeLema/cmp-async-path',
         'saadparwaiz1/cmp_luasnip',
+        {
+            'tzachar/cmp-fuzzy-buffer',
+            dependencies = { 'tzachar/fuzzy.nvim' },
+        },
 
         -- NOTE: snippet plugins
         {
@@ -118,6 +122,7 @@ M.opts = function()
         priority_weight = 2,
         comparators = {
             require('copilot_cmp.comparators').prioritize,
+            require('cmp_fuzzy_buffer.compare'),
 
             cmp.config.compare.offset,
             cmp.config.compare.exact,
@@ -149,6 +154,9 @@ M.opts = function()
             { name = 'async_path' },
             { name = 'nvim_lsp' },
             { name = 'luasnip',   keyword_length = 2 },
+        },
+        {
+            { name = 'fuzzy_buffer', option = { min_match_length = 2 } },
         }
     )
 
@@ -185,6 +193,16 @@ M.config = function(_, opts)
     local cmp = require('cmp')
 
     cmp.setup(opts)
+
+    cmp.setup.cmdline({ '/', '?' }, {
+        mapping = cmp.mapping.preset.cmdline(),
+        completion = {
+            completeopt = 'menuone,noselect',
+        },
+        sources = {
+            { name = 'fuzzy_buffer', option = { min_match_length = 2 } },
+        }
+    })
 
     cmp.setup.cmdline(':', {
         mapping = cmp.mapping.preset.cmdline(),
