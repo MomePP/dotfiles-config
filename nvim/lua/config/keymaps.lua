@@ -203,16 +203,13 @@ keymaps.noice = {
     docs_scroll_down = '<C-d>',
 }
 
--- INFO: flash keymaps
-keymaps.flash = {
-    search           = '/',
-    backsearch       = '?',
-    forward          = 'f',
-    backward         = 'F',
-    till             = 't',
-    backtill         = 'T',
-    flash            = 's',
-    flash_treesitter = 'S',
+-- INFO: flit keymaps
+keymaps.flit = {
+    forward  = 'f',
+    backward = 'F',
+    till     = 't',
+    backtill = 'T',
+    leap     = 's',
 }
 
 -- INFO: markdown preview keymap

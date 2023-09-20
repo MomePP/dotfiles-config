@@ -544,10 +544,11 @@ M.config = function()
             TelescopeMatching = { fg = c.base12, bold = true },
         }
 
-        local flash_highlight = {
-            FlashBackdrop = { fg = c.base03, bg = c.none },
-            FlashMatch = { fg = 'white', bold = true, nocombine = true },
-            FlashLabel = { fg = 'cyan', bold = true, nocombine = true },
+        local flit_highlight = {
+            LeapBackdrop = { fg = c.base03, bg = c.none },
+            LeapLabelPrimary = { fg = 'cyan', bold = true, nocombine = true },
+            LeapLabelSecondary = { fg = M.colorset.purple, bold = true, nocombine = true },
+            LeapMatch = { fg = 'white', bold = true, nocombine = true },
         }
 
         local diagnostic_highlight = {
@@ -639,7 +640,7 @@ M.config = function()
         overrideHighlightConfig(telescope_highlight)
         overrideHighlightConfig(incline_highlight)
         overrideHighlightConfig(noice_highlight)
-        overrideHighlightConfig(flash_highlight)
+        overrideHighlightConfig(flit_highlight)
         overrideHighlightConfig(diagnostic_highlight)
         overrideHighlightConfig(rainbow_delimiter_highlight)
         overrideHighlightConfig(treesitter_context_highlight)
