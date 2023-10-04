@@ -4,7 +4,8 @@ local M = {
     -- 'catppuccin/nvim',
     'nyoom-engineering/oxocarbon.nvim',
     name = 'nvim-colorscheme',
-    event = 'UIEnter'
+    lazy = false,
+    priority = 1000,
 }
 
 M.colorset = {

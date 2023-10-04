@@ -1,7 +1,6 @@
 local M = {
     'hiphish/rainbow-delimiters.nvim',
     event = { 'BufReadPost', 'BufNewFile' },
-    dependencies = { 'nvim-treesitter' },
 }
 
 M.config = function()
