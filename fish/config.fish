@@ -85,7 +85,7 @@ alias pip "python3 -m pip"
 alias tma "tmux attach-session || tmux new -s default"
 alias tmd "tmux detach"
 alias cat "bat"
-alias ssh "kitty +kitten ssh"
+alias kssh "kitty +kitten ssh"
 
 pyenv init - | source
 starship init fish | source
