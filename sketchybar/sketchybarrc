@@ -136,13 +136,13 @@ sketchybar  --add item clock right                              \
                                                                 \
             --add item wifi right                               \
             --set wifi "${wifi[@]}"                             \
-            --subscribe wifi wifi_change                        \
+            --subscribe wifi wifi_change mouse.clicked          \
                                                                 \
             --add event input_change $KEYBOARD_EVENT            \
             --add item keyboard right                           \
             --set keyboard "${keyboard[@]}"                     \
             --subscribe keyboard input_change
 
-
 ##### Finalizing Setup #####
+sketchybar --hotload on
 sketchybar --update
