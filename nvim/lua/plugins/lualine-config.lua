@@ -81,7 +81,7 @@ M.opts = function()
     local lsp_status = {
         function()
             local msg = 'no active lsp'
-            local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
+            local buf_ft = vim.api.nvim_get_option_value('filetype', { buf = 0 })
             local clients = vim.lsp.get_clients()
 
             if not clients then
@@ -114,7 +114,7 @@ M.opts = function()
             return fname_split[#fname_split]
         end,
         icon = icons.lualine.session,
-        padding = { left = -1, right = 1 },
+        padding = { left = 0, right = 1 },
         cond = conditions.check_session_exist
     }
 
@@ -147,7 +147,7 @@ M.opts = function()
             lualine_z = { location },
         },
         tabline = {},
-        extensions = { 'toggleterm', 'lazy' }
+        extensions = { 'toggleterm', 'lazy', 'mason' }
     }
 end
 
