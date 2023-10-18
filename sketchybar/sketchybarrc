@@ -10,10 +10,12 @@ source "$CONFIG_DIR/colors.sh"
 bar=(
     height=36
     blur_radius=30
+    corner_radius=8
+    margin=8
     position=top
     sticky=on
-    padding_left=20
-    padding_right=20
+    padding_left=12
+    padding_right=8
     color=$BAR_COLOR
 )
 sketchybar --bar "${bar[@]}"
