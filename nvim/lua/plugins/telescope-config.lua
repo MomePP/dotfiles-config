@@ -77,7 +77,7 @@ M.opts = function()
                     require('lazy').load({ plugins = { 'mini.bufremove' } })
 
                     current_picker:delete_selection(function(selection)
-                        local force = vim.api.nvim_buf_get_option(selection.bufnr, 'buftype') == 'terminal'
+                        local force = vim.api.nvim_get_option_value('buftype', { buf = selection.bufnr }) == 'terminal'
                         local ok = pcall(require('mini.bufremove').delete, selection.bufnr, force)
                         if ok then table.insert(removed, utils.transform_path({}, selection.filename)) end
                         return ok
