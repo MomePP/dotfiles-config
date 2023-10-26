@@ -622,6 +622,10 @@ M.config = function()
             HlSearchLens = { link = 'PmenuSel' },
         }
 
+        local indentscope_highlight = {
+            MiniIndentscopeSymbol = { fg = c.base07, bg = c.none },
+        }
+
         overrideHighlightConfig({
             Normal = { fg = c.base04, bg = c.none },
             NormalNC = { fg = c.base04, bg = c.none },
@@ -648,6 +652,7 @@ M.config = function()
         overrideHighlightConfig(cmp_highlight)
         overrideHighlightConfig(local_highlight)
         overrideHighlightConfig(hlslens_highlight)
+        overrideHighlightConfig(indentscope_highlight)
 
         for hl_name, hl_value in pairs(highlight_overrides) do
             vim.api.nvim_set_hl(0, hl_name, hl_value)
