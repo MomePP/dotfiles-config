@@ -3,7 +3,18 @@ local M = {
     build = ':TSUpdate',
     event = { 'BufReadPost', 'BufNewFile' },
     dependencies = {
-        { 'nvim-treesitter/nvim-treesitter-context', opts = { zindex = 5 } },
+        {
+            'nvim-treesitter/nvim-treesitter-context',
+            opts = { zindex = 5 },
+        },
+        {
+            'vidocqh/auto-indent.nvim',
+            opts = {
+                indentexpr = function(lnum)
+                    return require("nvim-treesitter.indent").get_indent(lnum)
+                end
+            }
+        },
         'JoosepAlviste/nvim-ts-context-commentstring',
         'windwp/nvim-ts-autotag',
         'nvim-treesitter-textobjects',
