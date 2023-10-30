@@ -1,0 +1,84 @@
+[
+  {
+    "context": "Editor && VimControl && !VimWaiting && !menu && vim_mode == normal",
+    "bindings": {
+      "space": "workspace::ActivateNextPane",
+      "ctrl-w v": "pane::SplitRight",
+      "ctrl-w ctrl-v": "pane::SplitRight",
+      "ctrl-w s": "pane::SplitDown",
+      "ctrl-w ctrl-s": "pane::SplitDown",
+      "shift-k": "editor::Hover",
+      "g c c": [
+        "editor::ToggleComments", { "advance_downwards": false }
+      ],
+      "alt-k": "editor::MoveLineUp",
+      "alt-j": "editor::MoveLineDown",
+      "ctrl-j": "pane::GoForward",
+      "ctrl-k": "pane::GoBack",
+      "\\ f w": "workspace::NewSearch",
+      "\\ f s": "file_finder::Toggle",
+      "\\ f b": "workspace::ToggleLeftDock",
+      "\\ t": "terminal_panel::ToggleFocus",
+      // "\\ g": [
+      //    "terminal_panel::ToggleFocus" ,
+      //    "terminal::SendText", "lazygit" ,
+      //    "terminal::SendKeystroke", "enter"
+      // ],
+      "tab": "pane::ActivateNextItem",
+      "shift-tab": "pane::ActivatePrevItem",
+      "] c": "editor::GoToHunk",
+      "[ c": "editor::GoToPrevHunk",
+      "] d": "editor::GoToDiagnostic",
+      "[ d": "editor::GoToPrevDiagnostic"
+    }
+  },
+  {
+    "context": "Editor && vim_mode == insert && !menu",
+    "bindings": {
+      "ctrl-w": "editor::DeleteToPreviousWordStart"
+    }
+  },
+  {
+    "context": "Editor && (showing_code_actions || showing_completions)",
+    "bindings": {
+      "enter": "editor::ConfirmCompletion",
+      "up": "editor::ContextMenuPrev",
+      "shift-tab": "editor::ContextMenuPrev",
+      "down": "editor::ContextMenuNext",
+      "tab": "editor::ContextMenuNext"
+    }
+  },
+  {
+    "context": "Terminal",
+    "bindings": {
+      "\\ t": "workspace::ToggleBottomDock",
+      "\\ g": [
+         // "terminal_panel::ToggleFocus" ,
+         "terminal::SendText", "lazygit",
+         // "terminal::SendKeystroke", "enter"
+      ],
+    }
+  },
+  {
+    "context": "ProjectPanel",
+    "bindings": {
+      "h": "project_panel::CollapseSelectedEntry",
+      "l": "project_panel::ExpandSelectedEntry",
+      "j": "menu::SelectNext",
+      "k": "menu::SelectPrev",
+      "cmd-n": "project_panel::NewFile",
+      "ctrl-alt-n": "project_panel::NewDirectory",
+      "cmd-x": "project_panel::Cut",
+      "cmd-c": "project_panel::Copy",
+      "cmd-v": "project_panel::Paste",
+      "cmd-alt-c": "project_panel::CopyPath",
+      "alt-cmd-shift-c": "project_panel::CopyRelativePath",
+      "enter": "project_panel::Rename",
+      "space": "project_panel::Open",
+      "backspace": "project_panel::Delete",
+      "alt-cmd-r": "project_panel::RevealInFinder",
+      "alt-shift-f": "project_panel::NewSearchInDirectory",
+      "escape": "workspace::ToggleLeftDock"
+    }
+  }
+]
