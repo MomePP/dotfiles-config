@@ -578,7 +578,7 @@ M.config = function()
         }
 
         local treesitter_context_highlight = {
-            TreesitterContext = { bg = c.none, bold = true, italic = true },
+            TreesitterContext = { bg = c.none, bold = true },
             TreesitterContextLineNumber = { link = 'TreesitterContext' },
         }
 

@@ -19,8 +19,8 @@ M.opts = function()
             zindex = 10,
         },
         render = function(props)
+            local render_icon = {}
             local bufname = vim.api.nvim_buf_get_name(props.buf)
-
             local render_path = truncate_utils(
                 (bufname ~= '' and vim.fn.fnamemodify(bufname, ':.') or '[No Name]'),
                 MAX_PATH_WIDTH,
@@ -28,7 +28,6 @@ M.opts = function()
                 -1
             )
 
-            local render_icon = {}
             if vim.api.nvim_get_option_value('modified', { buf = props.buf }) then
                 render_icon = { '  ', group = 'InclineModified' }
             else
