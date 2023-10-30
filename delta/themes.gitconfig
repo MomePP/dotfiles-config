@@ -101,7 +101,7 @@
     merge-conflict-theirs-diff-header-style = yellow bold
     merge-conflict-theirs-diff-header-decoration-style = black box
 
-[delta "tokyonight"]
+[delta "oxocarbon"]
     dark = true
     line-numbers = true
     side-by-side = false
@@ -126,3 +126,30 @@
     plus-empty-line-marker-style  = syntax "#273849"
     line-numbers-plus-style       = "#627259"
     line-numbers-zero-style       = "#3b4261"
+
+[delta "nightfox"]
+    dark = false
+    line-numbers = true
+    side-by-side = false
+    keep-plus-minus-markers = false
+    syntax-theme = Monokai Extended Light
+    file-style = bold
+    file-decoration-style = ul
+    file-added-label = [+]
+    file-copied-label = [==]
+    file-modified-label = [*]
+    file-removed-label = [-]
+    file-renamed-label = [->]
+    hunk-header-style = omit
+    minus-style                   = syntax "#e1b7c3"
+    minus-non-emph-style          = syntax "#e1b7c3"
+    minus-emph-style              = syntax "#d293a5"
+    minus-empty-line-marker-style = syntax "#e1b7c3"
+    line-numbers-minus-style      = "#b55a67"
+    plus-style                    = syntax "#c0d8cc"
+    plus-non-emph-style           = syntax "#c0d8cc"
+    plus-emph-style               = syntax "#a0c5b3"
+    plus-empty-line-marker-style  = syntax "#c0d8cc"
+    line-numbers-plus-style       = "#627259"
+    line-numbers-zero-style       = syntax
+

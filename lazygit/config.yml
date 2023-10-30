@@ -3,9 +3,9 @@ gui:
   showBottomLine: false
   theme:
     selectedLineBgColor:
-      - default
+      - '#ebe5df'
     selectedRangeBgColor:
-      - '#393939'
+      - '#ebe5df'
   experimentalShowBranchHeads: true
 git:
   paging:

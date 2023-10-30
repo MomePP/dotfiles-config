@@ -2,7 +2,8 @@ local M = {
     -- 'rebelot/kanagawa.nvim',
     -- 'folke/tokyonight.nvim',
     -- 'catppuccin/nvim',
-    'nyoom-engineering/oxocarbon.nvim',
+    -- 'nyoom-engineering/oxocarbon.nvim',
+    'EdenEast/nightfox.nvim',
     name = 'nvim-colorscheme',
     lazy = false,
     priority = 1000,
@@ -664,6 +665,112 @@ M.config = function()
         vim.g['terminal_color_9'] = c.base15
         vim.g['terminal_color_11'] = c.base12
         vim.g['terminal_color_13'] = '#ff6f00'
+    end
+
+    local nightfox_status, _ = pcall(require, 'nightfox')
+    if nightfox_status then
+        vim.cmd.colorscheme 'dawnfox'
+
+        local palettes = require('nightfox.palette').load('dawnfox')
+
+        M.colorset.lualine = {
+            normal = vim.tbl_deep_extend('force', lualine_defaults, {
+                a = { fg = palettes.blue.bright },
+                b = { fg = palettes.fg0 },
+                c = { fg = palettes.fg0 },
+            }),
+            insert = vim.tbl_deep_extend('force', lualine_defaults, {
+                a = { fg = palettes.green.bright },
+                b = { fg = palettes.fg0 },
+                c = { fg = palettes.fg0 },
+            }),
+            visual = vim.tbl_deep_extend('force', lualine_defaults, {
+                a = { fg = palettes.magenta.bright },
+                b = { fg = palettes.fg0 },
+                c = { fg = palettes.fg0 },
+            }),
+            replace = vim.tbl_deep_extend('force', lualine_defaults, {
+                a = { fg = palettes.yellow.bright },
+                b = { fg = palettes.fg0 },
+                c = { fg = palettes.fg0 },
+            }),
+            command = vim.tbl_deep_extend('force', lualine_defaults, {
+                a = { fg = palettes.red.bright },
+                b = { fg = palettes.fg0 },
+                c = { fg = palettes.fg0 },
+            }),
+        }
+
+        local rainbow_delimiter_highlight = {
+            RainbowDelimiterRed = { fg = palettes.red.base },
+            RainbowDelimiterBlue = { fg = palettes.blue.base },
+            RainbowDelimiterCyan = { fg = palettes.cyan.base },
+            RainbowDelimiterGreen = { fg = palettes.green.base },
+            RainbowDelimiterYellow = { fg = palettes.yellow.base },
+            RainbowDelimiterOrange = { fg = palettes.orange.base },
+            RainbowDelimiterViolet = { fg = palettes.magenta.base },
+        }
+
+        local noice_highlight = {
+            NoiceCmdlineIconCmdline = { link = 'lualine_a_command' },
+            NoiceCmdlineIconSearch = { link = 'lualine_a_command' },
+            NoiceCmdlineIconFilter = { link = 'lualine_a_command' },
+            NoiceMini = { bg = 'NONE' },
+            NoiceCmdline = { bg = 'NONE' },
+            NoiceSplit = { bg = palettes.bg1 },
+        }
+
+        local telescope_highlight = {
+            TelescopeNormal = { fg = palettes.fg1, bg = palettes.bg0 },
+            TelescopeSelection = { bold = true },
+            TelescopeMultiSelection = { fg = palettes.fg2, bold = true },
+            TelescopePromptNormal = { fg = palettes.fg1, bg = '#e2d9d0' },
+            TelescopePromptPrefix = { fg = palettes.cyan.base, bg = '#e2d9d0' },
+            TelescopePromptBorder = { bg = '#e2d9d0' },
+            TelescopePromptCounter = { fg = palettes.fg3 },
+            TelescopePreviewNormal = { bg = palettes.bg0 },
+            TelescopePreviewBorder = { bg = palettes.bg0 },
+            TelescopeResultsNormal = { bg = '#e8e1d9' },
+            TelescopeResultsBorder = { bg = '#e8e1d9' },
+            TelescopeResultsDiffAdd = { bg = '#e8e1d9' },
+            TelescopeResultsDiffChange = { bg = '#e8e1d9' },
+            TelescopeResultsDiffDelete = { bg = '#e8e1d9' },
+            TelescopeResultsDiffUntracked = { bg = '#e8e1d9' },
+            TelescopePromptTitle = { fg = palettes.fg0, bg = palettes.pink.bright, bold = true },
+            TelescopePreviewTitle = { fg = palettes.fg0, bg = palettes.yellow.bright, bold = true },
+            TelescopeResultsTitle = { fg = palettes.fg2 },
+        }
+
+        local treesitter_context_highlight = {
+            TreesitterContext = { bg = palettes.bg0, bold = true },
+            TreesitterContextLineNumber = { link = 'TreesitterContext' },
+        }
+
+        local local_highlight = {
+            LocalHighlight = { bg = palettes.bg2, bold = true, nocombine = true },
+        }
+
+        local incline_highlight = {
+            InclineNormal = { bg = palettes.bg0, bold = true },
+            InclineNormalNC = { fg = palettes.fg2, bg = 'NONE' },
+            InclineModified = { fg = palettes.orange.base, bg = 'NONE', },
+        }
+
+        overrideHighlightConfig({
+            FloatBorder = { link = 'NormalFloat' },
+            Pmenu = { fg = palettes.fg1, bg = palettes.bg0 },
+            PmenuSel = { fg = 'NONE', bg = palettes.bg4 },
+        })
+        overrideHighlightConfig(rainbow_delimiter_highlight)
+        overrideHighlightConfig(noice_highlight)
+        overrideHighlightConfig(telescope_highlight)
+        overrideHighlightConfig(treesitter_context_highlight)
+        overrideHighlightConfig(local_highlight)
+        overrideHighlightConfig(incline_highlight)
+
+        for hl_name, hl_value in pairs(highlight_overrides) do
+            vim.api.nvim_set_hl(0, hl_name, hl_value)
+        end
     end
 end
 
