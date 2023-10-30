@@ -88,6 +88,7 @@ weather=(
     icon=
     icon.color=$PINK
     icon.font="$FONT_FACE:Bold:16.0"
+    label.max_chars=30
     update_freq=1800
     script="$PLUGIN_DIR/weather.sh"
 )
@@ -96,8 +97,10 @@ spotify=(
     icon=󰫔
     icon.color=$YELLOW
     icon.font="$FONT_FACE:Bold:20.0"
-    label.drawing=off
+    label="nothing to play now .."
     label.padding_left=3
+    label.max_chars=30
+    scroll_texts=yes
     script="$PLUGIN_DIR/media_info.sh"
 )
 sketchybar --add item weather center                         \
