@@ -38,11 +38,12 @@ keymaps.setup = function()
     vim.keymap.set({ 'n', 'i' }, '<C-l>', '<Cmd>noh<CR>')
     vim.keymap.set('n', 'dw', 'vb"_d')      -- delete a word backward
     vim.keymap.set('n', '<leader>d', '"_d') -- delete without yank
+    vim.keymap.set('n', 'c', '"_c')
     vim.keymap.set('n', 'x', '"_x')
-    vim.keymap.set('v', 'p', '"_dP')        -- replace-paste without yank
-    vim.keymap.set('i', '<S-Tab>', '<C-d>') -- de-tab while in insert mode
-    vim.keymap.set('n', 'Y', 'y$')          -- Yank line after cursor
-    vim.keymap.set('n', 'P', '<cmd>pu<CR>') -- Paste on new line
+    vim.keymap.set('x', 'p', '"_c<C-r>+<Esc>') -- replace-paste in insert mode
+    vim.keymap.set('i', '<S-Tab>', '<C-d>')    -- de-tab while in insert mode
+    vim.keymap.set('n', 'Y', 'y$')             -- Yank line after cursor
+    vim.keymap.set('n', 'P', '<cmd>pu<CR>')    -- Paste on new line
     vim.keymap.set('v', '<', '<gv')
     vim.keymap.set('v', '>', '>gv')
 
@@ -78,7 +79,8 @@ keymaps.lsp = {
     diagnostic_prev  = { key = '[d', cmd = function() vim.diagnostic.goto_prev({ float = false }) end },
     declaration      = { key = 'gD', cmd = function() vim.lsp.buf.declaration({ on_list = open_with_qflist }) end },
     format           = { key = '<leader>ff', cmd = function() vim.lsp.buf.format({ async = true }) end },
-    document_symbol  = { key = '<leader>ls', cmd = function() vim.lsp.buf.document_symbol({ on_list = open_with_qflist }) end },
+    document_symbol  = { key = '<leader>ls',
+        cmd = function() vim.lsp.buf.document_symbol({ on_list = open_with_qflist }) end },
     hover            = {
         key = 'K',
         cmd = function()
