@@ -89,6 +89,7 @@ weather=(
     icon.color=$PINK
     icon.font="$FONT_FACE:Bold:16.0"
     label.max_chars=30
+    scroll_texts=yes
     update_freq=1800
     script="$PLUGIN_DIR/weather.sh"
 )
