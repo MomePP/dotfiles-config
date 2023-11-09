@@ -8,7 +8,8 @@ opt.undofile       = true
 opt.backup         = false
 opt.writebackup    = false
 opt.swapfile       = false
-opt.updatetime     = 200 -- Save swap file and trigger CursorHold
+opt.updatetime     = 250
+opt.timeoutlen     = 300
 opt.undolevels     = 5000
 
 opt.title          = true
@@ -25,6 +26,7 @@ opt.number         = true
 opt.relativenumber = true
 opt.ruler          = false
 
+opt.breakindent    = true
 opt.linebreak      = true
 opt.wrap           = false
 
