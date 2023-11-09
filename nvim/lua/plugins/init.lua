@@ -44,6 +44,11 @@ return {
         keys = { { 'gx' } },
         config = true,
     },
+    {
+        'utilyre/sentiment.nvim',
+        event = 'VeryLazy',
+        config = true
+    },
 
     -- Miscellaneous
     { 'RaafatTurki/hex.nvim', cmd = { 'HexToggle', 'HexDump', 'HexAssemble' }, config = true },
