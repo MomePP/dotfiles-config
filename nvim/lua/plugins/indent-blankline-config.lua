@@ -4,6 +4,23 @@ local M = {
     dependencies = {
         {
             'echasnovski/mini.indentscope',
+            init = function()
+                local ignore_buftypes = { 'terminal' }
+                local augroup = vim.api.nvim_create_augroup('IndentscopeDisable', { clear = true })
+
+                vim.api.nvim_create_autocmd('BufEnter', {
+                    group = augroup,
+                    callback = function(_)
+                        if vim.tbl_contains(ignore_buftypes, vim.bo.buftype)
+                        then
+                            vim.b.miniindentscope_disable = true
+                        else
+                            vim.b.miniindentscope_disable = false
+                        end
+                    end,
+                    desc = 'Disable mini.indentscope for buftype',
+                })
+            end,
             opts = {
                 symbol = '•',
             },
