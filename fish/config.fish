@@ -42,9 +42,9 @@ command -qv nvim && alias vi nvim
 set -gx EDITOR nvim
 
 # config fish-exa
-set -Ux EXA_STANDARD_OPTIONS --group-directories-first --icons
-set -Ux EXA_LA_OPTIONS --all
-set -Ux EXA_LT_OPTIONS --long --tree --level 2
+set -Ux EZA_STANDARD_OPTIONS --group-directories-first --icons
+set -Ux EZA_LA_OPTIONS --all
+set -Ux EZA_LT_OPTIONS --long --tree --level 2
 
 # config ruby
 fish_add_path /opt/homebrew/opt/ruby/bin

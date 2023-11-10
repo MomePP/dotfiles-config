@@ -2,11 +2,11 @@ flutter
 fish/completions
 fish/functions
 fish/fish_variables
+fish/conf.d
 configstore
 nvim/plugin/packer_compiled.lua
 tmux/plugins
 containers
-
 
 github-copilot
 nvim/lazy-lock.json

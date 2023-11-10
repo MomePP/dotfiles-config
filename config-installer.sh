@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # WARN: must have brew installed
-brew install wget neovim lazygit git-flow-avh git-delta ripgrep fd jq
+brew install wget neovim lazygit git-flow-avh git-delta ripgrep fd jq eza
 
 # INFO: -- move nvim config files to local config directory
 config_path=~/.config
