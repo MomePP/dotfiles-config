@@ -29,8 +29,6 @@ do
   DISPLAY_INDEX=$(($DISPLAY_INDEX+1))
 done <<< "$CURRENT_SPACES"
 
-sketchybar --trigger space_change
-
 # INFO: update kitty terminal font size
 DISPLAY_COUNT="$(yabai -m query --displays | jq -r '. | length')"
 
