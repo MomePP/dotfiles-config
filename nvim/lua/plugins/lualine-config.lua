@@ -80,37 +80,23 @@ M.opts = function()
 
     local lsp_status = {
         function()
-            local msg = 'no active lsp'
-            local buf_ft = vim.api.nvim_get_option_value('filetype', { buf = 0 })
-            local clients = vim.lsp.get_clients()
-
-            if not clients then
-                return msg
-            end
-
+            local msg, buf_filetype = 'no active lsp', vim.api.nvim_get_option_value('filetype', { buf = 0 })
             local matching_clients = {}
 
-            for _, client in ipairs(clients) do
-                local filetypes = client.config.filetypes
-
-                if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
+            for _, client in ipairs(vim.lsp.get_clients() or {}) do
+                if client.config.filetypes and vim.fn.index(client.config.filetypes, buf_filetype) ~= -1 then
                     table.insert(matching_clients, client.name)
                 end
             end
 
-            if #matching_clients > 0 then
-                return table.concat(matching_clients, ', ')
-            else
-                return msg
-            end
+            return #matching_clients > 0 and table.concat(matching_clients, ', ') or msg
         end,
         icon = icons.lualine.lsp,
     }
 
     local session_status = {
         function()
-            local fname = vim.fn.fnamemodify(vim.v.this_session, ':t')
-            local fname_split = vim.split(fname, '__')
+            local fname_split = vim.split(vim.fn.fnamemodify(vim.v.this_session, ':t'), '__')
             return fname_split[#fname_split]
         end,
         icon = icons.lualine.session,
