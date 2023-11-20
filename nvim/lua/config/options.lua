@@ -9,6 +9,7 @@ opt.backup         = false
 opt.writebackup    = false
 opt.swapfile       = false
 opt.updatetime     = 250
+opt.timeoutlen     = 400
 opt.undolevels     = 5000
 
 opt.title          = true
