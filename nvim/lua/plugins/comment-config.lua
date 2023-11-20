@@ -1,8 +1,11 @@
 local M = {
     'lucastavaresa/SingleComment.nvim',
     dependencies = {
-        'nvim-treesitter',
-        'nvim-ts-context-commentstring',
+        { 'nvim-treesitter' },
+        {
+            'JoosepAlviste/nvim-ts-context-commentstring',
+            opts = { enable_autocmd = false },
+        },
     }
 }
 
