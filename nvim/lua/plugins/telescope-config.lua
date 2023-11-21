@@ -197,12 +197,10 @@ end
 
 M.keys = function()
     local function getVisualSelection()
-        vim.cmd('noau normal! "vy"')
-        local text = vim.fn.getreg('v')
+        local success, text = pcall(vim.fn.getreg, 'v', 1)
         vim.fn.setreg('v', {})
 
-        text = string.gsub(text, '\n', '')
-        if #text > 0 then return text else return '' end
+        return success and (type(text) == 'string' and text:gsub('\n', '') or '') or ''
     end
 
     return {
@@ -219,7 +217,7 @@ M.keys = function()
             telescope_keymap.grep_workspace,
             function()
                 require('telescope.builtin').grep_string {
-                    default_text = ("'%s"):format(getVisualSelection()),
+                    default_text = ("%s"):format(getVisualSelection()),
                     use_regex = false,
                 }
             end,
