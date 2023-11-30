@@ -40,7 +40,6 @@ yabai -m rule --add app="^(Calculator|Software Update|Dictionary|System Settings
 yabai -m rule --add label="Safari" app="^Safari$" title="^(General|(Tab|Password|Website|Extension)s|AutoFill|Se(arch|curity)|Privacy|Advance)$" manage=off
 yabai -m rule --add label="Arc browser" app="^Arc$" title="^(Peeranut|General|Max|Shortcuts|Links|Advanced)$" manage=off
 yabai -m rule --add label="Arc PiP" app="^Arc$" subrole="^AXSystemDialog$" manage=off
-yabai -m rule --add label="Arc Little" app="^Arc$" title="^Space.*$" manage=off
 
 # default layout (can be bsp, stack or float)
 yabai -m config layout bsp
