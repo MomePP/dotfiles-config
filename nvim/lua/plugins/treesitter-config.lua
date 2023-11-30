@@ -5,7 +5,7 @@ local M = {
     dependencies = {
         {
             'nvim-treesitter/nvim-treesitter-context',
-            opts = { zindex = 5 },
+            opts = { zindex = 5, max_lines = 3 },
         },
         {
             'vidocqh/auto-indent.nvim',

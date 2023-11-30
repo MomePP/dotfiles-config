@@ -32,8 +32,9 @@ lsp_setup_module.init = function()
     -- INFO: setup diagnostic configs
     local diagnostic_config = {
         update_in_insert = false,
-        virtual_text = false,
         severity_sort = true,
+        virtual_text = false,
+        virtual_lines = true,
     }
     vim.diagnostic.config(diagnostic_config)
 
@@ -157,7 +158,9 @@ local diagflow_module = {
 }
 
 diagflow_module.opts = {
-    padding_top = 1,
+    scope = 'line',
+    show_sign = true,
+    padding_top = 2,
     toggle_event = { 'InsertEnter' },
 }
 
