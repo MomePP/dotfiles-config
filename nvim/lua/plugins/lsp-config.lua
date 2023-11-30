@@ -18,11 +18,10 @@ mason_module.opts = {
 local lsp_setup_module = {
     'VonHeikemen/lsp-zero.nvim',
     branch = 'v3.x',
-    event = { 'BufReadPre', 'BufNewFile' },
+    event = { 'BufReadPost', 'BufNewFile' },
     dependencies = {
         'mason.nvim',
         'cmp-nvim-lsp',
-        'diagflow.nvim',
         'neovim/nvim-lspconfig',
         'williamboman/mason-lspconfig.nvim',
     },
@@ -155,6 +154,7 @@ end
 
 local diagflow_module = {
     'dgagn/diagflow.nvim',
+    event = 'LspAttach',
 }
 
 diagflow_module.opts = {
