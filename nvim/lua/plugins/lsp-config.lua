@@ -162,6 +162,7 @@ diagflow_module.opts = {
     show_sign = true,
     padding_top = 2,
     toggle_event = { 'InsertEnter' },
+    update_event = { 'DiagnosticChanged', 'BufEnter' }
 }
 
 return {
