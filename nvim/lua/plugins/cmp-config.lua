@@ -6,7 +6,6 @@ local M = {
         'hrsh7th/cmp-nvim-lsp',
         'hrsh7th/cmp-cmdline',
         'FelipeLema/cmp-async-path',
-        'saadparwaiz1/cmp_luasnip',
         {
             'tzachar/cmp-fuzzy-buffer',
             dependencies = { 'tzachar/fuzzy.nvim' },
@@ -14,19 +13,24 @@ local M = {
 
         -- NOTE: snippet plugins
         {
-            'L3MON4D3/LuaSnip',
+            'saadparwaiz1/cmp_luasnip',
             dependencies = {
-                'rafamadriz/friendly-snippets',
-                config = function()
-                    require('luasnip.loaders.from_vscode').lazy_load()
-                end,
+                {
+                    'rafamadriz/friendly-snippets',
+                    config = function()
+                        require('luasnip.loaders.from_vscode').lazy_load()
+                    end,
+                },
+                {
+                    'L3MON4D3/LuaSnip',
+                    opts = {
+                        history = true,
+                        enable_autosnippets = true,
+                        region_check_events = 'InsertEnter',
+                        delete_check_events = 'TextChanged,InsertLeave',
+                    }
+                }
             },
-            opts = {
-                history = true,
-                enable_autosnippets = true,
-                region_check_events = 'InsertEnter',
-                delete_check_events = 'TextChanged,InsertLeave',
-            }
         },
 
         -- NOTE: autopairs plugin
