@@ -1,6 +1,6 @@
 local M = {
     'kevinhwang91/nvim-ufo',
-    event = { 'BufWinEnter' },
+    event = { 'BufReadPost', 'BufNewFile' },
     dependencies = { 'kevinhwang91/promise-async' }
 }
 
