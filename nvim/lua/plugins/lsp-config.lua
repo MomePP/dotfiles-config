@@ -39,6 +39,7 @@ lsp_setup_module.init = function()
 
     -- INFO: setup lsp-zero configs
     vim.g.lsp_zero_ui_float_border = 0
+    vim.g.lsp_zero_extend_cmp = 0
 end
 
 lsp_setup_module.config = function()

@@ -13,24 +13,9 @@ local M = {
 
         -- NOTE: snippet plugins
         {
-            'saadparwaiz1/cmp_luasnip',
-            dependencies = {
-                {
-                    'rafamadriz/friendly-snippets',
-                    config = function()
-                        require('luasnip.loaders.from_vscode').lazy_load()
-                    end,
-                },
-                {
-                    'L3MON4D3/LuaSnip',
-                    opts = {
-                        history = true,
-                        enable_autosnippets = true,
-                        region_check_events = 'InsertEnter',
-                        delete_check_events = 'TextChanged,InsertLeave',
-                    }
-                }
-            },
+            'garymjr/nvim-snippets',
+            opts = { friendly_snippets = true },
+            dependencies = { 'rafamadriz/friendly-snippets' },
         },
 
         -- NOTE: autopairs plugin
@@ -58,10 +43,8 @@ local M = {
 }
 
 M.opts = function()
-    local default_border = require('config').defaults.float_border
-
     local cmp = require('cmp')
-    local luasnip = require('luasnip')
+    local default_border = require('config').defaults.float_border
 
     local lspkind_format = require('lspkind').cmp_format({
         mode = 'symbol_text',
@@ -103,8 +86,8 @@ M.opts = function()
         ['<Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_next_item()
-            elseif luasnip.expand_or_jumpable() then
-                luasnip.expand_or_jump()
+            elseif vim.snippet.jumpable(1) then
+                vim.schedule(function() vim.snippet.jump(1) end)
             elseif has_word_before() then
                 cmp.complete()
             else
@@ -114,8 +97,8 @@ M.opts = function()
         ['<S-Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-                luasnip.jump(-1)
+            elseif vim.snippet.jumpable(-1) then
+                vim.schedule(function() vim.snippet.jump(-1) end)
             else
                 fallback()
             end
@@ -157,7 +140,7 @@ M.opts = function()
             { name = 'copilot' },
             { name = 'async_path' },
             { name = 'nvim_lsp' },
-            { name = 'luasnip',   keyword_length = 2 },
+            { name = 'snippets',  keyword_length = 2 },
         },
         {
             { name = 'fuzzy_buffer', option = { min_match_length = 2 } },
@@ -165,7 +148,7 @@ M.opts = function()
     )
 
     return {
-        snippet = { expand = function(args) luasnip.lsp_expand(args.body) end },
+        snippet = { expand = function(args) vim.snippet.expand(args.body) end },
         mapping = cmp_mapping,
         sorting = cmp_sorting,
         sources = cmp_sources,
