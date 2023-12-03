@@ -641,6 +641,7 @@ M.config = function()
             PmenuSel = { fg = c.none, bg = c.base02 },
             Search = { fg = c.base01, bg = c.base12, bold = true },
             LspInlayHint = { fg = c.base03, bg = c.none, italic = true },
+            WinSeparator = { fg = c.base03, bg = c.none },
         })
         overrideHighlightConfig(telescope_highlight)
         overrideHighlightConfig(incline_highlight)
