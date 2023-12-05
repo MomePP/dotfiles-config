@@ -163,7 +163,13 @@ diagflow_module.opts = {
     show_sign = true,
     padding_top = 2,
     toggle_event = { 'InsertEnter' },
-    update_event = { 'DiagnosticChanged', 'BufEnter' }
+    update_event = { 'DiagnosticChanged', 'BufEnter' },
+    severity_colors = {
+        error = 'DiagnosticError',
+        warn = 'DiagnosticWarn',
+        info = 'DiagnosticInfo',
+        hint = 'DiagnosticHint',
+    },
 }
 
 return {
