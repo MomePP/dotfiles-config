@@ -5,7 +5,7 @@ local M = {
         {
             'echasnovski/mini.indentscope',
             init = function()
-                local ignore_buftypes = { 'terminal' }
+                local ignore_buftypes = { 'terminal', 'help' }
                 local augroup = vim.api.nvim_create_augroup('IndentscopeDisable', { clear = true })
 
                 vim.api.nvim_create_autocmd('BufEnter', {

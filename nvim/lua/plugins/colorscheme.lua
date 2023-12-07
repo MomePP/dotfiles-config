@@ -623,7 +623,7 @@ M.config = function()
         }
 
         local indentscope_highlight = {
-            MiniIndentscopeSymbol = { fg = c.base07, bg = c.none },
+            MiniIndentscopeSymbol = { fg = c.base04, bg = c.none },
         }
 
         overrideHighlightConfig({
