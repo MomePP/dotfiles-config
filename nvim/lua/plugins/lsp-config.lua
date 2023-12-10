@@ -130,6 +130,8 @@ lsp_setup_module.config = function()
     lsp_zero.set_sign_icons(require('config').defaults.icons.diagnostics)
 
     lsp_zero.on_attach(function(client, bufnr)
+        lsp_zero.highlight_symbol(client, bufnr)
+
         lsp_keymap(client, bufnr, require('config.keymaps').lsp)
         lsp_inlayhint(client, bufnr)
     end)

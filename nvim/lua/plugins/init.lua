@@ -10,11 +10,6 @@ return {
         config = true
     },
     {
-        'tzachar/local-highlight.nvim',
-        event = { 'BufReadPost', 'BufNewFile' },
-        config = true,
-    },
-    {
         'kylechui/nvim-surround',
         event = 'VeryLazy',
         config = true
