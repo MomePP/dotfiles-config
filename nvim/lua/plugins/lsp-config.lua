@@ -28,12 +28,22 @@ local lsp_setup_module = {
 }
 
 lsp_setup_module.init = function()
+    local diagnostic_icons = require('config').defaults.icons.diagnostics
+
     -- INFO: setup diagnostic configs
     local diagnostic_config = {
         update_in_insert = false,
         severity_sort = true,
         virtual_text = false,
         virtual_lines = true,
+        signs = {
+            text = {
+                [vim.diagnostic.severity.ERROR] = diagnostic_icons.error,
+                [vim.diagnostic.severity.WARN] = diagnostic_icons.warn,
+                [vim.diagnostic.severity.INFO] = diagnostic_icons.info,
+                [vim.diagnostic.severity.HINT] = diagnostic_icons.hint,
+            }
+        }
     }
     vim.diagnostic.config(diagnostic_config)
 
@@ -126,8 +136,6 @@ lsp_setup_module.config = function()
     --  lsp-zero configs
     --
     local lsp_zero = require('lsp-zero')
-
-    lsp_zero.set_sign_icons(require('config').defaults.icons.diagnostics)
 
     lsp_zero.on_attach(function(client, bufnr)
         lsp_zero.highlight_symbol(client, bufnr)
