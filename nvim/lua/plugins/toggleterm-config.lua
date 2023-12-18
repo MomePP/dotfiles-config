@@ -27,25 +27,29 @@ M.opts = {
 }
 
 M.keys = {
-		{
-			toggleterm_keymap.toggle,
-			desc = 'Toggle terminal'
-		},
-		{
-			toggleterm_keymap.lazygit,
-			function()
-				require('toggleterm.terminal').Terminal:new({ cmd = 'lazygit', hidden = true }):toggle()
-			end,
-			desc = 'Toggle `lazygit` terminal',
+	{
+		toggleterm_keymap.toggle,
+		desc = 'Toggle terminal'
+	},
+	{
+		toggleterm_keymap.lazygit,
+		function()
+			require('toggleterm.terminal').Terminal
+				:new({ cmd = 'lazygit', hidden = true })
+				:toggle()
+		end,
+		desc = 'Toggle `lazygit` terminal',
 
-		},
-		{
-			toggleterm_keymap.lazygit_file_history,
-			function()
-				require('toggleterm.terminal').Terminal:new({ cmd = 'lazygit -f ' .. vim.fn.expand('%'), hidden = true }):toggle()
-			end,
-			desc = 'Toggle file history in current buffer using `lazygit`',
-		},
-	}
+	},
+	{
+		toggleterm_keymap.lazygit_file_history,
+		function()
+			require('toggleterm.terminal').Terminal
+				:new({ cmd = 'lazygit -f ' .. vim.fn.expand('%'), hidden = true })
+				:toggle()
+		end,
+		desc = 'Toggle file history in current buffer using `lazygit`',
+	},
+}
 
 return M
