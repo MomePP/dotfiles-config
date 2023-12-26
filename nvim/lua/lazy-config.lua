@@ -21,7 +21,7 @@ require('lazy').setup {
     },
     performance = {
         install = {
-            colorscheme = { 'nvim-colorscheme', 'habamax' }
+            colorscheme = { 'nvim-colorscheme' }
         },
         ui = {
             border = require('config').defaults.float_border
