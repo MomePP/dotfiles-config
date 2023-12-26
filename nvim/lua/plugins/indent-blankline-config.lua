@@ -1,48 +1,40 @@
 local M = {
     'lukas-reineke/indent-blankline.nvim',
     event = { 'BufReadPost', 'BufNewFile' },
-    dependencies = {
-        {
-            'echasnovski/mini.indentscope',
-            init = function()
-                local ignore_buftypes = { 'terminal', 'help' }
-                local augroup = vim.api.nvim_create_augroup('IndentscopeDisable', { clear = true })
-
-                vim.api.nvim_create_autocmd('BufEnter', {
-                    group = augroup,
-                    callback = function(_)
-                        if vim.tbl_contains(ignore_buftypes, vim.bo.buftype)
-                        then
-                            vim.b.miniindentscope_disable = true
-                        else
-                            vim.b.miniindentscope_disable = false
-                        end
-                    end,
-                    desc = 'Disable mini.indentscope for buftype',
-                })
-            end,
-            opts = {
-                symbol = '•',
-            },
-        }
-    }
 }
 
-M.opts = {
-    indent = {
-        char = '•',
-        smart_indent_cap = true,
-    },
-    scope = {
-        enabled = false,
+M.opts = function()
+    local highlight = {
+        'RainbowDelimiterRed',
+        'RainbowDelimiterBlue',
+        'RainbowDelimiterCyan',
+        'RainbowDelimiterGreen',
+        'RainbowDelimiterYellow',
+        'RainbowDelimiterOrange',
+        'RainbowDelimiterViolet',
     }
-}
+
+    return {
+        indent = {
+            char = '•',
+            smart_indent_cap = true,
+        },
+        scope = {
+            enabled = true,
+            show_start = false,
+            show_end = false,
+            highlight = highlight,
+        },
+        debounce = 300
+    }
+end
 
 M.config = function(_, opts)
     require('ibl').setup(opts)
 
     local hooks = require('ibl.hooks')
     hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
+    hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
 end
 
 return M
