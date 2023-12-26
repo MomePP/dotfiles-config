@@ -24,6 +24,9 @@ M.opts = {
 	open_mapping = toggleterm_keymap.toggle,
 	shade_terminals = false,
 	direction = 'tab',
+	on_open = function()
+		vim.opt_local.hlsearch = false
+	end,
 }
 
 M.keys = {
@@ -35,7 +38,13 @@ M.keys = {
 		toggleterm_keymap.lazygit,
 		function()
 			require('toggleterm.terminal').Terminal
-				:new({ cmd = 'lazygit', hidden = true })
+				:new({
+					cmd = 'lazygit',
+					hidden = true,
+					on_open = function()
+						vim.opt_local.signcolumn = 'no'
+					end,
+				})
 				:toggle()
 		end,
 		desc = 'Toggle `lazygit` terminal',
@@ -45,7 +54,13 @@ M.keys = {
 		toggleterm_keymap.lazygit_file_history,
 		function()
 			require('toggleterm.terminal').Terminal
-				:new({ cmd = 'lazygit -f ' .. vim.fn.expand('%'), hidden = true })
+				:new({
+					cmd = 'lazygit -f ' .. vim.fn.expand('%'),
+					hidden = true,
+					on_open = function()
+						vim.opt_local.signcolumn = 'no'
+					end,
+				})
 				:toggle()
 		end,
 		desc = 'Toggle file history in current buffer using `lazygit`',
