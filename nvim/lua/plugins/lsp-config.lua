@@ -37,12 +37,7 @@ lsp_setup_module.init = function()
         virtual_text = false,
         virtual_lines = true,
         signs = {
-            text = {
-                [vim.diagnostic.severity.ERROR] = diagnostic_icons.error,
-                [vim.diagnostic.severity.WARN] = diagnostic_icons.warn,
-                [vim.diagnostic.severity.INFO] = diagnostic_icons.info,
-                [vim.diagnostic.severity.HINT] = diagnostic_icons.hint,
-            }
+            text = { diagnostic_icons.error, diagnostic_icons.warn, diagnostic_icons.info, diagnostic_icons.hint },
         }
     }
     vim.diagnostic.config(diagnostic_config)

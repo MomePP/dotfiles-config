@@ -1,15 +1,14 @@
 local M = {
     'hiphish/rainbow-delimiters.nvim',
     event = { 'BufReadPost', 'BufNewFile' },
+    main = 'rainbow-delimiters.setup'
 }
 
-M.config = function()
-    vim.g.rainbow_delimiters = {
-        query = {
-            [''] = 'rainbow-delimiters',
-            lua = 'rainbow-blocks',
-        },
-    }
-end
+M.opts = {
+    query = {
+        [''] = 'rainbow-delimiters',
+        lua = 'rainbow-blocks',
+    },
+}
 
 return M
