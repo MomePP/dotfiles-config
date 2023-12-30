@@ -143,8 +143,8 @@ M.config = function()
                 -- MarkVirtTextHL = { fg = M.colorset.bright_blue, bg = M.colorset.transparent, nocombine = true },
             }
 
-            local local_highlight = {
-                LocalHighlight = { bg = M.colorset.bg1, bold = true, nocombine = true },
+            local lsp_highlight = {
+                LspReferenceWrite = { bg = theme.diff.text, underline = false },
             }
 
             local noice_highlight = {
@@ -226,7 +226,7 @@ M.config = function()
             overrideHighlightConfig(telescope_highlight)
             overrideHighlightConfig(flit_highlight)
             overrideHighlightConfig(marks_highlight)
-            overrideHighlightConfig(local_highlight)
+            overrideHighlightConfig(lsp_highlight)
             overrideHighlightConfig(noice_highlight)
             overrideHighlightConfig(incline_highlight)
 
