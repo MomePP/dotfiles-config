@@ -14,7 +14,16 @@ local M = {
         -- NOTE: snippet plugins
         {
             'garymjr/nvim-snippets',
-            opts = { friendly_snippets = true },
+            opts = {
+                friendly_snippets = true,
+                search_paths = {
+                    vim.fn.stdpath('config') .. '/snippets',
+                    vim.fn.stdpath('data') .. '/lazy/friendly-snippets/snippets/frameworks',
+                },
+                extended_filetypes = {
+                    vue = { 'html', 'javascript' },
+                },
+            },
             dependencies = { 'rafamadriz/friendly-snippets' },
         },
 
@@ -139,8 +148,8 @@ M.opts = function()
         {
             { name = 'copilot' },
             { name = 'async_path' },
-            { name = 'nvim_lsp' },
             { name = 'snippets',  keyword_length = 2 },
+            { name = 'nvim_lsp' },
         },
         {
             { name = 'fuzzy_buffer', option = { min_match_length = 2 } },
