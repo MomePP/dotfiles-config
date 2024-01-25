@@ -31,3 +31,5 @@
 	features = tokyonight
 [include]
 	path = /Users/momeppkt/.config/delta/themes.gitconfig
+[pull]
+	rebase = true
