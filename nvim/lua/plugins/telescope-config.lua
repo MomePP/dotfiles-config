@@ -123,6 +123,7 @@ M.opts = function()
             layout_config = {
                 prompt_position = 'top',
             },
+            winblend = 5
         },
         pickers = {
             diagnostics = mergeConfig(bottom_layout_config, {
