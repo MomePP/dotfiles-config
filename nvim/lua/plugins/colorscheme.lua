@@ -636,8 +636,11 @@ M.config = function()
             Pmenu = { fg = c.base04, bg = c.base00 },
             PmenuSel = { fg = c.none, bg = c.base02 },
             Search = { fg = c.base01, bg = c.base12, bold = true },
-            LspInlayHint = { fg = c.base03, bg = c.none, italic = true },
             WinSeparator = { fg = c.base03, bg = c.none },
+            LspInlayHint = { fg = c.base03, bg = c.none, italic = true },
+            LspReferenceText = { bg = c.base02 },
+            LspReferenceRead = { link = 'LspReferenceText' },
+            LspReferenceWrite = { link = 'LspReferenceText' },
         })
         overrideHighlightConfig(telescope_highlight)
         overrideHighlightConfig(incline_highlight)
