@@ -25,9 +25,6 @@ M.opts = {
 	open_mapping = toggleterm_keymap.toggle,
 	shade_terminals = false,
 	direction = 'tab',
-	on_open = function()
-		vim.opt_local.hlsearch = false
-	end,
 }
 
 M.keys = {
