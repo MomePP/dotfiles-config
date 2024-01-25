@@ -36,7 +36,14 @@ return {
     {
         'chrishrb/gx.nvim',
         dependencies = { 'plenary.nvim' },
-        keys = { { 'gx' } },
+        keys = { {
+            'gx',
+            function ()
+                require('gx').open()
+                vim.defer_fn(function() vim.fn.jobstart('yabai -m space --balance') end, 300)
+            end,
+            mode = { 'n', 'x' },
+        } },
         config = true,
     },
     {
