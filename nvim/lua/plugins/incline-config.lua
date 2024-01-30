@@ -28,7 +28,7 @@ M.opts = function()
                 -1
             )
 
-            if vim.api.nvim_get_option_value('modified', { buf = props.buf }) then
+            if vim.bo[props.buf].modified then
                 render_icon = { '  ', group = 'InclineModified' }
             else
                 local icon, icon_hl = require('nvim-web-devicons').get_icon(
