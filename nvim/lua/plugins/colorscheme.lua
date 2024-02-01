@@ -622,6 +622,10 @@ M.config = function()
             MiniIndentscopeSymbol = { fg = c.base04, bg = c.none },
         }
 
+        local marks_highlight = {
+            MarkSignHL = { fg = M.colorset.bright_blue },
+        }
+
         overrideHighlightConfig({
             Normal = { fg = c.base04, bg = c.none },
             NormalNC = { fg = c.base04, bg = c.none },
@@ -652,6 +656,7 @@ M.config = function()
         overrideHighlightConfig(cmp_highlight)
         overrideHighlightConfig(hlslens_highlight)
         overrideHighlightConfig(indentscope_highlight)
+        overrideHighlightConfig(marks_highlight)
 
         for hl_name, hl_value in pairs(highlight_overrides) do
             vim.api.nvim_set_hl(0, hl_name, hl_value)
