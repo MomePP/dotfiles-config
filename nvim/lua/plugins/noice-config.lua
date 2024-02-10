@@ -36,7 +36,10 @@ M.opts = {
                 style = 'none',
             },
             format = { ' {confirm}' },
-        }
+        },
+        mini = {
+            timeout = 5000,
+        },
     },
     messages = {
         view_search = false,
