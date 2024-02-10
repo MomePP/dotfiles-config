@@ -82,7 +82,7 @@ M.keys = function()
                     vim.notify('There is no marks -  ', vim.log.levels.WARN)
                     return
                 end
-                vim.cmd 'TroubleToggle quickfix'
+                vim.cmd 'Telescope quickfix'
             end
         },
     }
