@@ -146,7 +146,6 @@ M.rename_to_qflist = function()
             -- set qflist if more than 1 file
             if num_files > 1 then
                 vim.fn.setqflist(entries, 'r')
-                vim.cmd('TroubleToggle quickfix')
             end
         end)
     end)
