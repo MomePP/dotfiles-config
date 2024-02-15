@@ -142,16 +142,18 @@ keymaps.gitconflict = {
 
 -- INFO: Telescope keymap
 keymaps.telescope = {
-    grep_workspace       = 'gw',
-    search_workspace     = '<leader>fw',
-    buffers              = '<leader>\\',
-    find_files           = '<leader>fs',
-    resume               = '<leader>;',
-    jumplist             = '<leader>j',
-    oldfiles             = '<leader>fr',
-    file_browse          = '<leader>fb',
-    help_tags            = '<leader>?',
-    action_buffer_delete = { n = 'd', i = '<m-d>' },
+    grep_workspace        = 'gw',
+    search_workspace      = '<leader>fw',
+    buffers               = '<leader>\\',
+    find_files            = '<leader>fs',
+    resume                = '<leader>;',
+    jumplist              = '<leader>j',
+    oldfiles              = '<leader>fr',
+    file_browse           = '<leader>fb',
+    help_tags             = '<leader>?',
+    action_buffer_delete  = { n = 'd', i = '<m-d>' },
+    action_send_to_qflist = { n = '<m-q>', i = '<m-q>' },
+    action_select_all     = { n = '<m-a>', i = '<m-a>' },
 }
 
 -- INFO: Todocomments keymap

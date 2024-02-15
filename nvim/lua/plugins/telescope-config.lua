@@ -98,6 +98,17 @@ M.opts = function()
         return true
     end
 
+    local mappings_action = {
+        send_to_qflist = function(bufnr)
+            require('telescope.actions').smart_add_to_qflist(bufnr)
+            vim.cmd('TroubleToggle quickfix')
+        end,
+
+        select_all = function(bufnr)
+            require('telescope.actions').select_all(bufnr)
+        end,
+    }
+
     return {
         defaults = {
             prompt_prefix = '   ',
@@ -111,12 +122,14 @@ M.opts = function()
             dynamic_preview_title = true,
             borderchars = defaults.float_border,
             mappings = {
-                i = {
-                    ['<C-q>'] = function(bufnr)
-                        require 'telescope.actions'.smart_add_to_qflist(bufnr)
-                        vim.cmd 'TroubleToggle quickfix'
-                    end
+                n = {
+                    [telescope_keymap.action_send_to_qflist.n] = mappings_action.send_to_qflist,
+                    [telescope_keymap.action_select_all.n] = mappings_action.select_all,
                 },
+                i = {
+                    [telescope_keymap.action_send_to_qflist.i] = mappings_action.send_to_qflist,
+                    [telescope_keymap.action_select_all.i] = mappings_action.select_all,
+                }
             },
             sorting_strategy = 'ascending',
             layout_strategy = 'flex',
