@@ -22,7 +22,13 @@ M.init = function()
 end
 
 M.opts = {
-    ui = { signcolumn = false }
+    autoresize = {
+        minwidth = 60,
+        minheight = 15,
+    },
+    ui = {
+        signcolumn = false,
+    }
 }
 
 M.keys = function()
