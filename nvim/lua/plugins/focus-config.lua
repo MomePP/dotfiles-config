@@ -23,8 +23,8 @@ end
 
 M.opts = {
     autoresize = {
-        minwidth = 60,
-        minheight = 15,
+        minwidth = 30,
+        minheight = 10,
     },
     ui = {
         signcolumn = false,
