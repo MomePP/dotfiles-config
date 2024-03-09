@@ -5,8 +5,7 @@ local M = {
 }
 
 M.opts = function()
-    local truncate_utils = require('plenary.strings').truncate
-    local MAX_PATH_WIDTH = 50
+    -- local helpers = require 'incline.helpers'
 
     return {
         debounce_threshold = {
@@ -19,30 +18,15 @@ M.opts = function()
             zindex = 10,
         },
         render = function(props)
-            local render_icon = {}
-            local bufname = vim.api.nvim_buf_get_name(props.buf)
-            local render_path = truncate_utils(
-                (bufname ~= '' and vim.fn.fnamemodify(bufname, ':.') or '[No Name]'),
-                MAX_PATH_WIDTH,
-                nil,
-                -1
-            )
-
-            if vim.bo[props.buf].modified then
-                render_icon = { '  ', group = 'InclineModified' }
-            else
-                local icon, icon_hl = require('nvim-web-devicons').get_icon(
-                    vim.fn.fnamemodify(bufname, ':t'),
-                    vim.fn.fnamemodify(bufname, ':e'),
-                    { default = true }
-                )
-                render_icon = { ' ', icon, ' ', group = icon_hl }
-            end
-
-            return {
-                render_icon,
-                render_path,
+            local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')
+            local ft_icon, ft_color = require('nvim-web-devicons').get_icon_color(filename)
+            local buffer = {
+                ' ',
+                ft_icon and { ft_icon, guifg = ft_color } or '',
+                ' ',
+                { filename, gui = 'bold', guifg = vim.bo[props.buf].modified and '#ffaa00' or nil },
             }
+            return buffer
         end,
     }
 end
