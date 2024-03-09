@@ -17,7 +17,6 @@ window_state() {
   elif [[ $STACK_INDEX -gt 0 ]]; then
     LAST_STACK_INDEX=$(yabai -m query --windows --window stack.last | jq '.["stack-index"]')
     APP_NAME="$(printf "%s [%s/%s]" "$APP_NAME" "$STACK_INDEX" "$LAST_STACK_INDEX")"
-    COLOR=$RED
   fi
 
   if [ ! -z "$APP_NAME" ]; then 
