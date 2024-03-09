@@ -250,4 +250,10 @@ keymaps.treesj = {
     toggle = 'J',
 }
 
+-- INFO: copilot keymap
+keymaps.copilot = {
+    next = '<m-]>',
+    prev = '<m-[>',
+}
+
 return keymaps

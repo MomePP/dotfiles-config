@@ -5,11 +5,8 @@ local M = {
         -- NOTE: cmp sources
         'hrsh7th/cmp-nvim-lsp',
         'hrsh7th/cmp-cmdline',
-        'FelipeLema/cmp-async-path',
-        {
-            'tzachar/cmp-fuzzy-buffer',
-            dependencies = { 'tzachar/fuzzy.nvim' },
-        },
+        { 'tzachar/cmp-fuzzy-path',   dependencies = 'tzachar/fuzzy.nvim', },
+        { 'tzachar/cmp-fuzzy-buffer', dependencies = 'tzachar/fuzzy.nvim' },
 
         -- NOTE: snippet plugins
         {
@@ -34,17 +31,7 @@ local M = {
         },
 
         -- NOTE: github copilot if available
-        {
-            'zbirenbaum/copilot-cmp',
-            dependencies = {
-                'zbirenbaum/copilot.lua',
-                opts = {
-                    suggestion = { enabled = false },
-                    panel = { enabled = false },
-                }
-            },
-            config = true
-        },
+        'copilot.lua',
 
         -- NOTE: misc. plugins
         'onsails/lspkind.nvim',
@@ -55,10 +42,11 @@ M.opts = function()
     local cmp = require('cmp')
     local default_border = require('config').defaults.float_border
 
+    local copilot_status, copilot_suggestion = pcall(require, 'copilot.suggestion')
+
     local lspkind_format = require('lspkind').cmp_format({
         mode = 'symbol_text',
         maxwidth = 50,
-        symbol_map = { Copilot = '' },
     })
 
     local function has_word_before()
@@ -84,10 +72,21 @@ M.opts = function()
     local cmp_mapping = {
         ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(2), { 'i', 'c' }),
         ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-2), { 'i', 'c' }),
-        ['<C-e>'] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
+        ['<C-e>'] = cmp.mapping {
+            i = function()
+                if cmp.visible() then
+                    cmp.abort()
+                elseif copilot_status and copilot_suggestion.is_visible() then
+                    copilot_suggestion.dismiss()
+                end
+            end,
+            c = cmp.mapping.close(),
+        },
         ['<CR>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true })
+            elseif copilot_status and copilot_suggestion.is_visible() then
+                copilot_suggestion.accept()
             else
                 fallback()
             end
@@ -99,6 +98,8 @@ M.opts = function()
                 vim.schedule(function() vim.snippet.jump(1) end)
             elseif has_word_before() then
                 cmp.complete()
+            elseif copilot_status and copilot_suggestion.is_visible() then
+                copilot_suggestion.next()
             else
                 fallback()
             end
@@ -108,6 +109,8 @@ M.opts = function()
                 cmp.select_prev_item()
             elseif vim.snippet.jumpable(-1) then
                 vim.schedule(function() vim.snippet.jump(-1) end)
+            elseif copilot_status and copilot_suggestion.is_visible() then
+                copilot_suggestion.prev()
             else
                 fallback()
             end
@@ -117,8 +120,8 @@ M.opts = function()
     local cmp_sorting = {
         priority_weight = 2,
         comparators = {
-            require('copilot_cmp.comparators').prioritize,
             require('cmp_fuzzy_buffer.compare'),
+            require('cmp_fuzzy_path.compare'),
 
             cmp.config.compare.offset,
             cmp.config.compare.exact,
@@ -146,8 +149,7 @@ M.opts = function()
 
     local cmp_sources = cmp.config.sources(
         {
-            { name = 'copilot' },
-            { name = 'async_path' },
+            { name = 'fuzzy_path' },
             { name = 'snippets',  keyword_length = 2 },
             { name = 'nvim_lsp' },
         },
@@ -206,11 +208,20 @@ M.config = function(_, opts)
             completeopt = 'menuone,noselect',
         },
         sources = cmp.config.sources({
-            { name = 'async_path' }
+            { name = 'fuzzy_path' }
         }, {
             { name = 'cmdline' }
         })
     })
+
+    -- NOTE: copilot hide suggestion when cmp opened
+    cmp.event:on('menu_opened', function()
+        vim.b.copilot_suggestion_hidden = true
+    end)
+
+    cmp.event:on('menu_closed', function()
+        vim.b.copilot_suggestion_hidden = false
+    end)
 
     -- NOTE: autopairs mapping on <CR>
     cmp.event:on('confirm_done', require('nvim-autopairs.completion.cmp').on_confirm_done())

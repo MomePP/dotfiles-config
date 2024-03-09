@@ -1,6 +1,9 @@
 local M = {
     'nvim-lualine/lualine.nvim',
-    dependencies = 'nvim-colorscheme',
+    dependencies = {
+        'nvim-colorscheme',
+        'copilot-lualine',
+    },
     event = 'UIEnter'
 }
 
@@ -116,6 +119,10 @@ M.opts = function()
         end,
     }
 
+    local copilot = {
+        'copilot',
+    }
+
     return {
         options = {
             icons_enabled = true,
@@ -128,7 +135,7 @@ M.opts = function()
             lualine_a = { mode },
             lualine_b = { session_status },
             lualine_c = { branch, spacing, navic_location },
-            lualine_x = { diagnostics },
+            lualine_x = { copilot, diagnostics },
             lualine_y = { lsp_status },
             lualine_z = { location },
         },
