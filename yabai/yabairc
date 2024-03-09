@@ -11,12 +11,12 @@ $HOME/.config/yabai/display_changed.sh
 yabai -m config external_bar               all:36:0     \
                 mouse_follows_focus        off          \
                 focus_follows_mouse        off          \
-                menubar_opacity            0.0          \
+                menubar_opacity            1.0          \
                                                         \
                 window_zoom_persist        off          \
                 window_placement           second_child \
                 window_shadow              float        \
-                window_origin_display      focused      \
+                window_origin_display      cursor       \
                                                         \
                 window_opacity             off          \
                 active_window_opacity      1.0          \
@@ -38,9 +38,9 @@ yabai -m config external_bar               all:36:0     \
                 window_gap                 4
 
 # Exclude problematic apps from being managed:
-yabai -m rule --add app="^(Calculator|Software Update|Dictionary|System Settings|System Information|zoom.us|Photo Booth|Archive Utility|Python|App Store|Steam|Activity Monitor|Spotify|Numi|Finder|KiCad|LINE)$" manage=off
+yabai -m rule --add app="^(Calculator|Software Update|System Settings|System Information|zoom.us|Archive Utility|App Store|Activity Monitor|Spotify|Numi|Finder|KiCad|LINE)$" manage=off
 yabai -m rule --add label="Safari" app="^Safari$" title="^(General|(Tab|Password|Website|Extension)s|AutoFill|Se(arch|curity)|Privacy|Advance)$" manage=off
-yabai -m rule --add label="Arc browser" app="^Arc$" title="^(Peeranut|General|Max|Shortcuts|Links|Advanced)$" manage=off
+yabai -m rule --add label="Arc Settings" app="^Arc$" title="^Peeranut$" manage=off
 yabai -m rule --add label="Arc PiP" app="^Arc$" subrole="^AXSystemDialog$" manage=off
 
 # default layout (can be bsp, stack or float)
