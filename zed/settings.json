@@ -10,15 +10,17 @@
   "telemetry": {
     "metrics": true
   },
-  "theme": "Rosé Pine",
+  "theme": "Carbonfox",
   "buffer_font_size": 13.5,
   "buffer_line_height": { "custom": 1.4 },
   "buffer_font_family": "Maple Mono",
-  "vim_mode": true,
+  "ui_font_size": 15,
   "active_pane_magnification": 1.61803398875,
   "terminal": {
     "font_family": "Hack Nerd Font",
     "font_size": 12
   },
-  "relative_line_numbers": true
+  "relative_line_numbers": true,
+  "vim_mode": true,
+  "vim": { "use_multiline_find": true }
 }

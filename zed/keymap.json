@@ -8,9 +8,7 @@
       "ctrl-w s": "pane::SplitDown",
       "ctrl-w ctrl-s": "pane::SplitDown",
       "shift-k": "editor::Hover",
-      "g c c": [
-        "editor::ToggleComments", { "advance_downwards": false }
-      ],
+      "g c c": ["editor::ToggleComments", { "advance_downwards": false }],
       "alt-k": "editor::MoveLineUp",
       "alt-j": "editor::MoveLineDown",
       "ctrl-j": "pane::GoForward",
@@ -29,7 +27,8 @@
       "] c": "editor::GoToHunk",
       "[ c": "editor::GoToPrevHunk",
       "] d": "editor::GoToDiagnostic",
-      "[ d": "editor::GoToPrevDiagnostic"
+      "[ d": "editor::GoToPrevDiagnostic",
+      "\\ d": "diagnostics::Deploy"
     }
   },
   {
@@ -53,10 +52,11 @@
     "bindings": {
       "\\ t": "workspace::ToggleBottomDock",
       "\\ g": [
-         // "terminal_panel::ToggleFocus" ,
-         "terminal::SendText", "lazygit",
-         // "terminal::SendKeystroke", "enter"
-      ],
+        // "terminal_panel::ToggleFocus" ,
+        "terminal::SendText",
+        "lazygit"
+        // "terminal::SendKeystroke", "enter"
+      ]
     }
   },
   {
