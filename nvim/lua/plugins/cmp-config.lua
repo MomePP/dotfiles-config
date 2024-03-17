@@ -5,8 +5,8 @@ local M = {
         -- NOTE: cmp sources
         'hrsh7th/cmp-nvim-lsp',
         'hrsh7th/cmp-cmdline',
-        { 'tzachar/cmp-fuzzy-path',   dependencies = 'tzachar/fuzzy.nvim', },
-        { 'tzachar/cmp-fuzzy-buffer', dependencies = 'tzachar/fuzzy.nvim' },
+        'hrsh7th/cmp-buffer',
+        'hrsh7th/cmp-path',
 
         -- NOTE: snippet plugins
         {
@@ -120,9 +120,6 @@ M.opts = function()
     local cmp_sorting = {
         priority_weight = 2,
         comparators = {
-            require('cmp_fuzzy_buffer.compare'),
-            require('cmp_fuzzy_path.compare'),
-
             cmp.config.compare.offset,
             cmp.config.compare.exact,
             cmp.config.compare.score,
@@ -149,12 +146,10 @@ M.opts = function()
 
     local cmp_sources = cmp.config.sources(
         {
-            { name = 'fuzzy_path' },
-            { name = 'snippets',  keyword_length = 2 },
+            { name = 'path' },
+            { name = 'snippets', keyword_length = 2 },
             { name = 'nvim_lsp' },
-        },
-        {
-            { name = 'fuzzy_buffer', option = { min_match_length = 2 } },
+            { name = 'buffer' },
         }
     )
 
@@ -198,7 +193,7 @@ M.config = function(_, opts)
             completeopt = 'menuone,noselect',
         },
         sources = {
-            { name = 'fuzzy_buffer', option = { min_match_length = 2 } },
+            { name = 'buffer' },
         }
     })
 
@@ -208,7 +203,7 @@ M.config = function(_, opts)
             completeopt = 'menuone,noselect',
         },
         sources = cmp.config.sources({
-            { name = 'fuzzy_path' }
+            { name = 'path' }
         }, {
             { name = 'cmdline' }
         })
