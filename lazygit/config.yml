@@ -1,12 +1,13 @@
 gui:
   nerdFontsVersion: '3'
   showBottomLine: false
+  showListFooter: false
   theme:
     selectedLineBgColor:
       - default
     selectedRangeBgColor:
       - '#393939'
-  experimentalShowBranchHeads: true
+  border: 'hidden'
 git:
   paging:
     colorArg: always
