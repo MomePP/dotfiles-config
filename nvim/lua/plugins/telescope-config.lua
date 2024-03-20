@@ -6,14 +6,12 @@ local M = {
     dependencies = {
         { 'nvim-telescope/telescope-file-browser.nvim' },
         { 'nvim-telescope/telescope-fzf-native.nvim',  build = 'make' },
+        { 'hbac.nvim' },
     },
 }
 
 M.opts = function()
     local defaults = require('config').defaults
-
-    local utils = require('telescope.utils')
-    local action_state = require('telescope.actions.state')
 
     local vertical_layout_config = {
         layout_strategy = 'vertical',
@@ -48,54 +46,6 @@ M.opts = function()
 
     local function mergeConfig(conf1, conf2)
         return vim.tbl_deep_extend('force', conf1, conf2)
-    end
-
-    local function buffers_mapping(prompt_bufnr, map)
-        local function delete_buf()
-            local current_picker = action_state.get_current_picker(prompt_bufnr)
-            local multi_selections = current_picker:get_multi_selection()
-
-            local buffers = vim.tbl_map(function(selection)
-                return utils.transform_path({}, selection.filename)
-            end, multi_selections)
-
-            if next(buffers) == nil then
-                local selection = action_state.get_selected_entry()
-                multi_selections = vim.tbl_extend('force', multi_selections, { selection })
-                buffers = { utils.transform_path({}, selection.filename) }
-            end
-
-            local removed = {}
-            local message = 'Selections to be removed: ' .. table.concat(buffers, ', ')
-            vim.notify(string.format('[buffers.actions.remove] %s', message), vim.log.levels.INFO,
-                { title = 'Telescope builtin' })
-
-            vim.ui.input({ prompt = 'Remove selections ? [y/n] ' }, function(input)
-                vim.cmd [[ redraw ]] -- redraw to clear out vim.ui.prompt to avoid hit-enter prompt
-                if input and input:lower() == 'y' then
-                    -- INFO: lazy loads `mini.bufremove` for handles buffer deletion
-                    require('lazy').load({ plugins = { 'mini.bufremove' } })
-
-                    current_picker:delete_selection(function(selection)
-                        local force = vim.api.nvim_get_option_value('buftype', { buf = selection.bufnr }) == 'terminal'
-                        local ok = pcall(require('mini.bufremove').delete, selection.bufnr, force)
-                        if ok then table.insert(removed, utils.transform_path({}, selection.filename)) end
-                        return ok
-                    end)
-
-                    vim.notify('[buffers.actions.remove] Removed: ' .. table.concat(removed, ', '),
-                        vim.log.levels.INFO,
-                        { title = 'Telescope builtin' })
-                else
-                    vim.notify('[buffers.actions.remove] Removing selections aborted!', vim.log.levels.INFO,
-                        { title = 'Telescope builtin' })
-                end
-            end)
-        end
-
-        map('n', telescope_keymap.action_buffer_delete.n, delete_buf)
-        map('i', telescope_keymap.action_buffer_delete.i, delete_buf)
-        return true
     end
 
     local mappings_action = {
@@ -161,10 +111,6 @@ M.opts = function()
                 include_current_line = true,
                 trim_text = true,
             }),
-            buffers = mergeConfig(horizontal_layout_config, {
-                sort_mru = true,
-                attach_mappings = buffers_mapping
-            }),
             quickfix = mergeConfig(vertical_layout_config, {
                 layout_config = {
                     preview_height = 0.5,
@@ -200,6 +146,7 @@ M.config = function(_, opts)
     telescope.setup(opts)
     telescope.load_extension('fzf')
     telescope.load_extension('file_browser')
+    telescope.load_extension('hbac')
 
     local telescope_augroup = vim.api.nvim_create_augroup('UserTelescopeAugroup', { clear = true })
     vim.api.nvim_create_autocmd('FileType', {
@@ -220,7 +167,7 @@ M.keys = function()
 
     return {
         { telescope_keymap.resume,           '<Cmd>Telescope resume<CR>' },
-        { telescope_keymap.buffers,          '<Cmd>Telescope buffers<CR>' },
+        { telescope_keymap.buffers,          '<Cmd>Telescope hbac buffers<CR>' },
         { telescope_keymap.jumplist,         '<Cmd>Telescope jumplist<CR>' },
         { telescope_keymap.help_tags,        '<Cmd>Telescope help_tags<CR>' },
         { telescope_keymap.file_browse,      '<Cmd>Telescope file_browser<CR>' },

@@ -151,7 +151,6 @@ keymaps.telescope = {
     oldfiles              = '<leader>fr',
     file_browse           = '<leader>fb',
     help_tags             = '<leader>?',
-    action_buffer_delete  = { n = 'd', i = '<m-d>' },
     action_send_to_qflist = { n = '<m-q>', i = '<m-q>' },
     action_select_all     = { n = '<m-a>', i = '<m-a>' },
 }
@@ -254,6 +253,15 @@ keymaps.treesj = {
 keymaps.copilot = {
     next = '<m-]>',
     prev = '<m-[>',
+}
+
+-- INFO: Hbac keymap
+keymaps.hbac = {
+    action_delete         = { n = 'd', i = '<m-d>' },
+    action_pin_all        = { n = 'a', i = '<m-a>' },
+    action_unpin_all      = { n = 'u', i = '<m-u>' },
+    action_toggle_pin     = { n = 'b', i = '<m-b>' },
+    action_close_unpinned = { n = 'c', i = '<m-c>' },
 }
 
 return keymaps
