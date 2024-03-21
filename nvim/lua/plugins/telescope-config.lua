@@ -6,8 +6,19 @@ local M = {
     cmd = 'Telescope',
     dependencies = {
         { 'nvim-telescope/telescope-file-browser.nvim' },
-        { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
-        { 'momepp/hbac.nvim', keys = { { hbac_keymap.toggle_pin, '<Cmd>Hbac toggle_pin<CR>' } } },
+        { 'nvim-telescope/telescope-fzf-native.nvim',  build = 'make' },
+        {
+            'momepp/hbac.nvim',
+            opts = {
+                threshold = 20,
+                close_command = function(bufnr)
+                    local force = vim.api.nvim_get_option_value('buftype', { buf = bufnr }) == 'terminal'
+                    require('lazy').load({ plugins = { 'mini.bufremove' } })
+                    pcall(require('mini.bufremove').delete, bufnr, force)
+                end,
+            },
+            keys = { { hbac_keymap.toggle_pin, function() require('hbac').toggle_pin() end } },
+        },
     },
 }
 
@@ -140,12 +151,6 @@ M.opts = function()
                 hijack_netrw = true,
             }),
             hbac = {
-                threshold = 20,
-                close_command = function(bufnr)
-                    local force = vim.api.nvim_get_option_value('buftype', { buf = bufnr }) == 'terminal'
-                    require('lazy').load({ plugins = { 'mini.bufremove' } })
-                    pcall(require('mini.bufremove').delete, bufnr, force)
-                end,
                 telescope = {
                     sort_mru = true,
                     sort_lastused = false,
