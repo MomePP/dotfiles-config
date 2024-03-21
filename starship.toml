@@ -1,10 +1,10 @@
 [character]
-success_symbol = "[](cyan)"
-error_symbol = "[](yellow)"
-vicmd_symbol = "[](cyan)"
-vimcmd_replace_one_symbol = "[](magenta)"
-vimcmd_replace_symbol = "[](magenta)"
-vimcmd_visual_symbol = "[](green)"
+success_symbol = "[](cyan)"
+error_symbol = "[](yellow)"
+vicmd_symbol = "[󰇙](cyan)"
+vimcmd_replace_one_symbol = "[󰇙](magenta)"
+vimcmd_replace_symbol = "[󰇙](magenta)"
+vimcmd_visual_symbol = "[󰇙](green)"
 
 [directory]
 read_only = " "
