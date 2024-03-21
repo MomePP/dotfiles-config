@@ -1,17 +1,20 @@
 local telescope_keymap = require('config.keymaps').telescope
+local hbac_keymap = require('config.keymaps').hbac
 
 local M = {
     'nvim-telescope/telescope.nvim',
     cmd = 'Telescope',
     dependencies = {
         { 'nvim-telescope/telescope-file-browser.nvim' },
-        { 'nvim-telescope/telescope-fzf-native.nvim',  build = 'make' },
-        { 'hbac.nvim' },
+        { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+        { 'momepp/hbac.nvim', keys = { { hbac_keymap.toggle_pin, '<Cmd>Hbac toggle_pin<CR>' } } },
     },
 }
 
 M.opts = function()
     local defaults = require('config').defaults
+    local telescope_actions = require('telescope.actions')
+    local hbac_actions = require('hbac.telescope.actions')
 
     local vertical_layout_config = {
         layout_strategy = 'vertical',
@@ -50,12 +53,12 @@ M.opts = function()
 
     local mappings_action = {
         send_to_qflist = function(bufnr)
-            require('telescope.actions').smart_add_to_qflist(bufnr)
+            telescope_actions.smart_add_to_qflist(bufnr)
             vim.cmd('TroubleToggle quickfix')
         end,
 
         select_all = function(bufnr)
-            require('telescope.actions').select_all(bufnr)
+            telescope_actions.select_all(bufnr)
         end,
     }
 
@@ -122,13 +125,13 @@ M.opts = function()
             current_buffer_fuzzy_find = vertical_layout_config,
         },
         extensions = {
-            ['fzf'] = {
+            fzf = {
                 fuzzy = true,                   -- false will only do exact matching
                 override_generic_sorter = true, -- override the generic sorter
                 override_file_sorter = true,    -- override the file sorter
                 case_mode = 'smart_case',       -- or 'ignore_case' or 'respect_case'
             },
-            ['file_browser'] = mergeConfig(horizontal_layout_config, {
+            file_browser = mergeConfig(horizontal_layout_config, {
                 path = '%:p:h',
                 cwd_to_path = true,
                 respect_gitignore = false,
@@ -136,6 +139,29 @@ M.opts = function()
                 grouped = true,
                 hijack_netrw = true,
             }),
+            hbac = {
+                threshold = 20,
+                close_command = function(bufnr)
+                    local force = vim.api.nvim_get_option_value('buftype', { buf = bufnr }) == 'terminal'
+                    require('lazy').load({ plugins = { 'mini.bufremove' } })
+                    pcall(require('mini.bufremove').delete, bufnr, force)
+                end,
+                telescope = {
+                    sort_mru = true,
+                    sort_lastused = false,
+                    use_default_mappings = true,
+                    mappings = {
+                        i = {
+                            [hbac_keymap.action_delete.i] = hbac_actions.delete_buffer,
+                            [hbac_keymap.action_toggle_pin.i] = hbac_actions.toggle_pin,
+                        },
+                        n = {
+                            [hbac_keymap.action_delete.n] = hbac_actions.delete_buffer,
+                            [hbac_keymap.action_toggle_pin.n] = hbac_actions.toggle_pin,
+                        }
+                    }
+                },
+            },
         }
     }
 end

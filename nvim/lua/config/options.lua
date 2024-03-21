@@ -17,7 +17,7 @@ opt.mouse          = 'a'
 opt.shell          = 'fish'
 opt.clipboard      = 'unnamedplus'
 
-opt.sessionoptions = { 'buffers', 'curdir', 'winsize', 'folds', 'terminal' }
+opt.sessionoptions = { 'buffers', 'curdir', 'winsize', 'folds', 'terminal', 'globals' }
 opt.wildignore     = '**/node_module/*, **/.pio/*, **/.git/*'
 
 -- UI editor

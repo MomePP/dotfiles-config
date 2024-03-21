@@ -25,7 +25,10 @@ M.opts = function()
         end,
         check_session_exist = function()
             return vim.v.this_session ~= ''
-        end
+        end,
+        plugin_loaded = function(plugin_name)
+            return require('lazy.core.config').plugins[plugin_name]._.loaded
+        end,
     }
 
     local mode = {
@@ -123,6 +126,16 @@ M.opts = function()
         'copilot',
     }
 
+    local hbac = {
+        function()
+            local cur_buf = vim.api.nvim_get_current_buf()
+            local _, pinned = pcall(require('hbac.state').is_pinned, cur_buf)
+            return pinned and '  pinned buffer' or ''
+        end,
+        color = { fg = '#ef5f6b', gui = 'bold' },
+        cond = conditions.plugin_loaded('hbac.nvim')
+    }
+
     return {
         options = {
             icons_enabled = true,
@@ -135,7 +148,7 @@ M.opts = function()
             lualine_a = { mode },
             lualine_b = { session_status },
             lualine_c = { branch, spacing, navic_location },
-            lualine_x = { copilot, diagnostics },
+            lualine_x = { hbac, copilot, diagnostics },
             lualine_y = { lsp_status },
             lualine_z = { location },
         },

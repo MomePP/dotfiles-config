@@ -220,11 +220,6 @@ keymaps.flit = {
     leap     = 's',
 }
 
--- INFO: markdown preview keymap
-keymaps.markdown_preview = {
-    toggle = '<leader>p',
-}
-
 -- INFO: mini.bufremove keymap
 keymaps.bufremove = {
     delete = 'wQ',
@@ -257,11 +252,9 @@ keymaps.copilot = {
 
 -- INFO: Hbac keymap
 keymaps.hbac = {
+    toggle_pin            = '<leader>p',
     action_delete         = { n = 'd', i = '<m-d>' },
-    action_pin_all        = { n = 'a', i = '<m-a>' },
-    action_unpin_all      = { n = 'u', i = '<m-u>' },
-    action_toggle_pin     = { n = 'b', i = '<m-b>' },
-    action_close_unpinned = { n = 'c', i = '<m-c>' },
+    action_toggle_pin     = { n = 'p', i = '<m-p>' },
 }
 
 return keymaps
