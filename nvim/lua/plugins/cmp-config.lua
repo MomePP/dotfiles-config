@@ -154,7 +154,6 @@ M.opts = function()
     )
 
     return {
-        snippet = { expand = function(args) vim.snippet.expand(args.body) end },
         mapping = cmp_mapping,
         sorting = cmp_sorting,
         sources = cmp_sources,
