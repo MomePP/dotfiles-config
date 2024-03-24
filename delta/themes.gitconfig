@@ -101,28 +101,32 @@
     merge-conflict-theirs-diff-header-style = yellow bold
     merge-conflict-theirs-diff-header-decoration-style = black box
 
-[delta "tokyonight"]
-    dark = true
-    line-numbers = true
-    side-by-side = false
-    keep-plus-minus-markers = false
-    syntax-theme = Monokai Extended Origin
-    file-style = bold
-    file-decoration-style = ul
-    file-added-label = [+]
-    file-copied-label = [==]
-    file-modified-label = [*]
-    file-removed-label = [-]
-    file-renamed-label = [->]
-    hunk-header-style = omit
-    minus-style                   = syntax "#3a273a"
-    minus-non-emph-style          = syntax "#3a273a"
-    minus-emph-style              = syntax "#6b2e43"
-    minus-empty-line-marker-style = syntax "#3a273a"
-    line-numbers-minus-style      = "#b55a67"
-    plus-style                    = syntax "#273849"
-    plus-non-emph-style           = syntax "#273849"
-    plus-emph-style               = syntax "#305f6f"
-    plus-empty-line-marker-style  = syntax "#273849"
-    line-numbers-plus-style       = "#627259"
-    line-numbers-zero-style       = "#3b4261"
+[delta "oxocarbon"]
+    dark                          = true
+    line-numbers                  = true
+    side-by-side                  = false
+    keep-plus-minus-markers       = false
+    syntax-theme                  = Monokai Extended Origin
+    file-style                    = bold
+    file-decoration-style         = ul
+    file-added-label              = [+]
+    file-copied-label             = [==]
+    file-modified-label           = [*]
+    file-removed-label            = [-]
+    file-renamed-label            = [->]
+    hunk-header-style             = omit
+    minus-style                   = syntax "#450822"
+    minus-non-emph-style          = syntax "#450822"
+    minus-emph-style              = syntax "#891044"
+    minus-empty-line-marker-style = syntax "#450822"
+    plus-style                    = syntax "#023130"
+    plus-non-emph-style           = syntax "#023130"
+    plus-emph-style               = syntax "#046260"
+    plus-empty-line-marker-style  = syntax "#023130"
+    line-numbers-plus-style       = "#08bdba"
+    line-numbers-minus-style      = "#ee5396"
+    line-numbers-zero-style       = "#525252"
+    line-numbers-left-format      = "{nm:>4} ."
+    line-numbers-left-style       = "#525252"
+    line-numbers-right-format     = "{np:>4} "
+    # line-numbers-right-style      = white
