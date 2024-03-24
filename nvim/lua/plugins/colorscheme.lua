@@ -633,9 +633,9 @@ M.config = function()
             SignColumn = { fg = c.base02, bg = c.none },
             CursorLine = { bg = c.base02 },
             VertSplit = { fg = c.base02, bg = c.none },
-            NormalFloat = { bg = c.base00 },
+            NormalFloat = { bg = c.base01 },
             FloatBorder = { link = 'NormalFloat' },
-            FloatTitle = { fg = c.base10, bg = c.base00, bold = true },
+            FloatTitle = { fg = c.base10, bg = c.base01, bold = true },
             Pmenu = { fg = c.base04, bg = c.base00 },
             PmenuSel = { fg = c.none, bg = c.base02 },
             Search = { fg = c.base01, bg = c.base12, bold = true },
@@ -644,6 +644,14 @@ M.config = function()
             LspReferenceText = { bg = c.base02 },
             LspReferenceRead = { link = 'LspReferenceText' },
             LspReferenceWrite = { link = 'LspReferenceText' },
+            NuiComponentsTreeSpectreIcon = { fg = c.base10 },
+            NuiComponentsTreeSpectreFileName = { fg = c.base04 },
+            NuiComponentsTreeSpectreCodeLine = { fg = c.base03 },
+            NuiComponentsTreeSpectreSearchValue = { fg = c.base04, bg = c.base03, bold = true },
+            NuiComponentsTreeSpectreSearchOldValue = { fg = c.base04, bg = c.base03, bold = true, strikethrough = true },
+            NuiComponentsTreeSpectreSearchNewValue = { fg = c.base00, bg = c.base14, bold = true },
+            NuiComponentsTreeSpectreReplaceSuccess = { fg = c.base13 },
+            -- NuiComponentsBorderLabel = { fg = colors.dark["500"], bg = colors.primary["300"] },
         })
         overrideHighlightConfig(telescope_highlight)
         overrideHighlightConfig(incline_highlight)

@@ -257,4 +257,10 @@ keymaps.hbac = {
     action_toggle_pin     = { n = 'p', i = '<m-p>' },
 }
 
+-- Spectre keymap
+keymaps.spectre = {
+    toggle = '<leader>r',
+    tree_replace = 'r',
+}
+
 return keymaps
