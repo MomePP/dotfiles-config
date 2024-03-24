@@ -46,5 +46,15 @@ return {
     },
 
     -- Miscellaneous
-    { 'RaafatTurki/hex.nvim', cmd = { 'HexToggle', 'HexDump', 'HexAssemble' }, config = true },
+    {
+        'RaafatTurki/hex.nvim',
+        cmd = { 'HexToggle', 'HexDump', 'HexAssemble' },
+        config = true,
+    },
+    {
+        'MeanderingProgrammer/markdown.nvim',
+        dependencies = 'nvim-treesitter',
+        ft = 'markdown',
+        config = true,
+    },
 }
