@@ -26,9 +26,6 @@ M.opts = function()
         check_session_exist = function()
             return vim.v.this_session ~= ''
         end,
-        plugin_loaded = function(plugin_name)
-            return require('lazy.core.config').plugins[plugin_name]._.loaded
-        end,
     }
 
     local mode = {
@@ -133,7 +130,6 @@ M.opts = function()
             return pinned and '  pinned buffer' or ''
         end,
         color = { fg = '#ef5f6b', gui = 'bold' },
-        cond = conditions.plugin_loaded('hbac.nvim')
     }
 
     return {
