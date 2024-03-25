@@ -3,10 +3,12 @@ local spectre_keymap = require('config.keymaps').spectre
 local M = {
     'nvim-pack/nvim-spectre',
     dependencies = { 'grapp-dev/nui-components.nvim' },
+    opts = {
+        picker = {}
+    }
 }
-local SpectreUI = {}
 
-M.config = function()
+M.config = function(_, opts)
     require('spectre').setup {}
 
     local spectre_search = require('spectre.search')
@@ -196,7 +198,7 @@ M.config = function()
 
         local is_replacing = #node.diff.replace > 0
         local search_highlight_group = component:hl_group(is_replacing and "SpectreSearchOldValue" or
-        "SpectreSearchValue")
+            "SpectreSearchValue")
         local default_text_highlight = component:hl_group("SpectreCodeLine")
 
         local _, empty_spaces = string.find(node.diff.text, "^%s*")
@@ -284,9 +286,9 @@ M.config = function()
     -- ---
     -- ---      SpectreUI
     -- ---
-    function SpectreUI.toggle()
-        if SpectreUI.renderer then
-            return SpectreUI.renderer:focus()
+    function opts.picker.toggle()
+        if opts.picker.renderer then
+            return opts.picker.renderer:focus()
         end
 
         local char_search_threshold = 3
@@ -342,10 +344,10 @@ M.config = function()
         renderer:on_unmount(function()
             vim.api.nvim_set_current_win(renderer:get_origin_winid())
             subscription:unsubscribe()
-            SpectreUI.renderer = nil
+            opts.picker.renderer = nil
         end)
 
-        SpectreUI.renderer = renderer
+        opts.picker.renderer = renderer
 
         local body = n.rows(n.columns(
             n.checkbox({
@@ -438,8 +440,11 @@ M.config = function()
     end
 end
 
-M.keys = {
-    { spectre_keymap.toggle, function() SpectreUI.toggle() end }
-}
+M.keys = function(self)
+
+    return {
+        { spectre_keymap.toggle, function() self.opts.picker.toggle() end }
+    }
+end
 
 return M
