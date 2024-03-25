@@ -651,7 +651,6 @@ M.config = function()
             NuiComponentsTreeSpectreSearchOldValue = { fg = c.base04, bg = c.base03, bold = true, strikethrough = true },
             NuiComponentsTreeSpectreSearchNewValue = { fg = c.base00, bg = c.base14, bold = true },
             NuiComponentsTreeSpectreReplaceSuccess = { fg = c.base13 },
-            -- NuiComponentsBorderLabel = { fg = colors.dark["500"], bg = colors.primary["300"] },
         })
         overrideHighlightConfig(telescope_highlight)
         overrideHighlightConfig(incline_highlight)

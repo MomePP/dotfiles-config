@@ -15,11 +15,8 @@ M.opts = {
             win_options = {
                 wrap = true,
                 linebreak = true,
-                winhighlight = {
-                    Normal = 'NormalFloat',
-                    FloatBorder = 'FloatBorder',
-                    Search = 'NONE',
-                }
+                winblend = 10,
+                winhighlight = { Normal = 'Pmenu', FloatBorder = 'Pmenu', Search = 'NONE' }
             },
         },
         confirm = {

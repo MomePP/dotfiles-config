@@ -166,6 +166,7 @@ M.opts = function()
             },
             documentation = {
                 border = default_border,
+                winhighlight = 'Normal:Pmenu,FloatBorder:Pmenu'
             }
         },
         experimental = {
