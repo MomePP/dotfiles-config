@@ -19,13 +19,14 @@ require('lazy').setup {
     defaults = {
         lazy = true
     },
+    install = {
+        colorscheme = { 'nvim-colorscheme' }
+    },
+    ui = {
+        border = require('config').defaults.float_border,
+        backdrop = 100,
+    },
     performance = {
-        install = {
-            colorscheme = { 'nvim-colorscheme' }
-        },
-        ui = {
-            border = require('config').defaults.float_border
-        },
         rtp = {
             disabled_plugins = {
                 '2html_plugin',
