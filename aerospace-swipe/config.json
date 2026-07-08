@@ -6,6 +6,6 @@
     "fingers": 4,
     "sensitivity": 3,
     "show_menu_bar": false,
-    "multi_swipe": true,
+    "multi_swipe": false,
     "max_steps": 5
 }
