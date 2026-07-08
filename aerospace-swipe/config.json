@@ -1,0 +1,11 @@
+{
+    "haptic": true,
+    "natural_swipe": true,
+    "wrap_around": true,
+    "skip_empty": true,
+    "fingers": 4,
+    "sensitivity": 3,
+    "show_menu_bar": false,
+    "multi_swipe": true,
+    "max_steps": 5
+}
