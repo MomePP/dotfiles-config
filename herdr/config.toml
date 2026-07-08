@@ -1,7 +1,7 @@
 onboarding = false
 
 [theme]
-name = "vesper"                  # dark base for any token not set in [theme.custom]
+name = "catppuccin"                  # dark base for any token not set in [theme.custom]
 
 # Oxocarbon (IBM Carbon), transparent background — mirrors ghostty theme=oxocarbon
 # + background-opacity. panel_bg is see-through so Ghostty's blur shows behind panes.
@@ -16,7 +16,7 @@ overlay0    = "#686868"          # sidebar section headers (spaces/agents/new/me
 overlay1    = "#525252"          # dim labels
 text        = "#f2f4f8"          # oxocarbon foreground
 subtext0    = "#b6b8bb"          # confirmed: inactive workspace names (not the line)
-accent      = "#00b4ff"          # oxocarbon blue (primary accent)
+accent      = "#c693ff"          # oxocarbon mauve (primary accent)
 blue        = "#00b4ff"
 teal        = "#00dfdb"
 mauve       = "#c693ff"          # purple
@@ -30,6 +30,7 @@ yellow      = "#d4bb86"          # oxocarbon has no yellow — soft approximatio
 # (The subtle divider lines are colored separately via [theme.custom] surface_dim.)
 pane_borders = false
 pane_gaps = true
+sidebar_collapsed_mode = "hidden"
 
 [keys]
 prefix = "ctrl+a"                          # default: "ctrl+b"
