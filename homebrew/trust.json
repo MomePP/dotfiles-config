@@ -1,18 +1,13 @@
 {
   "trustedtaps": [
     "anomalyco/tap",
-    "mediosz/tap",
+    "momepp/formulae",
     "nikitabobko/tap",
     "oven-sh/bun",
     "supabase/tap",
     "tw93/tap"
   ],
   "trustedformulae": [
-    "/private/tmp/claude-501/-users-momeppkt--config/aeb18e2e-c11a-49cb-865d-d2d9b5a26076/scratchpad/homebrew-formulae/aerospace-swipe",
-    "momepp/formulae/aerospace-swipe",
     "supabase/tap/supabase"
-  ],
-  "trustedcasks": [
-    "mediosz/tap/swipeaerospace"
   ]
 }
