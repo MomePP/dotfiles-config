@@ -114,7 +114,9 @@ previous_agent = "prefix+up"               # Ctrl-a ↑ → previous agent in th
 
 # herd.nvim round trip: <leader>\ (leader-doubled) goes TO the agent from nvim;
 # prefix+\ comes back to the editor that spawned it (herdr default: unbound).
+# --resurrect: if nvim was quit (leaving an idle shell), prompt to relaunch it in
+# place instead of focusing a dead tab. HERD_EDITOR overrides the launch command.
 [[keys.command]]
 key = 'prefix+\'
 type = "shell"
-command = "nvim -l /Users/momeppkt/Developer/nvim-plugins/herd.nvim/bin/herd-return.lua"
+command = "nvim -l /Users/momeppkt/Developer/nvim-plugins/herd.nvim/bin/herd-return.lua --resurrect"

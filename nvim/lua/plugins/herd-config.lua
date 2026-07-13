@@ -8,6 +8,12 @@
 -- Keys (<leader>\ toggle/send/hide, <leader>s picker, <leader>S dashboard), the
 -- fullscreen float, and the 'herd.nvim' workspace label are all plugin DEFAULTS
 -- now — only the personal bits (transparency winhighlight + tools) remain here.
+--
+-- Context-bridge features (all plugin defaults): visual <leader>\ wraps the
+-- selection with its path:line-range (send.context); FocusGained/float-leave run
+-- checktime so agent edits refresh (reload). Commands (no default keymap):
+-- :Herd diagnostics (send buffer LSP diagnostics), :Herd jump (quickfix the
+-- path:line refs in the agent's output).
 local M = {
     'MomePP/herd.nvim',
     -- dev = true, -- use local ~/Developer/nvim-plugins/herd.nvim
@@ -19,7 +25,8 @@ M.opts = {
     -- native mode: spawn each agent as a sibling herdr tab (no nvim float) so
     -- scroll/drag-select are native Ghostty/herdr. Requires nvim to run inside a
     -- herdr pane (else it warns + falls back to float). Round trip: <leader>\ goes
-    -- to the agent, Ctrl-a \ (herd-return) comes back. win.* below is float-only.
+    -- to the agent, Ctrl-a \ (herd-return) comes back — and with --resurrect in
+    -- config.toml, relaunches nvim if it was quit to a shell. win.* below is float-only.
     mode = 'native',
     win = {
         -- transparency: map the float to the terminal highlight groups (Snacks) so
