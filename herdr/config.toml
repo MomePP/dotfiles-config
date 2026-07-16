@@ -32,6 +32,14 @@ pane_borders = false
 pane_gaps = true
 sidebar_collapsed_mode = "hidden"
 
+# herdr 0.7.4 packs sidebar rows by default; row_gap = 1 restores the old (spaced)
+# look — separately for the agent panel and the spaces/workspace panel.
+[ui.sidebar.agents]
+row_gap = 1
+
+[ui.sidebar.spaces]
+row_gap = 1
+
 [keys]
 prefix = "ctrl+a"                          # default: "ctrl+b"
 
@@ -74,8 +82,10 @@ cycle_pane_previous = "prefix+shift+tab"   # default: "prefix+shift+tab"
 last_pane = "prefix+;"                      # tmux last-pane | default: "" (unset)
 
 # --- Agents ---
-# focus-by-number (focus_agent) needs modified digits, which are terminal-fragile in
-# prefix mode (Alt sends Esc → cancels prefix; Shift sends symbols). Cycle instead:
+# focus-by-number (focus_agent) was terminal-fragile (Shift sends symbols); herdr
+# 0.7.4 (#1184) fixed shifted indexed bindings, so try Ctrl-a Shift-1..9 → agent N
+# alongside the cycle keys (workspaces stay on plain Ctrl-a 1..9).
+focus_agent = "prefix+shift+1..9"          # Ctrl-a Shift-N → focus agent N in the panel
 next_agent = "prefix+down"                 # Ctrl-a ↓ → next agent in the panel
 previous_agent = "prefix+up"               # Ctrl-a ↑ → previous agent in the panel
 
