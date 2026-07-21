@@ -47,8 +47,30 @@ install_config_file() {
     fi
 }
 
+# INFO: -- helper to symlink a config file into a location outside ~/.config
+symlink_config() {
+    local source="$1" # relative to $config_path
+    local target="$2" # absolute path to create
+    local update="y"
+    local found=false
+    if [[ -f "$target" || -L "$target" ]]; then
+        found=true
+        read -p "found exist $(basename "$target") .. overwrite (y) or (n) ? : " update
+    fi
+    if [ "$update" = "y" ]; then
+        if $found; then
+            rm "$target" # remove old symlink or old config file
+        fi
+        mkdir -p "$(dirname "$target")"
+        ln -s "${config_path}/${source}" "$target"
+        echo "linked $target !"
+    else
+        echo "skipped $(basename "$target").."
+    fi
+}
+
 # INFO: -- install config directories
-config_dirs=(nvim aerospace bat carapace delta ghostty git kitty lazygit nushell opencode tmux)
+config_dirs=(nvim aerospace bat carapace claude-code bin delta ghostty git kitty lazygit nushell opencode tmux)
 for dir in "${config_dirs[@]}"; do
     install_config_dir "$dir"
 done
@@ -73,3 +95,13 @@ if [ "$update_gitconfig" = "y" ]; then
 else
     echo "skipped gitconfig.."
 fi
+
+# INFO: -- symlink claude code settings + the caskroom relink helper
+#
+# claude-relink keeps ~/.local/bin/claude hardlinked to the current cask
+# binary. macOS TCC grants app-data access by absolute path, and the cask
+# installs to a version-stamped dir, so without a stable path every
+# `brew upgrade` re-triggers "Data Access Blocked". The Stop hook in
+# settings.json runs the relink; both must be present for it to work.
+symlink_config "claude-code/settings.json" ~/.claude/settings.json
+symlink_config "bin/claude-relink" ~/.local/bin/claude-relink

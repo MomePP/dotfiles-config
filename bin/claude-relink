@@ -1,0 +1,20 @@
+#!/bin/sh
+# Re-point ~/.local/bin/claude at the current Caskroom binary.
+#
+# TCC keys app-data grants for unbundled binaries by absolute path, and the
+# cask installs to a version-stamped dir, so every upgrade would otherwise
+# lose the grant and re-trigger "Data Access Blocked". A hardlink at a stable
+# path keeps one grant — but it pins the old inode, so it MUST be refreshed
+# after each `brew upgrade` or you keep running the stale binary.
+set -e
+
+target=$(readlink /opt/homebrew/bin/claude)
+[ -x "$target" ] || { echo "claude-relink: no cask binary at $target" >&2; exit 1; }
+
+if [ "$(stat -f %i "$target")" = "$(stat -f %i "$HOME/.local/bin/claude" 2>/dev/null || echo -)" ]; then
+	echo "claude-relink: already current ($target)"
+	exit 0
+fi
+
+ln -f "$target" "$HOME/.local/bin/claude"
+echo "claude-relink: -> $target"
