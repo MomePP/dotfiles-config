@@ -678,5 +678,15 @@ alias cat = bat
 alias kssh = kitty +kitten ssh
 def ssh [...args] { with-env { TERM: "xterm-256color" } { ^ssh ...$args } }
 
+# the claude-code cask installs to a version-stamped path, and macOS TCC grants
+# app-data access by absolute path — so re-point the stable ~/.local/bin/claude
+# hardlink after every brew run. silent unless it actually relinks. a failing
+# external aborts the rest of a command body, so the catch path relinks too:
+# a partly-failed `brew upgrade` may still have upgraded claude-code.
+def --wrapped brew [...args] {
+    try { ^brew ...$args } catch { |e| claude-relink; error make --unspanned { msg: $e.msg } }
+    claude-relink
+}
+
 source ~/.cache/carapace/init.nu
 use ~/.cache/starship/init.nu

@@ -75,17 +75,6 @@
           }
         ]
       }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"/Users/momeppkt/.local/bin/claude-relink\" >/dev/null 2>&1",
-            "timeout": 10
-          }
-        ]
-      }
     ]
   },
   "statusLine": {
