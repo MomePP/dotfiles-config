@@ -70,7 +70,7 @@ symlink_config() {
 }
 
 # INFO: -- install config directories
-config_dirs=(nvim aerospace bat carapace claude-code bin delta ghostty git kitty lazygit nushell opencode tmux)
+config_dirs=(nvim aerospace aerospace-swipe bat bin carapace claude-code delta gh-dash ghostty git herdr homebrew kitty lazygit nushell opencode tmux)
 for dir in "${config_dirs[@]}"; do
     install_config_dir "$dir"
 done
@@ -105,3 +105,10 @@ fi
 # settings.json runs the relink; both must be present for it to work.
 symlink_config "claude-code/settings.json" ~/.claude/settings.json
 symlink_config "bin/claude-relink" ~/.local/bin/claude-relink
+
+# INFO: -- symlink claude code hooks referenced by settings.json
+symlink_config "claude-code/hooks/context-mode-cache-heal.mjs" ~/.claude/hooks/context-mode-cache-heal.mjs
+symlink_config "claude-code/hooks/herdr-agent-state.sh" ~/.claude/hooks/herdr-agent-state.sh
+
+# INFO: -- Claude reads the opencode config dir; symlink rather than duplicate it
+symlink_config "opencode" "$config_path/Claude"
