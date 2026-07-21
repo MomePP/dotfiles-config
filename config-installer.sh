@@ -106,9 +106,11 @@ fi
 symlink_config "claude-code/settings.json" ~/.claude/settings.json
 symlink_config "bin/claude-relink" ~/.local/bin/claude-relink
 
-# INFO: -- symlink claude code hooks referenced by settings.json
-symlink_config "claude-code/hooks/context-mode-cache-heal.mjs" ~/.claude/hooks/context-mode-cache-heal.mjs
-symlink_config "claude-code/hooks/herdr-agent-state.sh" ~/.claude/hooks/herdr-agent-state.sh
+# NOTE: the SessionStart hooks in settings.json are NOT tracked here.
+# ~/.claude/hooks/context-mode-cache-heal.mjs and herdr-agent-state.sh are
+# vendor-managed — each tool redeploys and re-registers its own hook, so they
+# self-heal on a fresh machine. Tracking them would only mirror vendor output
+# into this repo on every plugin update.
 
 # INFO: -- Claude reads the opencode config dir; symlink rather than duplicate it
 symlink_config "opencode" "$config_path/Claude"
