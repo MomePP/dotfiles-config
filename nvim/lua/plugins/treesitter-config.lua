@@ -1,10 +1,9 @@
 local M = {
-    'neovim-treesitter/nvim-treesitter',
+    'nvim-treesitter/nvim-treesitter',
     branch = 'main',
     build = ':TSUpdate',
     event = 'BufEnter',
     dependencies = {
-        { 'neovim-treesitter/treesitter-parser-registry' },
         { 'nvim-treesitter/nvim-treesitter-context',     opts = { zindex = 5, max_lines = 3 } },
         { 'folke/ts-comments.nvim',                      opts = {} },
     },
