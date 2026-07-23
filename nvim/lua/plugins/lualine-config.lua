@@ -23,7 +23,7 @@ M.opts = function()
             return next(vim.lsp.get_clients()) ~= nil
         end,
         check_session_exist = function()
-            return utils.is_loaded('resession.nvim') and require('resession').get_current() ~= nil
+            return vim.v.this_session ~= ''
         end,
         check_cmp_visible = function()
             return utils.is_loaded('blink.cmp') and require('blink.cmp').is_visible()
@@ -39,7 +39,7 @@ M.opts = function()
 
     local session_status = {
         function()
-            return vim.fn.fnamemodify(require('resession').get_current(), ':t')
+            return vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
         end,
         icon = icons.lualine.session,
         cond = conditions.check_session_exist
