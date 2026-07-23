@@ -174,8 +174,8 @@ keymaps.marks = {
     list   = '<leader>m',
 }
 
--- INFO: resession keymaps
-keymaps.resession = {
+-- INFO: session keymaps
+keymaps.sessions = {
     save   = '<leader>rs',
     delete = '<leader>rd',
 }

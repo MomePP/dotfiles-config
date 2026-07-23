@@ -17,7 +17,7 @@ opt.mouse          = 'a'
 opt.mousemodel     = 'extend'
 opt.clipboard      = vim.env.SSH_TTY and '' or 'unnamedplus'
 
-opt.sessionoptions = { 'buffers', 'curdir', 'winsize', 'folds', 'terminal' }
+opt.sessionoptions = { 'buffers', 'curdir', 'winsize', 'folds' }
 opt.wildignore     = '**/node_module/*, **/.pio/*, **/.git/*'
 
 -- UI editor
