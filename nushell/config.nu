@@ -683,9 +683,20 @@ def ssh [...args] { with-env { TERM: "xterm-256color" } { ^ssh ...$args } }
 # hardlink after every brew run. silent unless it actually relinks. a failing
 # external aborts the rest of a command body, so the catch path relinks too:
 # a partly-failed `brew upgrade` may still have upgraded claude-code.
+#
+# espressif's clangd fork has no formula and no pio package, so nothing tracks
+# its releases — fold it into the commands already used for exactly this, and
+# mirror brew's own split: `update` reports what is available, `upgrade`
+# installs it. only on those two subcommands, since each costs a GitHub API
+# call and `brew --prefix` style invocations must stay cheap. both stay quiet
+# when there is nothing to do; the `try` keeps a failed clangd install from
+# masking the brew run that already succeeded.
 def --wrapped brew [...args] {
     try { ^brew ...$args } catch { |e| claude-relink; error make --unspanned { msg: $e.msg } }
     claude-relink
+    let sub = if ($args | length) > 0 { $args | first } else { "" }
+    if $sub == "update" { esp-clangd-update --check }
+    if $sub == "upgrade" { try { esp-clangd-update --quiet } }
 }
 
 source ~/.cache/carapace/init.nu

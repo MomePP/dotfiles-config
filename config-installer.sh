@@ -106,6 +106,11 @@ fi
 symlink_config "claude-code/settings.json" ~/.claude/settings.json
 symlink_config "bin/claude-relink" ~/.local/bin/claude-relink
 
+# esp-clangd-update is called bare by the `brew` wrapper in nushell/config.nu,
+# and ~/.config/bin is not on PATH — so it needs the same ~/.local/bin symlink
+# or every `brew update` on a fresh machine ends in "command not found".
+symlink_config "bin/esp-clangd-update" ~/.local/bin/esp-clangd-update
+
 # NOTE: the SessionStart hooks in settings.json are NOT tracked here.
 # ~/.claude/hooks/context-mode-cache-heal.mjs and herdr-agent-state.sh are
 # vendor-managed — each tool redeploys and re-registers its own hook, so they

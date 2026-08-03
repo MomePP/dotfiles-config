@@ -1,0 +1,128 @@
+#!/bin/sh
+# Check for / install a newer Espressif clangd from espressif/llvm-project.
+#
+# ESP32 Xtensa targets need Espressif's clangd fork; upstream clang has no
+# Xtensa backend. There is no Homebrew formula and no PlatformIO package for
+# it, so the binary lives outside every package manager and only gets updated
+# when someone remembers to look at the releases page.
+#
+# We track /releases/latest deliberately. It is GitHub's stable pointer —
+# prereleases and drafts are excluded by definition — so it follows whatever
+# Espressif marks as current, which is what a consumer of the toolchain wants.
+# We do not scan back through older releases for one that happens to carry a
+# build for this platform: quietly installing a stale clangd is worse than
+# saying "the current release has nothing for you" and letting you decide.
+#
+# Worth recording, because it looks like a broken install and is not:
+#   - the `clangd-esp-*` asset is the bare binary, with no lib/clang/<v>/include
+#     resource dir. That is intentional (the full compiler lives in the 324MB
+#     `clang-esp-*` tarball) — clangd is meant to take builtin headers from the
+#     cross-compiler instead, via `CompileFlags: BuiltinHeaders: QueryDriver`
+#     plus --query-driver. Do not "fix" the missing headers by pulling 324MB.
+#
+# Both flags exist so the `brew` wrapper in nushell/config.nu can mirror brew's
+# own split: `brew update` reports what is available, `brew upgrade` installs
+# it. Neither may break the brew command it rides on, so both swallow the
+# pre-install failure modes and stay silent when there is nothing to do.
+set -e
+
+repo=espressif/llvm-project
+dest=${ESP_CLANGD_HOME:-$HOME/Developer/toolchains/esp-clangd}
+# --check  report only, never install  (wired to `brew update`)
+# --quiet  install if newer, say nothing when already current (`brew upgrade`)
+# neither  install if newer, report either way (manual run)
+check_only=0
+quiet=0
+case "${1:-}" in
+	--check) check_only=1; quiet=1 ;;
+	--quiet) quiet=1 ;;
+	"")      ;;
+	*) echo "usage: esp-clangd-update [--check|--quiet]" >&2; exit 2 ;;
+esac
+
+case "$(uname -s)-$(uname -m)" in
+	Darwin-arm64)  triple=aarch64-apple-darwin ;;
+	Darwin-x86_64) triple=x86_64-apple-darwin ;;
+	Linux-aarch64) triple=aarch64-linux-gnu ;;
+	Linux-x86_64)  triple=x86_64-linux-gnu ;;
+	*) echo "esp-clangd-update: unsupported platform $(uname -sm)" >&2; exit 1 ;;
+esac
+
+# Everything bail() covers happens before anything is touched (no jq, no
+# network, unreadable version) — so from a brew wrapper it is safe to swallow.
+# A failure *during* install is reported loudly regardless; see the tail.
+note() { [ "$quiet" = 1 ] || echo "esp-clangd-update: $*"; }
+bail() { [ "$quiet" = 1 ] && exit 0; echo "esp-clangd-update: $*" >&2; exit 1; }
+
+command -v jq >/dev/null 2>&1 || bail "jq not found"
+
+# Installed tag, e.g. esp-21.1.3_20260304. Absent install counts as "none" so a
+# first run installs rather than erroring.
+if [ -x "$dest/bin/clangd" ]; then
+	have=$("$dest/bin/clangd" --version 2>/dev/null |
+		sed -n 's/.*llvm-project\.git \(esp-[0-9._]*\)).*/\1/p')
+	[ -n "$have" ] || bail "cannot parse version from $dest/bin/clangd"
+else
+	have=none
+fi
+
+api="https://api.github.com/repos/$repo/releases/latest"
+json=$(curl -fsSL -H 'Accept: application/vnd.github+json' "$api" 2>/dev/null) ||
+	bail "cannot reach the GitHub API"
+
+want=$(printf '%s' "$json" | jq -r '.tag_name // empty')
+url=$(printf '%s' "$json" | jq -r --arg t "$triple" '
+	.assets[]
+	| select(.name | startswith("clangd-esp-") and endswith($t + ".tar.xz"))
+	| .browser_download_url')
+
+[ -n "$want" ] || bail "cannot read the latest release tag"
+[ -n "$url" ] || bail "release $want ships no clangd build for $triple"
+
+if [ "$have" = "$want" ]; then
+	note "up to date ($have)"
+	exit 0
+fi
+
+# Date suffix guards against downgrading if `latest` ever moves backwards —
+# a retag, a pulled release, or a build installed by hand from a newer tag.
+date_of() { printf '%s' "$1" | sed -n 's/.*_\([0-9]\{8\}\)$/\1/p'; }
+if [ "$have" != none ]; then
+	hd=$(date_of "$have"); wd=$(date_of "$want")
+	if [ -n "$hd" ] && [ -n "$wd" ] && [ "$wd" -le "$hd" ]; then
+		note "up to date ($have; newest published is $want)"
+		exit 0
+	fi
+fi
+
+if [ "$check_only" = 1 ]; then
+	echo "esp-clangd: $want available (installed $have) — brew upgrade, or esp-clangd-update"
+	exit 0
+fi
+
+echo "esp-clangd-update: $have -> $want"
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT INT TERM
+
+curl -fSL --progress-bar -o "$tmp/clangd.tar.xz" "$url"
+mkdir "$tmp/x"
+tar -xJf "$tmp/clangd.tar.xz" -C "$tmp/x"
+
+# Layout inside the archive is not contractual — find bin/clangd and treat its
+# grandparent as the root, so an archive that does ship lib/ still lands whole.
+found=$(find "$tmp/x" -type f -name clangd -perm -u+x -print | head -1)
+[ -n "$found" ] || { echo "esp-clangd-update: no clangd in archive" >&2; exit 1; }
+root=$(dirname "$(dirname "$found")")
+
+mkdir -p "$(dirname "$dest")"
+rm -rf "$dest.old"
+[ -e "$dest" ] && mv "$dest" "$dest.old"
+if ! mv "$root" "$dest"; then
+	[ -e "$dest.old" ] && mv "$dest.old" "$dest"
+	echo "esp-clangd-update: install failed, kept $have" >&2
+	exit 1
+fi
+rm -rf "$dest.old"
+
+echo "esp-clangd-update: $("$dest/bin/clangd" --version | head -1)"
+echo "esp-clangd-update: restart nvim to pick it up"
