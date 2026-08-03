@@ -28,6 +28,7 @@ M.opts = {
     -- to the agent, Ctrl-a \ (herd-return) comes back — and with --resurrect in
     -- config.toml, relaunches nvim if it was quit to a shell. win.* below is float-only.
     mode = 'native',
+    keys = require('config.keymaps').herd,
     win = {
         -- transparency: map the float to the terminal highlight groups (Snacks) so
         -- Ghostty's transparent background shows through the fullscreen float.

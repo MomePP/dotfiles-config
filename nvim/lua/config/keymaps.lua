@@ -127,7 +127,7 @@ keymaps.snacks = {
         grep_workspace        = 'gw',
         search_workspace      = '<leader>fw',
         search_buffers        = '<leader>/',
-        buffers               = '<leader><tab>', -- moved off <leader>\ (now herd.nvim's agent toggle)
+        buffers               = '<leader>\\',
         find_files            = '<leader>fs',
         resume                = '<leader>;',
         jumplist              = '<leader>j',
@@ -214,6 +214,16 @@ keymaps.sidekick = {
     apply_nes = '<Tab>',
     toggle    = '<leader>s',
     select    = '<leader>S',
+}
+
+-- INFO: herd.nvim keymap
+keymaps.herd = {
+    toggle    = '<leader><tab>',
+    send      = '<leader><tab>',
+    hide      = '<leader><tab>',
+    select    = '<leader>s',
+    dashboard = '<leader>S',
+    newline   = '<S-CR>',
 }
 
 return keymaps

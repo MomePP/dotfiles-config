@@ -75,8 +75,8 @@ focus_pane_up = "prefix+k"                 #               | default: "prefix+k"
 focus_pane_right = "prefix+l"              #               | default: "prefix+l" (unchanged)
 
 # cycle panes (symmetric): Ctrl-a Tab = next, Ctrl-a Shift-Tab = previous
-cycle_pane_next = "prefix+tab"             # default: "prefix+tab"
-cycle_pane_previous = "prefix+shift+tab"   # default: "prefix+shift+tab"
+# cycle_pane_next = "prefix+tab"             # default: "prefix+tab"
+# cycle_pane_previous = "prefix+shift+tab"   # default: "prefix+shift+tab"
 
 # herd.nvim return trip: Ctrl-a ; jumps back to the last (nvim) pane
 last_pane = "prefix+;"                      # tmux last-pane | default: "" (unset)
@@ -127,6 +127,6 @@ previous_agent = "prefix+up"               # Ctrl-a ↑ → previous agent in th
 # --resurrect: if nvim was quit (leaving an idle shell), prompt to relaunch it in
 # place instead of focusing a dead tab. HERD_EDITOR overrides the launch command.
 [[keys.command]]
-key = 'prefix+\'
+key = 'prefix+tab'
 type = "shell"
 command = "nvim -l /Users/momeppkt/Developer/nvim-plugins/herd.nvim/bin/herd-return.lua --resurrect"
