@@ -7,5 +7,6 @@
     "sensitivity": 3,
     "show_menu_bar": false,
     "multi_swipe": false,
-    "max_steps": 5
+    "max_steps": 5,
+    "follow_mouse_monitor": true
 }
