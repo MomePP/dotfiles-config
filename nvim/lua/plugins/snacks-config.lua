@@ -6,6 +6,77 @@ local M = {
 
 local target_term_id = vim.v.count1
 
+local bit = require('bit')
+local GAP = '  '
+-- widths: perms is always 9; `999.9k` is the widest common size; `%b %d %H:%M`
+-- is 12 (the out-of-year `%b %d %Y` form is 11 and left-aligns into it).
+local SIZE_WIDTH, TIME_WIDTH = 6, 12
+
+-- INFO: these mirror canola.nvim's oil columns so a picker row reads like an oil
+-- buffer — see lua/oil/adapters/files.lua (size, mtime) and
+-- lua/oil/adapters/files/permissions.lua (mode_to_str). Copied rather than
+-- require()d: zpack's module loader packadds the owning plugin on first require,
+-- so pulling in oil.* here would eagerly load oil the moment the picker draws
+-- instead of on its keymap. Keep the columns below in sync with oil-config.lua.
+local function perm_to_str(exe_modifier, num)
+    local str = (bit.band(num, 4) ~= 0 and 'r' or '-') .. (bit.band(num, 2) ~= 0 and 'w' or '-')
+    if not exe_modifier then
+        return str .. (bit.band(num, 1) ~= 0 and 'x' or '-')
+    end
+    -- setuid/setgid/sticky replace the x slot, upper-cased when x is unset
+    return str .. (bit.band(num, 1) ~= 0 and exe_modifier or exe_modifier:upper())
+end
+
+local function mode_to_str(mode)
+    local extra = bit.rshift(mode, 9)
+    return perm_to_str(bit.band(extra, 4) ~= 0 and 's', bit.rshift(mode, 6))
+        .. perm_to_str(bit.band(extra, 2) ~= 0 and 's', bit.rshift(mode, 3))
+        .. perm_to_str(bit.band(extra, 1) ~= 0 and 't', mode)
+end
+
+-- NOTE: oil counts in decimal units (1e3), not 1024.
+local function format_size(size)
+    if size >= 1e9 then return ('%.1fG'):format(size / 1e9) end
+    if size >= 1e6 then return ('%.1fM'):format(size / 1e6) end
+    if size >= 1e3 then return ('%.1fk'):format(size / 1e3) end
+    return ('%d'):format(size)
+end
+
+local function format_mtime(sec)
+    local fmt = os.date('%Y', sec) == os.date('%Y') and '%b %d %H:%M' or '%b %d %Y'
+    return os.date(fmt, sec)
+end
+
+-- INFO: oil-style columns in front of the stock file formatter, so a row reads:
+-- permissions, size, mtime, icon, filename, dir. Fixed-width leading parts are
+-- measured by snacks' layout pass, so the (deferred) path part truncates itself
+-- around them with no extra padding maths here.
+--
+-- format() only runs for the rows currently VISIBLE (snacks list:render loops
+-- top..top+height), so the per-row fs_stat costs one window's worth of syscalls
+-- per redraw, not one per candidate.
+local function file_details(item, picker)
+    local snacks = require('snacks')
+    local ret = snacks.picker.format.file(item, picker)
+
+    local path = snacks.picker.util.path(item)
+    local stat = path and vim.uv.fs_stat(path)
+    if not stat then return ret end
+
+    -- NOTE: fs_stat follows symlinks, so a link reports its target's mode/size.
+    -- oil renders an empty column as a dimmed `-`; directories have no size.
+    local size, size_hl = format_size(stat.size), nil
+    if stat.type == 'directory' then size, size_hl = '-', 'SnacksPickerDimmed' end
+
+    local align = snacks.picker.util.align
+    local details = {
+        { mode_to_str(stat.mode) },                          { GAP },
+        { align(size, SIZE_WIDTH), size_hl },                { GAP },
+        { align(format_mtime(stat.mtime.sec), TIME_WIDTH) }, { GAP },
+    }
+    return vim.list_extend(details, ret)
+end
+
 M.opts = function()
     local keymaps = require('config.keymaps').snacks
     local picker_keymap = keymaps.picker
@@ -48,7 +119,7 @@ M.opts = function()
             ui_select = true,
             layout = fullscreen_layout,
             sources = {
-                files = { hidden = true },
+                files = { hidden = true, format = file_details },
                 select = { layout = select_layout },
                 help = { confirm = 'vsplit' },
             },
