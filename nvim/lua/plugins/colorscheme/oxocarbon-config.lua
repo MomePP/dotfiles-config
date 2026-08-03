@@ -8,8 +8,6 @@ M.info = {
 M.setup = function()
     vim.opt.background = 'dark'
     vim.cmd.colorscheme 'oxocarbon'
-
-    vim.api.nvim_set_hl(0, 'SidekickChat', { bg = '#181818' })
 end
 
 M.lualine = function()
