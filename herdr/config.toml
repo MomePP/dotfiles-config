@@ -30,6 +30,7 @@ yellow      = "#d4bb86"          # oxocarbon has no yellow — soft approximatio
 # (The subtle divider lines are colored separately via [theme.custom] surface_dim.)
 pane_borders = false
 pane_gaps = true
+pane_scrollbars = false
 sidebar_collapsed_mode = "hidden"
 
 # herdr 0.7.4 packs sidebar rows by default; row_gap = 1 restores the old (spaced)
