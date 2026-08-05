@@ -209,6 +209,13 @@ keymaps.treesj = {
     toggle = 'J',
 }
 
+-- INFO: sidekick keymap
+keymaps.sidekick = {
+    apply_nes = '<Tab>',
+    toggle    = '<leader>s',
+    select    = '<leader>S',
+}
+
 -- INFO: herd.nvim keymap
 keymaps.herd = {
     toggle    = '<leader><tab>',
