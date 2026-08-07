@@ -192,6 +192,24 @@ renders undimmed. `DarkGray` is SGR 90 and is the one that reads as grey.
 `Color::Black` vanishes into the background entirely. This wasted three rounds
 of "the detail line is still too bright / now it's invisible".
 
+**A dock pane renames its host window under `automatic-rename`.** tmux names a
+window after its *active* pane, and this user's
+`automatic-rename-format` is `#{b:pane_current_path}` — a directory. The dock is
+a pane and inherits its cwd at spawn, so clicking into the sidebar renamed the
+window to `basename $HOME` and it reverted on blur. `dock::match_host_cwd`
+chdirs the dock process to the neighbouring work pane's directory after every
+follow, which makes the rename a no-op. Turning `automatic-rename` off on the
+host window would instead freeze the name of whichever window you are working
+in, and overrides a setting the user chose.
+
+**The dock must not do the popup's work.** The TUI loop is shared, so anything
+unconditional in it runs in both surfaces. Refreshing the preview was: the dock
+draws none, but `PreviewMirror::refresh_for` re-captures whenever the selection
+changes, so every `j`/`k` shelled out to `capture-pane` for panes nothing would
+render — a stall exactly where it is most visible. It also measured the capture
+with `switcher_layout`, the popup's geometry. Gate surface-specific work on
+`surface == Surface::Popup`.
+
 **`Modifier::DIM` is not portable.** Stacked on an already-dark grey it washed a
 whole section out to barely legible in Ghostty.
 
@@ -295,6 +313,23 @@ check disagrees with a green unit suite.
   moved last. Single-client is the documented assumption.
 - The dock branch never got a final whole-branch review — subagent dispatch was
   denied mid-plan, so tasks 3–7 carry controller-performed reviews only.
+
+## Neighbours that the dock disturbs
+
+**sidekick.nvim floats do not survive a resize.** `Terminal:open_win` resolves a
+float's fractional size to absolute rows and columns *once*
+(`opts.width = opts.width <= 1 and floor(vim.o.columns * w)`), and the plugin
+registers no `VimResized` handler. An `editor`-relative float keeps whatever
+geometry it opened with — nvim clamps floats down to fit a shrinking editor but
+never grows them back. Verified headless: editor 80→200 columns leaves the float
+at 80.
+
+So opening the dock (narrowing the nvim pane), toggling a sidekick float, then
+closing the dock leaves the float at the narrow width with stale cells to the
+right of it. Nothing tmux does fixes this — the stale cells are inside nvim's own
+grid. The fix is a `VimResized` autocmd in `nvim/lua/plugins/llm-config.lua` that
+re-applies sidekick's own arithmetic and writes the geometry over the window's
+*current* config, so the border, footer and title from `cli.win.config` survive.
 
 ## Prior art
 

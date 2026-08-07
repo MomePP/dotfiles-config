@@ -357,6 +357,46 @@ sidekick.keys = function()
     }
 end
 
+-- INFO: sidekick resolves a float's fractional size to absolute rows/columns once,
+-- in Terminal:open_win (`opts.width = opts.width <= 1 and floor(vim.o.columns * w)`),
+-- and registers no VimResized handler. An `editor`-relative float keeps whatever
+-- geometry it was opened with, so a float opened while the editor was narrow stays
+-- narrow after it widens — nvim clamps floats down to fit but never grows them back.
+--
+-- Reproduce: open the tmux agent-switcher dock (narrows the nvim pane), toggle the
+-- sidekick float, close the dock. The pane returns to full width; the float does not.
+--
+-- Re-apply the same arithmetic on VimResized. Geometry is written over the window's
+-- *current* config rather than rebuilt, so the border, footer and title set up by
+-- `cli.win.config` survive untouched.
+vim.api.nvim_create_autocmd('VimResized', {
+    group = vim.api.nvim_create_augroup('sidekick_float_resize', { clear = true }),
+    desc = 'Re-fit sidekick CLI floats to the editor',
+    callback = function()
+        local ok, Terminal = pcall(require, 'sidekick.cli.terminal')
+        if not ok then return end
+
+        for _, term in ipairs(Terminal.sessions()) do
+            local float = term.opts and term.opts.layout == 'float' and term.opts.float
+            if float and term.win and vim.api.nvim_win_is_valid(term.win) then
+                local width  = float.width or 0
+                local height = float.height or 0
+                width  = width <= 1 and math.floor(vim.o.columns * width) or width
+                height = height <= 1 and math.floor(vim.o.lines * height) or height
+                width, height = math.max(width, 80), math.max(height, 10)
+
+                local row, col = float.row or 0.5, float.col or 0.5
+                row = row <= 1 and math.floor((vim.o.lines - height) * row) or row
+                col = col <= 1 and math.floor((vim.o.columns - width) * col) or col
+
+                local cfg = vim.api.nvim_win_get_config(term.win)
+                cfg.row, cfg.col, cfg.width, cfg.height = row, col, width, height
+                pcall(vim.api.nvim_win_set_config, term.win, cfg)
+            end
+        end
+    end,
+})
+
 return {
     sidekick
 }
