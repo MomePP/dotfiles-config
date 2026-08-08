@@ -270,6 +270,23 @@ with `switcher_layout`, the popup's geometry. Gate surface-specific work on
 **`Modifier::DIM` is not portable.** Stacked on an already-dark grey it washed a
 whole section out to barely legible in Ghostty.
 
+**`display-message -p -c <client>` does not scope format expansion.** `-c`
+chooses the client a message is *shown* to. With `-p` the format is expanded
+against whichever client tmux picks for itself — the most recently used one — so
+asking three different ttys "which window are you in?" returns the same answer
+three times. Verified on 3.7b: with a sidekick float last touched, every `-c`
+reported the float's window, and the dock followed itself inside the embedded
+session. **To ask a specific client, use `list-clients -F`**, which expands its
+format in each client's own context and answers for all of them in one call:
+`#{client_tty}\t#{session_name}\t#{window_id}\t#{pane_id}\t#{window_width}\t#{window_layout}`.
+`-c` on a command whose *subject* is a client (`switch-client -c`) is a different
+thing and is honoured.
+
+Corollary for finding this class of bug: **a read-only smoke test of a hook,
+run from outside any client, is worth more than it looks.** Outside a client is
+where tmux's "pick a client for me" fallback is most wrong, so it exposes
+exactly the assumptions that hold by luck inside one.
+
 **tmux hooks are arrays.** Write them at a reserved index
 (`set-hook -g 'session-window-changed[50]' …`) — idempotent across the config
 reloads that re-run a plugin's `.tmux`, and it leaves other plugins' entries at
