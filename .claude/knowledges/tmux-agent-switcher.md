@@ -287,6 +287,21 @@ run from outside any client, is worth more than it looks.** Outside a client is
 where tmux's "pick a client for me" fallback is most wrong, so it exposes
 exactly the assumptions that hold by luck inside one.
 
+**`nvim --remote-expr` waits for the *editor*, not the client.** The client
+binary starts in ~14ms; the RPC then blocks until the expression finishes
+running inside the target Neovim, and `sidekick.cli.show` opening a float and
+attaching a terminal takes a second or two. Anything sequenced after it — the
+dock's re-observe and redraw — inherits that wait, which is why the accent
+landed long after the window it describes had changed. The reveal is best
+effort, so it is started and not waited for.
+
+Getting "don't wait" right across both surfaces needs a **process**, not a
+thread: the popup exits immediately after asking, and only a separate process
+survives that; the dock lives on, so something must `wait()` on the child or
+every click leaves a zombie. A thread doing the waiting satisfies both. Give the
+child its own process group as well — the popup runs under `display-popup -E`,
+which tmux tears down when the command exits.
+
 **tmux hooks are arrays.** Write them at a reserved index
 (`set-hook -g 'session-window-changed[50]' …`) — idempotent across the config
 reloads that re-run a plugin's `.tmux`, and it leaves other plugins' entries at
