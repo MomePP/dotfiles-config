@@ -73,6 +73,7 @@ boundary) and is left blank for Sessions.
 | Session name | White. The tree is scanned by session first, so the names that anchor it stay bright |
 | Window row | `Color::DarkGray`, receding under its session |
 | Attached session or window | The accent colour, since the right edge now belongs to the fold arrow |
+| An agent that finished out of sight | The unread dot. "Out of sight" is the whole meaning of it: the daemon marks a pane read whenever it is visible — its window is its session's current one *and* something is attached to that session. So an agent you sat and watched finish never raises one, and a sidekick agent that finished behind a closed float does. Before this the dot was raised by the `Working → Idle` edge alone and could only be cleared by selecting the row you were already looking at |
 | Rolled-up status on a session | Its dot — but **only while collapsed**. Expanded, every window under it shows its own, and a dot beside an open session reads as the session being the busy thing. The column stays blank so names still line up |
 | Detail line | `Color::DarkGray` |
 | Agent state | The status icon's colour, which is **never** dimmed — the colour *is* the signal |
