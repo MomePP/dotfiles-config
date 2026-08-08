@@ -69,8 +69,11 @@ boundary) and is left blank for Sessions.
 
 | Signal | How it is said |
 |---|---|
-| Cursor row | **Bold**. Not `REVERSED` — a reversed slab across a 30-column sidebar pulls harder than the name it marks |
-| Attached session | The accent colour (`TMUX_ORANGE`), since the right edge now belongs to the fold arrow and weight is taken by the cursor |
+| Cursor row | White **and bold**, over everything. Not a slab — neither `REVERSED` nor a filled background: both were tried, and across a 30-column sidebar of thin tree punctuation a bar pulls harder than the name it marks |
+| Session name | White. The tree is scanned by session first, so the names that anchor it stay bright |
+| Window row | `Color::DarkGray`, receding under its session |
+| Attached session or window | The accent colour, since the right edge now belongs to the fold arrow |
+| Rolled-up status on a session | Its dot — but **only while collapsed**. Expanded, every window under it shows its own, and a dot beside an open session reads as the session being the busy thing. The column stays blank so names still line up |
 | Detail line | `Color::DarkGray` |
 | Agent state | The status icon's colour, which is **never** dimmed — the colour *is* the signal |
 | Section focus | Nothing. Dimming the unfocused half made the sidebar look switched off; the cursor already says it |
@@ -256,14 +259,28 @@ draws into *is* the pane — on the same tick that refreshes cards, and only whe
 the width has just changed, so a window with no room to spare is asked once and
 not again.
 
-**A sidekick session only folds while its float is open.** `embed::resolve_embedded`
-traces *attached clients* back to a host pane. Close the float and the client
-detaches, but `tmux new -A -s` keeps the session alive — now with no client,
-nothing to trace, and so it reappears in the Sessions list on its own. That is
-deliberate for a session that outlives its Neovim; it is merely surprising for
-one whose float is temporarily shut. Folding a detached session would mean
-remembering its host across polls and evicting the memory when the host pane
-dies.
+**Folding needs a client, and closing a sidekick float takes it away.**
+`embed::resolve_embedded` traces *attached clients* back to a host pane. Close
+the float and the client detaches, but `tmux new -A -s` keeps the session
+running — no client, nothing to trace, and the session reappeared in the sidebar
+as a peer with its Neovim showing no agent. The mapping is therefore remembered
+in `@tmux_agent_switcher_embedded` (`session\tpane` per line) and kept while all
+three still hold: the session exists, the host pane exists, and that pane belongs
+to some *other* session. The last clause does double duty — it rules out folding
+a session into itself, and it is what expires the memory when the Neovim's pane
+is gone, which is the case embed.rs always wanted right: a session that outlives
+its host goes back to standing on its own. A live client outranks the memory; a
+real terminal attachment discards it.
+
+**A retiring status daemon must not clear the winner's claim.** Retiring by
+handoff is the only safe way to replace one (see the `run-shell -b` entry
+above), but the old code unset `@tmux_agent_switcher_status_daemon_pid` on exit
+*unconditionally* — including when the replacement had already claimed it.
+`ensure_status_daemon` then saw an empty option and started another daemon,
+which took the option, which retired the incumbent, which cleared it again.
+Once two daemons ever coexisted the pair never settled: a new process every few
+seconds for the life of the tmux server, and it is invisible unless you watch
+the pid. Release the option only while it still names you.
 
 **Counting clippy warnings by `grep -c '^warning'` is wrong.** That counts
 per-target summary lines (`generated 1 warning`), which vary with what
