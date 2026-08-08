@@ -218,10 +218,25 @@ window after its *active* pane, and this user's
 `automatic-rename-format` is `#{b:pane_current_path}` — a directory. The dock is
 a pane and inherits its cwd at spawn, so clicking into the sidebar renamed the
 window to `basename $HOME` and it reverted on blur. `dock::match_host_cwd`
-chdirs the dock process to the neighbouring work pane's directory after every
-follow, which makes the rename a no-op. Turning `automatic-rename` off on the
-host window would instead freeze the name of whichever window you are working
-in, and overrides a setting the user chose.
+chdirs the dock process to the **active** neighbouring pane's directory, which
+makes the rename a no-op. Turning `automatic-rename` off on the host window
+would instead freeze the name of whichever window you are working in, and
+overrides a setting the user chose.
+
+Three things about it are load-bearing, each learned the hard way:
+
+- **Match the *active* neighbour, not the first one.** The name is computed from
+  the active pane; in a three-pane window "first non-dock pane" copied the wrong
+  directory two times in three.
+- **Match *after* the move, never before.** While the dock is still in the
+  window it is leaving, changing its directory renames *that* window. Same bug,
+  other end.
+- **A tick is too late.** tmux applies the rename ~250ms after the active pane
+  changes (measured), so a match that waits for the 300ms card tick is a visible
+  flicker: the window wears its neighbour's name and hands it back. Match
+  synchronously when the dock performs a switch, and on `Event::Resize`, which is
+  how the dock learns the follow hook carried it — a hook in another process
+  cannot `chdir` the dock's process for it.
 
 **The dock must not do the popup's work.** The TUI loop is shared, so anything
 unconditional in it runs in both surfaces. Refreshing the preview was: the dock
