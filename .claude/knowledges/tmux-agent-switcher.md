@@ -93,6 +93,24 @@ relocated by a hook (chosen), a sidebar pane in every window (one TUI process
 per window, ~21 here, each redrawing on the refresh tick), or a workspace window
 that targets get `join-pane`d into (erodes the window structure as you work).
 
+**Two things move it, and the difference is visible.** A switch the switcher
+performs itself — clicking or hitting enter on a row, in the dock or the popup —
+puts the move *in front of* the switch in one tmux invocation (`select_card` →
+`dock::carry_before_switch`): guard, remember the destination's geometry, move
+the dock, restore the window being left, switch, select, release. tmux runs the
+list in one pass and redraws once, so the first frame of the destination already
+has the sidebar in it. A switch made any other way — a prefix binding, herdr,
+plain `select-window` — is caught by the follow hook instead, which by
+definition runs *after* the client has already moved.
+
+That asymmetry is the durable lesson: **a hook that fires after the client moves
+can never prevent the first wrong frame.** The destination gets drawn full
+width, and the sidebar arrives a beat later once the hook's own process has
+forked and probed. Making the hook faster does not help; only putting the move
+ahead of the switch does. Both paths share `carry_args` + `release_guard_args`,
+with the guard deliberately left up in between so a caller can splice its own
+commands inside the same invocation.
+
 State lives in tmux options so the `.tmux` script, the hooks and the binary
 agree without a side channel:
 
