@@ -244,6 +244,27 @@ like a hang. Retire it gracefully instead: set
 `@tmux_agent_switcher_status_daemon_pid` to a bogus value and wait ~3 s — the
 daemon checks ownership every 10 polls and exits on its own.
 
+**A pane's width does not survive its window being resized.** `move-pane -l 30`
+sets the width once and nothing re-asserts it; tmux rescales every pane in a
+window whenever the window's own size changes, and each window is sized to the
+last client that looked at it, so windows resize constantly under a single
+client. Measured on 3.7b: a 30-column pane in a 200-column window squeezed to
+120 columns is crushed to **1**, and grown back to 200 comes out **41**. Any
+fixed-width pane has to hold its own width. `dock::keep_width` does it from
+inside the dock — the process already knows its width, because the terminal it
+draws into *is* the pane — on the same tick that refreshes cards, and only when
+the width has just changed, so a window with no room to spare is asked once and
+not again.
+
+**A sidekick session only folds while its float is open.** `embed::resolve_embedded`
+traces *attached clients* back to a host pane. Close the float and the client
+detaches, but `tmux new -A -s` keeps the session alive — now with no client,
+nothing to trace, and so it reappears in the Sessions list on its own. That is
+deliberate for a session that outlives its Neovim; it is merely surprising for
+one whose float is temporarily shut. Folding a detached session would mean
+remembering its host across polls and evicting the memory when the host pane
+dies.
+
 **Counting clippy warnings by `grep -c '^warning'` is wrong.** That counts
 per-target summary lines (`generated 1 warning`), which vary with what
 recompiles. Use `cargo clippy --all-targets 2>&1 | grep '^warning' | grep -vc 'generated'`.
