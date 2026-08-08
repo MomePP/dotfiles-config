@@ -69,7 +69,7 @@ boundary) and is left blank for Sessions.
 
 | Signal | How it is said |
 |---|---|
-| Cursor row | White **and bold**, over everything. Not a slab — neither `REVERSED` nor a filled background: both were tried, and across a 30-column sidebar of thin tree punctuation a bar pulls harder than the name it marks |
+| Cursor row | White **and bold**, over everything — but **only while that surface holds the keyboard**. `focus` is an `Option<SectionFocus>`; `None` means the keys are elsewhere and no cursor is drawn. A dock spends most of its life beside the pane you are typing in, where a cursor claims a selection no key would act on and competes with the accent for the question the sidebar answers: where am I. Not a slab — neither `REVERSED` nor a filled background: both were tried, and across a 30-column sidebar of thin tree punctuation a bar pulls harder than the name it marks |
 | Session name | White. The tree is scanned by session first, so the names that anchor it stay bright |
 | Window row | `Color::DarkGray`, receding under its session |
 | Attached session or window | The accent colour, since the right edge now belongs to the fold arrow |
@@ -224,7 +224,16 @@ makes the rename a no-op. Turning `automatic-rename` off on the host window
 would instead freeze the name of whichever window you are working in, and
 overrides a setting the user chose.
 
-Four things about it are load-bearing, each learned the hard way:
+**Nothing the dock knows about itself survives being read once.** It is a
+long-lived process that tmux moves between windows underneath it, so every
+"where am I" answer goes stale: its window (which is *the attached window*,
+since it follows — that is what the accent marks), whether its pane holds the
+keyboard, and its directory. A popup can read these at startup because it lives
+for seconds; a dock lives for hours, and the accent stayed on whichever window
+it was opened in for the rest of the day. `dock::observe` re-reads all three per
+tick from one `list-panes`.
+
+Four things about the cwd match are load-bearing, each learned the hard way:
 
 - **The dock must be `exec`'d, or none of the rest matters.** tmux runs a pane
   command through `default-shell`, so `split-window "<exe> dock"` makes the
