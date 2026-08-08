@@ -223,8 +223,19 @@ makes the rename a no-op. Turning `automatic-rename` off on the host window
 would instead freeze the name of whichever window you are working in, and
 overrides a setting the user chose.
 
-Three things about it are load-bearing, each learned the hard way:
+Four things about it are load-bearing, each learned the hard way:
 
+- **The dock must be `exec`'d, or none of the rest matters.** tmux runs a pane
+  command through `default-shell`, so `split-window "<exe> dock"` makes the
+  pane's process `nu -c <exe> dock` with the dock a *child* of it — and
+  `pane_current_path` comes from the pane's own process. Every `set_current_dir`
+  the dock made was invisible; its reported directory stayed frozen at whatever
+  the pane it was split from was in. `split-window "exec <exe> dock"` replaces
+  the shell with the binary. Symptom that finally exposed it: the dock sat in
+  the `nvim` window for 600ms still reporting `~/.config`, and the click that
+  made it the active pane renamed that window `.config`. **When a chdir seems to
+  have no effect on a tmux format, check whether the process you changed is the
+  pane's process.**
 - **Match the *active* neighbour, not the first one.** The name is computed from
   the active pane; in a three-pane window "first non-dock pane" copied the wrong
   directory two times in three.
