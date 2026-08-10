@@ -302,6 +302,17 @@ every click leaves a zombie. A thread doing the waiting satisfies both. Give the
 child its own process group as well — the popup runs under `display-popup -E`,
 which tmux tears down when the command exits.
 
+**A pane cannot be padded, and `pane-scrollbars` is not the loophole.** tmux 3.7
+added scrollbars with a `pad` in `pane-scrollbars-style`, and set to
+`position left` they really do reserve columns — measured, a plain shell's
+content moved from column 41 to 42. But tmux only reserves them for panes with
+scrollback: the moment a pane enters the **alternate screen** the reservation
+vanishes (41 again). Every pane worth padding here — nvim, the dock's own TUI —
+is `alternate_on=1`, so it does nothing for them, and on a plain shell it makes
+the content jump a column whenever an editor opens or closes. The rule stands: a
+column is only blank if some pane owns it and paints it blank, so the space
+either side of a split can only come from the panes themselves, never from tmux.
+
 **tmux hooks are arrays.** Write them at a reserved index
 (`set-hook -g 'session-window-changed[50]' …`) — idempotent across the config
 reloads that re-run a plugin's `.tmux`, and it leaves other plugins' entries at
