@@ -1,4 +1,19 @@
-# tmux-agent-switcher (fork: MomePP/tmux-agent-switcher)
+# tmux-agent-dock (fork: MomePP/tmux-agent-dock)
+
+**Renamed from `tmux-agent-switcher` on 2026-08-10**, 58 commits past the fork
+point. Repo, package, binary, entry script, launchers, public options,
+internal option keys and env vars all moved to `agent_dock`; upstream stays
+`Ymirke/tmux-agent-switcher`. Rust type names (`SwitcherUi`, `SwitcherAction`)
+were left alone on purpose — internal, compiler-checked, and renaming them is a
+naming decision rather than a mechanical one.
+
+**A blanket prefix rename can silently merge two options.** `@agent_switcher_key`
+(the popup) and `@agent_switcher_dock_key` (the dock) both collapse to
+`@agent_dock_key` under a naive `@agent_switcher_ -> @agent_dock_` swap, which
+would have bound whichever was read last to both keys. They are now
+`@agent_dock_popup_key` and `@agent_dock_toggle_key`. Diff the option surface
+against the docs after any rename: `grep -rho '@agent_dock_[a-z_]*' src *.tmux |
+sort -u` against the same over the README.
 
 A Rust/ratatui TUI that switches between tmux windows and shows the live status
 of AI coding agents running in them. It runs two ways: as a `display-popup`
@@ -10,9 +25,9 @@ patched locally, because a TPM clone is throwaway and `prefix + U` overwrites it
 
 | Path | Role |
 |---|---|
-| `~/Developer/tmux-plugins/tmux-agent-switcher` | Dev clone. `origin` = the fork; `upstream` = Ymirke, **push URL disabled** on purpose |
-| `~/.config/tmux/plugins/tmux-agent-switcher` | TPM's clone, `origin` repointed to the fork. This is what actually runs |
-| `tmux/tmux.conf:140` | `set -g @plugin 'MomePP/tmux-agent-switcher'` |
+| `~/Developer/tmux-plugins/tmux-agent-dock` | Dev clone. `origin` = the fork; `upstream` = Ymirke, **push URL disabled** on purpose |
+| `~/.config/tmux/plugins/tmux-agent-dock` | TPM's clone, `origin` repointed to the fork. This is what actually runs |
+| `tmux/tmux.conf:140` | `set -g @plugin 'MomePP/tmux-agent-dock'` |
 
 Workflow: edit in the dev clone → push → `git pull` (or `prefix + U`) in the
 TPM clone. The launcher rebuilds automatically when `src/` is newer than the
@@ -117,14 +132,14 @@ agree without a side channel:
 
 | Option | Scope | Holds |
 |---|---|---|
-| `@tmux_agent_switcher_dock_pane` | global | The dock's `pane_id`, unset when closed |
-| `@tmux_agent_switcher_dock_moving` | global | Re-entry guard while a move is in flight |
-| `@tmux_agent_switcher_dock_client` | global | The client the dock belongs to |
-| `@tmux_agent_switcher_dock_layout` | window | The host window's `window_layout` from before the dock arrived |
-| `@agent_switcher_dock_width` | global | Columns, default 30 |
+| `@tmux_agent_dock_pane` | global | The dock's `pane_id`, unset when closed |
+| `@tmux_agent_dock_moving` | global | Re-entry guard while a move is in flight |
+| `@tmux_agent_dock_client` | global | The client the dock belongs to |
+| `@tmux_agent_dock_layout` | window | The host window's `window_layout` from before the dock arrived |
+| `@agent_dock_width` | global | Columns, default 30 |
 
 **Opening:** save `#{window_layout}`, `split-window -b -h -d -l <width>` running
-`tmux-agent-switcher dock`, record the `pane_id`.
+`tmux-agent-dock dock`, record the `pane_id`.
 **Following:** hooks at reserved index `[50]` on `session-window-changed` and
 `client-session-changed` run `dock-follow`, which `move-pane -b -h -d`s the dock
 into the newly active window. `-d` leaves it inactive, so the hook never steals
@@ -323,7 +338,7 @@ hook for session moves.
 **A tmux config reload never unbinds anything.** A plugin that binds keys when
 an option is on must *actively unbind* them when it is off, or turning the
 option off appears to do nothing until the server restarts. This is why
-`@agent_switcher_nav 'off'` left `C-l` switching windows.
+`@agent_dock_nav 'off'` left `C-l` switching windows.
 
 **tmux session names accept `:`, `.` and `!`** (verified on 3.7b), so there is
 no character an in-band marker can safely use when encoding session names into
@@ -341,7 +356,7 @@ which had been left behind when the first was fixed.
 status daemon with `kill` (SIGTERM) makes tmux open a view-mode window showing
 `… terminated by signal 15`, which in a session with `status off` looks exactly
 like a hang. Retire it gracefully instead: set
-`@tmux_agent_switcher_status_daemon_pid` to a bogus value and wait ~3 s — the
+`@tmux_agent_dock_status_daemon_pid` to a bogus value and wait ~3 s — the
 daemon checks ownership every 10 polls and exits on its own.
 
 **A pane's width does not survive its window being resized.** `move-pane -l 30`
@@ -361,7 +376,7 @@ not again.
 the float and the client detaches, but `tmux new -A -s` keeps the session
 running — no client, nothing to trace, and the session reappeared in the sidebar
 as a peer with its Neovim showing no agent. The mapping is therefore remembered
-in `@tmux_agent_switcher_embedded` (`session\tpane` per line) and kept while all
+in `@tmux_agent_dock_embedded` (`session\tpane` per line) and kept while all
 three still hold: the session exists, the host pane exists, and that pane belongs
 to some *other* session. The last clause does double duty — it rules out folding
 a session into itself, and it is what expires the memory when the Neovim's pane
@@ -371,7 +386,7 @@ real terminal attachment discards it.
 
 **A retiring status daemon must not clear the winner's claim.** Retiring by
 handoff is the only safe way to replace one (see the `run-shell -b` entry
-above), but the old code unset `@tmux_agent_switcher_status_daemon_pid` on exit
+above), but the old code unset `@tmux_agent_dock_status_daemon_pid` on exit
 *unconditionally* — including when the replacement had already claimed it.
 `ensure_status_daemon` then saw an empty option and started another daemon,
 which took the option, which retired the incumbent, which cleared it again.
@@ -393,15 +408,15 @@ half-applied — and is a **no-op under `cfg(test)`**.
 That guard is load-bearing, not tidiness. The unit tests drive the very keys
 that persist (`v`, `S-tab`, `h`, `l`) against fixture data, so without it a
 plain `cargo test` rewrites the developer's own live tmux globals. It really
-happened: a test run set `@tmux_agent_switcher_known` to `dotfiles`, a session
+happened: a test run set `@tmux_agent_dock_known` to `dotfiles`, a session
 that exists only in `sections::tests::fixture`, on a server with no such
 session.
 
-**Expansion state is two sets, not one.** `@tmux_agent_switcher_expanded` is
-what was left open; `@tmux_agent_switcher_known` is every session the switcher
+**Expansion state is two sets, not one.** `@tmux_agent_dock_expanded` is
+what was left open; `@tmux_agent_dock_known` is every session the switcher
 had an opinion about at close. A session in `known` keeps whatever it was left
 as; a session in neither is new and follows
-`@agent_switcher_expand_default` (`all` — the default — / `attached` / `none`).
+`@agent_dock_expand_default` (`all` — the default — / `attached` / `none`).
 
 Remembering only `expanded` conflated "you collapsed this" with "this did not
 exist yet", which broke two things: a session created since the last close
@@ -442,7 +457,7 @@ check disagrees with a green unit suite.
   invisibly; arguably should no-op.
 - `toggle_expanded`/`collapse_selected` read `sessions_pane` regardless of which
   section has focus.
-- Tests still read `TMUX_AGENT_SWITCHER_INITIAL_MOVE` and shell out to
+- Tests still read `TMUX_AGENT_DOCK_INITIAL_MOVE` and shell out to
   `load_session_order`.
 - With two clients attached to different windows the dock follows whichever
   moved last. Single-client is the documented assumption.
