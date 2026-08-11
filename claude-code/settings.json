@@ -80,7 +80,8 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bash \"/Users/momeppkt/.claude/plugins/cache/claude-hud/claude-hud/0.8.0/scripts/claude-hud.sh\""
+    "command": "bash \"/Users/momeppkt/.claude/plugins/cache/claude-hud/claude-hud/0.9.1/scripts/claude-hud.sh\"",
+    "refreshInterval": 5
   },
   "enabledPlugins": {
     "claude-hud@claude-hud": true,
