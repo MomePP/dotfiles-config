@@ -328,6 +328,27 @@ the content jump a column whenever an editor opens or closes. The rule stands: a
 column is only blank if some pane owns it and paints it blank, so the space
 either side of a split can only come from the panes themselves, never from tmux.
 
+**A tmux option cannot be a lock.** Switching to a window in another session
+fires `client-session-changed` *and* `session-window-changed`, so two
+`dock-follow` processes start microseconds apart. Reading and setting
+`@tmux_agent_dock_moving` are two separate tmux commands, so both read it as
+unset before either sets it, and both moved the dock. The second `move-pane`
+re-inserts a pane already in place and tmux hands the dock the space its old slot
+gave up — traced at 50ms, twice: 30 -> **61** -> 30 on a 198-column window, the
+correction coming from `keep_width` a frame later, which is what made it read as
+a flicker rather than a bug and let it survive a review pass. `fs::create_dir` is
+the fix because it is atomic; take a lock older than 5s as stale so a process
+killed mid-follow cannot wedge following for the server's life. The option guard
+stays for its own job: stopping the hooks our own `move-pane` fires.
+
+**Hooks should run the binary, not the launcher.** `bin/tmux-agent-dock` is a
+bash script that finds, downloads or builds the binary before exec'ing it —
+right for an interactive open, pure overhead on a hook. Measured 40ms vs 20ms,
+and that time is the destination window drawn *without* the sidebar. What
+remains is structural: the hook fires after the client has moved, so the only
+paths that can avoid the wrong first frame are the ones the sidebar performs
+itself, which pre-carry.
+
 **tmux hooks are arrays.** Write them at a reserved index
 (`set-hook -g 'session-window-changed[50]' …`) — idempotent across the config
 reloads that re-run a plugin's `.tmux`, and it leaves other plugins' entries at
