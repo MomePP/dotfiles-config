@@ -221,6 +221,50 @@ to its own host session makes tmux render recursively — jumping, broken layout
 dock command targets that. Getting this half-right is easy and useless: the host
 *window* must be resolved **and** the `split-window` must be `-t`-targeted at it.
 
+## What the status daemon costs
+
+**The daemon's life is the tmux server's, not the dock's.** Closing the sidebar
+kills the pane the UI draws in and nothing else. `ensure_status_daemon` is
+called from `load_cards()`, so the first dock or popup starts one; the loop then
+exits only when another daemon takes the pid option or tmux itself goes away.
+A closed sidebar polls exactly as hard as an open one.
+
+**It must not stop while the dock is closed, for two unrelated reasons.** The
+unread dot is raised on the *Working → Idle edge*, not on the idle state: the
+statuses live in pane options, so a paused daemon forgets nothing, but a run
+that both starts and finishes inside one gap reads Idle → Idle on the next poll
+and raises nothing at all — which is precisely the agent-finished-out-of-sight
+case the dot exists for. Separately, the tick this daemon lends out is the only
+heartbeat left for continuum saves once the status line is gone. So the lever is
+*poll less*, never *stop*.
+
+**The cost is wakeups, not arithmetic.** About 90% of the daemon's CPU time is
+system time — a poll is 3–5 forks (`list-panes -a` twice, `list-windows -a`, a
+`ps -A` snapshot, a `capture-pane` per agent pane whose title doesn't already
+encode its state) and macOS's energy model charges for the waking, not the work.
+
+Three cadences, in `Pace`:
+
+| when | interval |
+| --- | --- |
+| something changed, or an agent just appeared | 300ms |
+| agents present, 20 polls with nothing moving | 1s |
+| no pane holds an agent at all | 5s |
+
+Dormant is entered at once rather than after the quiet count, because with
+nothing to watch there is no state to miss — only an *arrival*, which is a
+process appearing rather than a run that could fit between two polls. It is
+capped at 5s for that same reason: it bounds how long a starting agent goes
+unseen.
+
+Measured on this machine, as `utime`+`stime` deltas over a fixed window rather
+than `pcpu`: sidebar closed with idle agents, **0.8%** of a core at the 1s
+cadence before any of this; **0.07%** dormant against a server with no agents at
+all. The dormant tier is where the battery win lives — the middle number moved
+much less, because gating the icons only removes the writer's own
+`list-windows -a` and its per-window `set-option`s, not the embedded-host
+resolution the gate first swallowed (see below).
+
 ## Gotchas that cost real time
 
 **`Color::Gray` is SGR 37 — the terminal's *normal* white.** On a dark theme it
@@ -414,6 +458,46 @@ which took the option, which retired the incumbent, which cleared it again.
 Once two daemons ever coexisted the pair never settled: a new process every few
 seconds for the life of the tmux server, and it is invisible unless you watch
 the pid. Release the option only while it still names you.
+
+**`embedded_session_hosts` is a writer, and a perf gate swallowed it.** Its name
+and its return value both read as a lookup, but it also persists what it
+resolved into `@tmux_agent_dock_embedded` — the memory that keeps a sidekick
+session folded once its float is shut and its client is gone (see the folding
+entry above). Skipping the window-icon block when `@agent_dock_tab_status` is
+`off` skipped that call with it, and the daemon is the memory's only writer
+while the dock is closed, which is exactly when a float is opened, used and
+closed. Every agent started through sidekick then surfaced as a top-level
+session row. **The tell was cheap and I nearly missed it**: the option held one
+stale mapping from before the change and nothing newer. Resolve always; gate the
+icon write alone.
+
+**Claude Code's title spinner is not a stable interface.** It was braille
+(`⠋ …`); it now cycles the quarter-filled circles (`◐ ◑ ◒ ◓`). Nothing else in
+the Claude path ever votes Working — `detect_claude_state` checks the selection
+prompt, then the title, then falls through to Idle — so one glyph change turned
+*every* working Claude pane into a green tick, and no run raised an unread dot.
+It fails silently and looks like "the dock is a bit wrong", not like a bug.
+`starts_with_spinner_status` now accepts both ranges, and the fix took one
+`tmux display-message -p '#{pane_title}' | od -c` against a live pane.
+
+**`ps -o pcpu` is a lifetime-decayed average, not the CPU cost now.** A daemon
+that spent its first minutes at the fast cadence reads several times its settled
+cost hours later. Sample `utime`+`stime` twice over a fixed window instead. The
+same discipline applies to the tmux server's share: any `tmux` command *you* run
+during the sample lands in that process's counters, so its number is only
+meaningful when you keep your hands off the socket.
+
+**`tmux -L <name>` is a second socket, not a second config.** A throwaway server
+for daemon testing still sources the user's `tmux.conf`, still runs TPM, still
+gets `@agent_dock_tick_command` pointed at `continuum_save.sh`, and still
+restores the real resurrect save — which is why it comes up with the *real*
+windows in it. Its tick can then save that server's junk layout back over the
+resurrect file. Check `ls -lt ~/.local/share/tmux/resurrect/ | head -3` after any
+such test. Pointing a daemon at one takes a PATH shim (`exec tmux -L docktest
+"$@"`), since it shells out to a bare `tmux`; a symlink named `claude` →
+`/bin/sleep` fakes an agent well enough to test detection, because the
+process-tree walk matches the exec path even though tmux reports the pane
+command as `sleep`.
 
 **Counting clippy warnings by `grep -c '^warning'` is wrong.** That counts
 per-target summary lines (`generated 1 warning`), which vary with what
