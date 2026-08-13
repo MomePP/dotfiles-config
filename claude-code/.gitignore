@@ -1,0 +1,46 @@
+# Guard: ~/.claude holds ~1 GB of caches, session state and secrets. Only the
+# small config files belong in this repo, and it is PUBLIC. If anything below
+# ever gets symlinked or copied in here, git must refuse it.
+
+# Credentials and auth
+.credentials.json
+daemon-auth-*.json
+daemon-auth-cooldown
+*.key
+*.pem
+*.token
+
+# Session state — transcripts, prompt history, per-project memory.
+# These contain source paths, code excerpts and private repo details.
+projects/
+history.jsonl
+transcripts/
+file-history/
+todos/
+sessions/
+session-data/
+session-env/
+.session-stats.json
+
+# Caches and installed artifacts (hundreds of MB)
+plugins/
+context-mode/
+cache/
+backups/
+downloads/
+shell-snapshots/
+statsig/
+
+# Runtime / telemetry
+daemon/
+daemon.log
+telemetry/
+tasks/
+jobs/
+debug/
+.last-cleanup
+
+# Editor/OS noise
+*.bak
+*.swp
+.DS_Store
