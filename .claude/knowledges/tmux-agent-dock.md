@@ -265,6 +265,32 @@ much less, because gating the icons only removes the writer's own
 `list-windows -a` and its per-window `set-option`s, not the embedded-host
 resolution the gate first swallowed (see below).
 
+**Hook-reported state was designed and rejected (2026-08-13).** workmux takes
+the other road: agents push their own state through lifecycle hooks it installs
+(`workmux setup --hooks`, a Claude Code plugin), so nothing polls. The dock could
+do the same — `SessionStart`/`UserPromptSubmit`/`PermissionRequest`/`Stop` map
+cleanly onto idle/working/blocked, `$TMUX_PANE` is already the pane id the dock
+keys on, and a hooked pane needs no `capture-pane` at all. It was specced and
+dropped for three reasons that outweigh the fragility it would fix:
+
+- **The battery case had already been won.** The dormant tier costs 0.07% of a
+  core; hooks would have bought exactness, not watts.
+- **Setup does not travel.** Passive detection works on any agent, on any
+  machine, with nothing installed into it. Hooks work only where the plugin is
+  installed and only for agents that have them — codex and opencode would keep
+  the polling path anyway, so it adds a second mechanism rather than replacing
+  one.
+- **Hooks introduce a failure mode polling does not have.** A killed agent fires
+  no `Stop` and no `SessionEnd`, so its pane reads Working until something else
+  notices. Removing polling entirely is not possible regardless: folding needs
+  topology (`ps`, `list-clients`) no hook can supply, and continuum's tick has
+  no other heartbeat.
+
+The fragility this leaves in place is real and will recur — see the spinner-glyph
+entry below. The mitigation is to keep the *diagnosis* cheap rather than to
+remove the guessing: one `tmux display-message -p '#{pane_title}' | od -c`
+against a live pane identifies it in seconds.
+
 ## Gotchas that cost real time
 
 **`Color::Gray` is SGR 37 — the terminal's *normal* white.** On a dark theme it
