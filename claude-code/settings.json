@@ -55,6 +55,16 @@
             "command": "\"/Users/momeppkt/.claude/hooks/context-mode-cache-heal.mjs\""
           }
         ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/momeppkt/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [
@@ -70,7 +80,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bash \"/Users/momeppkt/.claude/plugins/cache/claude-hud/claude-hud/0.9.1/scripts/claude-hud.sh\"",
+    "command": "bash \"/Users/momeppkt/.claude/plugins/cache/claude-hud/claude-hud/0.9.2/scripts/claude-hud.sh\"",
     "refreshInterval": 5
   },
   "enabledPlugins": {
