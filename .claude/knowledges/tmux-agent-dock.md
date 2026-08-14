@@ -291,6 +291,50 @@ entry below. The mitigation is to keep the *diagnosis* cheap rather than to
 remove the guessing: one `tmux display-message -p '#{pane_title}' | od -c`
 against a live pane identifies it in seconds.
 
+## Signals for agent state, and the dead ends
+
+Measured on tmux 3.7b / macOS 27 on 2026-08-14, while looking for something more
+robust than parsing a spinner. Recorded because each of these looks obviously
+right until you measure it.
+
+**tmux has no per-pane activity, and never has.** Activity monitoring is
+window-scoped by design: `monitor-activity` is a *window* option,
+`alert-activity` a *window* hook, and `window_activity` the only timestamp.
+`pane_last_activity` does not exist — the full pane format list in 3.7b is 44
+entries and none of them is activity. Upstream `CHANGES` records exactly one
+pane-level addition in this area, `pane_unseen_changes`, and the manual defines
+it as "1 if there were changes in pane **while in mode**" — copy-mode only, and
+it reads `0` on a busy agent pane. Older tmux is strictly worse; formats only
+accumulate.
+
+**`window_activity` does not mean "last output".** The obvious workaround —
+agents get their own window under sidekick, so window activity is effectively
+pane activity — fails on the first measurement. Sampled 8s apart, the working
+agent's window advanced 8s and an untouched idle nvim window advanced 8s too.
+It tracks the clock, not the pane, at least with `monitor-activity off`.
+
+**CPU time cannot tell working from idle.** A working agent is *waiting on the
+model*, not computing: the Claude process burned `0:25.66 → 0:25.66` — exactly
+zero — across 6s in the middle of a run. Any rule built on process CPU, load or
+`%CPU` reads a thinking agent as an idle one. This one is worth remembering
+because it feels like the most robust signal available and it is the deadest.
+
+**`pipe-pane` is the only native per-pane output signal.**
+`tmux pipe-pane -t %23 -O '<cmd>'` streams a pane's output to a process:
+push-based, no polling, and `pane_pipe` reports whether it is active. The costs
+are a consumer process per agent pane with a lifecycle to manage, output
+duplication proportional to what the agent prints, and **one pipe per pane** —
+anything else that claims it conflicts. It yields the same fact a `capture-pane`
+diff yields ("the screen moved"), so it is the tool for wanting *zero* polling,
+not for wanting better information.
+
+**`pane_pb_state` / `pane_pb_progress` are the signal to watch for.** tmux 3.7
+exposes an application-set progress bar (`hidden` / `normal` / `error` /
+`indeterminate` / `paused`, plus a percentage). If an agent ever emits it, that
+is exact per-pane state for free, with no parsing and no cooperation beyond the
+agent adopting the escape sequence. As of 2026-08-14 Claude Code does not: a
+live pane mid-run reports `hidden` and `0`. Re-check on agent upgrades.
+
 ## Gotchas that cost real time
 
 **`Color::Gray` is SGR 37 — the terminal's *normal* white.** On a dark theme it
