@@ -1,14 +1,14 @@
--- herd.nvim — nvim is the host, herdr is the backend daemon. CLI agents run in
--- nvim floating terminals via `herdr agent attach`. https://github.com/MomePP/herd.nvim
+-- herd.nvim — nvim drives, herdr owns the agent processes and shows them.
+-- https://github.com/MomePP/herd.nvim
 --
--- INFO: gated on the `herdr` binary being installed (NOT on HERDR_PANE_ID). In the
--- nvim-host model nvim no longer needs to live inside a herdr pane — herdr just needs
--- its server/daemon running. The plugin's own ensure_server() warns if it isn't.
+-- INFO: the spec gate is the `herdr` binary; native mode additionally needs nvim
+-- to be running inside a herdr pane, which the plugin checks itself (falling back
+-- to float mode with a warning when it isn't).
 --
--- Keys come from config/keymaps.lua (<leader>s toggle/send/hide, <leader>S
--- picker, <leader><tab> dashboard); the fullscreen float and the 'herd.nvim'
--- workspace label are plugin DEFAULTS — only the personal bits (keys,
--- transparency winhighlight + tools) remain here.
+-- Keys come from config/keymaps.lua (<leader>s toggle/send, <leader>S picker,
+-- <leader><tab> dashboard); the 'herd.nvim' workspace label is a plugin DEFAULT —
+-- only the personal bits (keys, placement, transparency winhighlight + tools)
+-- remain here.
 --
 -- Context-bridge features (all plugin defaults): visual <leader>s wraps the
 -- selection with its path:line-range (send.context); FocusGained/float-leave run
@@ -23,20 +23,22 @@ local M = {
 }
 
 M.opts = {
-    -- float mode: this is the sidekick.nvim workflow with herdr as the backend.
-    -- Open nvim in the working dir, <leader>s spawns/toggles this cwd's agent — the
-    -- process is a persistent herdr agent parked in the dedicated 'herd.nvim'
-    -- workspace (never tiled next to nvim), and the float is just `herdr agent
-    -- attach` wiring its PTY into an nvim terminal. Hiding the float or quitting
-    -- nvim detaches, it does not kill; the agent is back on the next <leader>s.
-    -- The whole round trip stays inside nvim, so no herdr-side return key is needed
-    -- (config.toml's prefix+tab herd-return only matters in native mode).
+    -- native + placement='workspace': <leader>s spawns the agent as a real herdr
+    -- tab in the dedicated 'herd.nvim' space and focuses it there — no nvim float,
+    -- no PTY attach, so scroll and drag-select are native Ghostty/herdr. Project
+    -- spaces keep their tab bars to editors only.
     --
-    -- native mode (mode = 'native') instead spawns each agent as a sibling herdr
-    -- tab for native Ghostty scroll/drag-select, and needs nvim to run inside a
-    -- herdr pane. win.* below is float-only.
+    -- The trip back is herdr-side by necessity: once herdr shows the agent, nvim
+    -- receives no keys, so <leader>s can only ever mean "go to the agent".
+    -- config.toml binds prefix+s (Ctrl-a s) to herd-return, which reads the agent
+    -- tab's '<project>:<agent>' label and focuses the editor tab it names — across
+    -- spaces, since the agent no longer sits beside nvim.
+    --
+    -- Requires nvim to run inside a herdr pane (reads $HERDR_TAB_ID); otherwise
+    -- setup() warns and falls back to float mode. win.* below is float-only.
     keys = require('config.keymaps').herd,
-    mode = 'float',
+    mode = 'native',
+    placement = 'workspace',
     win = {
         -- transparency: map the float to the terminal highlight groups (Snacks) so
         -- Ghostty's transparent background shows through the fullscreen float.

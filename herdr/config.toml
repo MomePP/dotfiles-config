@@ -48,6 +48,10 @@ prefix = "ctrl+a"                          # default: "ctrl+b"
 reload_config = "prefix+r"                 # default: "prefix+shift+r"
 resize_mode = "prefix+shift+r"             # default: "prefix+r"
 
+# settings moved off prefix+s so herd.nvim's return trip can have it (see the
+# [[keys.command]] block at the bottom)
+settings = "prefix+shift+s"                # default: "prefix+s"
+
 # workspace picker = Ctrl-a w;  workspace tree / omni-jump (goto) = Ctrl-a Ctrl-w
 workspace_picker = "prefix+w"              # default: "prefix+w" (unchanged)
 goto = "prefix+ctrl+w"                     # tmux C-w (choose-tree) | default: "prefix+g"
@@ -92,7 +96,6 @@ previous_agent = "prefix+up"               # Ctrl-a ↑ → previous agent in th
 
 # ── herdr defaults NOT overridden above (uncomment + edit to customise) ──────────
 # help                     = "prefix+?"        # show every active binding
-# settings                 = "prefix+s"
 # detach                   = "prefix+q"
 # toggle_sidebar           = "prefix+b"
 # open_notification_target = "prefix+o"
@@ -123,13 +126,18 @@ previous_agent = "prefix+up"               # Ctrl-a ↑ → previous agent in th
 # type = "pane"        # "pane" = temp pane that closes on exit; "shell" = detached
 # command = "lazygit"
 
-# herd.nvim round trip — NATIVE MODE ONLY. herd.nvim now runs in float mode, where
-# the agent is attached inside an nvim float and the whole trip stays in the editor,
-# so nothing binds this. Kept for the native-mode fallback: prefix+tab comes back to
-# the editor tab that spawned the focused agent (herdr default: unbound).
+# herd.nvim round trip. <leader>s in nvim goes TO the agent; Ctrl-a s comes back.
+# It cannot be <leader>s in both directions: herdr focuses the agent's tab, so nvim
+# stops receiving keys and \s would just type into the CLI. A herdr binding is one
+# key combo (optionally behind the prefix) — no two-key sequences — so prefix+s is
+# the closest mirror: same trailing key, prefix instead of leader.
+#
+# herd-return reads the focused agent tab's "<project>:<agent>" label and focuses
+# the editor tab it names, crossing spaces (placement = 'workspace' parks agents in
+# the herd.nvim space, away from the project's own).
 # --resurrect: if nvim was quit (leaving an idle shell), prompt to relaunch it in
 # place instead of focusing a dead tab. HERD_EDITOR overrides the launch command.
 [[keys.command]]
-key = 'prefix+tab'
+key = 'prefix+s'
 type = "shell"
 command = "nvim -l /Users/momeppkt/Developer/nvim-plugins/herd.nvim/bin/herd-return.lua --resurrect"
