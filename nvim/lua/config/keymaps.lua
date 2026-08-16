@@ -209,13 +209,16 @@ keymaps.treesj = {
     toggle = 'J',
 }
 
--- INFO: herd.nvim keymap
+-- INFO: herd.nvim keymap — float mode, so the whole round trip stays in nvim and
+-- s/S carry the launcher the way they did under sidekick.nvim: <leader>s spawns or
+-- toggles this cwd's agent (count = slot), <leader>S opens the project picker.
+-- <leader><tab> keeps the herdr-side leg: focus the dedicated herd.nvim workspace.
 keymaps.herd = {
-    toggle    = '<leader><tab>',
-    send      = '<leader><tab>',
-    hide      = '<leader><tab>',
-    select    = '<leader>s',
-    dashboard = '<leader>S',
+    toggle    = '<leader>s',
+    send      = '<leader>s',
+    hide      = '<leader>s',
+    select    = '<leader>S',
+    dashboard = '<leader><tab>',
     newline   = '<S-CR>',
 }
 
