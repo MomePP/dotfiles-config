@@ -27,13 +27,39 @@ set -euo pipefail
 file="$1"
 tmp="$file.filtered"
 
+# The dock already knows which sessions are embedded, and it knows by tracing
+# each client's pid through the process tree rather than by guessing at names.
+# It remembers the mapping in a tmux option (`session\tpane` per line) precisely
+# so a session survives its float closing -- which is the state resurrect saves
+# in. Ask it instead of re-deriving the answer.
+#
+# Handed over in the environment, not through `awk -v`: the value is one record
+# per line, and -v runs the assignment through escape processing, where an
+# embedded newline is an error ("newline in string") rather than a newline.
+#
+# `|| true` because `set -e` would otherwise abort on a failed query and leave
+# the save unfiltered -- and resurrect discards a hook's exit status, so that
+# abort would be silent, which is the failure mode this lookup exists to end.
+# An empty value simply falls through to the name-shape rule below.
+EMBEDDED_SESSIONS="$(tmux show-option -gqv @tmux_agent_dock_embedded 2>/dev/null | cut -f1 || true)"
+export EMBEDDED_SESSIONS
+
 awk -F '\t' '
-	# Sidekick session ids are "<tool> <hex>", where the hash is truncated so
-	# that the two halves plus the space always total 17 characters
-	# (sidekick.nvim, lua/sidekick/cli/session/init.lua). Anchoring on the hex
-	# tail *and* the width keeps real session names out of the net.
+	BEGIN {
+		rows = split(ENVIRON["EMBEDDED_SESSIONS"], row, "\n")
+		for (i = 1; i <= rows; i++) {
+			if (row[i] != "") { known[row[i]] = 1 }
+		}
+	}
+	# Name shape is the fallback for when the dock has not run yet (fresh
+	# server, no agent opened): sidekick session ids are "<tool> <hex>", the
+	# hash truncated so the two halves plus the space total 17 characters
+	# (sidekick.nvim, lua/sidekick/cli/session/init.lua). That arithmetic is
+	# sidekick internals -- it holds today only because the numbered-clone
+	# tool names are 8 characters -- so it is the guess, not the answer.
 	function ephemeral(name) {
-		return name ~ /^[A-Za-z0-9_.-]+ [0-9a-f]+$/ && length(name) == 17
+		return (name in known) ||
+			(name ~ /^[A-Za-z0-9_.-]+ [0-9a-f]+$/ && length(name) == 17)
 	}
 	$1 == "pane"            && ($10 == "tmux-agent-dock" || ephemeral($2)) { next }
 	$1 == "window"          && ephemeral($2)                              { next }
