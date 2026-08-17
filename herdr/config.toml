@@ -132,9 +132,6 @@ previous_agent = "prefix+up"               # Ctrl-a ↑ → previous agent in th
 # key combo (optionally behind the prefix) — no two-key sequences — so prefix+s is
 # the closest mirror: same trailing key, prefix instead of leader.
 #
-# herd-return reads the focused agent tab's "<project>:<agent>" label and focuses
-# the editor tab it names, crossing spaces (placement = 'workspace' parks agents in
-# the herd.nvim space, away from the project's own).
 # --resurrect: if nvim was quit (leaving an idle shell), prompt to relaunch it in
 # place instead of focusing a dead tab. HERD_EDITOR overrides the launch command.
 [[keys.command]]

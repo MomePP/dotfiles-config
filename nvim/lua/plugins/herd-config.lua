@@ -25,17 +25,12 @@ local M = {
 M.opts = {
     -- native + placement='workspace': <leader>s spawns the agent as a real herdr
     -- tab in the dedicated 'herd.nvim' space and focuses it there — no nvim float,
-    -- no PTY attach, so scroll and drag-select are native Ghostty/herdr. Project
-    -- spaces keep their tab bars to editors only.
+    -- no PTY attach, so scroll and drag-select are native Ghostty/herdr, and
+    -- project spaces keep their tab bars to editors only.
     --
-    -- The trip back is herdr-side by necessity: once herdr shows the agent, nvim
-    -- receives no keys, so <leader>s can only ever mean "go to the agent".
-    -- config.toml binds prefix+s (Ctrl-a s) to herd-return, which reads the agent
-    -- tab's '<project>:<agent>' label and focuses the editor tab it names — across
-    -- spaces, since the agent no longer sits beside nvim.
-    --
-    -- Requires nvim to run inside a herdr pane (reads $HERDR_TAB_ID); otherwise
-    -- setup() warns and falls back to float mode. win.* below is float-only.
+    -- The trip back is herdr-side by necessity — once herdr shows the agent, nvim
+    -- receives no keys — so herdr/config.toml binds it to prefix+s. win.* below is
+    -- float-only (see :help herd-native-mode for the mechanism).
     keys = require('config.keymaps').herd,
     mode = 'native',
     placement = 'workspace',
