@@ -40,6 +40,11 @@ jobs/
 debug/
 .last-cleanup
 
+# Skills: the whole dir is symlinked from ~/.claude/skills, so a new skill is
+# tracked with no extra wiring. `learned/` is Claude Code's own output — vendor
+# managed, same reasoning as the untracked SessionStart hooks.
+/skills/learned/
+
 # Editor/OS noise
 *.bak
 *.swp

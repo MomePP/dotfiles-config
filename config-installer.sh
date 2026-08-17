@@ -104,7 +104,14 @@ fi
 # `brew upgrade` re-triggers "Data Access Blocked". The Stop hook in
 # settings.json runs the relink; both must be present for it to work.
 symlink_config "claude-code/settings.json" ~/.claude/settings.json
+symlink_config "claude-code/CLAUDE.md" ~/.claude/CLAUDE.md
 symlink_config "bin/claude-relink" ~/.local/bin/claude-relink
+
+# The whole skills dir is linked, so a new hand-written skill needs no extra
+# wiring here. Claude Code writes its own `learned/` skills into the same tree;
+# that path is gitignored in claude-code/.gitignore rather than kept out by
+# linking each skill separately.
+symlink_config "claude-code/skills" ~/.claude/skills
 
 # esp-clangd-update is called bare by the `brew` wrapper in nushell/config.nu,
 # and ~/.config/bin is not on PATH — so it needs the same ~/.local/bin symlink
