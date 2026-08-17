@@ -214,6 +214,23 @@ For multi-step tasks, state a brief plan:
 
 Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
 
+### 5. Anti-slop delta on review passes
+
+On any code review pass — a `superpowers:subagent-driven-development` task
+review, `/code-review`, `superpowers:requesting-code-review` — also check the
+four things the standard quality rubric does not cover:
+
+1. Dead code, unreachable branches, stale flags, unused exports
+2. Pass-through wrappers, speculative indirection, single-use helper layers
+3. Boundary violations: wrong-layer imports, hidden coupling, misplaced side effects
+4. Deletion over addition — flag an addition that could have been a deletion
+
+These are *additions* to the rubric already in use, not a replacement. Report
+them with `file:line` like any other finding, at their real severity.
+
+For a full regression-safe cleanup pass (behavior locked by tests, ordered
+smell-focused passes, quality gates), invoke the `ai-slop-cleaner` skill.
+
 ---
 
 <!-- CODEGRAPH_START -->
