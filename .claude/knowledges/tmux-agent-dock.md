@@ -550,6 +550,28 @@ It fails silently and looks like "the dock is a bit wrong", not like a bug.
 `starts_with_spinner_status` now accepts both ranges, and the fix took one
 `tmux display-message -p '#{pane_title}' | od -c` against a live pane.
 
+**And then the title stopped saying anything at all.** As of Claude Code
+2.1.236 the OSC title is a static `✳ <topic>` in *every* state — a working pane
+and a settled one are byte-identical, so no glyph range can fix it. The signal
+moved to the screen: Claude draws a run status line at column 0 just above the
+input box while it works (`✻ Beboppin'… (6m 10s · ↓ 9.7k tokens)`) and replaces
+it with a summary when it settles (`✻ Cooked for 2m 49s`). `has_run_status` in
+`detect.rs` matches that line, and deliberately matches **neither** the glyph
+nor the elapsed time on its own: the glyph is now the asterisk set
+(`· ✢ ✳ ✻ ✽`), its third change, and the summary keeps a time too. The
+parentheses are the discriminator — a running timer is bracketed, a finished one
+is prose — and the column-0 margin keeps a status line quoted back inside a
+transcript (indented under its `⎿` tool result) from pinning a settled pane to
+Working. The debounce does not cover that case; it gates transitions, not
+persistent text.
+
+Diagnosing it took one command: sample a live pane's title while the agent is
+demonstrably busy (`tmux display-message -p -t %54 '#{pane_title}'` in a loop)
+and compare it against an idle pane's. Identical output is the whole finding.
+Note the target must be a pane id — these agent sessions are named
+`claude_1 <hex>`, with a space, so `-t claude_1:1.1` silently resolves to
+nothing and prints an empty title that looks like the bug.
+
 **`ps -o pcpu` is a lifetime-decayed average, not the CPU cost now.** A daemon
 that spent its first minutes at the fast cadence reads several times its settled
 cost hours later. Sample `utime`+`stime` twice over a fixed window instead. The
