@@ -142,9 +142,32 @@ Consequence when switching: a **running** tmux server captured `default-shell`
 at start, so new panes keep spawning the old shell until `tmux kill-server`.
 Same for already-open terminal tabs.
 
-## Aliases: `l`/`la`/`ll`/`lla` are eza, not `ls`
+## Listing: `l`/`la`/`ll`/`lla`/`lt` are eza shaped like nushell's `ls`
 
 nushell's builtin `ls` was a structured table; BSD `ls -l` is nothing like it
-and eza is close. The four short aliases therefore map to
-`eza --icons --git [--long] [--all]`, matching the style `lt` already used.
-Swap them for plain `ls` if the literal POSIX behaviour is ever wanted.
+and eza is close. All five wrappers share one flag array:
+
+```zsh
+--long --header --time-style=relative --icons=always --git --classify=always
+```
+
+`l`/`la` add `--no-permissions --no-user`, `ll`/`lla` add `--smart-group` — the
+same split nushell had between `ls` and `ls -l`. Type is carried by the icon
+plus the `--classify` suffix (`/` dir, `*` executable, `@` symlink) rather than
+a column of its own.
+
+**eza cannot reproduce nushell's box borders or its `#` index column.** There is
+no border, table, or index flag in the full option list; that rendering belongs
+to nushell's table renderer, not to a listing tool. Everything else — columns,
+header row, relative timestamps, icons, git status — matches. Colors are
+tunable through `EZA_COLORS` or a `theme.yml` under `EZA_CONFIG_DIR`.
+
+Two eza traps these wrappers are built around:
+
+- **`--icons` takes an *optional* value and greedily swallows the next
+  argument**, so `eza -l --icons .` dies with
+  `invalid value '.' for '--icons'`. Always spell it `--icons=always`.
+- **Bare `eza` with no path argument prints nothing** on this machine — 0
+  bytes, exit 0, with or without flags, in and out of a sandbox — while
+  `eza .` works. That is why these are functions passing `"${@:-.}"` rather
+  than plain aliases. eza 0.23.5; recheck if a later version fixes it.

@@ -113,16 +113,34 @@ if [[ -f $_zsh_plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; t
 fi
 unset _zsh_plugins
 
-# -- aliases ------------------------------------------------------------------
+# -- listing ------------------------------------------------------------------
 #
-# l/la/ll/lla map to eza rather than coreutils ls: nushell's builtin `ls` was a
-# rich table, and eza is far closer to that than BSD ls. Swap in plain `ls -l`
-# etc. if you want the literal port.
-alias l='eza --icons --git'
-alias la='eza --icons --git --all'
-alias ll='eza --icons --git --long'
-alias lla='eza --icons --git --long --all'
-alias lt='eza --tree --level=2 --long --icons --git'
+# eza tuned to read like nushell's `ls` table: size, relative mtime, git status,
+# name, under a header row. It cannot go all the way — eza has no option for the
+# box borders or the `#` index column, those belong to nushell's renderer, not
+# to a listing tool. Type is carried by the icon plus the --classify suffix
+# (`/` dir, `*` executable, `@` symlink) instead of a column of its own.
+#
+# The l/la vs ll/lla split mirrors nushell's `ls` vs `ls -l`: the short pair
+# drops permissions and owner, the long pair keeps them.
+#
+# --icons=always, never bare --icons: the flag takes an *optional* value and
+# greedily swallows a following path, so `eza -l --icons .` is a parse error.
+_eza_nu=(
+    --long --header --time-style=relative
+    --icons=always --git --classify=always
+)
+
+# These are functions rather than aliases only because of "${@:-.}": bare `eza`
+# with no path argument prints nothing on this machine (0 bytes, exit 0) while
+# `eza .` works, so the directory is always passed explicitly.
+l()   { eza "${_eza_nu[@]}" --no-permissions --no-user       "${@:-.}" }
+la()  { eza "${_eza_nu[@]}" --no-permissions --no-user --all "${@:-.}" }
+ll()  { eza "${_eza_nu[@]}" --smart-group                    "${@:-.}" }
+lla() { eza "${_eza_nu[@]}" --smart-group --all              "${@:-.}" }
+lt()  { eza "${_eza_nu[@]}" --tree --level=2                 "${@:-.}" }
+
+# -- aliases ------------------------------------------------------------------
 
 alias c='clear'
 alias vi='nvim'
