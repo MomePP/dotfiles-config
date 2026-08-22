@@ -142,7 +142,7 @@ Consequence when switching: a **running** tmux server captured `default-shell`
 at start, so new panes keep spawning the old shell until `tmux kill-server`.
 Same for already-open terminal tabs.
 
-## Listing: `l`/`la`/`ll`/`lla`/`lt` are eza shaped like nushell's `ls`
+## Listing: `ls`/`l`/`la`/`ll`/`lla`/`lt` are eza shaped like nushell's `ls`
 
 nushell's builtin `ls` was a structured table; BSD `ls -l` is nothing like it
 and eza is close. All five wrappers share one flag set:
@@ -151,9 +151,15 @@ and eza is close. All five wrappers share one flag set:
 --long --header --time-style=relative --icons=always --git --classify=always
 ```
 
-Colours come from `eza/theme.yml` (oxocarbon, see below). `l`/`la` add
+Colours come from `eza/theme.yml` (oxocarbon, see below). `ls`/`l`/`la` add
 `--no-permissions --no-user`, `ll`/`lla` add `--smart-group` — the
-same split nushell had between `ls` and `ls -l`. Type is carried by the icon
+same split nushell had between `ls` and `ls -l`.
+
+`ls` itself is bound, not just the short forms: under nushell `ls` was already
+the table, so leaving it as coreutils would make the most-typed command the odd
+one out. `command ls` or `\ls` reaches the real binary. One muscle-memory
+trap — **eza reads `-h` as `--header`, not `--human-readable`**, so `ls -lh`
+silently means something else rather than erroring. Type is carried by the icon
 plus the `--classify` suffix (`/` dir, `*` executable, `@` symlink) rather than
 a column of its own.
 

@@ -131,6 +131,12 @@ unset _zsh_plugins
 # the note in .zprofile.
 _eza_nu='--long --header --time-style=relative --icons=always --git --classify=always'
 
+# `ls` gets the same view as `l`: under nushell `ls` was already the table, so
+# a bare grid here would be the odd one out. Reach the real binary with
+# `command ls` or `\ls` when POSIX behaviour is actually wanted — note that
+# eza reads `-h` as --header, not --human-readable, so `ls -lh` is not an error
+# but does not mean what it does in coreutils.
+alias ls="eza $_eza_nu --no-permissions --no-user"
 alias l="eza $_eza_nu --no-permissions --no-user"
 alias la="eza $_eza_nu --no-permissions --no-user --all"
 alias ll="eza $_eza_nu --smart-group"
