@@ -145,13 +145,14 @@ Same for already-open terminal tabs.
 ## Listing: `l`/`la`/`ll`/`lla`/`lt` are eza shaped like nushell's `ls`
 
 nushell's builtin `ls` was a structured table; BSD `ls -l` is nothing like it
-and eza is close. All five wrappers share one flag array:
+and eza is close. All five wrappers share one flag set:
 
 ```zsh
 --long --header --time-style=relative --icons=always --git --classify=always
 ```
 
-`l`/`la` add `--no-permissions --no-user`, `ll`/`lla` add `--smart-group` — the
+Colours come from `eza/theme.yml` (oxocarbon, see below). `l`/`la` add
+`--no-permissions --no-user`, `ll`/`lla` add `--smart-group` — the
 same split nushell had between `ls` and `ls -l`. Type is carried by the icon
 plus the `--classify` suffix (`/` dir, `*` executable, `@` symlink) rather than
 a column of its own.
@@ -159,15 +160,37 @@ a column of its own.
 **eza cannot reproduce nushell's box borders or its `#` index column.** There is
 no border, table, or index flag in the full option list; that rendering belongs
 to nushell's table renderer, not to a listing tool. Everything else — columns,
-header row, relative timestamps, icons, git status — matches. Colors are
-tunable through `EZA_COLORS` or a `theme.yml` under `EZA_CONFIG_DIR`.
+header row, relative timestamps, icons, git status — matches.
 
-Two eza traps these wrappers are built around:
+Colours live in `eza/theme.yml`, repainted from the oxocarbon palette that
+ghostty and the nvim colorscheme use. It is written in **truecolor hexes, not
+the 30-37 ANSI codes**, because oxocarbon remaps the ANSI slots — slot 1
+"red" is cyan, slot 2 "green" is blue — so `32` would render blue. Semantics
+carry over from the old nushell `dark_theme`: green-bold header, purple dates,
+cyan filesizes, white plain files. Setting `EZA_COLORS` would override the
+whole file *and* drop the underline eza puts on the header; leave it unset.
+
+Three eza traps, all found the hard way on 0.23.5:
 
 - **`--icons` takes an *optional* value and greedily swallows the next
   argument**, so `eza -l --icons .` dies with
   `invalid value '.' for '--icons'`. Always spell it `--icons=always`.
-- **Bare `eza` with no path argument prints nothing** on this machine — 0
-  bytes, exit 0, with or without flags, in and out of a sandbox — while
-  `eza .` works. That is why these are functions passing `"${@:-.}"` rather
-  than plain aliases. eza 0.23.5; recheck if a later version fixes it.
+
+- **`EZA_CONFIG_DIR` must be exported even when it names the default path.**
+  `eza(1)` says it "defaults to `$XDG_CONFIG_HOME/eza` or `$HOME/.config/eza`",
+  but 0.23.5 does not look there — `~/.config/eza/theme.yml` is silently
+  ignored until the variable is set, which is why `.zprofile` exports it.
+
+- **eza reads paths from stdin whenever stdin is not a TTY**, with no `--stdin`
+  flag needed. So in any non-interactive shell — a script, a CI step, an agent
+  harness — bare `eza` reads an empty stdin, finds zero paths, and prints
+  nothing at all: 0 bytes, exit 0, no error. It looks exactly like a broken
+  binary and is not; `eza .` works, and so does bare `eza` in a real terminal.
+  Do **not** "fix" this by wrapping the aliases in functions that append
+  `"${@:-.}"` — that was tried, and it breaks every flag-only invocation
+  (`ll --all` passes `--all` as the path and drops the directory).
+
+**eza theme.yml silently ignores keys it does not recognise.** A typo or a
+wrong nesting level (`ui.header` instead of top-level `header`) produces no
+error, just a section that stayed default-coloured. Verify by eye, or grep the
+output of `eza --color=always … | cat -v` for the expected `38;2;R;G;B`.

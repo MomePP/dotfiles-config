@@ -126,19 +126,17 @@ unset _zsh_plugins
 #
 # --icons=always, never bare --icons: the flag takes an *optional* value and
 # greedily swallows a following path, so `eza -l --icons .` is a parse error.
-_eza_nu=(
-    --long --header --time-style=relative
-    --icons=always --git --classify=always
-)
+#
+# Colours come from eza/theme.yml, which needs EZA_CONFIG_DIR exported — see
+# the note in .zprofile.
+_eza_nu='--long --header --time-style=relative --icons=always --git --classify=always'
 
-# These are functions rather than aliases only because of "${@:-.}": bare `eza`
-# with no path argument prints nothing on this machine (0 bytes, exit 0) while
-# `eza .` works, so the directory is always passed explicitly.
-l()   { eza "${_eza_nu[@]}" --no-permissions --no-user       "${@:-.}" }
-la()  { eza "${_eza_nu[@]}" --no-permissions --no-user --all "${@:-.}" }
-ll()  { eza "${_eza_nu[@]}" --smart-group                    "${@:-.}" }
-lla() { eza "${_eza_nu[@]}" --smart-group --all              "${@:-.}" }
-lt()  { eza "${_eza_nu[@]}" --tree --level=2                 "${@:-.}" }
+alias l="eza $_eza_nu --no-permissions --no-user"
+alias la="eza $_eza_nu --no-permissions --no-user --all"
+alias ll="eza $_eza_nu --smart-group"
+alias lla="eza $_eza_nu --smart-group --all"
+alias lt="eza $_eza_nu --tree --level=2"
+unset _eza_nu   # aliases expanded it at definition time; nothing needs it later
 
 # -- aliases ------------------------------------------------------------------
 

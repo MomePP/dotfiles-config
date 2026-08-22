@@ -74,7 +74,7 @@ symlink_config() {
 }
 
 # INFO: -- install config directories
-config_dirs=(nvim aerospace aerospace-swipe bat bin carapace claude-code delta gh-dash ghostty git herdr homebrew kitty lazygit opencode tmux zsh)
+config_dirs=(nvim aerospace aerospace-swipe bat bin carapace claude-code delta eza gh-dash ghostty git herdr homebrew kitty lazygit opencode tmux zsh)
 for dir in "${config_dirs[@]}"; do
     install_config_dir "$dir"
 done

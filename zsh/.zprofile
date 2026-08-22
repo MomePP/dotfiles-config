@@ -39,3 +39,9 @@ export SDKROOT='/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk'
 # carapace falls back to these shells' completion specs for commands it has no
 # native spec for (lazygit, tmux, cargo — none of which ship a zsh completion).
 export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
+
+# Must be set explicitly. eza(1) claims this "defaults to $XDG_CONFIG_HOME/eza
+# or $HOME/.config/eza", but 0.23.5 does not actually look there — the theme is
+# silently ignored unless the variable is present, even when it names the exact
+# path the man page describes.
+export EZA_CONFIG_DIR="$XDG_CONFIG_HOME/eza"
