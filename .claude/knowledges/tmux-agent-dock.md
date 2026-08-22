@@ -366,7 +366,7 @@ Four things about the cwd match are load-bearing, each learned the hard way:
 
 - **The dock must be `exec`'d, or none of the rest matters.** tmux runs a pane
   command through `default-shell`, so `split-window "<exe> dock"` makes the
-  pane's process `nu -c <exe> dock` with the dock a *child* of it — and
+  pane's process `zsh -c <exe> dock` with the dock a *child* of it — and
   `pane_current_path` comes from the pane's own process. Every `set_current_dir`
   the dock made was invisible; its reported directory stayed frozen at whatever
   the pane it was split from was in. `split-window "exec <exe> dock"` replaces

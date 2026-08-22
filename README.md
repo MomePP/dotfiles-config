@@ -15,6 +15,42 @@ Most of the keybindings can be modified in [keymaps.lua](nvim/lua/config/keymaps
 #### Plugins
 All the installed plugins are listed in [plugins/init.lua](nvim/lua/plugins/init.lua) or [plugins/](nvim/lua/plugins/)
 
+## zsh
+The login shell. Uses the zsh macOS ships (`/bin/zsh`, 5.9) — Homebrew's is
+5.9.2, a patch bump with nothing user-visible, and the system one is already
+listed in `/etc/shells` so it needs no `sudo` and cannot leave the account
+shell-less if a `brew upgrade` fails part-way.
+
+``` bash
+chsh -s /bin/zsh
+```
+
+`config-installer.sh` symlinks both rc files, which zsh only reads from `$HOME`:
+
+| File | Holds |
+| --- | --- |
+| [`zsh/.zprofile`](zsh/.zprofile) | `brew shellenv`, PATH, exported env — runs once per login shell |
+| [`zsh/.zshrc`](zsh/.zshrc) | completions, prompt, vi mode, keybinds, aliases, functions |
+
+Tool init lives in `.zshrc`: `starship`, `carapace` (after `compinit`, which it
+needs for `compdef`), `fnm --use-on-cd`, `pyenv init -`, and `bun completions`.
+Most CLI completions come free — `brew shellenv` puts
+`/opt/homebrew/share/zsh/site-functions` on `FPATH` and `compinit` picks them
+all up; carapace covers what brew does not ship (`lazygit`, `tmux`, `cargo`).
+
+Inline hints and syntax highlighting are the two things zsh does not have built
+in. `config-installer.sh` installs them; `.zshrc` sources both behind an
+existence check, so a machine without them still gets a working shell.
+
+``` bash
+brew install zsh-autosuggestions zsh-syntax-highlighting
+```
+
+> The `brew` function in `.zshrc` is not a convenience — it re-runs
+> `claude-relink` after every invocation. macOS TCC grants app-data access by
+> absolute path and the claude-code cask installs to a version-stamped dir, so
+> without it every `brew upgrade` re-triggers "Data Access Blocked".
+
 ## Fish shell
 Requires `fish` and `fisher`(packages manager)
 
@@ -28,24 +64,6 @@ chsh -s /bin/fish   # set default shell to fish
 ``` bash
 curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher   # install fisher
 fisher update   # install all listed plugins in `fish_plugins`
-```
-
-## nushell
-Requires `nu` to be installed
-``` bash
-brew install nushell
-sudo echo "$(which nu)" >> /etc/shells
-chsh -s $(which nu)
-```
-
-### setup nu config files to source from XDG_CONFIG_HOME
-
-``` Library/Application Support/nushell/config.nu
-source ~/.config/nushell/config.nu
-```
-
-``` Library/Application Support/nushell/env.nu
-source ~/.config/nushell/env.nu
 ```
 
 ## tmux

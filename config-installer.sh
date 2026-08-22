@@ -1,7 +1,11 @@
 #!/bin/bash
 
 # WARN: must have brew installed
-brew install wget lazygit git-flow-avh git-delta ripgrep fd eza fnm neovim nushell gh bat pyenv tmux starship aerospace tree-sitter-cli carapace
+brew install wget lazygit git-flow-avh git-delta ripgrep fd eza fnm neovim gh bat pyenv tmux starship aerospace tree-sitter-cli carapace
+# Inline hints and syntax highlighting are the two things zsh has no built-in
+# equivalent for. .zshrc sources them behind an existence check, so a machine
+# without them still gets a working shell.
+brew install zsh-autosuggestions zsh-syntax-highlighting
 brew install opencode
 # brew install --cask ghostty kitty
 
@@ -70,7 +74,7 @@ symlink_config() {
 }
 
 # INFO: -- install config directories
-config_dirs=(nvim aerospace aerospace-swipe bat bin carapace claude-code delta gh-dash ghostty git herdr homebrew kitty lazygit nushell opencode tmux)
+config_dirs=(nvim aerospace aerospace-swipe bat bin carapace claude-code delta gh-dash ghostty git herdr homebrew kitty lazygit opencode tmux zsh)
 for dir in "${config_dirs[@]}"; do
     install_config_dir "$dir"
 done
@@ -96,6 +100,14 @@ else
     echo "skipped gitconfig.."
 fi
 
+# INFO: -- symlink the zsh rc files
+#
+# zsh only reads these two from $HOME (or $ZDOTDIR, which we do not set), so
+# they cannot live under ~/.config on their own. .zprofile carries PATH and
+# exported env; .zshrc carries everything interactive.
+symlink_config "zsh/.zprofile" ~/.zprofile
+symlink_config "zsh/.zshrc" ~/.zshrc
+
 # INFO: -- symlink claude code settings + the caskroom relink helper
 #
 # claude-relink keeps ~/.local/bin/claude hardlinked to the current cask
@@ -113,7 +125,7 @@ symlink_config "bin/claude-relink" ~/.local/bin/claude-relink
 # linking each skill separately.
 symlink_config "claude-code/skills" ~/.claude/skills
 
-# esp-clangd-update is called bare by the `brew` wrapper in nushell/config.nu,
+# esp-clangd-update is called bare by the `brew` wrapper in zsh/.zshrc,
 # and ~/.config/bin is not on PATH — so it needs the same ~/.local/bin symlink
 # or every `brew update` on a fresh machine ends in "command not found".
 symlink_config "bin/esp-clangd-update" ~/.local/bin/esp-clangd-update

@@ -20,7 +20,7 @@
 #     cross-compiler instead, via `CompileFlags: BuiltinHeaders: QueryDriver`
 #     plus --query-driver. Do not "fix" the missing headers by pulling 324MB.
 #
-# Both flags exist so the `brew` wrapper in nushell/config.nu can mirror brew's
+# Both flags exist so the `brew` wrapper in zsh/.zshrc can mirror brew's
 # own split: `brew update` reports what is available, `brew upgrade` installs
 # it. Neither may break the brew command it rides on, so both swallow the
 # pre-install failure modes and stay silent when there is nothing to do.
