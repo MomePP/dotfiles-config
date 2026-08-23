@@ -115,34 +115,39 @@ unset _zsh_plugins
 
 # -- listing ------------------------------------------------------------------
 #
-# eza tuned to read like nushell's `ls` table: size, relative mtime, git status,
-# name, under a header row. It cannot go all the way — eza has no option for the
-# box borders or the `#` index column, those belong to nushell's renderer, not
-# to a listing tool. Type is carried by the icon plus the --classify suffix
-# (`/` dir, `*` executable, `@` symlink) instead of a column of its own.
+# The table forms are tuned to read like nushell's `ls`: size, relative mtime,
+# git status, name, under a header row. They cannot go all the way — eza has no
+# option for the box borders or the `#` index column, those belong to nushell's
+# renderer, not to a listing tool. Type is carried by the icon plus the
+# --classify suffix (`/` dir, `*` executable, `@` symlink) throughout.
 #
-# The l/la vs ll/lla split mirrors nushell's `ls` vs `ls -l`: the short pair
-# drops permissions and owner, the long pair keeps them.
+# ls/l/la are the quick glance, ll/lla the full table — the coreutils rhythm,
+# where the short command stays short. Making every variant a table left `ls`
+# differing from `la` only by dotfiles, which is invisible in any directory
+# that has none.
+#
+# --git is deliberately absent from the grid: without --long there is no column
+# to put it in, so it would cost a status walk and show nothing.
 #
 # --icons=always, never bare --icons: the flag takes an *optional* value and
 # greedily swallows a following path, so `eza -l --icons .` is a parse error.
 #
 # Colours come from eza/theme.yml, which needs EZA_CONFIG_DIR exported — see
 # the note in .zprofile.
-_eza_nu='--long --header --time-style=relative --icons=always --git --classify=always'
+_eza_grid='--icons=always --classify=always'
+_eza_table='--long --header --time-style=relative --icons=always --git --classify=always'
 
-# `ls` gets the same view as `l`: under nushell `ls` was already the table, so
-# a bare grid here would be the odd one out. Reach the real binary with
-# `command ls` or `\ls` when POSIX behaviour is actually wanted — note that
-# eza reads `-h` as --header, not --human-readable, so `ls -lh` is not an error
-# but does not mean what it does in coreutils.
-alias ls="eza $_eza_nu --no-permissions --no-user"
-alias l="eza $_eza_nu --no-permissions --no-user"
-alias la="eza $_eza_nu --no-permissions --no-user --all"
-alias ll="eza $_eza_nu --smart-group"
-alias lla="eza $_eza_nu --smart-group --all"
-alias lt="eza $_eza_nu --tree --level=2"
-unset _eza_nu   # aliases expanded it at definition time; nothing needs it later
+# `ls` is bound too. Reach the real binary with `command ls` or `\ls` when
+# POSIX behaviour is actually wanted — and note that eza reads `-h` as
+# --header, not --human-readable, so `ls -lh` is not an error but does not mean
+# what it does in coreutils.
+alias ls="eza $_eza_grid"
+alias l="eza $_eza_grid"
+alias la="eza $_eza_grid --all"
+alias ll="eza $_eza_table --smart-group"
+alias lla="eza $_eza_table --smart-group --all"
+alias lt="eza $_eza_table --tree --level=2"
+unset _eza_grid _eza_table   # expanded at definition time; nothing needs them later
 
 # -- aliases ------------------------------------------------------------------
 

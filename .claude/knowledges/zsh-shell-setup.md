@@ -145,21 +145,29 @@ Same for already-open terminal tabs.
 ## Listing: `ls`/`l`/`la`/`ll`/`lla`/`lt` are eza shaped like nushell's `ls`
 
 nushell's builtin `ls` was a structured table; BSD `ls -l` is nothing like it
-and eza is close. All five wrappers share one flag set:
+and eza is close. Two flag sets, split the coreutils way — short command, short
+output:
 
 ```zsh
---long --header --time-style=relative --icons=always --git --classify=always
+grid  = --icons=always --classify=always                    # ls, l, la
+table = --long --header --time-style=relative \
+        --icons=always --git --classify=always              # ll, lla, lt
 ```
 
-Colours come from `eza/theme.yml` (oxocarbon, see below). `ls`/`l`/`la` add
-`--no-permissions --no-user`, `ll`/`lla` add `--smart-group` — the
-same split nushell had between `ls` and `ls -l`.
+`la` adds `--all` to the grid; `lla` adds it to the table; `lt` adds
+`--tree --level=2`. Colours come from `eza/theme.yml` (oxocarbon, see below).
 
-`ls` itself is bound, not just the short forms: under nushell `ls` was already
-the table, so leaving it as coreutils would make the most-typed command the odd
-one out. `command ls` or `\ls` reaches the real binary. One muscle-memory
-trap — **eza reads `-h` as `--header`, not `--human-readable`**, so `ls -lh`
-silently means something else rather than erroring. Type is carried by the icon
+**Every variant was a table at first, and that was a mistake**: it left `ls`
+differing from `la` only by dotfiles, which is invisible in any directory that
+has none, and it cost the quick glance that a bare `ls` is for.
+
+`--git` is deliberately absent from the grid set — with no `--long` there is no
+column to render it in, so it would pay for a git status walk and show nothing.
+
+`ls` itself is bound, not just the short forms. `command ls` or `\ls` reaches
+the real binary. One muscle-memory trap — **eza reads `-h` as `--header`, not
+`--human-readable`**, so `ls -lh` silently means something else rather than
+erroring. Type is carried by the icon
 plus the `--classify` suffix (`/` dir, `*` executable, `@` symlink) rather than
 a column of its own.
 
