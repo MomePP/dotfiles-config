@@ -30,3 +30,6 @@ nvim/nvim-pack-lock.json
 # herdr: track only config.toml; ignore runtime state (logs, sockets, session)
 /herdr/*
 !/herdr/config.toml
+
+# Superset drops its Amp lifecycle plugin here; vendor-owned, updated by the app.
+/amp/plugins/superset-lifecycle.ts

@@ -1,0 +1,7 @@
+{
+  "setup": [
+    "mkdir -p .claude/tmp",
+    "cp -n \"$SUPERSET_ROOT_PATH/.claude/settings.local.json\" .claude/settings.local.json 2>/dev/null || true"
+  ],
+  "teardown": []
+}
