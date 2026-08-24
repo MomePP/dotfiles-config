@@ -199,6 +199,7 @@ brew() {
     (( rc == 0 )) || return $rc
     case "$1" in
         update)  esp-clangd-update --check ;;
-        upgrade) esp-clangd-update --quiet || true ;;
+        upgrade) esp-clangd-update --quiet || true
+                 superset-repatch || true ;;
     esac
 }

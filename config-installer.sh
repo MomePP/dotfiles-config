@@ -130,6 +130,12 @@ symlink_config "claude-code/skills" ~/.claude/skills
 # or every `brew update` on a fresh machine ends in "command not found".
 symlink_config "bin/esp-clangd-update" ~/.local/bin/esp-clangd-update
 
+# superset-repatch is called bare by the same `brew` wrapper, for the same
+# reason. It rebuilds ~/Applications/Superset-transparent.app from the freshly
+# upgraded /Applications/Superset.app, since a cask upgrade drops the
+# transparency patches, the asar-integrity hash and the ad-hoc signature.
+symlink_config "bin/superset-repatch" ~/.local/bin/superset-repatch
+
 # NOTE: the SessionStart hooks in settings.json are NOT tracked here.
 # ~/.claude/hooks/context-mode-cache-heal.mjs and herdr-agent-state.sh are
 # vendor-managed — each tool redeploys and re-registers its own hook, so they

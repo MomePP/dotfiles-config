@@ -1,0 +1,256 @@
+#!/usr/bin/env python3
+"""Re-apply the transparency patches to a private copy of Superset.app.
+
+Homebrew replaces /Applications/Superset.app wholesale on every cask upgrade,
+which drops the patches, the rewritten asar-integrity hash, and the ad-hoc
+signature all at once. Rather than patch the managed app — where the next
+upgrade would silently revert it and Gatekeeper would have to be re-satisfied
+each time — this keeps a parallel copy at ~/Applications/Superset-transparent.app
+and rebuilds it from the freshly-upgraded original whenever the version moves.
+
+Run it bare after `brew upgrade`; the `brew` wrapper in zsh/.zshrc does that.
+Silent when the copy is already current, so it costs nothing on the no-op path.
+
+Why the patches are byte-for-byte same-length: an asar is a JSON header of file
+offsets followed by concatenated bodies. Replacing bytes without changing the
+total length keeps every offset valid, so a 1.2 GB archive never has to be
+unpacked and repacked. Each replacement is padded with spaces to match.
+
+Anchors are matched by content, never by byte offset, so the patches survive
+Superset's code moving between releases. A target that genuinely disappears is
+reported rather than silently skipped — that is the signal that a patch needs
+rewriting for a new version.
+"""
+
+import argparse
+import hashlib
+import plistlib
+import re
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+STOCK = Path("/Applications/Superset.app")
+PATCHED = Path.home() / "Applications" / "Superset-transparent.app"
+STAMP_NAME = ".patched-from-version"
+
+# --- the look, in one place -------------------------------------------------
+#
+# These are the persistent choice: the `brew` wrapper runs this script with no
+# arguments, so anything set only via a flag would be lost on the next cask
+# upgrade. Use the flags to try a value, then write the winner here.
+#
+# VIBRANCY: a macOS NSVisualEffectView material, or None for no blur at all.
+# There is no blur-radius knob — Electron exposes the material and nothing else,
+# and CSS backdrop-filter cannot reach the desktop behind a transparent window.
+# So the only way to "less blur" is a lighter material, or None.
+#
+#   None            no blur; the window is plainly see-through and TINT applies
+#   "hud"           tight and dark
+#   "sidebar"       light, the least heavy of the blurred options
+#   "under-window"  the macOS default feel
+#   "fullscreen-ui" broad and soft
+#   also: popover, menu, sheet, window, titlebar, selection, header, tooltip
+#
+# TINT: ARGB dim on the window, used ONLY when VIBRANCY is None — Electron
+# drops it whenever a material is set. Leading byte is the alpha:
+# #40 ≈ 25%, #80 = 50%, #B3 ≈ 70%, #CC = 80%.
+#
+# With a material, dim through the theme's `ui.background` instead. Every
+# macOS vibrancy material boosts the saturation of what it blurs — that is what
+# "vibrancy" means in the API — and a theme-level dim paints over the material
+# and mutes it back, which no window-level setting can do. That pairing is what
+# gets ghostty's calm blur. Keep `card`/`tertiary`/`sidebar` at alpha 0 so only
+# one layer carries alpha, or nested `bg-background` rows start to band.
+VIBRANCY: str | None = "hud"
+TINT = "#B3161616"
+
+# (label, old, new, expected occurrences or None for "however many exist")
+PATCHES = [
+    (
+        # Built from VIBRANCY/TINT — see window_options(). The tint has to live
+        # on the window rather than in the theme because Superset nests
+        # `bg-background` rows inside `bg-background` parents: any alpha below 1
+        # composites with itself, so every nested chrome row reads darker than
+        # the pane. One layer beneath everything has nothing to compound with.
+        "window transparency",
+        b'backgroundColor: electron.nativeTheme.shouldUseDarkColors ? "#252525" : "#ffffff",',
+        None,  # filled in at runtime
+        1,
+    ),
+    (
+        "xterm allowTransparency",
+        b"allowTransparency: false",
+        b"allowTransparency: true ",
+        None,
+    ),
+    (
+        # The workspace tab is distinguished only by `bg-background`, and the
+        # glass theme puts every surface at alpha 0 so nested `bg-background`
+        # rows cannot compound — which leaves the active tab with no fill.
+        #
+        # Borrow the styling Superset already uses for its Radix tabs (the
+        # Files/Changes/Review row), whose dark active state is
+        # `bg-input/30` + `border-input` + `text-foreground`. Matching those
+        # exactly makes the two tab rows look like one system instead of an
+        # approximation, and `input` then drives both. Only the isActive branch
+        # matches; the inactive branch has no bg class to disturb.
+        "active tab fill",
+        b"border border-border border-b-transparent bg-background text-foreground",
+        b"border border-input border-b-transparent bg-input/30 text-foreground",
+        None,
+    ),
+]
+
+# (label, anchor, search window after anchor, old, new)
+SCOPED_PATCHES = [
+    (
+        "host-unreachable overlay background",
+        b"function WorkspaceHostUnreachableState(",
+        800,
+        b"flex h-full w-full items-center justify-center p-6",
+        b"grid size-full place-items-center bg-popover p-6",
+    ),
+]
+
+
+def window_options(vibrancy: str | None, tint: str) -> bytes:
+    """The BrowserWindow options replacing the stock opaque backgroundColor.
+
+    Vibrancy and tint compose rather than exclude each other, which is how
+    ghostty gets its look: a blur radius *and* a background opacity, so the
+    wallpaper becomes a calm uniform wash instead of legible detail behind
+    text. The material blurs; the ARGB tint dims what the blur produced.
+
+    Tint stays on the window rather than in the theme because Superset nests
+    `bg-background` inside `bg-background` — any alpha below 1 there composites
+    with itself and every nested chrome row reads darker than the pane.
+    """
+    parts = ["transparent: true,"]
+    if vibrancy:
+        # Measured, not assumed: Electron silently ignores an alpha
+        # backgroundColor whenever a material is set, so emitting it here would
+        # be noise. With a material, dim through the theme's `ui.background`
+        # instead — that layer paints *over* the vibrancy and mutes it.
+        parts.append(f'vibrancy: "{vibrancy}",')
+    elif tint:
+        parts.append(f'backgroundColor: "{tint}",')
+    return " ".join(parts).encode()
+
+
+def app_version(app: Path) -> str:
+    info = plistlib.loads((app / "Contents" / "Info.plist").read_bytes())
+    return f"{info.get('CFBundleShortVersionString', '?')}+{info.get('CFBundleVersion', '?')}"
+
+
+def patch_asar(asar: Path, vibrancy: str | None, tint: str) -> tuple[str, list[str]]:
+    data = asar.read_bytes()
+    original_len = len(data)
+    notes: list[str] = []
+
+    for name, old, new, expect in PATCHES:
+        if new is None:  # the window options are composed from VIBRANCY/TINT
+            new = window_options(vibrancy, tint)
+        if len(new) > len(old):
+            sys.exit(f"{name}: replacement longer than original — would shift asar offsets")
+        hits = [m.start() for m in re.finditer(re.escape(old), data)]
+        if not hits:
+            notes.append(f"MISSED  {name}: target not found")
+            continue
+        if expect is not None and len(hits) != expect:
+            sys.exit(f"{name}: expected {expect} occurrence(s), found {len(hits)} — refusing to guess")
+        data = data.replace(old, new + b" " * (len(old) - len(new)))
+        notes.append(f"ok      {name} ({len(hits)}x)")
+
+    for name, anchor, window, old, new in SCOPED_PATCHES:
+        if len(new) > len(old):
+            sys.exit(f"{name}: replacement longer than original — would shift asar offsets")
+        anchors = [m.start() for m in re.finditer(re.escape(anchor), data)]
+        if not anchors:
+            notes.append(f"MISSED  {name}: anchor not found")
+            continue
+        padded = new + b" " * (len(old) - len(new))
+        done = 0
+        # The anchor matches the executing bundle and the source copy shipped
+        # beside it; patching both keeps them consistent and only one runs.
+        for lo in anchors:
+            at = data.find(old, lo, min(len(data), lo + window))
+            if at == -1:
+                continue
+            data = data[:at] + padded + data[at + len(old):]
+            done += 1
+        notes.append(f"ok      {name} ({done}x)" if done else f"MISSED  {name}: no match near anchor")
+
+    if len(data) != original_len:
+        sys.exit("length changed — asar offsets would break, refusing to write")
+
+    asar.write_bytes(data)
+    return hashlib.sha256(data).hexdigest(), notes
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--force", action="store_true", help="rebuild even when the version is unchanged")
+    ap.add_argument("--quiet", action="store_true", help="only speak up on error")
+    ap.add_argument("--vibrancy", metavar="MATERIAL", default=VIBRANCY,
+                    help="macOS blur material, or 'none' for no blur. One of: "
+                         "none, hud, sidebar, under-window, fullscreen-ui, popover, menu, "
+                         "sheet, window, titlebar, selection, header, tooltip, content. "
+                         "Composes with --tint. Try one here, then set VIBRANCY in this file to keep it")
+    ap.add_argument("--tint", metavar="AARRGGBB", default=TINT,
+                    help="ARGB window tint, used only when there is no vibrancy material")
+    args = ap.parse_args()
+
+    if not STOCK.exists():
+        print(f"superset-repatch: no app at {STOCK}", file=sys.stderr)
+        return 1
+
+    version = app_version(STOCK)
+    stamp = PATCHED / "Contents" / "Resources" / STAMP_NAME
+
+    want = f"{(None if str(args.vibrancy).lower() in ('none','') else args.vibrancy) or 'none'}"
+    if not args.force and stamp.exists() and stamp.read_text().strip() == f"{version}|{want}|{args.tint}":
+        return 0  # already current — the no-op path stays silent
+
+    if not args.quiet:
+        print(f"superset-repatch: rebuilding transparent copy from {version}")
+
+    if PATCHED.exists():
+        shutil.rmtree(PATCHED)
+    PATCHED.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(STOCK, PATCHED, symlinks=True)
+
+    vibrancy = None if str(args.vibrancy).lower() in ("none", "") else args.vibrancy
+    digest, notes = patch_asar(PATCHED / "Contents" / "Resources" / "app.asar", vibrancy, args.tint)
+    for note in notes:
+        print(f"  {note}")
+
+    # Electron refuses to load an asar whose hash does not match this key, and
+    # the key name contains a dot, so PlistBuddy (`:` separated) is required —
+    # `plutil -replace` would read "Resources/app.asar" as two nested keys.
+    subprocess.run(
+        ["/usr/libexec/PlistBuddy", "-c",
+         f"Set :ElectronAsarIntegrity:Resources/app.asar:hash {digest}",
+         str(PATCHED / "Contents" / "Info.plist")],
+        check=True,
+    )
+
+    # Editing anything under Contents/ invalidates the Developer ID signature,
+    # and the hardened runtime means the app will not launch unsigned.
+    subprocess.run(["codesign", "--force", "--deep", "--sign", "-", str(PATCHED)], check=True)
+
+    stamp.write_text(f"{version}|{vibrancy or 'none'}|{args.tint}\n")
+
+    if any(n.startswith("MISSED") for n in notes):
+        print("superset-repatch: some patches did not apply — Superset's code moved, they need rewriting",
+              file=sys.stderr)
+        return 2
+
+    if not args.quiet:
+        print(f"superset-repatch: done — restart {PATCHED.name} to pick it up")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
