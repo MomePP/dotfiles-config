@@ -46,29 +46,49 @@ Patches are matched by **content anchors, never byte offsets**, so they survive
 Superset's code moving between releases. A target that disappears is reported
 as `MISSED` and exits 2 rather than shipping a half-patched app.
 
-## The four patches
+## The patches
 
-- **window transparency** — replaces the stock opaque
-  `backgroundColor: nativeTheme.shouldUseDarkColors ? …` with
-  `transparent: true` plus either a `vibrancy` material or an ARGB
-  `backgroundColor`. Removing the opaque colour is not optional; it defeats
+Seven, all same-length byte replacements:
+
+- **window transparency** — replaces the stock opaque `backgroundColor` with
+  `transparent: true` plus a `vibrancy` material (or an ARGB tint when there is
+  no material). Removing the opaque colour is not optional; it defeats
   `transparent: true` on its own.
-- **xterm allowTransparency** — Superset never passes `allowTransparency`, so
-  xterm.js falls back to its default `false`, paints the canvas opaque and
-  flattens any rgba `terminal.background` against black. Flipping the seven
-  `DEFAULT_OPTIONS` copies fixes every terminal at once. Note the cost: with it
-  on, xterm alpha-blends per cell instead of doing a fast opaque fill, so heavy
-  scrollback can get measurably slower.
-- **active tab fill** — the workspace tab is distinguished only by
-  `bg-background`, which the theme sets to alpha 0 (see below), leaving it with
-  no fill. It is restyled to `bg-input/30` + `border-input`, the exact classes
-  Superset's own Radix tabs (the Files/Changes/Review row) use for their dark
-  active state, so both tab rows read as one system and `ui.input` drives both.
-- **host-unreachable overlay background** — `WorkspaceHostUnreachableState`
-  ships with *no* background class (`flex h-full w-full items-center
-  justify-center p-6`), relying on the pane beneath being opaque. Once it is
-  not, the text is unreadable over the transcript. Scoped by anchor because
-  that class string appears 9 times across unrelated components.
+- **xterm allowTransparency** — Superset never passes it, so xterm.js falls
+  back to `false`, paints the canvas opaque and flattens any rgba
+  `terminal.background` against black. The cost of turning it on: xterm
+  alpha-blends per cell instead of doing a fast opaque fill, so heavy scrollback
+  can get measurably slower.
+- **active tab** — `border-input` + **`bg-card`**, keeping the original shape.
+- **right-pane inactive tab** — `bg-border/30` → `bg-card`, so Files/Review lose
+  the fill the terminal row's inactive tabs never had. Matched together with
+  `text-muted-foreground/70`, because `bg-border/30` alone appears 8 times and
+  most are *active*-state uses elsewhere.
+- **chrome bar background** (×2 patterns) — the tab strip and workspace header
+  paint `bg-muted/45 dark:bg-muted/35`, a visible band over the wash. Patched
+  rather than zeroing `ui.muted`, which also drives `hover:bg-muted`.
+- **host-unreachable overlay** — `WorkspaceHostUnreachableState` ships with *no*
+  background class, relying on the pane beneath being opaque. Scoped by anchor
+  because that class string appears 9 times across unrelated components.
+
+### `bg-card`, never `bg-background`, for anything meant to match a pane
+
+These are not interchangeable. In the dark theme `ui.background` carries the
+whole dim (alpha 0.55), so putting `bg-background` on a tab paints a *second*
+dim layer over the strip's and compounds into a darker slab. `card` is alpha 0
+in both themes, so tab and pane resolve to the same surface. This is the
+compounding trap again, in a single element.
+
+### Do not restyle by analogy
+
+A `TabsTrigger` in the bundle uses `rounded-[7px]`, and it is tempting to treat
+that as "how Superset does tabs". It is a different component from the
+right-pane Files/Changes/Review row, which is square with an open bottom edge —
+the same browser-tab form the workspace tabs already had. Rounding them made
+the two rows disagree rather than match, and had to be reverted.
+
+**Read the element, do not infer it.** Every one of these was settled in one
+look with DevTools (⌘⌥I, then ⌘⇧C) and guessed wrong at least once beforehand.
 
 ## The compounding trap — the thing that cost the most time
 

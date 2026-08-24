@@ -35,36 +35,50 @@ STOCK = Path("/Applications/Superset.app")
 PATCHED = Path.home() / "Applications" / "Superset-transparent.app"
 STAMP_NAME = ".patched-from-version"
 
-# --- the look, in one place -------------------------------------------------
+# --- the two looks ----------------------------------------------------------
 #
-# These are the persistent choice: the `brew` wrapper runs this script with no
-# arguments, so anything set only via a flag would be lost on the next cask
-# upgrade. Use the flags to try a value, then write the winner here.
+# THEME is the persistent choice: the `brew` wrapper runs this script with no
+# arguments, so anything set only via a flag is lost on the next cask upgrade.
+# Try a variant with --theme, then write the winner here.
 #
-# VIBRANCY: a macOS NSVisualEffectView material, or None for no blur at all.
-# There is no blur-radius knob — Electron exposes the material and nothing else,
-# and CSS backdrop-filter cannot reach the desktop behind a transparent window.
-# So the only way to "less blur" is a lighter material, or None.
+# Each variant pairs a window treatment with the Superset theme that expects it
+# — the two are not independent. A theme with alpha-0 surfaces looks flat on an
+# unpatched window, and a patched window with an opaque theme shows no glass at
+# all, so switching one without the other is always wrong.
+THEME = "dark"
+
+THEMES = {
+    "dark": {
+        "vibrancy": "hud",
+        "tint": "#59161616",
+        "id": "oxocarbon-glass",
+        "file": "superset/oxocarbon-glass.json",
+    },
+    "light": {
+        "vibrancy": "hud",
+        "tint": "#59f2f2f2",
+        "id": "oxocarbon-light-glass",
+        "file": "superset/oxocarbon-light-glass.json",
+    },
+}
+
+CONFIG_DIR = Path.home() / ".config"
+
+# VIBRANCY: a macOS NSVisualEffectView material, or None for no blur. There is
+# no blur-radius knob — Electron exposes the material and nothing else, and CSS
+# backdrop-filter cannot reach the desktop behind a transparent window.
 #
-#   None            no blur; the window is plainly see-through and TINT applies
+#   None            no blur; TINT applies instead
 #   "hud"           tight and dark
-#   "sidebar"       light, the least heavy of the blurred options
+#   "sidebar"       lightest of the blurred options
 #   "under-window"  the macOS default feel
 #   "fullscreen-ui" broad and soft
-#   also: popover, menu, sheet, window, titlebar, selection, header, tooltip
 #
-# TINT: ARGB dim on the window, used ONLY when VIBRANCY is None — Electron
-# drops it whenever a material is set. Leading byte is the alpha:
-# #40 ≈ 25%, #80 = 50%, #B3 ≈ 70%, #CC = 80%.
-#
-# With a material, dim through the theme's `ui.background` instead. Every
-# macOS vibrancy material boosts the saturation of what it blurs — that is what
-# "vibrancy" means in the API — and a theme-level dim paints over the material
-# and mutes it back, which no window-level setting can do. That pairing is what
-# gets ghostty's calm blur. Keep `card`/`tertiary`/`sidebar` at alpha 0 so only
-# one layer carries alpha, or nested `bg-background` rows start to band.
-VIBRANCY: str | None = "hud"
-TINT = "#B3161616"
+# Every material also boosts the saturation of what it blurs — that is what
+# "vibrancy" means in the API — and Electron drops an alpha backgroundColor
+# whenever a material is set. So with a material, the dim has to come from the
+# theme's `ui.background`, which paints over the vibrancy and mutes it back.
+# TINT is only reachable when VIBRANCY is None.
 
 # (label, old, new, expected occurrences or None for "however many exist")
 PATCHES = [
@@ -90,15 +104,65 @@ PATCHES = [
         # glass theme puts every surface at alpha 0 so nested `bg-background`
         # rows cannot compound — which leaves the active tab with no fill.
         #
-        # Borrow the styling Superset already uses for its Radix tabs (the
-        # Files/Changes/Review row), whose dark active state is
-        # `bg-input/30` + `border-input` + `text-foreground`. Matching those
-        # exactly makes the two tab rows look like one system instead of an
-        # approximation, and `input` then drives both. Only the isActive branch
-        # matches; the inactive branch has no bg class to disturb.
-        "active tab fill",
+        # Colour only — the SHAPE was already right. The right-pane
+        # Files/Changes/Review tabs are square with an open bottom edge, the
+        # same browser-tab form the workspace tabs use, so `border-b-transparent`
+        # has to stay. (A `TabsTrigger` in the bundle does use `rounded-[7px]`,
+        # but it is a different component than the right pane's tabs; rounding
+        # these made the two rows disagree rather than match.)
+        #
+        # `bg-card`, NOT `bg-background`: the active tab should read as part of
+        # the pane it opens into, and the pane is a card. `background` is not
+        # interchangeable with it — in the dark theme that token carries the
+        # whole dim (alpha 0.55), so `bg-background` here paints a second dim
+        # layer over the tab strip's and compounds into a darker slab. `card`
+        # sits at alpha 0 in both themes, so the tab and the pane resolve to the
+        # same surface and the tab genuinely has no fill.
+        #
+        # The border token changes too. `ui.border` is deliberately near
+        # invisible in the glass themes, which leaves the outline — the only
+        # thing marking the active tab once there is no fill — too faint to
+        # see. `border-input` is stronger and tunable from `ui.input`.
+        "active tab",
         b"border border-border border-b-transparent bg-background text-foreground",
-        b"border border-input border-b-transparent bg-input/30 text-foreground",
+        b"border border-input border-b-transparent bg-card text-foreground",
+        None,
+    ),
+    (
+        # The right pane's inactive tabs (Files/Review) paint `bg-border/30`,
+        # giving them a fill the terminal row's inactive tabs do not have — so
+        # the two tab rows disagree. `bg-card` is alpha 0 in both themes, which
+        # flattens them to match.
+        #
+        # Matched together with `text-muted-foreground/70` on purpose:
+        # `bg-border/30` alone appears 8 times and most are *active*-state uses
+        # elsewhere in the sidebar. The pair occurs only in
+        # SIDEBAR_HEADER_TAB_INACTIVE_INVERTED_CLASS_NAME — the bundle copy and
+        # the source copy beside it, hence 2.
+        "right-pane inactive tab",
+        b"bg-border/30 text-muted-foreground/70",
+        b"bg-card      text-muted-foreground/70",
+        2,
+    ),
+    (
+        # The chrome bars — the tab strip and the workspace header — paint
+        # `bg-muted/45 dark:bg-muted/35`, which lands as a visible band over the
+        # window wash because `ui.muted` carries real alpha. Zeroing the token
+        # instead would be simpler but wrong: `muted` also drives hover states
+        # (`hover:bg-muted`, `hover:bg-muted/60`), which would vanish with it.
+        #
+        # `bg-card` is alpha 0 in both themes, so the bars flatten into the
+        # surrounding glass while `muted` stays available for hovers.
+        "chrome bar background",
+        b"bg-muted/45 dark:bg-muted/35",
+        b"bg-card     dark:bg-card    ",
+        None,
+    ),
+    (
+        # Same bars, the variant that carries padding between the two classes.
+        "chrome bar background (padded)",
+        b"bg-muted/45 px-2 dark:bg-muted/35",
+        b"bg-card     px-2 dark:bg-card    ",
         None,
     ),
 ]
@@ -137,6 +201,31 @@ def window_options(vibrancy: str | None, tint: str) -> bytes:
     elif tint:
         parts.append(f'backgroundColor: "{tint}",')
     return " ".join(parts).encode()
+
+
+def apply_theme(look: dict, quiet: bool = False) -> int:
+    """Import and activate the Superset theme paired with this look.
+
+    Separate from patching on purpose: the theme is pure settings and touches no
+    bytes in the bundle, so it can be switched without a rebuild.
+    """
+    theme_file = CONFIG_DIR / look["file"]
+    if not theme_file.exists():
+        print(f"superset-repatch: {theme_file} missing — theme not applied", file=sys.stderr)
+        return 1
+    try:
+        subprocess.run(["superset", "settings", "theme", "import", str(theme_file)],
+                       check=True, capture_output=True)
+        subprocess.run(["superset", "settings", "theme", "set", look["id"]],
+                       check=True, capture_output=True)
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        # The CLI needs a running host; the patch is still valid without it.
+        print(f"superset-repatch: could not set theme — run "
+              f"`superset settings theme set {look['id']}` once the app is up", file=sys.stderr)
+        return 1
+    if not quiet:
+        print(f"superset-repatch: theme -> {look['id']}")
+    return 0
 
 
 def app_version(app: Path) -> str:
@@ -193,25 +282,39 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--force", action="store_true", help="rebuild even when the version is unchanged")
     ap.add_argument("--quiet", action="store_true", help="only speak up on error")
-    ap.add_argument("--vibrancy", metavar="MATERIAL", default=VIBRANCY,
-                    help="macOS blur material, or 'none' for no blur. One of: "
-                         "none, hud, sidebar, under-window, fullscreen-ui, popover, menu, "
-                         "sheet, window, titlebar, selection, header, tooltip, content. "
-                         "Composes with --tint. Try one here, then set VIBRANCY in this file to keep it")
-    ap.add_argument("--tint", metavar="AARRGGBB", default=TINT,
-                    help="ARGB window tint, used only when there is no vibrancy material")
+    ap.add_argument("--theme", choices=sorted(THEMES), default=THEME,
+                    help="which look to build: pairs a window treatment with its Superset theme")
+    ap.add_argument("--vibrancy", metavar="MATERIAL", default=None,
+                    help="override the material for this run: none, hud, sidebar, under-window, "
+                         "fullscreen-ui, popover, menu, sheet, window, titlebar, selection, "
+                         "header, tooltip, content. Defaults to whatever --theme specifies")
+    ap.add_argument("--tint", metavar="AARRGGBB", default=None,
+                    help="override the ARGB tint for this run; only reachable when there is no material")
     args = ap.parse_args()
 
     if not STOCK.exists():
         print(f"superset-repatch: no app at {STOCK}", file=sys.stderr)
         return 1
 
+    look = THEMES[args.theme]
+    vibrancy = args.vibrancy if args.vibrancy is not None else look["vibrancy"]
+    vibrancy = None if str(vibrancy).lower() in ("none", "") else vibrancy
+    tint = args.tint if args.tint is not None else look["tint"]
+
     version = app_version(STOCK)
     stamp = PATCHED / "Contents" / "Resources" / STAMP_NAME
 
-    want = f"{(None if str(args.vibrancy).lower() in ('none','') else args.vibrancy) or 'none'}"
-    if not args.force and stamp.exists() and stamp.read_text().strip() == f"{version}|{want}|{args.tint}":
-        return 0  # already current — the no-op path stays silent
+    # Only what actually lands in the asar belongs in the stamp. The Superset
+    # theme is applied through the CLI and changes no bytes, so switching
+    # light/dark must not trigger a 2.1 GB copy and re-sign.
+    want = f"{version}|{window_options(vibrancy, tint).decode()}"
+    up_to_date = stamp.exists() and stamp.read_text().strip() == want
+
+    if up_to_date and not args.force:
+        # Nothing to patch, but the theme may still need switching.
+        if not args.quiet:
+            print("superset-repatch: patch already current, switching theme only")
+        return apply_theme(look, quiet=args.quiet)
 
     if not args.quiet:
         print(f"superset-repatch: rebuilding transparent copy from {version}")
@@ -221,8 +324,7 @@ def main() -> int:
     PATCHED.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(STOCK, PATCHED, symlinks=True)
 
-    vibrancy = None if str(args.vibrancy).lower() in ("none", "") else args.vibrancy
-    digest, notes = patch_asar(PATCHED / "Contents" / "Resources" / "app.asar", vibrancy, args.tint)
+    digest, notes = patch_asar(PATCHED / "Contents" / "Resources" / "app.asar", vibrancy, tint)
     for note in notes:
         print(f"  {note}")
 
@@ -240,7 +342,9 @@ def main() -> int:
     # and the hardened runtime means the app will not launch unsigned.
     subprocess.run(["codesign", "--force", "--deep", "--sign", "-", str(PATCHED)], check=True)
 
-    stamp.write_text(f"{version}|{vibrancy or 'none'}|{args.tint}\n")
+    stamp.write_text(want + "\n")
+
+    apply_theme(look, quiet=args.quiet)
 
     if any(n.startswith("MISSED") for n in notes):
         print("superset-repatch: some patches did not apply — Superset's code moved, they need rewriting",
