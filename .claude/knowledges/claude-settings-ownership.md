@@ -8,8 +8,21 @@ wrong for keeping it linked afterwards.
 the symlink with a plain file. Claude Code writes to it too — `/config` changes
 land there. Re-linking only resets a countdown to the next Superset restart.
 
-Verified August 2026: symlinked it, restarted Superset, and it was a plain 5.5k
-file again with all 8 of Superset's `notify.sh` hooks restored.
+Tested twice in August 2026, because the first result had an obvious
+alternative explanation:
+
+1. Symlinked to a repo copy with **no** Superset hooks, restarted → plain file,
+   hooks restored. Consistent with "it writes when its hooks are missing".
+2. So the hooks were tracked in the repo copy, making live and repo
+   byte-identical, and it was symlinked and restarted again → **still replaced
+   with a plain file**, even with nothing to add.
+
+The write is unconditional. Tracking the vendor hooks buys nothing, so it was
+reverted and they stay untracked for the original reason.
+
+Worth noting the app rewrites on *its* start, not the host service's — the
+`terminal-host.pid` mtime was unchanged across the second test while
+`settings.json` picked up a fresh timestamp.
 
 ## What survives a Superset rewrite
 
