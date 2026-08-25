@@ -136,6 +136,12 @@ symlink_config "bin/esp-clangd-update" ~/.local/bin/esp-clangd-update
 # transparency patches, the asar-integrity hash and the ad-hoc signature.
 symlink_config "bin/superset-repatch" ~/.local/bin/superset-repatch
 
+# claude-settings-sync reports drift between ~/.claude/settings.json and the
+# copy tracked here. They cannot be symlinked: Superset rewrites the live file
+# on every app start, so the tracked copy is a template and deliberate settings
+# have to be carried across by hand.
+symlink_config "bin/claude-settings-sync" ~/.local/bin/claude-settings-sync
+
 # NOTE: the SessionStart hooks in settings.json are NOT tracked here.
 # ~/.claude/hooks/context-mode-cache-heal.mjs and herdr-agent-state.sh are
 # vendor-managed — each tool redeploys and re-registers its own hook, so they

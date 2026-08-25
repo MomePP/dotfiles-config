@@ -1,0 +1,108 @@
+#!/usr/bin/env python3
+"""Report (or port) drift between the live Claude settings and the tracked copy.
+
+`~/.claude/settings.json` cannot stay symlinked into this repo: Superset
+rewrites it in place on every app start, replacing the link with a plain file,
+and Claude Code writes there too whenever /config changes. So the tracked copy
+is a template for provisioning a fresh machine, not a live mirror, and
+deliberate settings have to be carried across by hand — which is easy to forget
+for weeks. This makes the forgetting visible.
+
+Read-only by default. `--write` ports the drift into the repo copy, leaving it
+staged for review rather than committed: a settings change is the user's to
+describe, and silently rewriting tracked files is how surprises like an
+unexplained `remoteControlAtStartup` diff happen.
+
+IGNORED_KEYS are vendor-managed and deliberately never tracked — see
+.claude/knowledges/claude-settings-ownership.md.
+"""
+
+import argparse
+import json
+import sys
+from pathlib import Path
+
+LIVE = Path.home() / ".claude" / "settings.json"
+REPO = Path.home() / ".config" / "claude-code" / "settings.json"
+
+# `hooks` is re-registered by whoever owns it — Superset's 8 notify.sh entries
+# on app start, context-mode and herdr on theirs. Tracking it would mirror
+# vendor output into the repo on every update, and the installer already says
+# so for the SessionStart pair.
+IGNORED_KEYS = {
+    "hooks",
+    # Written by the claude-hud plugin with a version-stamped path into
+    # plugins/cache, so it changes on every plugin release — tracking it means
+    # drift after each update and a pinned version that is wrong on any other
+    # machine. The plugin sets it on install, so a fresh machine gets one too.
+    "statusLine",
+}
+
+
+def summarise(value, width: int = 88) -> str:
+    if value is None:
+        return "<absent>"
+    text = json.dumps(value)
+    return text if len(text) <= width else f"{text[:width - 1]}…"
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--write", action="store_true",
+                    help="port the drift into the repo copy and stage it (default: report only)")
+    ap.add_argument("--quiet", action="store_true",
+                    help="say nothing when in sync; for hook or wrapper use")
+    ap.add_argument("--all", action="store_true",
+                    help=f"include normally ignored keys ({', '.join(sorted(IGNORED_KEYS))})")
+    args = ap.parse_args()
+
+    for path in (LIVE, REPO):
+        if not path.exists():
+            print(f"claude-settings-sync: {path} missing", file=sys.stderr)
+            return 1
+
+    live = json.loads(LIVE.read_text())
+    repo = json.loads(REPO.read_text())
+
+    ignored = set() if args.all else IGNORED_KEYS
+    drift = sorted(k for k in set(live) | set(repo)
+                   if k not in ignored and live.get(k) != repo.get(k))
+
+    if not drift:
+        if not args.quiet:
+            print("claude-settings-sync: in sync")
+        return 0
+
+    verb = "porting" if args.write else "drift"
+    print(f"claude-settings-sync: {verb} in {len(drift)} key(s)")
+    for key in drift:
+        print(f"  {key}")
+        print(f"    live: {summarise(live.get(key))}")
+        print(f"    repo: {summarise(repo.get(key))}")
+
+    if not args.write:
+        print("\nrun with --write to port these into the repo copy")
+        return 1  # non-zero so a wrapper or CI can notice unported drift
+
+    for key in drift:
+        if key in live:
+            repo[key] = live[key]
+        else:
+            # Present in the repo but gone from live: Claude Code dropped it,
+            # so the template should drop it too rather than resurrect it.
+            repo.pop(key, None)
+
+    REPO.write_text(json.dumps(repo, indent=2) + "\n")
+
+    import subprocess
+    try:
+        subprocess.run(["git", "-C", str(REPO.parent.parent), "add", str(REPO)], check=True)
+        print(f"\nported and staged {REPO} — review and commit")
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        print(f"\nported {REPO} — stage and commit it yourself")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
