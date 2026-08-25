@@ -282,8 +282,13 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--force", action="store_true", help="rebuild even when the version is unchanged")
     ap.add_argument("--quiet", action="store_true", help="only speak up on error")
-    ap.add_argument("--theme", choices=sorted(THEMES), default=THEME,
-                    help="which look to build: pairs a window treatment with its Superset theme")
+    # Deliberately defaults to None rather than THEME: passing it is what asks
+    # for the Superset theme to be switched. A bare run — which is how the brew
+    # wrapper calls this — patches only, and leaves whatever theme is active
+    # alone, since an upgrade is no reason to override the user's choice.
+    ap.add_argument("--theme", choices=sorted(THEMES), default=None,
+                    help="switch to this look: patches for it AND applies its Superset theme. "
+                         f"Omit to patch only, leaving the active theme untouched (patches for {THEME!r})")
     ap.add_argument("--vibrancy", metavar="MATERIAL", default=None,
                     help="override the material for this run: none, hud, sidebar, under-window, "
                          "fullscreen-ui, popover, menu, sheet, window, titlebar, selection, "
@@ -296,7 +301,7 @@ def main() -> int:
         print(f"superset-repatch: no app at {STOCK}", file=sys.stderr)
         return 1
 
-    look = THEMES[args.theme]
+    look = THEMES[args.theme or THEME]
     vibrancy = args.vibrancy if args.vibrancy is not None else look["vibrancy"]
     vibrancy = None if str(vibrancy).lower() in ("none", "") else vibrancy
     tint = args.tint if args.tint is not None else look["tint"]
@@ -311,7 +316,8 @@ def main() -> int:
     up_to_date = stamp.exists() and stamp.read_text().strip() == want
 
     if up_to_date and not args.force:
-        # Nothing to patch, but the theme may still need switching.
+        if args.theme is None:
+            return 0  # nothing to patch and no theme asked for — stay silent
         if not args.quiet:
             print("superset-repatch: patch already current, switching theme only")
         return apply_theme(look, quiet=args.quiet)
@@ -344,7 +350,8 @@ def main() -> int:
 
     stamp.write_text(want + "\n")
 
-    apply_theme(look, quiet=args.quiet)
+    if args.theme is not None:
+        apply_theme(look, quiet=args.quiet)
 
     if any(n.startswith("MISSED") for n in notes):
         print("superset-repatch: some patches did not apply — Superset's code moved, they need rewriting",
