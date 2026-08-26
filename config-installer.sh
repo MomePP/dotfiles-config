@@ -52,6 +52,26 @@ install_config_file() {
 }
 
 # INFO: -- helper to symlink a config file into a location outside ~/.config
+# claude-hud refuses a symlinked config: since 0.8.0 its loader lstats the file
+# and ignores anything that is not a regular file, so a link silently drops the
+# whole config back to defaults. Copy instead — nothing else writes that file,
+# so the copy only drifts when you change it deliberately.
+copy_config() {
+    local source="$1" # relative to $config_path
+    local target="$2" # absolute path to create
+    local update="y"
+    if [[ -e "$target" ]]; then
+        read -p "found exist $(basename "$target") .. overwrite (y) or (n) ? : " update
+    fi
+    if [ "$update" = "y" ]; then
+        mkdir -p "$(dirname "$target")"
+        cp "${config_path}/${source}" "$target"
+        echo "copied $target !"
+    else
+        echo "skipped $(basename "$target").."
+    fi
+}
+
 symlink_config() {
     local source="$1" # relative to $config_path
     local target="$2" # absolute path to create
@@ -118,6 +138,12 @@ symlink_config "zsh/.zshrc" ~/.zshrc
 symlink_config "claude-code/settings.json" ~/.claude/settings.json
 symlink_config "claude-code/CLAUDE.md" ~/.claude/CLAUDE.md
 symlink_config "bin/claude-relink" ~/.local/bin/claude-relink
+
+# claude-hud's display config. Copied, not linked — see copy_config above. It
+# lives beside plugins/cache rather than inside it, so it survives every plugin
+# update; only the statusLine path in settings.json is version-stamped, and
+# that one is deliberately untracked (see claude-settings-sync IGNORED_KEYS).
+copy_config "claude-code/claude-hud/config.json" ~/.claude/plugins/claude-hud/config.json
 
 # The whole skills dir is linked, so a new hand-written skill needs no extra
 # wiring here. Claude Code writes its own `learned/` skills into the same tree;

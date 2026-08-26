@@ -61,3 +61,25 @@ print([k for k in set(live)|set(repo) if live.get(k)!=repo.get(k)])"
 If the symlink *is* in place when Claude Code writes settings, the write goes
 straight into the dotfiles repo and shows up as uncommitted drift. That is how
 `remoteControlAtStartup` appeared as a repo change without anyone editing it.
+
+## claude-hud's config must be copied, never symlinked
+
+`~/.claude/plugins/claude-hud/config.json` is tracked at
+`claude-code/claude-hud/config.json` and installed with `copy_config`, not
+`symlink_config`.
+
+Since upstream 0.8.0 the plugin's loader hardens config input — `readConfigFile`
+lstats the path and bails on anything that is not a regular file
+(`src/config.ts:1254`). A symlink is therefore **silently ignored** and the HUD
+falls back to stock defaults: pipes project style, block bars, percent context.
+No warning, no error; it just stops looking like yours. Verified 2026-08-26 by
+linking it and watching the HUD render as `[Opus 5 (1M context)]` with default
+bars.
+
+Nothing else writes that file — unlike `settings.json`, no vendor rewrites it —
+so a copy only drifts when you change it deliberately.
+
+The file sits at `plugins/claude-hud/`, a sibling of `plugins/cache/`, so it
+survives plugin updates untouched. Only the `statusLine` path in
+`settings.json` is version-stamped, and that stays untracked for the reason
+recorded in `claude-settings-sync`'s `IGNORED_KEYS`.
