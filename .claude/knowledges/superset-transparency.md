@@ -157,32 +157,52 @@ Terminal-side fallout from all this lives in [[claude-hud-transparent-terminal]]
 dim spans and OSC 8 links render as opaque boxes once the terminal is
 see-through.
 
-## `editor.colors.activeLine` must be set explicitly on a glass theme
+## `editor.colors.activeLine` must be pinned, or glass washes the line out
 
 The editor's current-line band is derived, not themed by default:
 `getEditorTheme()` computes `activeLine: withAlpha(theme.ui.accent, 0.5)`, and
 `withAlpha` **replaces** the colour's alpha rather than multiplying it. On an
-opaque theme that is harmless — `#262626` becomes `#26262680`, a subtle lift.
-On a glass theme it is not: `ui.accent` is deliberately a near-white tint at
-6% (`rgba(242, 244, 248, 0.06)`), and forcing alpha to 0.5 turns the active
-line into a `#f2f4f880` wash that composites to ~`#838588` and swallows the
-syntax colours underneath.
+opaque theme that is merely wrong-ish — `#262626` becomes `#26262680`, a very
+faint lift. On a glass theme it is unusable: `ui.accent` is deliberately a
+near-white tint at 6% (`rgba(242, 244, 248, 0.06)`), and forcing alpha to 0.5
+turns the active line into a `#f2f4f880` wash that composites to ~`#838588`
+and swallows the syntax colours underneath.
 
-The fix is an explicit override, which `getEditorTheme` spreads verbatim over
-the derived palette and never re-alphas:
+An explicit override fixes it — `getEditorTheme` spreads `theme.editor.colors`
+verbatim over the derived palette and never re-alphas it:
 
 ```json
-"editor": { "colors": { "activeLine": "rgba(242, 244, 248, 0.10)" } }
+"editor": { "colors": { "activeLine": "#393939" } }
 ```
 
-Both glass variants carry one (`rgba(55, 71, 79, 0.10)` for the light one).
-The opaque variants deliberately do not — their derived value is already fine.
+All five variants pin it, to the same colour `oxocarbon.nvim` uses for
+`CursorLine` so the app and the editor agree: `#393939` for the dark ones,
+`#d0d0d0` for the light ones. Query the source of truth with
+
+```sh
+nvim --headless -c 'colorscheme oxocarbon' \
+  -c 'lua =("%06x"):format(vim.api.nvim_get_hl(0,{name="CursorLine"}).bg)' -c qa
+```
+
+**Opaque is correct even on glass.** nvim's own cursorline is opaque over a
+transparent terminal, so a solid band is what "matches nvim" means here; a
+translucent tint (0.10 was tried) stays invisible against a busy wallpaper.
 
 Two consequences worth knowing:
 
-- Any theme that carries an `editor` block gets the **full** derived editor
-  palette (every colour and syntax key) snapshotted into the stored theme at
-  import time. That is harmless here because `superset-repatch` re-imports
-  these files on every run, so the snapshot refreshes with the app.
+- Any theme carrying an `editor` block gets the **full** derived editor palette
+  (every colour and syntax key) snapshotted into the stored theme at import
+  time. Harmless here because these files are re-imported on demand, so the
+  snapshot refreshes with the app.
 - There is no separate token for the active-line *gutter*; it shares
   `activeLine`, so fixing one fixes both.
+
+## The live theme files are `~/.config/superset/`, not a feature worktree
+
+`superset settings theme import` copies the JSON **into the app's store**; the
+file is not read again afterwards. So editing a theme inside a `.superset`
+worktree changes nothing until the commit lands in `~/.config`, and re-running
+an import against `~/.config/superset/<theme>.json` will happily overwrite a
+newer value that was imported from elsewhere. Land the commit first, then
+import. `superset-repatch` re-imports from `~/.config` only when passed
+`--theme`; a bare `--force` rebuild leaves the store alone.

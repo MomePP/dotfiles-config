@@ -66,5 +66,10 @@
     "brightMagenta": "#be95ff",
     "brightCyan": "#ff7eb6",
     "brightWhite": "#ffffff"
+  },
+  "editor": {
+    "colors": {
+      "activeLine": "#393939"
+    }
   }
 }

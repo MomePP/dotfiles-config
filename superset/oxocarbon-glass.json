@@ -69,7 +69,7 @@
   },
   "editor": {
     "colors": {
-      "activeLine": "rgba(242, 244, 248, 0.10)"
+      "activeLine": "#393939"
     }
   }
 }
