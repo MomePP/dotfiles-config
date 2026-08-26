@@ -165,6 +165,34 @@ PATCHES = [
         b"bg-card     px-2 dark:bg-card    ",
         None,
     ),
+    (
+        # The editor's current-line band. `getEditorTheme()` derives it as
+        # `withAlpha(theme.ui.accent, 0.5)`, and `withAlpha` *replaces* the
+        # alpha rather than scaling it — so the glass themes' near-white 6%
+        # accent becomes a 50% white wash that swallows the syntax colours.
+        #
+        # A theme-level `editor.colors.activeLine` override is the documented
+        # fix and it round-trips through the CLI and app-state.json intact, but
+        # the renderer's theme object arrives with no `editor` key at all, so
+        # `getEditorTheme` always takes the `!theme.editor` early return.
+        # Verified in the live DOM: `.cm-activeLine` computes to
+        # rgba(242, 244, 248, 0.5) with the override stored. Superset bug.
+        #
+        # `ui.tertiaryActive` is the lever because it is the one UI token this
+        # build defines (`--tertiary-active`) and never consumes — no chrome
+        # moves when we repurpose it, and the colour stays editable per theme
+        # from the JSON instead of being frozen into the patch. The themes set
+        # it to oxocarbon.nvim's CursorLine so the app matches nvim.
+        #
+        # 5x: the two bundle copies that execute, the source copy beside them,
+        # and two more in the shipped unit tests. Keep `editor.colors.activeLine`
+        # in the theme files — it costs nothing and takes over the day Superset
+        # wires the renderer up.
+        "editor active line",
+        b"withAlpha(theme.ui.accent, 0.5)",
+        b"theme.ui.tertiaryActive",
+        5,
+    ),
 ]
 
 # (label, anchor, search window after anchor, old, new)

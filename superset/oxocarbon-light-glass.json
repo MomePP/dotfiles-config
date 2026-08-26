@@ -20,7 +20,7 @@
     "accent": "rgba(55, 71, 79, 0.08)",
     "accentForeground": "#161616",
     "tertiary": "rgba(255, 255, 255, 0)",
-    "tertiaryActive": "rgba(55, 71, 79, 0.16)",
+    "tertiaryActive": "#d0d0d0",
     "destructive": "#ee5396",
     "destructiveForeground": "#ffffff",
     "border": "rgba(55, 71, 79, 0.20)",
