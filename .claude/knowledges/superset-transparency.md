@@ -6,8 +6,8 @@ against Superset v1.24.2.
 
 Superset ships opaque and has no setting for this — `superset settings list`
 has 33 keys and none touch opacity or window appearance, and the theme schema
-(`docs.superset.sh/custom-themes`) is only `ui` and `terminal` colours. The
-capability comes entirely from patching the app bundle.
+(`docs.superset.sh/custom-themes`) is only `ui`, `terminal` and `editor`
+colours. The capability comes entirely from patching the app bundle.
 
 ## The moving parts
 
@@ -156,3 +156,33 @@ the screen itself.
 Terminal-side fallout from all this lives in [[claude-hud-transparent-terminal]] —
 dim spans and OSC 8 links render as opaque boxes once the terminal is
 see-through.
+
+## `editor.colors.activeLine` must be set explicitly on a glass theme
+
+The editor's current-line band is derived, not themed by default:
+`getEditorTheme()` computes `activeLine: withAlpha(theme.ui.accent, 0.5)`, and
+`withAlpha` **replaces** the colour's alpha rather than multiplying it. On an
+opaque theme that is harmless — `#262626` becomes `#26262680`, a subtle lift.
+On a glass theme it is not: `ui.accent` is deliberately a near-white tint at
+6% (`rgba(242, 244, 248, 0.06)`), and forcing alpha to 0.5 turns the active
+line into a `#f2f4f880` wash that composites to ~`#838588` and swallows the
+syntax colours underneath.
+
+The fix is an explicit override, which `getEditorTheme` spreads verbatim over
+the derived palette and never re-alphas:
+
+```json
+"editor": { "colors": { "activeLine": "rgba(242, 244, 248, 0.10)" } }
+```
+
+Both glass variants carry one (`rgba(55, 71, 79, 0.10)` for the light one).
+The opaque variants deliberately do not — their derived value is already fine.
+
+Two consequences worth knowing:
+
+- Any theme that carries an `editor` block gets the **full** derived editor
+  palette (every colour and syntax key) snapshotted into the stored theme at
+  import time. That is harmless here because `superset-repatch` re-imports
+  these files on every run, so the snapshot refreshes with the app.
+- There is no separate token for the active-line *gutter*; it shares
+  `activeLine`, so fixing one fixes both.
