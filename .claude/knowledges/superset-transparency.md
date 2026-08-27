@@ -48,7 +48,7 @@ as `MISSED` and exits 2 rather than shipping a half-patched app.
 
 ## The patches
 
-Seven, all same-length byte replacements:
+Eight, all same-length byte replacements:
 
 - **window transparency** — replaces the stock opaque `backgroundColor` with
   `transparent: true` plus a `vibrancy` material (or an ARGB tint when there is
@@ -70,6 +70,19 @@ Seven, all same-length byte replacements:
 - **host-unreachable overlay** — `WorkspaceHostUnreachableState` ships with *no*
   background class, relying on the pane beneath being opaque. Scoped by anchor
   because that class string appears 9 times across unrelated components.
+- **dialog surface** — `Dialog`/`AlertDialog` paint `bg-background`, which in the
+  glass themes is the *window dim* (alpha 0.55), not a surface — so the delete-
+  workspace confirmation read as a tinted sheet with the terminal text legible
+  through it. `bg-popover` is what every other floating surface already uses
+  (`PopoverContent`, `DropdownMenuContent`), and the themes hold it at 0.97 for
+  exactly this reason. Matched on the shared head of `alertDialogContentClassName`
+  and `DialogContent`'s inline class string, which diverge only after
+  `max-w-[calc(100%-2rem)]`; `bg-background ` alone is far too common to anchor on.
+
+  `Sheet` and `Drawer` carry `bg-background` too, and are the same bug — but
+  1.25.0 tree-shakes them out: `data-slot="sheet-content"` exists only in the
+  shipped source copy, with no compiled counterpart. Left alone until one
+  actually renders.
 
 ### `bg-card`, never `bg-background`, for anything meant to match a pane
 

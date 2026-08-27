@@ -166,6 +166,32 @@ PATCHES = [
         None,
     ),
     (
+        # Modal dialogs paint `bg-background`, and in the glass themes that
+        # token carries the window dim (alpha 0.55) rather than a surface — so
+        # a Dialog/AlertDialog reads as a tinted sheet with the terminal text
+        # underneath still legible through it.
+        #
+        # `bg-popover` is the token every other floating surface already uses:
+        # PopoverContent and DropdownMenuContent both open with
+        # `bg-popover text-popover-foreground`, and the themes keep it at alpha
+        # 0.97 precisely so a floating panel reads as solid against whatever it
+        # covers. Dialogs are the one overlay Superset left on `background`.
+        #
+        # The anchor is the shared head of `alertDialogContentClassName` and
+        # DialogContent's inline class string, which diverge only after
+        # `max-w-[calc(100%-2rem)]`. 6x: dialog and alert-dialog, each in the
+        # executing bundle, the source copy beside it, and the escaped-source
+        # copy. `bg-background ` alone appears far too often to match on.
+        "dialog surface",
+        b"bg-background data-[state=open]:animate-in data-[state=closed]:animate-out "
+        b"data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 "
+        b"data-[state=closed]:zoom-out-95",
+        b"bg-popover data-[state=open]:animate-in data-[state=closed]:animate-out "
+        b"data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 "
+        b"data-[state=closed]:zoom-out-95",
+        6,
+    ),
+    (
         # The editor's current-line band. `getEditorTheme()` derives it as
         # `withAlpha(theme.ui.accent, 0.5)`, and `withAlpha` *replaces* the
         # alpha rather than scaling it — so the glass themes' near-white 6%
