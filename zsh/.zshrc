@@ -110,6 +110,22 @@ fi
 # Must be sourced last — it wraps every widget bound before it.
 if [[ -f $_zsh_plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
     source $_zsh_plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+    # Match nushell's shapes. Both shells share oxocarbon's ANSI palette, but
+    # they pick different slots for the same role, so the same command line
+    # comes out differently coloured: nu paints the command word with
+    # shape_external_resolved (light_yellow → slot 11) and its arguments with
+    # shape_externalarg (green → slot 2), while zsh's defaults are arg0=green
+    # and arguments unstyled.
+    #
+    # oxocarbon scrambles the palette — slot 11 is pink (#ff4297) and green is
+    # blue (#00b4ff) — so these names read wrong and are still right. Don't
+    # "fix" them to fg=magenta/fg=blue; that picks different colours.
+    ZSH_HIGHLIGHT_STYLES[arg0]='fg=11,bold'                 # command word
+    ZSH_HIGHLIGHT_STYLES[precommand]='fg=11,bold'           # sudo, command, …
+    ZSH_HIGHLIGHT_STYLES[default]='fg=green,bold'           # arguments
+    ZSH_HIGHLIGHT_STYLES[single-hyphen-option]='fg=green,bold'
+    ZSH_HIGHLIGHT_STYLES[double-hyphen-option]='fg=green,bold'
 fi
 unset _zsh_plugins
 
