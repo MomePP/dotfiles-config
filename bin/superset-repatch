@@ -398,11 +398,16 @@ def main() -> int:
         check=True,
     )
 
+    # Before the signature, not after: the stamp lands in Contents/Resources,
+    # and anything added there once the bundle is sealed makes
+    # `codesign --verify` report a missing sealed resource. macOS launches such
+    # a bundle anyway, which is why this went unnoticed for months, but a
+    # signature that cannot be verified is no signature to check against.
+    stamp.write_text(want + "\n")
+
     # Editing anything under Contents/ invalidates the Developer ID signature,
     # and the hardened runtime means the app will not launch unsigned.
     subprocess.run(["codesign", "--force", "--deep", "--sign", "-", str(PATCHED)], check=True)
-
-    stamp.write_text(want + "\n")
 
     if args.theme is not None:
         apply_theme(look, quiet=args.quiet)
