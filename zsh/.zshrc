@@ -206,7 +206,9 @@ ssh() {
 # installs it. only on those two subcommands, since each costs a GitHub API
 # call and `brew --prefix` style invocations must stay cheap. both stay quiet
 # when there is nothing to do; the `|| true` keeps a failed clangd install from
-# masking the brew run that already succeeded.
+# masking the brew run that already succeeded. paseo-repatch is hooked here for
+# symmetry, but the paseo cask tracks stable only — on the beta channel Paseo
+# updates itself and the repatch has to be run by hand afterwards.
 brew() {
     local rc
     command brew "$@"
@@ -217,6 +219,7 @@ brew() {
         update)  esp-clangd-update --check ;;
         upgrade) esp-clangd-update --quiet || true
                  superset-repatch || true
+                 paseo-repatch || true
                  claude-settings-sync --quiet || true ;;
     esac
 }
