@@ -50,6 +50,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 STOCK = Path("/Applications/Paseo.app")
@@ -335,6 +336,34 @@ def look_signature(look: dict) -> str:
     return f"{opts}|dim={look['dim']}|palette={look['palette']}"
 
 
+def running_pids() -> list[str]:
+    """PIDs of the patched copy, if it is up.
+
+    Matched on the executable path rather than the bundle id, which both copies
+    share — quitting by id would take the stock app down instead.
+    """
+    found = subprocess.run(
+        ["pgrep", "-f", f"{PATCHED}/Contents/MacOS/"], capture_output=True, text=True
+    )
+    return found.stdout.split()
+
+
+def quit_patched() -> bool:
+    """Ask the patched copy to quit and wait for it to actually go.
+
+    A rebuild starts by deleting the bundle, so doing it under a live app
+    unlinks the executable and frameworks out from under it. Returns False if
+    it is still up after the grace period, which is a refusal to proceed.
+    """
+    subprocess.run(["osascript", "-e", 'tell application id "sh.paseo.desktop" to quit'],
+                   capture_output=True)
+    for _ in range(40):
+        if not running_pids():
+            return True
+        time.sleep(0.5)
+    return False
+
+
 def app_version(app: Path) -> str:
     info = plistlib.loads((app / "Contents" / "Info.plist").read_bytes())
     return f"{info.get('CFBundleShortVersionString', '?')}+{info.get('CFBundleVersion', '?')}"
@@ -453,6 +482,9 @@ def main() -> int:
     ap.add_argument("--quiet", action="store_true", help="only speak up on error")
     ap.add_argument("--look", choices=sorted(LOOKS), default=None,
                     help=f"build this look for one run; omit to use {LOOK!r}")
+    ap.add_argument("--restart", action="store_true",
+                    help="quit the patched copy before rebuilding and reopen it after, so "
+                         "trying a look is one command instead of three")
     ap.add_argument("--dim", type=float, metavar="ALPHA", default=None,
                     help="override the window wash for this run, 0 (clear) to 1 (solid). "
                          "This is the only dimming knob — every surface above it is at 0")
@@ -480,6 +512,17 @@ def main() -> int:
 
     if stamp.exists() and stamp.read_text().strip() == want and not args.force:
         return 0  # already current — stay silent, this is the brew-wrapper path
+
+    if running_pids():
+        if not args.restart:
+            print(f"paseo-repatch: {PATCHED.name} is running — quit it first, "
+                  f"or pass --restart to have it quit and reopen around the rebuild",
+                  file=sys.stderr)
+            return 1
+        if not quit_patched():
+            print(f"paseo-repatch: {PATCHED.name} did not quit — refusing to rebuild "
+                  f"a live bundle", file=sys.stderr)
+            return 1
 
     if not args.quiet:
         print(f"paseo-repatch: rebuilding transparent copy from {version} ({args.look or LOOK})")
@@ -525,6 +568,12 @@ def main() -> int:
         print("paseo-repatch: some patches did not apply — Paseo's code moved, they need rewriting",
               file=sys.stderr)
         return 2
+
+    if args.restart:
+        subprocess.run(["open", "-a", str(PATCHED)], check=True)
+        if not args.quiet:
+            print(f"paseo-repatch: done — {PATCHED.name} reopened")
+        return 0
 
     if not args.quiet:
         print(f"paseo-repatch: done — restart {PATCHED.name} to pick it up")
