@@ -77,44 +77,38 @@ STAMP_NAME = ".patched-from-version"
 # whenever a material is set. So the dim cannot come from the window; it has to
 # come from the theme, which is what ALPHAS is for.
 #
-# ALPHAS maps the four surface slots that cover real estate to an alpha, or to
-# None to leave that slot's opaque hex alone. The values are not independent:
-# these surfaces nest, and any alpha below 1 composites with whatever is under
-# it. `background` is the bottom layer and nothing else paints beneath it, so
-# it is the one place a dim can live without compounding. Everything stacked on
-# top of it sits at 0 — otherwise the sidebar reads darker than the pane beside
-# it and the terminal darker still.
+# DIM and ALPHAS split one job in two, and the split is the whole trick.
+#
+# Paseo's surfaces nest heavily — `backgroundColor: colors.surface0` appears
+# 42 times, on the full-screen fill and again on panes, cards and chips inside
+# it. Any alpha below 1 on that token composites with itself, so a 0.55 root
+# under a 0.55 pane reads 0.80, and a chip inside that reads 0.91. The app ends
+# up looking blotchy rather than glass.
+#
+# So every React surface goes to alpha 0 (ALPHAS) and the dim lives on exactly
+# one layer that cannot nest: the `html, body` rule in index.html (DIM). That
+# rule sits beneath the entire React tree and above the transparent window, and
+# there is precisely one of it. Tune the wash with --dim without touching
+# anything else.
 LOOK = "glass"
 
 LOOKS = {
-    # Full glass: one dim at the bottom, every surface above it clear. Paseo's
-    # own hues are untouched, so its theme picker keeps working and all six
-    # built-in themes become glass versions of themselves.
-    "glass": {
-        "vibrancy": "hud",
-        "alphas": {"background": 0.55, "sidebar": 0.0, "workspace": 0.0, "terminal": 0.0},
-        "palette": False,
-    },
+    # Full glass. Paseo's own hues are untouched, so its theme picker keeps
+    # working and every built-in theme becomes a glass version of itself.
+    "glass": {"vibrancy": "hud", "dim": 0.55, "palette": False},
     # Glass plus the oxocarbon colours from the Superset theme, so Paseo, nvim
     # and Superset agree. Overwrites Paseo's default green theme and the shared
     # dark ANSI set — see OXOCARBON_ANSI for why that reaches every theme.
-    "oxocarbon": {
-        "vibrancy": "hud",
-        "alphas": {"background": 0.55, "sidebar": 0.0, "workspace": 0.0, "terminal": 0.0},
-        "palette": True,
-    },
-    # Conservative: dim the root background only, leave the sidebar, workspace
-    # and terminal on their opaque hex. Patching nothing but the window would
-    # have been the smaller change, but the renderer paints an opaque colour
-    # over the whole client area — a transparent window under it shows nothing
-    # at all except rounded corners — so there has to be at least one alpha
-    # surface for the look to be visible.
-    "vibrancy": {
-        "vibrancy": "hud",
-        "alphas": {"background": 0.55, "sidebar": None, "workspace": None, "terminal": None},
-        "palette": False,
-    },
+    "oxocarbon": {"vibrancy": "hud", "dim": 0.55, "palette": True},
+    # Nearly solid: the same construction with a heavy wash, so the desktop
+    # reads only as a faint texture. Start here if full glass costs too much
+    # contrast.
+    "vibrancy": {"vibrancy": "hud", "dim": 0.85, "palette": False},
 }
+
+# Every surface token the React tree paints with. All zero, always — see DIM
+# above for why none of them may carry the dim.
+ALPHAS = {"surface0": 0.0, "background": 0.0, "sidebar": 0.0, "workspace": 0.0, "terminal": 0.0}
 
 # Paseo's default dark theme, replaced wholesale for the oxocarbon look. The
 # slot names are Paseo's; the values are the oxocarbon.nvim palette already used
@@ -182,6 +176,22 @@ RENDERER_PATCHES = [
         "allowTransparency:!0",
         1,
     ),
+    (
+        # React Navigation's DefaultTheme, which Paseo never switches to a dark
+        # variant — it just paints `surface0` opaquely over the navigator and
+        # never sees it. Zero out surface0 and this light grey becomes the
+        # backdrop for everything right of the sidebar: an opaque 1423x1069
+        # sheet that blocks the window dim, the wallpaper and the blur at once,
+        # while the sidebar (outside the navigator) stays correctly clear.
+        #
+        # Found by reading computed styles off the live window over CDP rather
+        # than from the bundle — nothing in the source hints that this element
+        # is the one painting, and four passes of reasoning about it missed.
+        "react-navigation backdrop",
+        "background:'rgb(242, 242, 242)'",
+        "background:'transparent'",
+        1,
+    ),
 ]
 
 # Two places re-assert an opaque background *after* the window is constructed.
@@ -207,14 +217,14 @@ WINDOW_CHROME_PAYLOAD = (
 # dark surface colour under a prefers-color-scheme media query, so the window
 # is not white for the few frames before React mounts. It sits beneath the
 # entire React tree and above the transparent window, so no amount of alpha in
-# the theme can get past it.
+# the theme can get past it while it stays opaque.
 #
-# Making it transparent brings back the flash it was guarding against — but a
-# brief clear window over a blurred desktop is a far milder artifact than the
-# white one the rule was written for.
-HTML_FLASH_GUARD = (
-    re.compile(r"(html,\s*body\s*\{\s*)background-color:\s*#[0-9a-fA-F]{3,8};"),
-    r"\1background-color: transparent;",
+# Rather than clear it, this is where DIM lands. The rule keeps doing its
+# original job — no white flash — and doubles as the single non-nesting layer
+# the wash can live on. Its own colour is reused so the wash matches whichever
+# dark surface Paseo shipped, rather than a value hardcoded here.
+HTML_FLASH_GUARD = re.compile(
+    r"(html,\s*body\s*\{\s*background-color:\s*)#([0-9a-fA-F]{6});"
 )
 
 # Prepended to the bundle rather than injected into the theme factory, because
@@ -243,6 +253,21 @@ ALPHA_HELPER = (
 # the terminal background (followed by `foreground:`) from matching each other.
 # The counts differ because only the newer factory defines `surfaceWorkspace`.
 SURFACE_PATCHES = [
+    (
+        # The token that actually covers the app. `colors.surface0` is read 96
+        # times in the bundle, 42 of them as a literal `backgroundColor`,
+        # including the flex:1 fill behind everything — patching only
+        # `background` (18 uses) left the whole shell opaque.
+        #
+        # Safe to zero because this is the factory's *output* passthrough:
+        # `primaryForeground` reads the input palette's surface0 instead, so
+        # button label text keeps its opaque hex and stays legible.
+        "surface0",
+        "app surface fill",
+        "{surface0:t.surface0,surface1:",
+        "{surface0:__paseoAlpha(t.surface0,{a}),surface1:",
+        2,
+    ),
     (
         "background",
         "app background + window dim",
@@ -303,11 +328,11 @@ def window_options(vibrancy: str | None) -> bytes:
 def look_signature(look: dict) -> str:
     """Everything about a look that lands as bytes in the copy.
 
-    Used as the stamp alongside the version, so switching looks forces a
-    rebuild while re-running the same look stays a no-op.
+    Used as the stamp alongside the version, so switching looks or dims forces
+    a rebuild while re-running the same one stays a no-op.
     """
-    alphas = ",".join(f"{k}={v}" for k, v in sorted(look["alphas"].items()))
-    return f"{window_options(look['vibrancy']).decode()}|{alphas}|palette={look['palette']}"
+    opts = window_options(look["vibrancy"]).decode()
+    return f"{opts}|dim={look['dim']}|palette={look['palette']}"
 
 
 def app_version(app: Path) -> str:
@@ -392,32 +417,34 @@ def patch_renderer(path: Path, look: dict) -> list[str]:
         replace_re("oxocarbon palette", STOCK_PALETTE, OXOCARBON_PALETTE, 1)
         replace_re("oxocarbon ANSI", STOCK_ANSI, OXOCARBON_ANSI, 1)
 
-    active = {slot: a for slot, a in look["alphas"].items() if a is not None}
-    if active:
-        src = ALPHA_HELPER + src
-        notes.append("ok      alpha helper (1x)")
-        for slot, label, old, template, expect in SURFACE_PATCHES:
-            if slot not in active:
-                continue
-            replace(label, old, template.replace("{a}", str(active[slot])), expect)
-        replace_re("window chrome repaint", *WINDOW_CHROME_PAYLOAD, 1)
+    src = ALPHA_HELPER + src
+    notes.append("ok      alpha helper (1x)")
+    for slot, label, old, template, expect in SURFACE_PATCHES:
+        replace(label, old, template.replace("{a}", str(ALPHAS[slot])), expect)
+    replace_re("window chrome repaint", *WINDOW_CHROME_PAYLOAD, 1)
 
     path.write_text(src, encoding="utf8")
     return notes
 
 
-def patch_index_html(app: Path, look: dict) -> list[str]:
-    """Clear the pre-mount flash guard so the transparent window shows through."""
-    if not any(a is not None for a in look["alphas"].values()):
-        return []
+def patch_index_html(app: Path, dim: float) -> list[str]:
+    """Turn the pre-mount flash guard into the one layer carrying the dim."""
     path = app / "Contents" / "Resources" / "app-dist" / "index.html"
     src = path.read_text()
-    pattern, new = HTML_FLASH_GUARD
-    hits = len(pattern.findall(src))
-    if not hits:
-        return ["MISSED  html flash guard: target not found"]
-    path.write_text(pattern.sub(new, src))
-    return [f"ok      html flash guard ({hits}x)"]
+    if not HTML_FLASH_GUARD.search(src):
+        return ["MISSED  window dim (html flash guard): target not found"]
+
+    def wash(match: re.Match) -> str:
+        # `html` is dropped from the selector, not just recoloured: the stock
+        # rule targets both elements, and an alpha applied to each composites
+        # with itself — a 0.55 wash measured 0.80 on the live window. `body`
+        # alone paints it exactly once.
+        r, g, b = (int(match[2][i:i + 2], 16) for i in (0, 2, 4))
+        return f"body {{ background-color: rgba({r}, {g}, {b}, {dim});"
+
+    src, hits = HTML_FLASH_GUARD.subn(wash, src)
+    path.write_text(src)
+    return [f"ok      window dim {dim} ({hits}x)"]
 
 
 def main() -> int:
@@ -426,6 +453,9 @@ def main() -> int:
     ap.add_argument("--quiet", action="store_true", help="only speak up on error")
     ap.add_argument("--look", choices=sorted(LOOKS), default=None,
                     help=f"build this look for one run; omit to use {LOOK!r}")
+    ap.add_argument("--dim", type=float, metavar="ALPHA", default=None,
+                    help="override the window wash for this run, 0 (clear) to 1 (solid). "
+                         "This is the only dimming knob — every surface above it is at 0")
     ap.add_argument("--vibrancy", metavar="MATERIAL", default=None,
                     help="override the material for this run: none, hud, sidebar, under-window, "
                          "fullscreen-ui, popover, menu, sheet, window, titlebar, selection, "
@@ -439,6 +469,10 @@ def main() -> int:
     look = dict(LOOKS[args.look or LOOK])
     if args.vibrancy is not None:
         look["vibrancy"] = None if args.vibrancy.lower() in ("none", "") else args.vibrancy
+    if args.dim is not None:
+        if not 0.0 <= args.dim <= 1.0:
+            sys.exit("--dim must be between 0 and 1")
+        look["dim"] = args.dim
 
     version = app_version(STOCK)
     stamp = PATCHED / "Contents" / "Resources" / STAMP_NAME
@@ -457,7 +491,7 @@ def main() -> int:
 
     digest, notes = patch_asar(PATCHED / "Contents" / "Resources" / "app.asar", look["vibrancy"])
     notes += patch_renderer(renderer_path(PATCHED), look)
-    notes += patch_index_html(PATCHED, look)
+    notes += patch_index_html(PATCHED, look["dim"])
 
     (PATCHED / "Contents" / "Resources" / "app-update.yml").write_text(DEAD_UPDATE_YML)
     notes.append("ok      updater neutered")
