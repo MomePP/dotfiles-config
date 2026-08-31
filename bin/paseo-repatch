@@ -184,6 +184,39 @@ RENDERER_PATCHES = [
     ),
 ]
 
+# Two places re-assert an opaque background *after* the window is constructed.
+# Either one alone is enough to hide `transparent: true` completely, which is
+# why the window patch on its own changed nothing visible.
+#
+# The first is a runtime IPC push. On mount and on every theme change the
+# renderer sends its palette's raw `surface0` to the main process, which calls
+# `win.setBackgroundColor()` with it — painting an opaque colour straight back
+# over the transparent window. Only `backgroundColor` is dropped from the
+# payload: `trafficLightOffsetY` travels in the same message and the
+# main-process handler already treats the two independently, so the traffic
+# lights keep their offset.
+#
+# Anchored on the key names rather than the minified local holding the colour,
+# since that identifier is renamed on every build.
+WINDOW_CHROME_PAYLOAD = (
+    re.compile(r"\{backgroundColor:[A-Za-z_$][\w$]*,trafficLightOffsetY:"),
+    "{trafficLightOffsetY:",
+)
+
+# The second is a CSS flash guard in index.html: `html, body` are painted the
+# dark surface colour under a prefers-color-scheme media query, so the window
+# is not white for the few frames before React mounts. It sits beneath the
+# entire React tree and above the transparent window, so no amount of alpha in
+# the theme can get past it.
+#
+# Making it transparent brings back the flash it was guarding against — but a
+# brief clear window over a blurred desktop is a far milder artifact than the
+# white one the rule was written for.
+HTML_FLASH_GUARD = (
+    re.compile(r"(html,\s*body\s*\{\s*)background-color:\s*#[0-9a-fA-F]{3,8};"),
+    r"\1background-color: transparent;",
+)
+
 # Prepended to the bundle rather than injected into the theme factory, because
 # there are two factories (`h` and `B`, both live, six palettes going through
 # one and one through the other) and their minified names are reused sixteen
@@ -341,22 +374,23 @@ def patch_renderer(path: Path, look: dict) -> list[str]:
         src = src.replace(old, new)
         notes.append(f"ok      {label} ({hits}x)")
 
+    def replace_re(label, pattern, new, expect):
+        nonlocal src
+        hits = len(pattern.findall(src))
+        if not hits:
+            notes.append(f"MISSED  {label}: target not found")
+            return
+        if hits != expect:
+            sys.exit(f"{label}: expected {expect} occurrence(s), found {hits} — refusing to guess")
+        src = pattern.sub(new, src)
+        notes.append(f"ok      {label} ({hits}x)")
+
     for label, old, new, expect in RENDERER_PATCHES:
         replace(label, old, new, expect)
 
     if look["palette"]:
-        for label, pattern, new in (
-            ("oxocarbon palette", STOCK_PALETTE, OXOCARBON_PALETTE),
-            ("oxocarbon ANSI", STOCK_ANSI, OXOCARBON_ANSI),
-        ):
-            hits = pattern.findall(src)
-            if not hits:
-                notes.append(f"MISSED  {label}: target not found")
-                continue
-            if len(hits) != 1:
-                sys.exit(f"{label}: expected 1 occurrence, found {len(hits)} — refusing to guess")
-            src = pattern.sub(lambda _m: new, src, count=1)
-            notes.append(f"ok      {label} (1x)")
+        replace_re("oxocarbon palette", STOCK_PALETTE, OXOCARBON_PALETTE, 1)
+        replace_re("oxocarbon ANSI", STOCK_ANSI, OXOCARBON_ANSI, 1)
 
     active = {slot: a for slot, a in look["alphas"].items() if a is not None}
     if active:
@@ -366,9 +400,24 @@ def patch_renderer(path: Path, look: dict) -> list[str]:
             if slot not in active:
                 continue
             replace(label, old, template.replace("{a}", str(active[slot])), expect)
+        replace_re("window chrome repaint", *WINDOW_CHROME_PAYLOAD, 1)
 
     path.write_text(src, encoding="utf8")
     return notes
+
+
+def patch_index_html(app: Path, look: dict) -> list[str]:
+    """Clear the pre-mount flash guard so the transparent window shows through."""
+    if not any(a is not None for a in look["alphas"].values()):
+        return []
+    path = app / "Contents" / "Resources" / "app-dist" / "index.html"
+    src = path.read_text()
+    pattern, new = HTML_FLASH_GUARD
+    hits = len(pattern.findall(src))
+    if not hits:
+        return ["MISSED  html flash guard: target not found"]
+    path.write_text(pattern.sub(new, src))
+    return [f"ok      html flash guard ({hits}x)"]
 
 
 def main() -> int:
@@ -408,6 +457,7 @@ def main() -> int:
 
     digest, notes = patch_asar(PATCHED / "Contents" / "Resources" / "app.asar", look["vibrancy"])
     notes += patch_renderer(renderer_path(PATCHED), look)
+    notes += patch_index_html(PATCHED, look)
 
     (PATCHED / "Contents" / "Resources" / "app-update.yml").write_text(DEAD_UPDATE_YML)
     notes.append("ok      updater neutered")
