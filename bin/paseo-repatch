@@ -238,8 +238,27 @@ ALPHA_HELPER = (
     'var __paseoAlpha=function(h,a){var v=String(h||"").replace("#","");'
     "return v.length<6?h:"
     '"rgba("+parseInt(v.slice(0,2),16)+", "+parseInt(v.slice(2,4),16)+", "'
-    '+parseInt(v.slice(4,6),16)+", "+a+")"};\n'
+    '+parseInt(v.slice(4,6),16)+", "+a+")"};'
+    # The inverse, for surfaces that must stay solid — see DIFF_PALETTE.
+    'var __paseoOpaque=function(c){return String(c||"")'
+    '.replace(/^rgba\\((.+),\\s*[\\d.]+\\)$/,"rgba($1, 1)")};\n'
 )
+
+# Paseo draws diffs onto a <canvas>, and its renderer only ever calls
+# `fillRect` with the palette colour — there is no `clearRect` anywhere in the
+# paint path. A fill is a composite, not a replacement, so a surface with any
+# alpha below 1 fails to erase the previous frame and scrolling stacks glyph on
+# glyph. Alpha 0 makes it invisible; even 0.9 would ghost, just more slowly.
+#
+# `createDiffPalette` reads `colors.surface0` for all three background slots,
+# so zeroing that token took the diff view with it. These are forced back to
+# opaque: the diff pane is the one surface in the app that cannot be glass.
+DIFF_PALETTE = [
+    ("surface", "surface:t.colors.surface0,headerSurface:t.colors.surface0,",
+     "surface:__paseoOpaque(t.colors.surface0),headerSurface:__paseoOpaque(t.colors.surface0),"),
+    ("empty rows", "emptyBackground:t.colors.surface0,",
+     "emptyBackground:__paseoOpaque(t.colors.surface0),"),
+]
 
 # (slot, label, old, new-template, expected occurrences) — `{a}` is the slot's
 # alpha. Patching the factories' *outputs* rather than the palettes feeding
@@ -451,6 +470,8 @@ def patch_renderer(path: Path, look: dict) -> list[str]:
     for slot, label, old, template, expect in SURFACE_PATCHES:
         replace(label, old, template.replace("{a}", str(ALPHAS[slot])), expect)
     replace_re("window chrome repaint", *WINDOW_CHROME_PAYLOAD, 1)
+    for label, old, new in DIFF_PALETTE:
+        replace(f"diff canvas {label}", old, new, 1)
 
     path.write_text(src, encoding="utf8")
     return notes
