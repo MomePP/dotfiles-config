@@ -96,11 +96,11 @@ LOOK = "glass"
 LOOKS = {
     # Full glass. Paseo's own hues are untouched, so its theme picker keeps
     # working and every built-in theme becomes a glass version of itself.
-    "glass": {"vibrancy": "hud", "dim": 0.55, "palette": False},
+    "glass": {"vibrancy": "hud", "dim": 0.70, "palette": False},
     # Glass plus the oxocarbon colours from the Superset theme, so Paseo, nvim
     # and Superset agree. Overwrites Paseo's default green theme and the shared
     # dark ANSI set — see OXOCARBON_ANSI for why that reaches every theme.
-    "oxocarbon": {"vibrancy": "hud", "dim": 0.55, "palette": True},
+    "oxocarbon": {"vibrancy": "hud", "dim": 0.70, "palette": True},
     # Nearly solid: the same construction with a heavy wash, so the desktop
     # reads only as a faint texture. Start here if full glass costs too much
     # contrast.
