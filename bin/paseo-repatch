@@ -169,9 +169,15 @@ OXOCARBON_PALETTE = (
 # same remap superset/oxocarbon-glass.json uses, so a terminal in Paseo and a
 # terminal in Superset render identically.
 #
-# This object is module-level in the bundle and shared by every dark theme, so
-# replacing it reaches all of them, not just the oxocarbon one. That is a real
-# side effect of the oxocarbon look and the reason it is not the default.
+# Its own knob rather than part of the oxocarbon look, because the two are
+# useful separately: lazygit, eza and friends name ANSI slots rather than hex,
+# so the palette alone decides how every TUI reads, whatever theme the app
+# chrome is wearing.
+#
+# The object is module-level in the bundle and shared by every dark theme, so
+# replacing it reaches all of them. That is intended — a terminal should not
+# change colour when the app chrome does.
+ANSI = "oxocarbon"
 OXOCARBON_ANSI = (
     '{red:"#08bdba",green:"#33b1ff",yellow:"#ee5396",blue:"#42be65",magenta:"#be95ff",'
     'cyan:"#ee5396",white:"#f2f4f8",brightRed:"#3ddbd9",brightGreen:"#82cfff",'
@@ -411,7 +417,11 @@ def window_options(vibrancy: str | None) -> bytes:
     """
     parts = ["transparent: true,"]
     if vibrancy:
-        parts.append(f'vibrancy: "{vibrancy}",')
+        # followWindow is the Electron default, and it swaps the material for a
+        # flat dark fill the moment the window loses focus — the blurred
+        # wallpaper vanishes and the app reads as a black slab until it is
+        # clicked again. "active" pins the material on regardless of focus.
+        parts.append(f'vibrancy: "{vibrancy}", visualEffectState: "active",')
     return " ".join(parts).encode()
 
 
@@ -503,7 +513,7 @@ def renderer_path(app: Path) -> Path:
 
 
 def patch_renderer(path: Path, look: dict, font_size: float | None,
-                   line_height: float) -> list[str]:
+                   line_height: float, ansi: str) -> list[str]:
     src = path.read_text(encoding="utf8")
     notes: list[str] = []
 
@@ -534,6 +544,8 @@ def patch_renderer(path: Path, look: dict, font_size: float | None,
 
     if look["palette"]:
         replace_re("oxocarbon palette", STOCK_PALETTE, OXOCARBON_PALETTE, 1)
+
+    if ansi == "oxocarbon":
         replace_re("oxocarbon ANSI", STOCK_ANSI, OXOCARBON_ANSI, 1)
 
     src = ALPHA_HELPER + src
@@ -602,6 +614,9 @@ def main() -> int:
     ap.add_argument("--line-height", type=float, metavar="RATIO", default=LINE_HEIGHT,
                     help=f"terminal line height; not reachable from Paseo's UI "
                          f"(default {LINE_HEIGHT})")
+    ap.add_argument("--ansi", choices=("oxocarbon", "stock"), default=ANSI,
+                    help=f"terminal ANSI palette; oxocarbon matches Superset and nvim "
+                         f"(default {ANSI})")
     ap.add_argument("--padding-left", type=int, metavar="PX", default=PADDING_LEFT,
                     help=f"left padding inside the terminal (default {PADDING_LEFT})")
     ap.add_argument("--restart", action="store_true",
@@ -634,7 +649,7 @@ def main() -> int:
     version = app_version(STOCK)
     stamp = PATCHED / "Contents" / "Resources" / STAMP_NAME
     want = (f"{version}|{look_signature(look)}|font={font_size}"
-            f"|lh={line_height}|pad={args.padding_left}")
+            f"|lh={line_height}|pad={args.padding_left}|ansi={args.ansi}")
 
     if stamp.exists() and stamp.read_text().strip() == want and not args.force:
         return 0  # already current — stay silent, this is the brew-wrapper path
@@ -659,7 +674,7 @@ def main() -> int:
     shutil.copytree(STOCK, PATCHED, symlinks=True)
 
     digest, notes = patch_asar(PATCHED / "Contents" / "Resources" / "app.asar", look["vibrancy"])
-    notes += patch_renderer(renderer_path(PATCHED), look, font_size, line_height)
+    notes += patch_renderer(renderer_path(PATCHED), look, font_size, line_height, args.ansi)
     notes += patch_index_html(PATCHED, look["dim"], args.padding_left)
 
     # Asserted like every other patch rather than written blind: if Paseo ever
