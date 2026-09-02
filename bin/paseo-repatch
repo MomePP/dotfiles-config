@@ -76,7 +76,7 @@ STAMP_NAME = ".patched-from-version"
 # Every material also boosts the saturation of what it blurs — that is what
 # "vibrancy" means in the API — and Electron drops an alpha backgroundColor
 # whenever a material is set. So the dim cannot come from the window; it has to
-# come from the theme, which is what ALPHAS is for.
+# be painted by the page, which is what DIM is for.
 #
 # DIM and ALPHAS split one job in two, and the split is the whole trick.
 #
@@ -150,7 +150,7 @@ STOCK_ANSI = re.compile(
 
 # --- asar: length-preserving ------------------------------------------------
 #
-# (label, old, new-or-None, expected occurrences or None for "however many")
+# (label, old, new-or-None, expected occurrences)
 ASAR_PATCHES = [
     (
         # Built from the look's vibrancy — see window_options(). This is the
@@ -359,10 +359,10 @@ def window_options(vibrancy: str | None) -> bytes:
     """The BrowserWindow options replacing the stock opaque backgroundColor.
 
     No backgroundColor is emitted alongside a material: Electron silently drops
-    an alpha one whenever vibrancy is set, so it would be noise. The dim comes
-    from the theme's `background` slot instead, which paints over the vibrancy
-    and mutes it back — a blur radius and an opacity composing the same way
-    ghostty gets its look.
+    an alpha one whenever vibrancy is set, so it would be noise. The dim is not
+    here at all — it lives on the `html, body` rule that patch_index_html()
+    rewrites, which paints over the vibrancy and mutes it back. A blur radius
+    and an opacity composing the same way ghostty gets its look.
     """
     parts = ["transparent: true,"]
     if vibrancy:
@@ -427,7 +427,7 @@ def patch_asar(asar: Path, vibrancy: str | None) -> tuple[str, list[str]]:
         if not hits:
             notes.append(f"MISSED  {name}: target not found")
             continue
-        if expect is not None and len(hits) != expect:
+        if len(hits) != expect:
             sys.exit(f"{name}: expected {expect} occurrence(s), found {len(hits)} — refusing to guess")
         data = data.replace(old, new + b" " * (len(old) - len(new)))
         notes.append(f"ok      {name} ({len(hits)}x)")
@@ -467,7 +467,7 @@ def patch_renderer(path: Path, look: dict) -> list[str]:
         if not hits:
             notes.append(f"MISSED  {label}: target not found")
             return
-        if expect is not None and hits != expect:
+        if hits != expect:
             sys.exit(f"{label}: expected {expect} occurrence(s), found {hits} — refusing to guess")
         src = src.replace(old, new)
         notes.append(f"ok      {label} ({hits}x)")
@@ -505,9 +505,8 @@ def patch_renderer(path: Path, look: dict) -> list[str]:
 def patch_index_html(app: Path, dim: float) -> list[str]:
     """Turn the pre-mount flash guard into the one layer carrying the dim."""
     path = app / "Contents" / "Resources" / "app-dist" / "index.html"
-    src = path.read_text()
-    if not HTML_FLASH_GUARD.search(src):
-        return ["MISSED  window dim (html flash guard): target not found"]
+    src = path.read_text(encoding="utf8")
+    notes: list[str] = []
 
     def wash(match: re.Match) -> str:
         # `html` is dropped from the selector, not just recoloured: the stock
@@ -517,8 +516,14 @@ def patch_index_html(app: Path, dim: float) -> list[str]:
         r, g, b = (int(match[2][i:i + 2], 16) for i in (0, 2, 4))
         return f"body {{ background-color: rgba({r}, {g}, {b}, {dim});"
 
+    # The dim and the opaque-surfaces stylesheet are independent patches, so a
+    # miss on one must not skip the other — an early return here would have
+    # signed a bundle with see-through menus and said nothing about it.
     src, hits = HTML_FLASH_GUARD.subn(wash, src)
-    notes = [f"ok      window dim {dim} ({hits}x)"]
+    if hits != 1:
+        notes.append(f"MISSED  window dim: expected 1 flash-guard rule, found {hits}")
+    else:
+        notes.append(f"ok      window dim {dim} (1x)")
 
     if "</head>" not in src:
         notes.append("MISSED  opaque floating surfaces: no </head> to inject before")
@@ -526,7 +531,7 @@ def patch_index_html(app: Path, dim: float) -> list[str]:
         src = src.replace("</head>", OPAQUE_SURFACES_CSS + "  </head>", 1)
         notes.append("ok      opaque floating surfaces (1x)")
 
-    path.write_text(src)
+    path.write_text(src, encoding="utf8")
     return notes
 
 
@@ -562,7 +567,7 @@ def main() -> int:
 
     version = app_version(STOCK)
     stamp = PATCHED / "Contents" / "Resources" / STAMP_NAME
-    want = f"{version}|{args.look or LOOK}|{look_signature(look)}"
+    want = f"{version}|{look_signature(look)}"
 
     if stamp.exists() and stamp.read_text().strip() == want and not args.force:
         return 0  # already current — stay silent, this is the brew-wrapper path
@@ -590,8 +595,16 @@ def main() -> int:
     notes += patch_renderer(renderer_path(PATCHED), look)
     notes += patch_index_html(PATCHED, look["dim"])
 
-    (PATCHED / "Contents" / "Resources" / "app-update.yml").write_text(DEAD_UPDATE_YML)
-    notes.append("ok      updater neutered")
+    # Asserted like every other patch rather than written blind: if Paseo ever
+    # moves this file into the asar or renames it, a blind write would leave a
+    # stray file at the dead path, report success, and let the real updater go
+    # on overwriting the copy.
+    updater = PATCHED / "Contents" / "Resources" / "app-update.yml"
+    if updater.exists():
+        updater.write_text(DEAD_UPDATE_YML)
+        notes.append("ok      updater neutered")
+    else:
+        notes.append("MISSED  updater neutered: app-update.yml not found")
 
     for note in notes:
         print(f"  {note}")
@@ -618,13 +631,19 @@ def main() -> int:
     # and the hardened runtime means the app will not launch unsigned.
     subprocess.run(["codesign", "--force", "--deep", "--sign", "-", str(PATCHED)], check=True)
 
+    # Reopened before the MISSED check, not after: the bundle is signed and
+    # launchable either way, and a patch that failed to apply is cosmetic.
+    # Quitting the user's app and then leaving it closed over a cosmetic miss
+    # is the worse trade.
+    if args.restart:
+        subprocess.run(["open", "-a", str(PATCHED)], check=True)
+
     if any(n.startswith("MISSED") for n in notes):
         print("paseo-repatch: some patches did not apply — Paseo's code moved, they need rewriting",
               file=sys.stderr)
         return 2
 
     if args.restart:
-        subprocess.run(["open", "-a", str(PATCHED)], check=True)
         if not args.quiet:
             print(f"paseo-repatch: done — {PATCHED.name} reopened")
         return 0
