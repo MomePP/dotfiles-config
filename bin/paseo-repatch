@@ -1,0 +1,657 @@
+#!/usr/bin/env python3
+"""Re-apply the transparency patches to a private copy of Paseo.app.
+
+Paseo is replaced wholesale by two independent update paths — `brew upgrade`
+for the cask, and an in-app electron-updater that overwrites the same bundle
+from GitHub releases without telling brew. Either one drops the patches, the
+rewritten asar-integrity hash, and the ad-hoc signature together. Rather than
+patch the managed app — where the next update would silently revert it and
+Gatekeeper would have to be re-satisfied each time — this keeps a parallel copy
+at ~/Applications/Paseo-transparent.app and rebuilds it from the freshly-updated
+original whenever the version moves.
+
+Run it bare after an update; the `brew` wrapper in zsh/.zshrc does that for cask
+upgrades. The homebrew cask tracks stable only, so on the beta channel the
+in-app updater is the only path to new builds and a bare run has to be done by
+hand after taking one. Silent when the copy is already current, so it costs
+nothing on the no-op path.
+
+The patched copy's own updater is neutered (its app-update.yml points at a dead
+provider), so it can never download a build that would wipe these patches or
+fail against the ad-hoc signature. Only ever launch the patched copy: the stock
+app then never runs, never self-updates, and brew stays the single source of
+truth about what is in /Applications.
+
+Both copies share CFBundleIdentifier, Application Support, and the daemon's
+singleton lock, so only one may run at a time — same constraint as
+Superset-transparent.app.
+
+Two kinds of patch, and the difference matters:
+
+  * app.asar is a JSON header of file offsets followed by concatenated bodies,
+    so replacements there must be byte-for-byte the same length or every
+    offset after them breaks. Each one is padded with spaces to match, which
+    is why a 59 MB archive never has to be unpacked and repacked.
+
+  * app-dist/ is loose files on disk — the Expo renderer bundle — with no
+    offset table and no integrity hash. Replacements there are free to change
+    length.
+
+Anchors are matched by content, never by byte offset, so the patches survive
+Paseo's code moving between releases. A target that genuinely disappears is
+reported rather than silently skipped — that is the signal that a patch needs
+rewriting for a new version.
+"""
+
+import argparse
+import hashlib
+import plistlib
+import re
+import shutil
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+STOCK = Path("/Applications/Paseo.app")
+PATCHED = Path.home() / "Applications" / "Paseo-transparent.app"
+STAMP_NAME = ".patched-from-version"
+
+# --- the three looks --------------------------------------------------------
+#
+# LOOK is the persistent choice: the `brew` wrapper runs this script with no
+# arguments, so anything set only via a flag is lost on the next rebuild.
+# Try a variant with --look, then write the winner here.
+#
+# VIBRANCY is a macOS NSVisualEffectView material, or None for no blur. There
+# is no blur-radius knob — Electron exposes the material and nothing else, and
+# CSS backdrop-filter cannot reach the desktop behind a transparent window.
+#
+#   None            no blur
+#   "hud"           tight and dark
+#   "sidebar"       lightest of the blurred options
+#   "under-window"  the macOS default feel
+#   "fullscreen-ui" broad and soft
+#
+# Every material also boosts the saturation of what it blurs — that is what
+# "vibrancy" means in the API — and Electron drops an alpha backgroundColor
+# whenever a material is set. So the dim cannot come from the window; it has to
+# be painted by the page, which is what DIM is for.
+#
+# DIM and ALPHAS split one job in two, and the split is the whole trick.
+#
+# Paseo's surfaces nest heavily — `backgroundColor: colors.surface0` appears
+# 42 times, on the full-screen fill and again on panes, cards and chips inside
+# it. Any alpha below 1 on that token composites with itself, so a 0.55 root
+# under a 0.55 pane reads 0.80, and a chip inside that reads 0.91. The app ends
+# up looking blotchy rather than glass.
+#
+# So every React surface goes to alpha 0 (ALPHAS) and the dim lives on exactly
+# one layer that cannot nest: the `html, body` rule in index.html (DIM). That
+# rule sits beneath the entire React tree and above the transparent window, and
+# there is precisely one of it. Tune the wash with --dim without touching
+# anything else.
+LOOK = "glass"
+
+LOOKS = {
+    # Full glass. Paseo's own hues are untouched, so its theme picker keeps
+    # working and every built-in theme becomes a glass version of itself.
+    "glass": {"vibrancy": "hud", "dim": 0.70, "palette": False},
+    # Glass plus the oxocarbon colours from the Superset theme, so Paseo, nvim
+    # and Superset agree. Overwrites Paseo's default green theme and the shared
+    # dark ANSI set — see OXOCARBON_ANSI for why that reaches every theme.
+    "oxocarbon": {"vibrancy": "hud", "dim": 0.70, "palette": True},
+    # Nearly solid: the same construction with a heavy wash, so the desktop
+    # reads only as a faint texture. Start here if full glass costs too much
+    # contrast.
+    "vibrancy": {"vibrancy": "hud", "dim": 0.85, "palette": False},
+}
+
+# Every surface token the React tree paints with. All zero, always — see DIM
+# above for why none of them may carry the dim.
+ALPHAS = {"surface0": 0.0, "background": 0.0, "sidebar": 0.0, "workspace": 0.0, "terminal": 0.0}
+
+# Paseo's default dark theme, replaced wholesale for the oxocarbon look. The
+# slot names are Paseo's; the values are the oxocarbon.nvim palette already used
+# by superset/oxocarbon-glass.json. Alpha is applied by ALPHAS at runtime, so
+# every value here stays an opaque hex.
+OXOCARBON_PALETTE = (
+    r'\1({surface0:"#161616",surface1:"#262626",surface2:"#262626",surface3:"#393939",'
+    'surface4:"#525252",surfaceDiffEmpty:"#1c1c1c",surfaceSidebar:"#161616",'
+    'foreground:"#f2f4f8",foregroundMuted:"#8d8d8d",foregroundExtraMuted:"#6f6f6f",'
+    'border:"#393939",borderAccent:"#525252",accent:"#c693ff",accentBright:"#dcc7ff",'
+    'accentForeground:"#161616",destructive:"#ff4297",ring:"#525252",'
+    'terminalBlack:"#161616",terminalBrightBlack:"#525252"})'
+)
+
+# The 16 ANSI colours, deliberately remapped rather than transliterated — the
+# same remap superset/oxocarbon-glass.json uses, so a terminal in Paseo and a
+# terminal in Superset render identically.
+#
+# This object is module-level in the bundle and shared by every dark theme, so
+# replacing it reaches all of them, not just the oxocarbon one. That is a real
+# side effect of the oxocarbon look and the reason it is not the default.
+OXOCARBON_ANSI = (
+    '{red:"#08bdba",green:"#33b1ff",yellow:"#ee5396",blue:"#42be65",magenta:"#be95ff",'
+    'cyan:"#ee5396",white:"#f2f4f8",brightRed:"#3ddbd9",brightGreen:"#82cfff",'
+    'brightYellow:"#ff7eb6",brightBlue:"#42be65",brightMagenta:"#be95ff",'
+    'brightCyan:"#ff7eb6",brightWhite:"#ffffff"}'
+)
+
+# The stock literals the oxocarbon look replaces. Both are unique in the bundle;
+# the ANSI one is anchored on its own contents rather than on the `y=` binding
+# beside it, since the minifier is free to rename that on any release.
+STOCK_PALETTE = re.compile(
+    r'([A-Za-z_$][\w$]*)\(\{surface0:"#181B1A".*?terminalBrightBlack:"#[0-9a-fA-F]{6}"\}\)'
+)
+STOCK_ANSI = re.compile(
+    r'\{red:"#e07070",green:"#5dba80".*?brightWhite:"#[0-9a-fA-F]{6}"\}'
+)
+
+# --- asar: length-preserving ------------------------------------------------
+#
+# (label, old, new-or-None, expected occurrences)
+ASAR_PATCHES = [
+    (
+        # Built from the look's vibrancy — see window_options(). This is the
+        # only patch the asar needs: Paseo's terminal and every colour it uses
+        # live in the renderer bundle, not here.
+        "window transparency",
+        b"backgroundColor: (0, window_manager_js_1.getWindowBackgroundColor)(systemTheme),",
+        None,  # filled in at runtime
+        1,
+    ),
+]
+
+# --- renderer: free length --------------------------------------------------
+#
+# (label, old, new, expected occurrences)
+RENDERER_PATCHES = [
+    (
+        # xterm's own default. Paseo never passes the option in its Terminal
+        # constructor, so flipping the default is what reaches the terminal —
+        # without it an rgba background is composited against black and the
+        # pane stays opaque no matter what the theme says.
+        "xterm allowTransparency",
+        "allowTransparency:!1",
+        "allowTransparency:!0",
+        1,
+    ),
+    (
+        # React Navigation's DefaultTheme, which Paseo never switches to a dark
+        # variant — it just paints `surface0` opaquely over the navigator and
+        # never sees it. Zero out surface0 and this light grey becomes the
+        # backdrop for everything right of the sidebar: an opaque 1423x1069
+        # sheet that blocks the window dim, the wallpaper and the blur at once,
+        # while the sidebar (outside the navigator) stays correctly clear.
+        #
+        # Found by reading computed styles off the live window over CDP rather
+        # than from the bundle — nothing in the source hints that this element
+        # is the one painting, and four passes of reasoning about it missed.
+        "react-navigation backdrop",
+        "background:'rgb(242, 242, 242)'",
+        "background:'transparent'",
+        1,
+    ),
+]
+
+# Two places re-assert an opaque background *after* the window is constructed.
+# Either one alone is enough to hide `transparent: true` completely, which is
+# why the window patch on its own changed nothing visible.
+#
+# The first is a runtime IPC push. On mount and on every theme change the
+# renderer sends its palette's raw `surface0` to the main process, which calls
+# `win.setBackgroundColor()` with it — painting an opaque colour straight back
+# over the transparent window. Only `backgroundColor` is dropped from the
+# payload: `trafficLightOffsetY` travels in the same message and the
+# main-process handler already treats the two independently, so the traffic
+# lights keep their offset.
+#
+# Anchored on the key names rather than the minified local holding the colour,
+# since that identifier is renamed on every build.
+WINDOW_CHROME_PAYLOAD = (
+    re.compile(r"\{backgroundColor:[A-Za-z_$][\w$]*,trafficLightOffsetY:"),
+    "{trafficLightOffsetY:",
+)
+
+# The second is a CSS flash guard in index.html: `html, body` are painted the
+# dark surface colour under a prefers-color-scheme media query, so the window
+# is not white for the few frames before React mounts. It sits beneath the
+# entire React tree and above the transparent window, so no amount of alpha in
+# the theme can get past it while it stays opaque.
+#
+# Rather than clear it, this is where DIM lands. The rule keeps doing its
+# original job — no white flash — and doubles as the single non-nesting layer
+# the wash can live on. Its own colour is reused so the wash matches whichever
+# dark surface Paseo shipped, rather than a value hardcoded here.
+HTML_FLASH_GUARD = re.compile(
+    r"(html,\s*body\s*\{\s*background-color:\s*)#([0-9a-fA-F]{6});"
+)
+
+# Floating surfaces have to stay opaque or the chat behind them reads straight
+# through and nothing on them is legible. They inherit `surface0` rather than
+# `popover`, so zeroing that token took them with it.
+#
+# Fixed with a stylesheet rather than another bundle patch, because Paseo emits
+# its theme as CSS custom properties — `--colors-popover` is `#272A29` on Dark
+# and the right value on each of the other six — so one rule follows the theme
+# picker for free. The selectors are ARIA roles and Paseo's own test ids, both
+# far more stable across releases than a minified style object; the combobox's
+# generated class (`unistyles_…`) is a content hash that changes every build.
+#
+# `aria-modal` rather than `role="dialog"` alone: the backdrop wrapper carries
+# the role too, and painting that opaque would black out the whole window.
+OPAQUE_SURFACES_CSS = """
+    <style id="paseo-repatch-opaque-surfaces">
+      /* added by paseo-repatch: keep floating surfaces readable over glass */
+      [aria-modal="true"],
+      [role="menu"],
+      [role="listbox"] {
+        background-color: var(--colors-popover) !important;
+      }
+    </style>
+"""
+
+# Prepended to the bundle rather than injected into the theme factory, because
+# there are two factories (`h` and `B`, both live, six palettes going through
+# one and one through the other) and their minified names are reused sixteen
+# times over between them — there is no single injection point. The bundle's
+# first line is already a bare top-level `var`, so a `var` in front of it lands
+# in the same script scope and both factories can see it.
+ALPHA_HELPER = (
+    'var __paseoAlpha=function(h,a){var v=String(h||"").replace("#","");'
+    "return v.length<6?h:"
+    '"rgba("+parseInt(v.slice(0,2),16)+", "+parseInt(v.slice(2,4),16)+", "'
+    '+parseInt(v.slice(4,6),16)+", "+a+")"};'
+    # The inverse, for surfaces that must stay solid — see DIFF_PALETTE.
+    'var __paseoOpaque=function(c){return String(c||"")'
+    '.replace(/^rgba\\((.+),\\s*[\\d.]+\\)$/,"rgba($1, 1)")};\n'
+)
+
+# Paseo draws diffs onto a <canvas>, and its renderer only ever calls
+# `fillRect` with the palette colour — there is no `clearRect` anywhere in the
+# paint path. A fill is a composite, not a replacement, so a surface with any
+# alpha below 1 fails to erase the previous frame and scrolling stacks glyph on
+# glyph. Alpha 0 makes it invisible; even 0.9 would ghost, just more slowly.
+#
+# `createDiffPalette` reads `colors.surface0` for all three background slots,
+# so zeroing that token took the diff view with it. These are forced back to
+# opaque: the diff pane is the one surface in the app that cannot be glass.
+# The parameter name is captured, never assumed: this function was
+# `function(t)` in one 0.7.0-beta build and `function(o)` in the next, which
+# silently broke both anchors. Every anchor below that reaches through a
+# minified binding does the same.
+DIFF_PALETTE = [
+    ("surface",
+     re.compile(r"surface:([A-Za-z_$][\w$]*)\.colors\.surface0,headerSurface:\1\.colors\.surface0,"),
+     r"surface:__paseoOpaque(\1.colors.surface0),headerSurface:__paseoOpaque(\1.colors.surface0),"),
+    ("empty rows",
+     re.compile(r"emptyBackground:([A-Za-z_$][\w$]*)\.colors\.surface0,"),
+     r"emptyBackground:__paseoOpaque(\1.colors.surface0),"),
+]
+
+# (slot, label, old, new-template, expected occurrences) — `{a}` is the slot's
+# alpha. Patching the factories' *outputs* rather than the palettes feeding
+# them is what keeps this safe: `surface0` is also `primaryForeground` (button
+# label text) and `surface2` is `popover`, `input` and `muted` all at once, so
+# an alpha applied at the palette would make button text invisible and popovers
+# see-through. Only the four slots that paint large areas are converted, and
+# each keeps its own hex as the base.
+#
+# Each anchor carries the key that follows it, both to survive a 20 MB bundle
+# without colliding and to keep the UI background (followed by `popover:`) and
+# the terminal background (followed by `foreground:`) from matching each other.
+# The counts differ because only the newer factory defines `surfaceWorkspace`.
+SURFACE_PATCHES = [
+    (
+        # The token that actually covers the app. `colors.surface0` is read 96
+        # times in the bundle, 42 of them as a literal `backgroundColor`,
+        # including the flex:1 fill behind everything — patching only
+        # `background` (18 uses) left the whole shell opaque.
+        #
+        # Safe to zero because this is the factory's *output* passthrough:
+        # `primaryForeground` reads the input palette's surface0 instead, so
+        # button label text keeps its opaque hex and stays legible.
+        "surface0", "app surface fill",
+        re.compile(r"\{surface0:([A-Za-z_$][\w$]*)\.surface0,surface1:"),
+        r"{surface0:__paseoAlpha(\1.surface0,{a}),surface1:",
+        2,
+    ),
+    (
+        "background", "app background + window dim",
+        re.compile(r"background:([A-Za-z_$][\w$]*)\.surface0,popover:"),
+        r"background:__paseoAlpha(\1.surface0,{a}),popover:",
+        2,
+    ),
+    (
+        "terminal", "terminal background",
+        re.compile(r"\{background:([A-Za-z_$][\w$]*)\.surface0,foreground:"),
+        r"{background:__paseoAlpha(\1.surface0,{a}),foreground:",
+        2,
+    ),
+    (
+        "sidebar", "sidebar background",
+        re.compile(r"surfaceSidebar:([A-Za-z_$][\w$]*)\.surfaceSidebar,surfaceSidebarHover:"),
+        r"surfaceSidebar:__paseoAlpha(\1.surfaceSidebar,{a}),surfaceSidebarHover:",
+        2,
+    ),
+    (
+        "workspace", "workspace pane background",
+        re.compile(r"surfaceWorkspace:([A-Za-z_$][\w$]*)\.surface1,interactionHighlight:"),
+        r"surfaceWorkspace:__paseoAlpha(\1.surface1,{a}),interactionHighlight:",
+        1,
+    ),
+]
+
+# electron-updater reads this from the bundle. Pointing it at an address that
+# cannot resolve turns the update check into a logged failure instead of a
+# download that would overwrite the patches — and, on macOS, would be rejected
+# against the ad-hoc signature anyway.
+DEAD_UPDATE_YML = """# neutered by paseo-repatch: this copy must never self-update.
+# Update the stock /Applications/Paseo.app, then re-run paseo-repatch.
+provider: generic
+url: https://127.0.0.1:1/paseo-repatch-disabled/
+updaterCacheDirName: '@getpaseodesktop-updater'
+"""
+
+
+def window_options(vibrancy: str | None) -> bytes:
+    """The BrowserWindow options replacing the stock opaque backgroundColor.
+
+    No backgroundColor is emitted alongside a material: Electron silently drops
+    an alpha one whenever vibrancy is set, so it would be noise. The dim is not
+    here at all — it lives on the `html, body` rule that patch_index_html()
+    rewrites, which paints over the vibrancy and mutes it back. A blur radius
+    and an opacity composing the same way ghostty gets its look.
+    """
+    parts = ["transparent: true,"]
+    if vibrancy:
+        parts.append(f'vibrancy: "{vibrancy}",')
+    return " ".join(parts).encode()
+
+
+def look_signature(look: dict) -> str:
+    """Everything about a look that lands as bytes in the copy.
+
+    Used as the stamp alongside the version, so switching looks or dims forces
+    a rebuild while re-running the same one stays a no-op.
+    """
+    opts = window_options(look["vibrancy"]).decode()
+    return f"{opts}|dim={look['dim']}|palette={look['palette']}"
+
+
+def running_pids() -> list[str]:
+    """PIDs of the patched copy, if it is up.
+
+    Matched on the executable path rather than the bundle id, which both copies
+    share — quitting by id would take the stock app down instead.
+    """
+    found = subprocess.run(
+        ["pgrep", "-f", f"{PATCHED}/Contents/MacOS/"], capture_output=True, text=True
+    )
+    return found.stdout.split()
+
+
+def quit_patched() -> bool:
+    """Ask the patched copy to quit and wait for it to actually go.
+
+    A rebuild starts by deleting the bundle, so doing it under a live app
+    unlinks the executable and frameworks out from under it. Returns False if
+    it is still up after the grace period, which is a refusal to proceed.
+    """
+    subprocess.run(["osascript", "-e", 'tell application id "sh.paseo.desktop" to quit'],
+                   capture_output=True)
+    for _ in range(40):
+        if not running_pids():
+            return True
+        time.sleep(0.5)
+    return False
+
+
+def app_version(app: Path) -> str:
+    info = plistlib.loads((app / "Contents" / "Info.plist").read_bytes())
+    return f"{info.get('CFBundleShortVersionString', '?')}+{info.get('CFBundleVersion', '?')}"
+
+
+def patch_asar(asar: Path, vibrancy: str | None) -> tuple[str, list[str]]:
+    data = asar.read_bytes()
+    original_len = len(data)
+    notes: list[str] = []
+
+    for name, old, new, expect in ASAR_PATCHES:
+        if new is None:  # the window options are composed from the look
+            new = window_options(vibrancy)
+        if len(new) > len(old):
+            sys.exit(f"{name}: replacement longer than original — would shift asar offsets")
+        hits = [m.start() for m in re.finditer(re.escape(old), data)]
+        if not hits:
+            notes.append(f"MISSED  {name}: target not found")
+            continue
+        if len(hits) != expect:
+            sys.exit(f"{name}: expected {expect} occurrence(s), found {len(hits)} — refusing to guess")
+        data = data.replace(old, new + b" " * (len(old) - len(new)))
+        notes.append(f"ok      {name} ({len(hits)}x)")
+
+    if len(data) != original_len:
+        sys.exit("length changed — asar offsets would break, refusing to write")
+
+    asar.write_bytes(data)
+    return hashlib.sha256(data).hexdigest(), notes
+
+
+def renderer_path(app: Path) -> Path:
+    """The Expo bundle the app actually loads.
+
+    Resolved through index.html rather than by globbing the directory: the
+    filename carries a content hash that changes every release, and a stale
+    sibling left behind by an update would otherwise be a silent no-op patch.
+    """
+    web = app / "Contents" / "Resources" / "app-dist"
+    html = (web / "index.html").read_text()
+    names = sorted(set(re.findall(r"index-[0-9a-f]+\.js", html)))
+    if len(names) != 1:
+        sys.exit(f"renderer: index.html references {len(names)} bundles, expected 1")
+    path = web / "_expo" / "static" / "js" / "web" / names[0]
+    if not path.exists():
+        sys.exit(f"renderer: {names[0]} referenced by index.html but missing on disk")
+    return path
+
+
+def patch_renderer(path: Path, look: dict) -> list[str]:
+    src = path.read_text(encoding="utf8")
+    notes: list[str] = []
+
+    def replace(label, old, new, expect):
+        nonlocal src
+        hits = src.count(old)
+        if not hits:
+            notes.append(f"MISSED  {label}: target not found")
+            return
+        if hits != expect:
+            sys.exit(f"{label}: expected {expect} occurrence(s), found {hits} — refusing to guess")
+        src = src.replace(old, new)
+        notes.append(f"ok      {label} ({hits}x)")
+
+    def replace_re(label, pattern, new, expect):
+        nonlocal src
+        hits = len(pattern.findall(src))
+        if not hits:
+            notes.append(f"MISSED  {label}: target not found")
+            return
+        if hits != expect:
+            sys.exit(f"{label}: expected {expect} occurrence(s), found {hits} — refusing to guess")
+        src = pattern.sub(new, src)
+        notes.append(f"ok      {label} ({hits}x)")
+
+    for label, old, new, expect in RENDERER_PATCHES:
+        replace(label, old, new, expect)
+
+    if look["palette"]:
+        replace_re("oxocarbon palette", STOCK_PALETTE, OXOCARBON_PALETTE, 1)
+        replace_re("oxocarbon ANSI", STOCK_ANSI, OXOCARBON_ANSI, 1)
+
+    src = ALPHA_HELPER + src
+    notes.append("ok      alpha helper (1x)")
+    for slot, label, pattern, template, expect in SURFACE_PATCHES:
+        replace_re(label, pattern, template.replace("{a}", str(ALPHAS[slot])), expect)
+    replace_re("window chrome repaint", *WINDOW_CHROME_PAYLOAD, 1)
+    for label, pattern, new in DIFF_PALETTE:
+        replace_re(f"diff canvas {label}", pattern, new, 1)
+
+    path.write_text(src, encoding="utf8")
+    return notes
+
+
+def patch_index_html(app: Path, dim: float) -> list[str]:
+    """Turn the pre-mount flash guard into the one layer carrying the dim."""
+    path = app / "Contents" / "Resources" / "app-dist" / "index.html"
+    src = path.read_text(encoding="utf8")
+    notes: list[str] = []
+
+    def wash(match: re.Match) -> str:
+        # `html` is dropped from the selector, not just recoloured: the stock
+        # rule targets both elements, and an alpha applied to each composites
+        # with itself — a 0.55 wash measured 0.80 on the live window. `body`
+        # alone paints it exactly once.
+        r, g, b = (int(match[2][i:i + 2], 16) for i in (0, 2, 4))
+        return f"body {{ background-color: rgba({r}, {g}, {b}, {dim});"
+
+    # The dim and the opaque-surfaces stylesheet are independent patches, so a
+    # miss on one must not skip the other — an early return here would have
+    # signed a bundle with see-through menus and said nothing about it.
+    src, hits = HTML_FLASH_GUARD.subn(wash, src)
+    if hits != 1:
+        notes.append(f"MISSED  window dim: expected 1 flash-guard rule, found {hits}")
+    else:
+        notes.append(f"ok      window dim {dim} (1x)")
+
+    if "</head>" not in src:
+        notes.append("MISSED  opaque floating surfaces: no </head> to inject before")
+    else:
+        src = src.replace("</head>", OPAQUE_SURFACES_CSS + "  </head>", 1)
+        notes.append("ok      opaque floating surfaces (1x)")
+
+    path.write_text(src, encoding="utf8")
+    return notes
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--force", action="store_true", help="rebuild even when the version is unchanged")
+    ap.add_argument("--quiet", action="store_true", help="only speak up on error")
+    ap.add_argument("--look", choices=sorted(LOOKS), default=None,
+                    help=f"build this look for one run; omit to use {LOOK!r}")
+    ap.add_argument("--restart", action="store_true",
+                    help="quit the patched copy before rebuilding and reopen it after, so "
+                         "trying a look is one command instead of three")
+    ap.add_argument("--dim", type=float, metavar="ALPHA", default=None,
+                    help="override the window wash for this run, 0 (clear) to 1 (solid). "
+                         "This is the only dimming knob — every surface above it is at 0")
+    ap.add_argument("--vibrancy", metavar="MATERIAL", default=None,
+                    help="override the material for this run: none, hud, sidebar, under-window, "
+                         "fullscreen-ui, popover, menu, sheet, window, titlebar, selection, "
+                         "header, tooltip, content. Defaults to whatever --look specifies")
+    args = ap.parse_args()
+
+    if not STOCK.exists():
+        print(f"paseo-repatch: no app at {STOCK}", file=sys.stderr)
+        return 1
+
+    look = dict(LOOKS[args.look or LOOK])
+    if args.vibrancy is not None:
+        look["vibrancy"] = None if args.vibrancy.lower() in ("none", "") else args.vibrancy
+    if args.dim is not None:
+        if not 0.0 <= args.dim <= 1.0:
+            sys.exit("--dim must be between 0 and 1")
+        look["dim"] = args.dim
+
+    version = app_version(STOCK)
+    stamp = PATCHED / "Contents" / "Resources" / STAMP_NAME
+    want = f"{version}|{look_signature(look)}"
+
+    if stamp.exists() and stamp.read_text().strip() == want and not args.force:
+        return 0  # already current — stay silent, this is the brew-wrapper path
+
+    if running_pids():
+        if not args.restart:
+            print(f"paseo-repatch: {PATCHED.name} is running — quit it first, "
+                  f"or pass --restart to have it quit and reopen around the rebuild",
+                  file=sys.stderr)
+            return 1
+        if not quit_patched():
+            print(f"paseo-repatch: {PATCHED.name} did not quit — refusing to rebuild "
+                  f"a live bundle", file=sys.stderr)
+            return 1
+
+    if not args.quiet:
+        print(f"paseo-repatch: rebuilding transparent copy from {version} ({args.look or LOOK})")
+
+    if PATCHED.exists():
+        shutil.rmtree(PATCHED)
+    PATCHED.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(STOCK, PATCHED, symlinks=True)
+
+    digest, notes = patch_asar(PATCHED / "Contents" / "Resources" / "app.asar", look["vibrancy"])
+    notes += patch_renderer(renderer_path(PATCHED), look)
+    notes += patch_index_html(PATCHED, look["dim"])
+
+    # Asserted like every other patch rather than written blind: if Paseo ever
+    # moves this file into the asar or renames it, a blind write would leave a
+    # stray file at the dead path, report success, and let the real updater go
+    # on overwriting the copy.
+    updater = PATCHED / "Contents" / "Resources" / "app-update.yml"
+    if updater.exists():
+        updater.write_text(DEAD_UPDATE_YML)
+        notes.append("ok      updater neutered")
+    else:
+        notes.append("MISSED  updater neutered: app-update.yml not found")
+
+    for note in notes:
+        print(f"  {note}")
+
+    # Electron refuses to load an asar whose hash does not match this key, and
+    # the key name contains a dot, so PlistBuddy (`:` separated) is required —
+    # `plutil -replace` would read "Resources/app.asar" as two nested keys.
+    subprocess.run(
+        ["/usr/libexec/PlistBuddy", "-c",
+         f"Set :ElectronAsarIntegrity:Resources/app.asar:hash {digest}",
+         str(PATCHED / "Contents" / "Info.plist")],
+        check=True,
+    )
+
+    # Before the signature, not after: the stamp lands in Contents/Resources,
+    # and anything added there once the bundle is sealed makes
+    # `codesign --verify` report a missing sealed resource. macOS still launches
+    # such a bundle — Superset-transparent.app has carried exactly that break
+    # for months — but a signature that cannot be verified is no signature to
+    # check against when something does go wrong.
+    stamp.write_text(want + "\n")
+
+    # Editing anything under Contents/ invalidates the Developer ID signature,
+    # and the hardened runtime means the app will not launch unsigned.
+    subprocess.run(["codesign", "--force", "--deep", "--sign", "-", str(PATCHED)], check=True)
+
+    # Reopened before the MISSED check, not after: the bundle is signed and
+    # launchable either way, and a patch that failed to apply is cosmetic.
+    # Quitting the user's app and then leaving it closed over a cosmetic miss
+    # is the worse trade.
+    if args.restart:
+        subprocess.run(["open", "-a", str(PATCHED)], check=True)
+
+    if any(n.startswith("MISSED") for n in notes):
+        print("paseo-repatch: some patches did not apply — Paseo's code moved, they need rewriting",
+              file=sys.stderr)
+        return 2
+
+    if args.restart:
+        if not args.quiet:
+            print(f"paseo-repatch: done — {PATCHED.name} reopened")
+        return 0
+
+    if not args.quiet:
+        print(f"paseo-repatch: done — restart {PATCHED.name} to pick it up")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
