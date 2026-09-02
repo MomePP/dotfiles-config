@@ -45,6 +45,7 @@ rewriting for a new version.
 
 import argparse
 import hashlib
+import json
 import plistlib
 import re
 import shutil
@@ -128,28 +129,63 @@ ALPHAS = {"surface0": 0.0, "background": 0.0, "sidebar": 0.0, "workspace": 0.0, 
 # terminal — it still drives code blocks and diffs. Pass --font-size 0 to hand
 # control back to the setting.
 FONT_SIZE: float | None = 13.5
+
+# Fallbacks for what the Ghostty config below normally supplies. Each is what
+# Paseo ships, so with no Ghostty file present nothing changes but the size.
 LINE_HEIGHT = 1.1
+PADDING = (0, 0)            # (y, x), CSS order
+CURSOR_STYLE = "bar"
+FONT_FAMILY: str | None = None   # None keeps Settings -> Code font in charge
 
-# xterm renders flush against the pane edge. FitAddon reads `.xterm`'s own
-# padding and subtracts it before computing cols/rows, so padding there is the
-# supported lever — it shifts the text without desyncing the grid.
-PADDING_LEFT = 10
+# --- ghostty ----------------------------------------------------------------
+#
+# Superset can import a Ghostty config for its in-app terminal; this is the
+# same idea for Paseo. The file is read at build time and the handful of keys
+# xterm has an equivalent for are mapped onto the constructor. Edit Ghostty,
+# re-run, Paseo follows — one source of truth. A missing file is not an error,
+# just the fallbacks above.
+#
+# What maps and what cannot:
+#
+#   cursor-style          -> cursorStyle             (Paseo hardcodes "bar")
+#   window-padding-x/y    -> .xterm padding          (FitAddon subtracts it)
+#   adjust-cell-height N% -> lineHeight 1 + N/100
+#   font-family (repeats) -> fontFamily, joined      (Ghostty repeats for fallback)
+#
+#   font-size, background-opacity   deliberately NOT read — FONT_SIZE and the
+#                                   look's dim were tuned by eye against
+#                                   Superset, and Paseo renders at a different
+#                                   scale than Ghostty so a literal copy would
+#                                   not look the same anyway
+#   background-blur-radius          Electron exposes a material, never a radius
+#   bold-is-bright                  xterm's drawBoldTextInBrightColors is
+#                                   already true by default
+#   macos-option-as-alt             Paseo already sets macOptionIsMeta
+#   mouse-hide-while-typing, copy-on-select, window-padding-balance,
+#   shell-integration-*, macos-*    no xterm equivalent
+#
+# `config-file` includes are not followed: the one in use points at a
+# keybinding file, and no keybind reaches xterm.
+GHOSTTY = Path.home() / ".config" / "ghostty" / "config"
 
-# One anchor carries both, since they are adjacent constructor keys and the
-# pair is unique in the bundle. `resolveTerminalFontSize` and the options
-# object are reached through minified bindings, so both are captured.
+# The four adjacent constructor keys as one anchor, unique in the bundle. The
+# resolvers and the options object are reached through minified bindings, so
+# both are captured; `\1` and `\2` assert the size pair uses the same ones.
 TERMINAL_METRICS = re.compile(
-    r"fontSize:\(0,([A-Za-z_$][\w$]*)\.resolveTerminalFontSize\)"
-    r"\(([A-Za-z_$][\w$]*)\.fontSize\),lineHeight:1,"
+    r'cursorStyle:"bar",'
+    r"fontFamily:\(0,([A-Za-z_$][\w$]*)\.resolveTerminalFontFamily\)\(([A-Za-z_$][\w$]*)\.fontFamily\),"
+    r"fontSize:\(0,\1\.resolveTerminalFontSize\)\(\2\.fontSize\),"
+    r"lineHeight:1,"
 )
 
-# The constructor is not the only place the size is set: a settings-sync effect
-# reassigns `options.fontSize` from the same resolver whenever the font
-# settings change, which silently undid the constructor patch and left the
-# terminal on the stored whole-number size. Both sites have to agree.
+# The constructor is not the only place the font is set: a settings-sync effect
+# reassigns `options.fontFamily` and `options.fontSize` from the same resolvers
+# whenever the font settings change, which silently undid the constructor
+# patch and left the terminal on the stored values. Both sites have to agree.
+# `\3` is the terminal binding the second assignment hangs off.
 TERMINAL_METRICS_SYNC = re.compile(
-    r"\.options\.fontSize=\(0,([A-Za-z_$][\w$]*)\.resolveTerminalFontSize\)"
-    r"\(([A-Za-z_$][\w$]*)\.fontSize\)"
+    r"\.options\.fontFamily=\(0,([A-Za-z_$][\w$]*)\.resolveTerminalFontFamily\)\(([A-Za-z_$][\w$]*)\.fontFamily\),"
+    r"([A-Za-z_$][\w$]*)\.options\.fontSize=\(0,\1\.resolveTerminalFontSize\)\(\2\.fontSize\)"
 )
 
 # Paseo's default dark theme, replaced wholesale for the oxocarbon look. The
@@ -298,7 +334,7 @@ OPAQUE_SURFACES_CSS = """
       }
       /* xterm sits flush against the pane edge; FitAddon subtracts this */
       .xterm {
-        padding-left: __PADDING_LEFT__px;
+        padding: __PADDING__;
       }
     </style>
 """
@@ -404,6 +440,46 @@ provider: generic
 url: https://127.0.0.1:1/paseo-repatch-disabled/
 updaterCacheDirName: '@getpaseodesktop-updater'
 """
+
+
+def read_ghostty(path: Path) -> dict[str, list[str]]:
+    """`key = value` lines into a dict of lists — Ghostty allows a key to repeat."""
+    cfg: dict[str, list[str]] = {}
+    for line in path.read_text(encoding="utf8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = (part.strip() for part in line.split("=", 1))
+        cfg.setdefault(key, []).append(value)
+    return cfg
+
+
+def ghostty_metrics(cfg: dict[str, list[str]]) -> tuple[dict, list[str]]:
+    """The subset of a Ghostty config xterm can honour, plus notes on the rest."""
+    out: dict = {}
+    notes: list[str] = []
+
+    if "cursor-style" in cfg:
+        out["cursor_style"] = cfg["cursor-style"][-1]
+
+    if "font-family" in cfg:
+        out["font_family"] = ", ".join(cfg["font-family"])
+
+    if "window-padding-x" in cfg or "window-padding-y" in cfg:
+        out["padding"] = (int(cfg.get("window-padding-y", ["0"])[-1]),
+                          int(cfg.get("window-padding-x", ["0"])[-1]))
+
+    if "adjust-cell-height" in cfg:
+        raw = cfg["adjust-cell-height"][-1]
+        # Only the percentage form is a ratio. Ghostty also takes `Npx` and
+        # negatives, and neither converts to a line height without knowing the
+        # cell height xterm will pick — so those fall back rather than guess.
+        if raw.endswith("%"):
+            out["line_height"] = round(1 + float(raw[:-1]) / 100, 3)
+        else:
+            notes.append(f"        ghostty adjust-cell-height {raw!r} is not a %, using default")
+
+    return out, notes
 
 
 def window_options(vibrancy: str | None) -> bytes:
@@ -518,8 +594,7 @@ def renderer_path(app: Path) -> Path:
     return path
 
 
-def patch_renderer(path: Path, look: dict, font_size: float | None,
-                   line_height: float, ansi: str) -> list[str]:
+def patch_renderer(path: Path, look: dict, term: dict, ansi: str) -> list[str]:
     src = path.read_text(encoding="utf8")
     notes: list[str] = []
 
@@ -560,13 +635,17 @@ def patch_renderer(path: Path, look: dict, font_size: float | None,
         replace_re(label, pattern, template.replace("{a}", str(ALPHAS[slot])), expect)
     replace_re("window chrome repaint", *WINDOW_CHROME_PAYLOAD, 1)
 
-    size = (r"fontSize:(0,\1.resolveTerminalFontSize)(\2.fontSize)"
-            if font_size is None else f"fontSize:{font_size}")
+    # JSON-quoted so a family list with spaces lands as one string literal.
+    family = (r"(0,\1.resolveTerminalFontFamily)(\2.fontFamily)"
+              if term["font_family"] is None else json.dumps(term["font_family"]))
+    size = (r"(0,\1.resolveTerminalFontSize)(\2.fontSize)"
+            if term["font_size"] is None else str(term["font_size"]))
     replace_re("terminal metrics", TERMINAL_METRICS,
-               f"{size},lineHeight:{line_height},", 1)
-    if font_size is not None:
+               f'cursorStyle:"{term["cursor_style"]}",fontFamily:{family},'
+               f'fontSize:{size},lineHeight:{term["line_height"]},', 1)
+    if term["font_family"] is not None or term["font_size"] is not None:
         replace_re("terminal metrics (settings sync)", TERMINAL_METRICS_SYNC,
-                   f".options.fontSize={font_size}", 1)
+                   f".options.fontFamily={family},\\3.options.fontSize={size}", 1)
     for label, pattern, new in DIFF_PALETTE:
         replace_re(f"diff canvas {label}", pattern, new, 1)
 
@@ -574,7 +653,7 @@ def patch_renderer(path: Path, look: dict, font_size: float | None,
     return notes
 
 
-def patch_index_html(app: Path, dim: float, padding_left: int) -> list[str]:
+def patch_index_html(app: Path, dim: float, padding: tuple[int, int]) -> list[str]:
     """Turn the pre-mount flash guard into the one layer carrying the dim."""
     path = app / "Contents" / "Resources" / "app-dist" / "index.html"
     src = path.read_text(encoding="utf8")
@@ -600,7 +679,7 @@ def patch_index_html(app: Path, dim: float, padding_left: int) -> list[str]:
     if "</head>" not in src:
         notes.append("MISSED  opaque floating surfaces: no </head> to inject before")
     else:
-        css = OPAQUE_SURFACES_CSS.replace("__PADDING_LEFT__", str(padding_left))
+        css = OPAQUE_SURFACES_CSS.replace("__PADDING__", f"{padding[0]}px {padding[1]}px")
         src = src.replace("</head>", css + "  </head>", 1)
         notes.append("ok      opaque floating surfaces (1x)")
 
@@ -617,14 +696,16 @@ def main() -> int:
     ap.add_argument("--font-size", type=float, metavar="PT", default=FONT_SIZE,
                     help=f"terminal font size, overriding Settings -> Code size for the "
                          f"terminal only (default {FONT_SIZE}); pass 0 to let the setting win")
-    ap.add_argument("--line-height", type=float, metavar="RATIO", default=LINE_HEIGHT,
-                    help=f"terminal line height; not reachable from Paseo's UI "
-                         f"(default {LINE_HEIGHT})")
+    ap.add_argument("--line-height", type=float, metavar="RATIO", default=None,
+                    help="terminal line height; overrides Ghostty's adjust-cell-height "
+                         f"(default {LINE_HEIGHT} when neither is given)")
+    ap.add_argument("--ghostty", type=Path, metavar="FILE", default=GHOSTTY,
+                    help=f"Ghostty config to derive terminal metrics from (default {GHOSTTY})")
+    ap.add_argument("--no-ghostty", action="store_true",
+                    help="ignore the Ghostty config and use the built-in defaults")
     ap.add_argument("--ansi", choices=("oxocarbon", "stock"), default=ANSI,
                     help=f"terminal ANSI palette; oxocarbon matches Superset and nvim "
                          f"(default {ANSI})")
-    ap.add_argument("--padding-left", type=int, metavar="PX", default=PADDING_LEFT,
-                    help=f"left padding inside the terminal (default {PADDING_LEFT})")
     ap.add_argument("--restart", action="store_true",
                     help="quit the patched copy before rebuilding and reopen it after, so "
                          "trying a look is one command instead of three")
@@ -649,13 +730,27 @@ def main() -> int:
             sys.exit("--dim must be between 0 and 1")
         look["dim"] = args.dim
 
-    font_size = None if args.font_size == 0 else args.font_size
-    line_height = args.line_height
+    # Precedence: explicit flag, then the Ghostty config, then the constant.
+    term = {"font_size": None if args.font_size == 0 else args.font_size,
+            "line_height": LINE_HEIGHT, "padding": PADDING,
+            "cursor_style": CURSOR_STYLE, "font_family": FONT_FAMILY}
+    ghostty_notes: list[str] = []
+    if args.no_ghostty:
+        ghostty_notes.append("ok      ghostty config (skipped by --no-ghostty)")
+    elif not args.ghostty.is_file():
+        ghostty_notes.append(f"ok      ghostty config (not found at {args.ghostty}, using defaults)")
+    else:
+        derived, extra = ghostty_metrics(read_ghostty(args.ghostty))
+        term.update(derived)
+        ghostty_notes.append(f"ok      ghostty config ({len(derived)} keys from {args.ghostty})")
+        ghostty_notes += extra
+    if args.line_height is not None:
+        term["line_height"] = args.line_height
 
     version = app_version(STOCK)
     stamp = PATCHED / "Contents" / "Resources" / STAMP_NAME
-    want = (f"{version}|{look_signature(look)}|font={font_size}"
-            f"|lh={line_height}|pad={args.padding_left}|ansi={args.ansi}")
+    want = (f"{version}|{look_signature(look)}|ansi={args.ansi}|"
+            + "|".join(f"{k}={v}" for k, v in sorted(term.items())))
 
     if stamp.exists() and stamp.read_text().strip() == want and not args.force:
         return 0  # already current — stay silent, this is the brew-wrapper path
@@ -680,8 +775,9 @@ def main() -> int:
     shutil.copytree(STOCK, PATCHED, symlinks=True)
 
     digest, notes = patch_asar(PATCHED / "Contents" / "Resources" / "app.asar", look["vibrancy"])
-    notes += patch_renderer(renderer_path(PATCHED), look, font_size, line_height, args.ansi)
-    notes += patch_index_html(PATCHED, look["dim"], args.padding_left)
+    notes += ghostty_notes
+    notes += patch_renderer(renderer_path(PATCHED), look, term, args.ansi)
+    notes += patch_index_html(PATCHED, look["dim"], term["padding"])
 
     # Asserted like every other patch rather than written blind: if Paseo ever
     # moves this file into the asar or renames it, a blind write would leave a
