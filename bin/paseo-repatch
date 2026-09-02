@@ -116,7 +116,7 @@ ALPHAS = {"surface0": 0.0, "background": 0.0, "sidebar": 0.0, "workspace": 0.0, 
 # by superset/oxocarbon-glass.json. Alpha is applied by ALPHAS at runtime, so
 # every value here stays an opaque hex.
 OXOCARBON_PALETTE = (
-    'B({surface0:"#161616",surface1:"#262626",surface2:"#262626",surface3:"#393939",'
+    r'\1({surface0:"#161616",surface1:"#262626",surface2:"#262626",surface3:"#393939",'
     'surface4:"#525252",surfaceDiffEmpty:"#1c1c1c",surfaceSidebar:"#161616",'
     'foreground:"#f2f4f8",foregroundMuted:"#8d8d8d",foregroundExtraMuted:"#6f6f6f",'
     'border:"#393939",borderAccent:"#525252",accent:"#c693ff",accentBright:"#dcc7ff",'
@@ -142,7 +142,7 @@ OXOCARBON_ANSI = (
 # the ANSI one is anchored on its own contents rather than on the `y=` binding
 # beside it, since the minifier is free to rename that on any release.
 STOCK_PALETTE = re.compile(
-    r'B\(\{surface0:"#181B1A".*?terminalBrightBlack:"#[0-9a-fA-F]{6}"\}\)'
+    r'([A-Za-z_$][\w$]*)\(\{surface0:"#181B1A".*?terminalBrightBlack:"#[0-9a-fA-F]{6}"\}\)'
 )
 STOCK_ANSI = re.compile(
     r'\{red:"#e07070",green:"#5dba80".*?brightWhite:"#[0-9a-fA-F]{6}"\}'
@@ -228,6 +228,30 @@ HTML_FLASH_GUARD = re.compile(
     r"(html,\s*body\s*\{\s*background-color:\s*)#([0-9a-fA-F]{6});"
 )
 
+# Floating surfaces have to stay opaque or the chat behind them reads straight
+# through and nothing on them is legible. They inherit `surface0` rather than
+# `popover`, so zeroing that token took them with it.
+#
+# Fixed with a stylesheet rather than another bundle patch, because Paseo emits
+# its theme as CSS custom properties — `--colors-popover` is `#272A29` on Dark
+# and the right value on each of the other six — so one rule follows the theme
+# picker for free. The selectors are ARIA roles and Paseo's own test ids, both
+# far more stable across releases than a minified style object; the combobox's
+# generated class (`unistyles_…`) is a content hash that changes every build.
+#
+# `aria-modal` rather than `role="dialog"` alone: the backdrop wrapper carries
+# the role too, and painting that opaque would black out the whole window.
+OPAQUE_SURFACES_CSS = """
+    <style id="paseo-repatch-opaque-surfaces">
+      /* added by paseo-repatch: keep floating surfaces readable over glass */
+      [aria-modal="true"],
+      [role="menu"],
+      [role="listbox"] {
+        background-color: var(--colors-popover) !important;
+      }
+    </style>
+"""
+
 # Prepended to the bundle rather than injected into the theme factory, because
 # there are two factories (`h` and `B`, both live, six palettes going through
 # one and one through the other) and their minified names are reused sixteen
@@ -253,11 +277,17 @@ ALPHA_HELPER = (
 # `createDiffPalette` reads `colors.surface0` for all three background slots,
 # so zeroing that token took the diff view with it. These are forced back to
 # opaque: the diff pane is the one surface in the app that cannot be glass.
+# The parameter name is captured, never assumed: this function was
+# `function(t)` in one 0.7.0-beta build and `function(o)` in the next, which
+# silently broke both anchors. Every anchor below that reaches through a
+# minified binding does the same.
 DIFF_PALETTE = [
-    ("surface", "surface:t.colors.surface0,headerSurface:t.colors.surface0,",
-     "surface:__paseoOpaque(t.colors.surface0),headerSurface:__paseoOpaque(t.colors.surface0),"),
-    ("empty rows", "emptyBackground:t.colors.surface0,",
-     "emptyBackground:__paseoOpaque(t.colors.surface0),"),
+    ("surface",
+     re.compile(r"surface:([A-Za-z_$][\w$]*)\.colors\.surface0,headerSurface:\1\.colors\.surface0,"),
+     r"surface:__paseoOpaque(\1.colors.surface0),headerSurface:__paseoOpaque(\1.colors.surface0),"),
+    ("empty rows",
+     re.compile(r"emptyBackground:([A-Za-z_$][\w$]*)\.colors\.surface0,"),
+     r"emptyBackground:__paseoOpaque(\1.colors.surface0),"),
 ]
 
 # (slot, label, old, new-template, expected occurrences) — `{a}` is the slot's
@@ -282,38 +312,33 @@ SURFACE_PATCHES = [
         # Safe to zero because this is the factory's *output* passthrough:
         # `primaryForeground` reads the input palette's surface0 instead, so
         # button label text keeps its opaque hex and stays legible.
-        "surface0",
-        "app surface fill",
-        "{surface0:t.surface0,surface1:",
-        "{surface0:__paseoAlpha(t.surface0,{a}),surface1:",
+        "surface0", "app surface fill",
+        re.compile(r"\{surface0:([A-Za-z_$][\w$]*)\.surface0,surface1:"),
+        r"{surface0:__paseoAlpha(\1.surface0,{a}),surface1:",
         2,
     ),
     (
-        "background",
-        "app background + window dim",
-        "background:t.surface0,popover:",
-        "background:__paseoAlpha(t.surface0,{a}),popover:",
+        "background", "app background + window dim",
+        re.compile(r"background:([A-Za-z_$][\w$]*)\.surface0,popover:"),
+        r"background:__paseoAlpha(\1.surface0,{a}),popover:",
         2,
     ),
     (
-        "terminal",
-        "terminal background",
-        "{background:t.surface0,foreground:",
-        "{background:__paseoAlpha(t.surface0,{a}),foreground:",
+        "terminal", "terminal background",
+        re.compile(r"\{background:([A-Za-z_$][\w$]*)\.surface0,foreground:"),
+        r"{background:__paseoAlpha(\1.surface0,{a}),foreground:",
         2,
     ),
     (
-        "sidebar",
-        "sidebar background",
-        "surfaceSidebar:t.surfaceSidebar,surfaceSidebarHover:",
-        "surfaceSidebar:__paseoAlpha(t.surfaceSidebar,{a}),surfaceSidebarHover:",
+        "sidebar", "sidebar background",
+        re.compile(r"surfaceSidebar:([A-Za-z_$][\w$]*)\.surfaceSidebar,surfaceSidebarHover:"),
+        r"surfaceSidebar:__paseoAlpha(\1.surfaceSidebar,{a}),surfaceSidebarHover:",
         2,
     ),
     (
-        "workspace",
-        "workspace pane background",
-        "surfaceWorkspace:t.surface1,interactionHighlight:",
-        "surfaceWorkspace:__paseoAlpha(t.surface1,{a}),interactionHighlight:",
+        "workspace", "workspace pane background",
+        re.compile(r"surfaceWorkspace:([A-Za-z_$][\w$]*)\.surface1,interactionHighlight:"),
+        r"surfaceWorkspace:__paseoAlpha(\1.surface1,{a}),interactionHighlight:",
         1,
     ),
 ]
@@ -467,11 +492,11 @@ def patch_renderer(path: Path, look: dict) -> list[str]:
 
     src = ALPHA_HELPER + src
     notes.append("ok      alpha helper (1x)")
-    for slot, label, old, template, expect in SURFACE_PATCHES:
-        replace(label, old, template.replace("{a}", str(ALPHAS[slot])), expect)
+    for slot, label, pattern, template, expect in SURFACE_PATCHES:
+        replace_re(label, pattern, template.replace("{a}", str(ALPHAS[slot])), expect)
     replace_re("window chrome repaint", *WINDOW_CHROME_PAYLOAD, 1)
-    for label, old, new in DIFF_PALETTE:
-        replace(f"diff canvas {label}", old, new, 1)
+    for label, pattern, new in DIFF_PALETTE:
+        replace_re(f"diff canvas {label}", pattern, new, 1)
 
     path.write_text(src, encoding="utf8")
     return notes
@@ -493,8 +518,16 @@ def patch_index_html(app: Path, dim: float) -> list[str]:
         return f"body {{ background-color: rgba({r}, {g}, {b}, {dim});"
 
     src, hits = HTML_FLASH_GUARD.subn(wash, src)
+    notes = [f"ok      window dim {dim} ({hits}x)"]
+
+    if "</head>" not in src:
+        notes.append("MISSED  opaque floating surfaces: no </head> to inject before")
+    else:
+        src = src.replace("</head>", OPAQUE_SURFACES_CSS + "  </head>", 1)
+        notes.append("ok      opaque floating surfaces (1x)")
+
     path.write_text(src)
-    return [f"ok      window dim {dim} ({hits}x)"]
+    return notes
 
 
 def main() -> int:
