@@ -36,3 +36,6 @@ nvim/nvim-pack-lock.json
 
 # assistant scratch
 .claude/tmp/
+
+# installed and auto-updated by Paseo (each carries .paseo-managed-files.json)
+claude-code/skills/paseo*/
