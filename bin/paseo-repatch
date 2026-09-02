@@ -133,7 +133,7 @@ FONT_SIZE: float | None = 13.5
 # Fallbacks for what the Ghostty config below normally supplies. Each is what
 # Paseo ships, so with no Ghostty file present nothing changes but the size.
 LINE_HEIGHT = 1.1
-PADDING = (0, 0)            # (y, x), CSS order
+PADDING = "0 0 0 10px"      # CSS shorthand; left only, by preference
 CURSOR_STYLE = "bar"
 FONT_FAMILY: str | None = None   # None keeps Settings -> Code font in charge
 
@@ -148,7 +148,6 @@ FONT_FAMILY: str | None = None   # None keeps Settings -> Code font in charge
 # What maps and what cannot:
 #
 #   cursor-style          -> cursorStyle             (Paseo hardcodes "bar")
-#   window-padding-x/y    -> .xterm padding          (FitAddon subtracts it)
 #   adjust-cell-height N% -> lineHeight 1 + N/100
 #   font-family (repeats) -> fontFamily, joined      (Ghostty repeats for fallback)
 #
@@ -157,6 +156,10 @@ FONT_FAMILY: str | None = None   # None keeps Settings -> Code font in charge
 #                                   Superset, and Paseo renders at a different
 #                                   scale than Ghostty so a literal copy would
 #                                   not look the same anyway
+#   window-padding-x/y              NOT read either: Ghostty pads all four
+#                                   sides, but a pane that already sits in
+#                                   app chrome only needs the left edge
+#                                   pushed off — PADDING stays a constant
 #   background-blur-radius          Electron exposes a material, never a radius
 #   bold-is-bright                  xterm's drawBoldTextInBrightColors is
 #                                   already true by default
@@ -465,10 +468,6 @@ def ghostty_metrics(cfg: dict[str, list[str]]) -> tuple[dict, list[str]]:
     if "font-family" in cfg:
         out["font_family"] = ", ".join(cfg["font-family"])
 
-    if "window-padding-x" in cfg or "window-padding-y" in cfg:
-        out["padding"] = (int(cfg.get("window-padding-y", ["0"])[-1]),
-                          int(cfg.get("window-padding-x", ["0"])[-1]))
-
     if "adjust-cell-height" in cfg:
         raw = cfg["adjust-cell-height"][-1]
         # Only the percentage form is a ratio. Ghostty also takes `Npx` and
@@ -653,7 +652,7 @@ def patch_renderer(path: Path, look: dict, term: dict, ansi: str) -> list[str]:
     return notes
 
 
-def patch_index_html(app: Path, dim: float, padding: tuple[int, int]) -> list[str]:
+def patch_index_html(app: Path, dim: float, padding: str) -> list[str]:
     """Turn the pre-mount flash guard into the one layer carrying the dim."""
     path = app / "Contents" / "Resources" / "app-dist" / "index.html"
     src = path.read_text(encoding="utf8")
@@ -679,7 +678,7 @@ def patch_index_html(app: Path, dim: float, padding: tuple[int, int]) -> list[st
     if "</head>" not in src:
         notes.append("MISSED  opaque floating surfaces: no </head> to inject before")
     else:
-        css = OPAQUE_SURFACES_CSS.replace("__PADDING__", f"{padding[0]}px {padding[1]}px")
+        css = OPAQUE_SURFACES_CSS.replace("__PADDING__", padding)
         src = src.replace("</head>", css + "  </head>", 1)
         notes.append("ok      opaque floating surfaces (1x)")
 
