@@ -29,6 +29,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 STOCK = Path("/Applications/Superset.app")
@@ -288,6 +289,36 @@ def apply_theme(look: dict, quiet: bool = False) -> int:
     return 0
 
 
+def running_pids() -> list[str]:
+    """PIDs of the patched copy, if it is up.
+
+    Matched on the executable path rather than the bundle id, which both copies
+    share — quitting by id would take the stock app down instead.
+    """
+    found = subprocess.run(
+        ["pgrep", "-f", f"{PATCHED}/Contents/MacOS/"], capture_output=True, text=True
+    )
+    return found.stdout.split()
+
+
+def quit_patched() -> bool:
+    """Ask the patched copy to quit and wait for it to actually go.
+
+    A rebuild starts by deleting the bundle, so doing it under a live app
+    unlinks the executable and frameworks out from under it — and this bundle
+    is 2.1 GB, so the window in which that can go wrong is a wide one. Returns
+    False if it is still up after the grace period, which is a refusal to
+    proceed.
+    """
+    subprocess.run(["osascript", "-e", 'tell application id "com.superset.desktop" to quit'],
+                   capture_output=True)
+    for _ in range(40):
+        if not running_pids():
+            return True
+        time.sleep(0.5)
+    return False
+
+
 def app_version(app: Path) -> str:
     info = plistlib.loads((app / "Contents" / "Info.plist").read_bytes())
     return f"{info.get('CFBundleShortVersionString', '?')}+{info.get('CFBundleVersion', '?')}"
@@ -349,6 +380,9 @@ def main() -> int:
     ap.add_argument("--theme", choices=sorted(THEMES), default=None,
                     help="switch to this look: patches for it AND applies its Superset theme. "
                          f"Omit to patch only, leaving the active theme untouched (patches for {THEME!r})")
+    ap.add_argument("--restart", action="store_true",
+                    help="quit the patched copy before rebuilding and reopen it after, so "
+                         "applying a change is one command instead of three")
     ap.add_argument("--vibrancy", metavar="MATERIAL", default=None,
                     help="override the material for this run: none, hud, sidebar, under-window, "
                          "fullscreen-ui, popover, menu, sheet, window, titlebar, selection, "
@@ -382,6 +416,17 @@ def main() -> int:
             print("superset-repatch: patch already current, switching theme only")
         return apply_theme(look, quiet=args.quiet)
 
+    if running_pids():
+        if not args.restart:
+            print(f"superset-repatch: {PATCHED.name} is running — quit it first, "
+                  f"or pass --restart to have it quit and reopen around the rebuild",
+                  file=sys.stderr)
+            return 1
+        if not quit_patched():
+            print(f"superset-repatch: {PATCHED.name} did not quit — refusing to rebuild "
+                  f"a live bundle", file=sys.stderr)
+            return 1
+
     if not args.quiet:
         print(f"superset-repatch: rebuilding transparent copy from {version}")
 
@@ -391,8 +436,9 @@ def main() -> int:
     shutil.copytree(STOCK, PATCHED, symlinks=True)
 
     digest, notes = patch_asar(PATCHED / "Contents" / "Resources" / "app.asar", vibrancy, tint)
-    for note in notes:
-        print(f"  {note}")
+    if not args.quiet:
+        for note in notes:
+            print(f"  {note}")
 
     # Electron refuses to load an asar whose hash does not match this key, and
     # the key name contains a dot, so PlistBuddy (`:` separated) is required —
@@ -415,6 +461,17 @@ def main() -> int:
     # and the hardened runtime means the app will not launch unsigned.
     subprocess.run(["codesign", "--force", "--deep", "--sign", "-", str(PATCHED)], check=True)
 
+    # Reopened before the MISSED check, not after: the bundle is signed and
+    # launchable either way, and a patch that failed to apply is cosmetic.
+    # Quitting the user's app and then leaving it closed over a cosmetic miss
+    # is the worse trade.
+    #
+    # And before apply_theme, not after: that shells out to the `superset` CLI,
+    # which needs a running host — with --restart the app is down at this point
+    # and the theme switch would fail for want of one.
+    if args.restart:
+        subprocess.run(["open", "-a", str(PATCHED)], check=True)
+
     if args.theme is not None:
         apply_theme(look, quiet=args.quiet)
 
@@ -424,7 +481,8 @@ def main() -> int:
         return 2
 
     if not args.quiet:
-        print(f"superset-repatch: done — restart {PATCHED.name} to pick it up")
+        done = "reopened" if args.restart else f"restart {PATCHED.name} to pick it up"
+        print(f"superset-repatch: done — {done}")
     return 0
 
 
