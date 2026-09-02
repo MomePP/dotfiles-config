@@ -81,7 +81,6 @@
   "enabledPlugins": {
     "claude-hud@claude-hud": true,
     "context-mode@context-mode": true,
-    "context7@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
     "i-have-adhd@i-have-adhd": true
   },
@@ -106,12 +105,12 @@
     }
   },
   "effortLevel": "high",
-  "advisorModel": "fable",
   "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "editorMode": "vim",
   "remoteControlAtStartup": false,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "theme": "auto"
+  "theme": "auto",
+  "model": "claude-fable-5-1[1m]"
 }
