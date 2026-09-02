@@ -441,9 +441,15 @@ def running_pids() -> list[str]:
     Matched on the executable path rather than the bundle id, which both copies
     share — quitting by id would take the stock app down instead.
     """
-    found = subprocess.run(
-        ["pgrep", "-f", f"{PATCHED}/Contents/MacOS/"], capture_output=True, text=True
-    )
+    macos = PATCHED / "Contents" / "MacOS"
+    if not macos.is_dir():
+        return []
+    # Anchored on the bare executable, because the helpers this app spawns run
+    # that same binary with a script argument and are meant to outlive a quit —
+    # the pty daemon and terminal host among them. An unanchored match sees
+    # those forever and the guard never clears.
+    exe = next(iter(sorted(macos.iterdir())))
+    found = subprocess.run(["pgrep", "-f", f"^{exe}$"], capture_output=True, text=True)
     return found.stdout.split()
 
 
