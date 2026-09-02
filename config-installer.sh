@@ -162,6 +162,12 @@ symlink_config "bin/esp-clangd-update" ~/.local/bin/esp-clangd-update
 # transparency patches, the asar-integrity hash and the ad-hoc signature.
 symlink_config "bin/superset-repatch" ~/.local/bin/superset-repatch
 
+# paseo-repatch is the same idea for Paseo, and needs the symlink for the same
+# reason. It also gets run by hand between cask upgrades: Paseo's in-app
+# electron-updater replaces /Applications/Paseo.app without telling brew, so on
+# the beta channel the wrapper never fires and the rebuild is manual.
+symlink_config "bin/paseo-repatch" ~/.local/bin/paseo-repatch
+
 # claude-settings-sync reports drift between ~/.claude/settings.json and the
 # copy tracked here. They cannot be symlinked: Superset rewrites the live file
 # on every app start, so the tracked copy is a template and deliberate settings
