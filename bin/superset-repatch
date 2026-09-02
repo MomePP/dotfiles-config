@@ -251,7 +251,13 @@ def window_options(vibrancy: str | None, tint: str) -> bytes:
         # backgroundColor whenever a material is set, so emitting it here would
         # be noise. With a material, dim through the theme's `ui.background`
         # instead — that layer paints *over* the vibrancy and mutes it.
-        parts.append(f'vibrancy: "{vibrancy}",')
+        #
+        # visualEffectState defaults to "followWindow", which swaps the
+        # material for a flat dark fill the moment the window loses focus — the
+        # blurred wallpaper vanishes and the app reads as a black slab until it
+        # is clicked again. "active" pins the material on regardless of focus.
+        # Only meaningful alongside a material, so it stays in this branch.
+        parts.append(f'vibrancy: "{vibrancy}", visualEffectState: "active",')
     elif tint:
         parts.append(f'backgroundColor: "{tint}",')
     return " ".join(parts).encode()
