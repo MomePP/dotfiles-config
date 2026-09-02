@@ -96,11 +96,11 @@ LOOK = "glass"
 LOOKS = {
     # Full glass. Paseo's own hues are untouched, so its theme picker keeps
     # working and every built-in theme becomes a glass version of itself.
-    "glass": {"vibrancy": "hud", "dim": 0.70, "palette": False},
+    "glass": {"vibrancy": "hud", "dim": 0.65, "palette": False},
     # Glass plus the oxocarbon colours from the Superset theme, so Paseo, nvim
     # and Superset agree. Overwrites Paseo's default green theme and the shared
     # dark ANSI set — see OXOCARBON_ANSI for why that reaches every theme.
-    "oxocarbon": {"vibrancy": "hud", "dim": 0.70, "palette": True},
+    "oxocarbon": {"vibrancy": "hud", "dim": 0.65, "palette": True},
     # Nearly solid: the same construction with a heavy wash, so the desktop
     # reads only as a faint texture. Start here if full glass costs too much
     # contrast.
@@ -110,6 +110,47 @@ LOOKS = {
 # Every surface token the React tree paints with. All zero, always — see DIM
 # above for why none of them may carry the dim.
 ALPHAS = {"surface0": 0.0, "background": 0.0, "sidebar": 0.0, "workspace": 0.0, "terminal": 0.0}
+
+# --- terminal metrics -------------------------------------------------------
+#
+# Independent of the glass work: these survive even if the transparency patches
+# are dropped, and they are here only because neither value is reachable from
+# Paseo's UI.
+#
+# LINE_HEIGHT is hardcoded to 1 in the xterm constructor with no setting behind
+# it at all.
+#
+# FONT_SIZE is settable in Settings -> Appearance -> Fonts -> Code size, but
+# only in whole numbers: the field parses "13.5" as 135 and clamps it to the
+# 22 maximum. `resolveTerminalFontSize` itself accepts any positive finite
+# number, so the restriction is in the input, not the terminal. Setting this
+# replaces the resolver call outright, so Code size no longer drives the
+# terminal — it still drives code blocks and diffs. Pass --font-size 0 to hand
+# control back to the setting.
+FONT_SIZE: float | None = 13.5
+LINE_HEIGHT = 1.1
+
+# xterm renders flush against the pane edge. FitAddon reads `.xterm`'s own
+# padding and subtracts it before computing cols/rows, so padding there is the
+# supported lever — it shifts the text without desyncing the grid.
+PADDING_LEFT = 10
+
+# One anchor carries both, since they are adjacent constructor keys and the
+# pair is unique in the bundle. `resolveTerminalFontSize` and the options
+# object are reached through minified bindings, so both are captured.
+TERMINAL_METRICS = re.compile(
+    r"fontSize:\(0,([A-Za-z_$][\w$]*)\.resolveTerminalFontSize\)"
+    r"\(([A-Za-z_$][\w$]*)\.fontSize\),lineHeight:1,"
+)
+
+# The constructor is not the only place the size is set: a settings-sync effect
+# reassigns `options.fontSize` from the same resolver whenever the font
+# settings change, which silently undid the constructor patch and left the
+# terminal on the stored whole-number size. Both sites have to agree.
+TERMINAL_METRICS_SYNC = re.compile(
+    r"\.options\.fontSize=\(0,([A-Za-z_$][\w$]*)\.resolveTerminalFontSize\)"
+    r"\(([A-Za-z_$][\w$]*)\.fontSize\)"
+)
 
 # Paseo's default dark theme, replaced wholesale for the oxocarbon look. The
 # slot names are Paseo's; the values are the oxocarbon.nvim palette already used
@@ -248,6 +289,10 @@ OPAQUE_SURFACES_CSS = """
       [role="menu"],
       [role="listbox"] {
         background-color: var(--colors-popover) !important;
+      }
+      /* xterm sits flush against the pane edge; FitAddon subtracts this */
+      .xterm {
+        padding-left: __PADDING_LEFT__px;
       }
     </style>
 """
@@ -457,7 +502,8 @@ def renderer_path(app: Path) -> Path:
     return path
 
 
-def patch_renderer(path: Path, look: dict) -> list[str]:
+def patch_renderer(path: Path, look: dict, font_size: float | None,
+                   line_height: float) -> list[str]:
     src = path.read_text(encoding="utf8")
     notes: list[str] = []
 
@@ -495,6 +541,14 @@ def patch_renderer(path: Path, look: dict) -> list[str]:
     for slot, label, pattern, template, expect in SURFACE_PATCHES:
         replace_re(label, pattern, template.replace("{a}", str(ALPHAS[slot])), expect)
     replace_re("window chrome repaint", *WINDOW_CHROME_PAYLOAD, 1)
+
+    size = (r"fontSize:(0,\1.resolveTerminalFontSize)(\2.fontSize)"
+            if font_size is None else f"fontSize:{font_size}")
+    replace_re("terminal metrics", TERMINAL_METRICS,
+               f"{size},lineHeight:{line_height},", 1)
+    if font_size is not None:
+        replace_re("terminal metrics (settings sync)", TERMINAL_METRICS_SYNC,
+                   f".options.fontSize={font_size}", 1)
     for label, pattern, new in DIFF_PALETTE:
         replace_re(f"diff canvas {label}", pattern, new, 1)
 
@@ -502,7 +556,7 @@ def patch_renderer(path: Path, look: dict) -> list[str]:
     return notes
 
 
-def patch_index_html(app: Path, dim: float) -> list[str]:
+def patch_index_html(app: Path, dim: float, padding_left: int) -> list[str]:
     """Turn the pre-mount flash guard into the one layer carrying the dim."""
     path = app / "Contents" / "Resources" / "app-dist" / "index.html"
     src = path.read_text(encoding="utf8")
@@ -528,7 +582,8 @@ def patch_index_html(app: Path, dim: float) -> list[str]:
     if "</head>" not in src:
         notes.append("MISSED  opaque floating surfaces: no </head> to inject before")
     else:
-        src = src.replace("</head>", OPAQUE_SURFACES_CSS + "  </head>", 1)
+        css = OPAQUE_SURFACES_CSS.replace("__PADDING_LEFT__", str(padding_left))
+        src = src.replace("</head>", css + "  </head>", 1)
         notes.append("ok      opaque floating surfaces (1x)")
 
     path.write_text(src, encoding="utf8")
@@ -541,6 +596,14 @@ def main() -> int:
     ap.add_argument("--quiet", action="store_true", help="only speak up on error")
     ap.add_argument("--look", choices=sorted(LOOKS), default=None,
                     help=f"build this look for one run; omit to use {LOOK!r}")
+    ap.add_argument("--font-size", type=float, metavar="PT", default=FONT_SIZE,
+                    help=f"terminal font size, overriding Settings -> Code size for the "
+                         f"terminal only (default {FONT_SIZE}); pass 0 to let the setting win")
+    ap.add_argument("--line-height", type=float, metavar="RATIO", default=LINE_HEIGHT,
+                    help=f"terminal line height; not reachable from Paseo's UI "
+                         f"(default {LINE_HEIGHT})")
+    ap.add_argument("--padding-left", type=int, metavar="PX", default=PADDING_LEFT,
+                    help=f"left padding inside the terminal (default {PADDING_LEFT})")
     ap.add_argument("--restart", action="store_true",
                     help="quit the patched copy before rebuilding and reopen it after, so "
                          "trying a look is one command instead of three")
@@ -565,9 +628,13 @@ def main() -> int:
             sys.exit("--dim must be between 0 and 1")
         look["dim"] = args.dim
 
+    font_size = None if args.font_size == 0 else args.font_size
+    line_height = args.line_height
+
     version = app_version(STOCK)
     stamp = PATCHED / "Contents" / "Resources" / STAMP_NAME
-    want = f"{version}|{look_signature(look)}"
+    want = (f"{version}|{look_signature(look)}|font={font_size}"
+            f"|lh={line_height}|pad={args.padding_left}")
 
     if stamp.exists() and stamp.read_text().strip() == want and not args.force:
         return 0  # already current — stay silent, this is the brew-wrapper path
@@ -592,8 +659,8 @@ def main() -> int:
     shutil.copytree(STOCK, PATCHED, symlinks=True)
 
     digest, notes = patch_asar(PATCHED / "Contents" / "Resources" / "app.asar", look["vibrancy"])
-    notes += patch_renderer(renderer_path(PATCHED), look)
-    notes += patch_index_html(PATCHED, look["dim"])
+    notes += patch_renderer(renderer_path(PATCHED), look, font_size, line_height)
+    notes += patch_index_html(PATCHED, look["dim"], args.padding_left)
 
     # Asserted like every other patch rather than written blind: if Paseo ever
     # moves this file into the asar or renames it, a blind write would leave a
