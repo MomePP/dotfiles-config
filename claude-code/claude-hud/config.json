@@ -1,0 +1,66 @@
+{
+  "language": "en",
+  "lineLayout": "expanded",
+  "showSeparators": false,
+  "maxWidth": 210,
+  "forceMaxWidth": true,
+  "elementOrder": [
+    "project",
+    "context",
+    "usage",
+    "addedDirs"
+  ],
+  "gitStatus": {
+    "enabled": true,
+    "showDirty": true,
+    "showAheadBehind": true,
+    "showFileStats": true,
+    "showFileList": false,
+    "linkBranch": false
+  },
+  "display": {
+    "projectStyle": "natural",
+    "naturalSeparator": "   ",
+    "showProject": false,
+    "showUsage": true,
+    "showTools": false,
+    "showAgents": false,
+    "showTodos": false,
+    "showPendingPermission": false,
+    "orchestrationSource": "superpowers",
+    "showOrchestration": true,
+    "showOrchestrationDetail": false,
+    "showDuration": false,
+    "showSessionName": false,
+    "sevenDayThreshold": 0,
+    "contextValue": "tokens",
+    "barStyle": "thin",
+    "showEffortLevel": true,
+    "showAddedDirs": true,
+    "addedDirsLayout": "line",
+    "orchestrationDetailLayout": "inline",
+    "showPromptCache": false,
+    "hourCycle": "h23",
+    "mergeGroups": [
+      [
+        "context",
+        "usage"
+      ]
+    ],
+    "sevenDayLayout": "inline"
+  },
+  "colors": {
+    "label": "#525252",
+    "barEmptyColor": "#393939",
+    "model": "#ff7eb6",
+    "thinking": "#ffab91",
+    "duration": "#525252",
+    "orchestration": "#82cfff",
+    "gitBranch": "#be95ff",
+    "dim": "#525252",
+    "usageWarning": "#ff6f00",
+    "sevenDay": "#08bdba",
+    "context": "#42be65",
+    "usage": "#33b1ff"
+  }
+}

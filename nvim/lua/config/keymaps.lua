@@ -209,6 +209,15 @@ keymaps.treesj = {
     toggle = 'J',
 }
 
+-- INFO: sidekick keymap — inert while the spec carries `enabled = false`
+-- (plugins/llm-config.lua). It overlaps herd.nvim's s/S below on purpose: only
+-- one of the two plugins ever loads, so only one set of keys is registered.
+keymaps.sidekick = {
+    apply_nes = '<Tab>',
+    toggle    = '<leader>s',
+    select    = '<leader>S',
+}
+
 -- INFO: herd.nvim keymap — s/S carry the launcher the way they did under
 -- sidekick.nvim: <leader>s goes to this cwd's agent (count = slot), <leader>S is
 -- the project picker, <leader><tab> the global agent dashboard. hide/newline are

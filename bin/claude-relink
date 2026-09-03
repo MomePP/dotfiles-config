@@ -12,7 +12,7 @@ target=$(readlink /opt/homebrew/bin/claude)
 [ -x "$target" ] || { echo "claude-relink: no cask binary at $target" >&2; exit 1; }
 
 # Silent on the no-op path: this runs after every `brew` invocation via the
-# wrapper in nushell/config.nu, and only the relink itself is worth reporting.
+# wrapper in zsh/.zshrc, and only the relink itself is worth reporting.
 if [ "$(stat -f %i "$target")" = "$(stat -f %i "$HOME/.local/bin/claude" 2>/dev/null || echo -)" ]; then
 	exit 0
 fi
