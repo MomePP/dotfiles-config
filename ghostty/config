@@ -11,7 +11,10 @@ mouse-hide-while-typing = true
 # auto-copy mouse selection to the system clipboard (native-style copy, incl. in
 # the herd.nvim float where win.mouse=false hands the mouse to ghostty)
 copy-on-select = clipboard
-shell-integration-features = cursor
+# `title` sets the pane title from the shell (OSC 2) — tmux falls back to the
+# hostname without it, so `choose-tree` shows no path. nushell used to emit this
+# itself via shell_integration.osc2; zsh ships nothing of the sort.
+shell-integration-features = cursor,title
 cursor-style = block
 
 # macos icon

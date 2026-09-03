@@ -23,6 +23,16 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 source <(carapace _carapace zsh)
 
 # -- tool init ----------------------------------------------------------------
+#
+# Ghostty auto-injects its shell integration only into shells it spawns itself,
+# so tmux panes miss it entirely — no OSC 2, and a pane's title falls back to
+# the hostname (which is what `choose-tree` then shows in place of the path).
+# Sourcing by hand is the documented fix; the script no-ops when it already ran.
+# Which features it turns on is `shell-integration-features` in ghostty/config.
+if [[ -n $GHOSTTY_RESOURCES_DIR ]]; then
+    source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
+fi
+
 eval "$(starship init zsh)"
 
 # --use-on-cd switches node per .nvmrc/.node-version on every cd. The nushell
