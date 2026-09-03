@@ -20,7 +20,6 @@ local M = {
     -- dev = true, -- use local ~/Developer/nvim-plugins/herd.nvim
     cond = function() return vim.fn.executable('herdr') == 1 end,
     event = 'VeryLazy',
-    enabled = false,
 }
 
 M.opts = {
