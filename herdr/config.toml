@@ -48,10 +48,6 @@ prefix = "ctrl+a"                          # default: "ctrl+b"
 reload_config = "prefix+r"                 # default: "prefix+shift+r"
 resize_mode = "prefix+shift+r"             # default: "prefix+r"
 
-# settings moved off prefix+s so herd.nvim's return trip can have it (see the
-# [[keys.command]] block at the bottom)
-settings = "prefix+shift+s"                # default: "prefix+s"
-
 # workspace picker = Ctrl-a w;  workspace tree / omni-jump (goto) = Ctrl-a Ctrl-w
 workspace_picker = "prefix+w"              # default: "prefix+w" (unchanged)
 goto = "prefix+ctrl+w"                     # tmux C-w (choose-tree) | default: "prefix+g"
@@ -126,15 +122,58 @@ previous_agent = "prefix+up"               # Ctrl-a ↑ → previous agent in th
 # type = "pane"        # "pane" = temp pane that closes on exit; "shell" = detached
 # command = "lazygit"
 
-# herd.nvim round trip. <leader>s in nvim goes TO the agent; Ctrl-a s comes back.
-# It cannot be <leader>s in both directions: herdr focuses the agent's tab, so nvim
-# stops receiving keys and \s would just type into the CLI. A herdr binding is one
-# key combo (optionally behind the prefix) — no two-key sequences — so prefix+s is
-# the closest mirror: same trailing key, prefix instead of leader.
-#
-# --resurrect: if nvim was quit (leaving an idle shell), prompt to relaunch it in
-# place instead of focusing a dead tab. HERD_EDITOR overrides the launch command.
+# ── plugins ─────────────────────────────────────────────────────────────────────
+# Bound by hand rather than via hunk-diff's `setup-keys`: its defaults would land
+# on prefix+shift+s and prefix+shift+a, which settings and annotate already use.
+# Plugin config lives in plugins/config/<id>/ (herdr-plus project + worktree
+# templates are tracked there; binaries and clones are gitignored).
+
+# herdr-plus: Enter opens the project on its checkout, ctrl+g inside the picker
+# opens it as a new worktree. prefix+g is free since goto moved to prefix+ctrl+w.
 [[keys.command]]
-key = 'prefix+s'
-type = "shell"
-command = "nvim -l /Users/momeppkt/Developer/nvim-plugins/herd.nvim/bin/herd-return.lua --resurrect"
+key = "prefix+g"
+type = "plugin_action"
+command = "cloudmanic.herdr-plus.projects"
+description = "herdr-plus: projects"
+
+[[keys.command]]
+key = "prefix+."
+type = "plugin_action"
+command = "cloudmanic.herdr-plus.quick-actions"
+description = "herdr-plus: quick actions"
+
+# annotate: select terminal text, comment, send it back to the agent
+[[keys.command]]
+key = "prefix+a"
+type = "plugin_action"
+command = "annotate.capture"
+description = "annotate text"
+
+[[keys.command]]
+key = "prefix+shift+a"
+type = "plugin_action"
+command = "annotate.copy-context"
+description = "copy annotations as context"
+
+# hunk-diff: review the agent's changes in hunk, send the comments back.
+# "review staged" is left unbound — reachable from the plugin action menu.
+[[keys.command]]
+key = "prefix+shift+h"
+type = "plugin_action"
+command = "jhochenbaum.hunkdiff.review"
+description = "hunk: review changes"
+
+[[keys.command]]
+key = "prefix+shift+s"
+type = "plugin_action"
+command = "jhochenbaum.hunkdiff.send-review"
+description = "hunk: send review to agent"
+
+[[keys.command]]
+key = "prefix+shift+c"
+type = "plugin_action"
+command = "jhochenbaum.hunkdiff.review:commit"
+description = "hunk: review last commit"
+
+[update]
+channel = "preview"

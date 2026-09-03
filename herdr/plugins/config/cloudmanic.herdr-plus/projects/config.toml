@@ -1,0 +1,18 @@
+# herdr-plus project: one file per project in this dir. Ctrl-a g opens the
+# picker; Enter builds these tabs on the checkout, ctrl+g in the picker builds a
+# new worktree instead (tabs then come from ../worktrees/, not from here).
+name = "config"
+description = "~/.config dotfiles"
+working_dir = "~/.config"
+
+[[tabs]]
+name = "claude"
+command = "claude"
+
+[[tabs]]
+name = "nvim"
+command = "nvim"
+
+[[tabs]]
+name = "lazygit"
+command = "lazygit"

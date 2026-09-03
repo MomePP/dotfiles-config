@@ -20,6 +20,9 @@ local M = {
     -- dev = true, -- use local ~/Developer/nvim-plugins/herd.nvim
     cond = function() return vim.fn.executable('herdr') == 1 end,
     event = 'VeryLazy',
+    -- INFO: off on this branch — agents launch from herdr itself (herdr-plus
+    -- projects picker, Ctrl-a g), not from nvim. Flip to try the round trip again.
+    enabled = false,
 }
 
 M.opts = {

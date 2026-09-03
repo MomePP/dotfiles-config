@@ -1,5 +1,13 @@
 # Building herdr from source on macOS 27 (zig@0.15 breakage)
 
+> **You only need this for a `--head` / source build.** Releases (stable and
+> the `preview` channel) ship a prebuilt `herdr-macos-aarch64`, so the normal
+> upgrade path is just `herdr channel set preview && herdr update` — none of
+> the zig/SDK breakage below applies. Two gotchas: `herdr update` refuses to
+> run from inside a herdr session (detach with `Ctrl-a q` or use a plain
+> Ghostty tab), and it must overwrite `~/.cargo/bin/herdr` — check `which herdr`
+> afterwards so a second copy doesn't shadow it. Verified 2026-09-03.
+
 `brew install herdr --head` **cannot work** on macOS 27 (CLT 27.0.0.0.1786046012).
 Two independent incompatibilities between `zig@0.15.2` and the macOS 27 SDK /
 linker both hit the vendored `libghostty-vt` build. Verified 2026-08-14 against
