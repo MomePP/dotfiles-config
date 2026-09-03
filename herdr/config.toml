@@ -125,22 +125,16 @@ previous_agent = "prefix+up"               # Ctrl-a ↑ → previous agent in th
 # ── plugins ─────────────────────────────────────────────────────────────────────
 # Bound by hand rather than via hunk-diff's `setup-keys`: its defaults would land
 # on prefix+shift+s and prefix+shift+a, which settings and annotate already use.
-# Plugin config lives in plugins/config/<id>/ (herdr-plus project + worktree
-# templates are tracked there; binaries and clones are gitignored).
+# Plugin config lives in plugins/config/<id>/ (nothing tracked; herdr manages it).
 
-# herdr-plus: Enter opens the project on its checkout, ctrl+g inside the picker
-# opens it as a new worktree. prefix+g is free since goto moved to prefix+ctrl+w.
+# agent-tab: open an agent in a new tab of THIS space — on the checkout, or on a
+# fresh .worktrees/<slug> worktree. herdr's own Ctrl-a G makes a space per
+# worktree; this keeps space = project, tab = agent. https://github.com/MomePP/herdr-agent-tab
 [[keys.command]]
-key = "prefix+g"
+key = "prefix+n"
 type = "plugin_action"
-command = "cloudmanic.herdr-plus.projects"
-description = "herdr-plus: projects"
-
-[[keys.command]]
-key = "prefix+."
-type = "plugin_action"
-command = "cloudmanic.herdr-plus.quick-actions"
-description = "herdr-plus: quick actions"
+command = "momepp.agent-tab.new"
+description = "new agent tab here"
 
 # annotate: select terminal text, comment, send it back to the agent
 [[keys.command]]

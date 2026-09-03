@@ -11,14 +11,9 @@ branch). New work starts from the projects picker.
 
 | Key | Action |
 |---|---|
-| `g` | **herdr-plus projects picker** — `Enter` opens the project on its checkout, `ctrl+g` inside the picker opens it as a **new worktree** (prompt for a branch name; empty lets herdr pick `worktree/…`) |
-| `.` | herdr-plus quick actions (one-off commands, fuzzy) |
+| `n` | **new agent tab here** — pick the agent, then `local · <branch>` or `worktree · new branch`. Worktrees land in `<repo>/.worktrees/<slug>` (shared with superpowers), base = git-flow develop or the current branch. |
 | `N` | new space on the current directory (herdr built-in) |
-| `G` | new space on a fresh worktree (herdr built-in, no template) |
-
-Project templates: `herdr/plugins/config/cloudmanic.herdr-plus/projects/*.toml`
-(one file per project). Worktree layouts: `…/worktrees/*.toml` — `repo = "*"`
-is the fallback, `repo = "<name>"` overrides it per repo.
+| `G` | new space on a fresh worktree (herdr built-in) — space-per-worktree, not this workflow |
 
 ## Spaces
 

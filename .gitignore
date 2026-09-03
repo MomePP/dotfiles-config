@@ -27,19 +27,10 @@ nvim/nvim-pack-lock.json
 /opencode/opencode-quota
 /.weave/runtime/sessions
 
-# herdr: track config.toml and the plugin config TOMLs (herdr-plus project +
-# worktree templates); ignore runtime state (logs, sockets, session) and the
-# plugin clones/binaries herdr manages itself.
+# herdr: track only config.toml; ignore runtime state (logs, sockets, session)
+# and the plugins herdr manages itself
 /herdr/*
 !/herdr/config.toml
-!/herdr/plugins/
-/herdr/plugins/*
-!/herdr/plugins/config/
-/herdr/plugins/config/*
-!/herdr/plugins/config/cloudmanic.herdr-plus/
-/herdr/plugins/config/cloudmanic.herdr-plus/*
-!/herdr/plugins/config/cloudmanic.herdr-plus/projects/
-!/herdr/plugins/config/cloudmanic.herdr-plus/worktrees/
 
 # Superset drops its Amp lifecycle plugin here; vendor-owned, updated by the app.
 /amp/plugins/superset-lifecycle.ts
