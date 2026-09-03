@@ -7,7 +7,8 @@ not override. Every key below is pressed after `Ctrl-a`. Capitals mean Shift.
 
 One herdr **space per project**; inside it one **tab per job** — the agent, an
 `nvim`, a `lazygit`. Nothing launches from nvim (herd.nvim is disabled on this
-branch). New work starts from the projects picker.
+branch). New work starts with `n`: a new agent tab in this space, on the
+checkout or a fresh worktree.
 
 | Key | Action |
 |---|---|
