@@ -12,7 +12,7 @@ checkout or a fresh worktree.
 
 | Key | Action |
 |---|---|
-| `n` | **new agent tab here** — pick the agent, then `local · <branch>` or `worktree · new branch`. Worktrees land in `<repo>/.worktrees/<slug>` (shared with superpowers), base = git-flow develop or the current branch. |
+| `n` | **new agent tab here** — pick the agent, then `local · <branch>` or `worktree · new branch`. Worktrees land in `<repo>/.claude/worktrees/<slug>` (same place Claude Code's own worktrees go), base = git-flow develop or the current branch. |
 | `N` | new space on the current directory (herdr built-in) |
 | `G` | new space on a fresh worktree (herdr built-in) — space-per-worktree, not this workflow |
 

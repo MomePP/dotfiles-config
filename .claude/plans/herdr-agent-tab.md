@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** A herdr plugin so `Ctrl-a n` opens a coding agent in a new tab of the *current* space, on the current checkout or on a fresh `.worktrees/<slug>` git worktree.
+**Goal:** A herdr plugin so `Ctrl-a n` opens a coding agent in a new tab of the *current* space, on the current checkout or on a fresh `.claude/worktrees/<slug>` git worktree.
 
 **Architecture:** One Go binary with two subcommands. `new` is the headless action a key binds to; it opens the plugin's popup pane. `picker` runs in that popup: `charmbracelet/huh` forms ask agent / where / branch, then `internal/app.Execute` drives git and the herdr CLI (`$HERDR_BIN_PATH`) through a `run.Runner` interface so tests and `--dry-run` swap in a recording fake.
 
@@ -14,7 +14,7 @@
 
 - Plugin id `momepp.agent-tab`; action id `new`; pane id `picker`; `min_herdr_version = "0.8.2"`; `platforms = ["macos", "linux"]`.
 - Repo `~/Developer/herdr-plugins/herdr-agent-tab`, module `github.com/MomePP/herdr-agent-tab`, MIT.
-- Worktrees at `<repo root>/.worktrees/<slug>`; never write to a tracked `.gitignore`, only `.git/info/exclude`.
+- Worktrees at `<repo root>/.claude/worktrees/<slug>`; never write to a tracked `.gitignore`, only `.git/info/exclude`.
 - Agent names match `[a-z][a-z0-9_-]{0,31}` and are unique among live agents.
 - Agent kinds come from `herdr agent start --help`, filtered by `PATH`; nothing hard-coded.
 - Every runtime command goes through `run.Runner`; no direct `exec.Command` outside `internal/run`.
@@ -112,7 +112,7 @@ bin/
 # herdr-agent-tab
 
 Open a coding agent in a **new tab of the current herdr space**, on the current
-checkout or on a fresh git worktree under `<repo>/.worktrees/<slug>`.
+checkout or on a fresh git worktree under `<repo>/.claude/worktrees/<slug>`.
 herdr's own worktree flow makes a new *space* per worktree; this keeps
 space = project, tab = agent.
 
@@ -135,7 +135,7 @@ description = "new agent tab here"
 The popup asks for the agent (every kind herdr supports that is on your
 `PATH`), local checkout or new worktree, and the branch name. Branch prefix and
 base come from the repo's git-flow config when present, else the current branch.
-If `.worktrees/` is not ignored the plugin adds it to `.git/info/exclude`.
+If `.claude/worktrees/` is not ignored the plugin adds it to `.git/info/exclude`.
 
 Dry run from a shell: `agent-tab new --dry-run --agent claude --where worktree --branch feature/x`.
 ````
@@ -250,7 +250,7 @@ func TestCannedAnswersTheFlow(t *testing.T) {
 	if !strings.Contains(string(out), `"pane_id"`) {
 		t.Fatalf("tab create reply = %q", out)
 	}
-	if _, err := reply("git", []string{"check-ignore", "-q", ".worktrees"}); err == nil {
+	if _, err := reply("git", []string{"check-ignore", "-q", ".claude/worktrees"}); err == nil {
 		t.Fatal("check-ignore should report not ignored")
 	}
 }
@@ -323,7 +323,7 @@ func (f *Fake) Run(dir, name string, args ...string) ([]byte, error) {
 // Canned answers the read-only git and herdr commands app.Execute issues, so a
 // dry run walks the whole flow without a repo or a herdr server. The repo is
 // rooted at cwd on branch, has no git-flow config, no existing branches, and
-// .worktrees is not yet ignored.
+// .claude/worktrees is not yet ignored.
 func Canned(cwd, branch string) func(name string, args []string) ([]byte, error) {
 	return func(name string, args []string) ([]byte, error) {
 		joined := strings.Join(args, " ")
@@ -575,7 +575,7 @@ func TestOpenAndBranch(t *testing.T) {
 	if b, _ := r.CurrentBranch(); b != "main" {
 		t.Fatalf("branch = %q", b)
 	}
-	if r.WorktreeDir("feature-x") != filepath.Join(dir, ".worktrees", "feature-x") {
+	if r.WorktreeDir("feature-x") != filepath.Join(dir, ".claude/worktrees", "feature-x") {
 		t.Fatalf("WorktreeDir = %q", r.WorktreeDir("feature-x"))
 	}
 }
@@ -605,16 +605,16 @@ func TestExclude(t *testing.T) {
 	dir := initRepo(t)
 	r, _ := Open(run.Exec{}, dir)
 	if r.IsExcluded() {
-		t.Fatal(".worktrees should not be ignored yet")
+		t.Fatal(".claude/worktrees should not be ignored yet")
 	}
 	if err := r.AppendExclude(); err != nil {
 		t.Fatal(err)
 	}
 	if !r.IsExcluded() {
-		t.Fatal(".worktrees should be ignored after AppendExclude")
+		t.Fatal(".claude/worktrees should be ignored after AppendExclude")
 	}
 	b, _ := os.ReadFile(filepath.Join(dir, ".git", "info", "exclude"))
-	if !strings.Contains(string(b), ".worktrees/") {
+	if !strings.Contains(string(b), ".claude/worktrees/") {
 		t.Fatalf("exclude = %q", b)
 	}
 	if _, err := os.Stat(filepath.Join(dir, ".gitignore")); err == nil {
@@ -688,7 +688,7 @@ type Repo struct {
 }
 
 // Open resolves dir to its repository. Using --git-common-dir rather than
-// --show-toplevel keeps .worktrees/ from nesting inside other worktrees.
+// --show-toplevel keeps .claude/worktrees/ from nesting inside other worktrees.
 func Open(r run.Runner, dir string) (*Repo, error) {
 	out, err := r.Run(dir, "git", "rev-parse", "--path-format=absolute", "--git-common-dir")
 	if err != nil {
@@ -732,16 +732,16 @@ func (r *Repo) BranchExists(name string) bool {
 }
 
 func (r *Repo) WorktreeDir(slug string) string {
-	return filepath.Join(r.Root, ".worktrees", slug)
+	return filepath.Join(r.Root, ".claude/worktrees", slug)
 }
 
-// IsExcluded reports whether .worktrees is already ignored by any rule.
+// IsExcluded reports whether .claude/worktrees is already ignored by any rule.
 func (r *Repo) IsExcluded() bool {
-	_, err := r.git("check-ignore", "-q", ".worktrees")
+	_, err := r.git("check-ignore", "-q", ".claude/worktrees")
 	return err == nil
 }
 
-// AppendExclude ignores .worktrees/ via .git/info/exclude, which is local to
+// AppendExclude ignores .claude/worktrees/ via .git/info/exclude, which is local to
 // the clone and never shows up in a diff.
 func (r *Repo) AppendExclude() error {
 	p := filepath.Join(r.Common, "info", "exclude")
@@ -753,7 +753,7 @@ func (r *Repo) AppendExclude() error {
 		return err
 	}
 	defer f.Close()
-	_, err = f.WriteString("\n# added by herdr-agent-tab\n.worktrees/\n")
+	_, err = f.WriteString("\n# added by herdr-agent-tab\n.claude/worktrees/\n")
 	return err
 }
 
@@ -879,11 +879,11 @@ func TestContextFallsBackToPaneCurrent(t *testing.T) {
 func TestTabCreateAndAgentStart(t *testing.T) {
 	f := &run.Fake{Reply: run.Canned("/repo", "main")}
 	c := NewWith("herdr", f)
-	id, err := c.TabCreate("wB", "/repo/.worktrees/x", "x")
+	id, err := c.TabCreate("wB", "/repo/.claude/worktrees/x", "x")
 	if err != nil || id != "wD:p9" {
 		t.Fatalf("id=%q err=%v", id, err)
 	}
-	want := "herdr tab create --workspace wB --cwd /repo/.worktrees/x --label x --focus"
+	want := "herdr tab create --workspace wB --cwd /repo/.claude/worktrees/x --label x --focus"
 	if got := strings.Join(f.Calls[0], " "); got != want {
 		t.Fatalf("argv = %q", got)
 	}
@@ -1305,7 +1305,7 @@ func TestWorktreeNewBranch(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := filepath.Join(dir, ".worktrees", "feature-shuttle-types")
+	want := filepath.Join(dir, ".claude/worktrees", "feature-shuttle-types")
 	if res.Dir != want || res.Base != "develop" || res.AgentName != "claude-feature-shuttle-types" {
 		t.Fatalf("res = %+v", res)
 	}
@@ -1313,7 +1313,7 @@ func TestWorktreeNewBranch(t *testing.T) {
 		t.Fatalf("worktree dir missing: %v", err)
 	}
 	if !repo.BranchExists("feature/shuttle types") || !repo.IsExcluded() {
-		t.Fatal("branch should exist and .worktrees should be excluded")
+		t.Fatal("branch should exist and .claude/worktrees should be excluded")
 	}
 	if !strings.Contains(argv(f, 0), "--cwd "+want+" --label feature-shuttle-types") {
 		t.Fatalf("tab create argv = %q", argv(f, 0))
@@ -1405,16 +1405,16 @@ func TestDryRunTouchesNothing(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if res.Dir != "/repo/.worktrees/feature-x" || res.Base != "develop" {
+	if res.Dir != "/repo/.claude/worktrees/feature-x" || res.Base != "develop" {
 		t.Fatalf("res = %+v", res)
 	}
 	if _, err := os.Stat("/repo"); err == nil {
 		t.Fatal("dry run must not create /repo")
 	}
 	for _, want := range []string{
-		"(would append .worktrees/ to .git/info/exclude)",
-		"$ git worktree add -b feature/x /repo/.worktrees/feature-x develop",
-		"$ herdr tab create --workspace wB --cwd /repo/.worktrees/feature-x --label feature-x --focus",
+		"(would append .claude/worktrees/ to .git/info/exclude)",
+		"$ git worktree add -b feature/x /repo/.claude/worktrees/feature-x develop",
+		"$ herdr tab create --workspace wB --cwd /repo/.claude/worktrees/feature-x --label feature-x --focus",
 		"$ herdr agent start claude-feature-x --kind claude --pane wD:p9",
 	} {
 		if !strings.Contains(out.String(), want) {
@@ -1554,7 +1554,7 @@ func Execute(d Deps, req Request) (Result, error) {
 		}
 		if !d.Git.IsExcluded() {
 			if d.Dry {
-				fmt.Fprintln(d.Out, "(would append .worktrees/ to .git/info/exclude)")
+				fmt.Fprintln(d.Out, "(would append .claude/worktrees/ to .git/info/exclude)")
 			} else if err := d.Git.AppendExclude(); err != nil {
 				return res, err
 			}
@@ -1796,14 +1796,14 @@ $ git rev-parse --abbrev-ref HEAD
 $ git rev-parse --verify --quiet refs/heads/feature/x
 $ git config --get gitflow.branch.develop
 $ git rev-parse --abbrev-ref HEAD
-$ git check-ignore -q .worktrees
-(would append .worktrees/ to .git/info/exclude)
-$ git worktree add -b feature/x /repo/.worktrees/feature-x main
+$ git check-ignore -q .claude/worktrees
+(would append .claude/worktrees/ to .git/info/exclude)
+$ git worktree add -b feature/x /repo/.claude/worktrees/feature-x main
 $ git config --get gitflow.branch.develop
-$ herdr tab create --workspace wDRY --cwd /repo/.worktrees/feature-x --label feature-x --focus
+$ herdr tab create --workspace wDRY --cwd /repo/.claude/worktrees/feature-x --label feature-x --focus
 $ herdr agent list
 $ herdr agent start claude-feature-x --kind claude --pane wD:p9
-→ tab at /repo/.worktrees/feature-x, agent claude-feature-x in pane wD:p9
+→ tab at /repo/.claude/worktrees/feature-x, agent claude-feature-x in pane wD:p9
 `
 	if out.String() != want {
 		t.Fatalf("got:\n%s\nwant:\n%s", out.String(), want)
@@ -1832,7 +1832,7 @@ Expected: FAIL — `undefined: dryRun`.
 `cmd/agent-tab/main.go` (full replacement):
 ```go
 // agent-tab is a herdr plugin: open an agent in a new tab of the current
-// space, on the checkout or a fresh .worktrees/<slug> worktree.
+// space, on the checkout or a fresh .claude/worktrees/<slug> worktree.
 //
 //	agent-tab new      action bound to a key; opens the picker popup
 //	agent-tab picker   runs inside the popup
@@ -2021,14 +2021,14 @@ Expected: `config: ok`, then `"status":"applied"` with empty diagnostics.
 Expected: a new focused tab labelled `claude` at the repo root with Claude running; `herdr agent list` shows `claude-develop`.
 
 - [ ] **Step 4: Worktree mode.** `Ctrl-a n` → `claude` (preselected) → `worktree · new branch` → `feature/agent-tab-try`.
-Expected: tab `feature-agent-tab-try`; `git -C ~/Developer/badminton-platform worktree list` shows `.worktrees/feature-agent-tab-try  [feature/agent-tab-try]`; `.git/info/exclude` gained `.worktrees/`; `git status` in the main checkout is clean.
+Expected: tab `feature-agent-tab-try`; `git -C ~/Developer/badminton-platform worktree list` shows `.claude/worktrees/feature-agent-tab-try  [feature/agent-tab-try]`; `.git/info/exclude` gained `.claude/worktrees/`; `git status` in the main checkout is clean.
 
 - [ ] **Step 5: Existing branch.** `Ctrl-a n` → worktree → `feature/agent-tab-try` again.
 Expected: the confirm prompt; **Cancel** leaves nothing behind; running once more and choosing **Open worktree** fails with "worktree directory already exists: …" (the directory from Step 4) and waits for Enter.
 
 - [ ] **Step 6: Clean the playground**
 ```bash
-cd ~/Developer/badminton-platform && git worktree remove .worktrees/feature-agent-tab-try && git branch -D feature/agent-tab-try
+cd ~/Developer/badminton-platform && git worktree remove .claude/worktrees/feature-agent-tab-try && git branch -D feature/agent-tab-try
 ```
 Close the two test tabs (`Ctrl-a Ctrl-x`).
 
@@ -2063,7 +2063,7 @@ Expected: `3`.
 Replace the two herdr-plus `[[keys.command]]` entries (`prefix+g` and `prefix+.`) and their comment with:
 ```toml
 # agent-tab: open an agent in a new tab of THIS space — on the checkout, or on a
-# fresh .worktrees/<slug> worktree. herdr's own Ctrl-a G makes a space per
+# fresh .claude/worktrees/<slug> worktree. herdr's own Ctrl-a G makes a space per
 # worktree; this keeps space = project, tab = agent. https://github.com/MomePP/herdr-agent-tab
 [[keys.command]]
 key = "prefix+n"
@@ -2093,7 +2093,7 @@ In `.claude/knowledges/herdr-keymap.md`, replace the "Workflow" table with:
 ```markdown
 | Key | Action |
 |---|---|
-| `n` | **new agent tab here** — pick the agent, then `local · <branch>` or `worktree · new branch`. Worktrees land in `<repo>/.worktrees/<slug>` (shared with superpowers), base = git-flow develop or the current branch. |
+| `n` | **new agent tab here** — pick the agent, then `local · <branch>` or `worktree · new branch`. Worktrees land in `<repo>/.claude/worktrees/<slug>` (shared with superpowers), base = git-flow develop or the current branch. |
 | `N` | new space on the current directory (herdr built-in) |
 | `G` | new space on a fresh worktree (herdr built-in) — space-per-worktree, not this workflow |
 ```
@@ -2112,6 +2112,6 @@ Expected: `config: ok`; status shows only the four paths above.
 
 ## Self-review
 
-- **Spec coverage.** Goals → Tasks 6/8/9. Manifest → Task 1. Agent list from herdr ∩ PATH + last-kind memory → Tasks 5/6/8. Branch/base/slug rules → Tasks 3/4/6. `.worktrees/` + `info/exclude` → Tasks 4/6. Every error row → Task 6 (`ErrNoRepo`, `ErrBranchExists`, `DirExistsError`, git stderr, tab-create wrap, `AgentStartError`) and the confirm in Task 8. Testing section → Tasks 2–6 unit, Task 8 golden, Task 9 manual. Dotfiles side → Task 10. Non-goals untouched.
+- **Spec coverage.** Goals → Tasks 6/8/9. Manifest → Task 1. Agent list from herdr ∩ PATH + last-kind memory → Tasks 5/6/8. Branch/base/slug rules → Tasks 3/4/6. `.claude/worktrees/` + `info/exclude` → Tasks 4/6. Every error row → Task 6 (`ErrNoRepo`, `ErrBranchExists`, `DirExistsError`, git stderr, tab-create wrap, `AgentStartError`) and the confirm in Task 8. Testing section → Tasks 2–6 unit, Task 8 golden, Task 9 manual. Dotfiles side → Task 10. Non-goals untouched.
 - **Placeholders.** None; every step has its content.
 - **Type consistency.** `run.Fake{Calls, Reply, Print}` used identically in Tasks 2/5/6/8. `gitx.Open(r, dir)` argument order matches everywhere. `herdr.NewWith(bin, r)` matches. `app.Deps{Git, Herdr, Out, Dry}` and `app.Request` fields match Task 8. `picker.Options` fields match Task 8. The dry-run golden's argv strings are exactly those `gitx`/`herdr` emit.

@@ -10,7 +10,7 @@ on either the current checkout or a fresh git worktree. It exists because herdr
 - `Ctrl-a n` in any space: pick an agent, pick "local branch" or "new
   worktree", optionally name the branch, and land in a focused tab with the
   agent already running there.
-- Worktrees live in `<repo>/.worktrees/<slug>` — the same convention as
+- Worktrees live in `<repo>/.claude/worktrees/<slug>` — the same convention as
   superpowers' `using-git-worktrees`, so both tools share one directory.
 - Zero per-machine config: agents are discovered from `PATH`, branch prefix
   and base from the repo's git-flow config when present.
@@ -82,7 +82,7 @@ Ctrl-a n
        1. agent   : herdr's kind list ∩ executables on PATH   (claude / omp / opencode today)
        2. where   : local · <current branch>   |   worktree · new branch
        3. branch  : (worktree only) input, placeholder = git-flow feature prefix
-       └─ worktree ? git worktree add <root>/.worktrees/<slug> -b <branch> <base>
+       └─ worktree ? git worktree add <root>/.claude/worktrees/<slug> -b <branch> <base>
        └─ herdr tab create --workspace $HERDR_WORKSPACE_ID --cwd <dir> --label <label> --focus
        └─ herdr agent start <name> --kind <kind> --pane <root_pane.pane_id>
 ```
@@ -117,8 +117,8 @@ numeric suffix if needed (herdr requires `[a-z][a-z0-9_-]{0,31}`, unique).
 
 ### Worktree directory
 
-`<root>/.worktrees/<slug>`. Before creating, if `git check-ignore -q .worktrees`
-fails, append `.worktrees/` to `.git/info/exclude` — never to a tracked
+`<root>/.claude/worktrees/<slug>`. Before creating, if `git check-ignore -q .claude/worktrees`
+fails, append `.claude/worktrees/` to `.git/info/exclude` — never to a tracked
 `.gitignore`. Directory already present ⇒ refuse and show the path.
 
 ## Errors
@@ -167,8 +167,10 @@ Every failure is shown inside the popup and leaves nothing half-done:
   installable, testable, and reusable from any machine with one command.
 - **Go.** Matches the plugins already installed (auto-title, herdr-plus), one
   static binary, `huh` gives arrow-key forms for free.
-- **`.worktrees/`, not `.claude/worktrees/`.** superpowers defaults to
-  `.worktrees/` at the project root; sharing it means one place to prune.
+- **`.claude/worktrees/`, matching Claude Code.** Claude Code's native
+  `EnterWorktree` puts worktrees there and the user's repos already gitignore
+  it; superpowers' `.worktrees/` is only its fallback when no native tool
+  exists. One directory for both tools.
 - **`.git/info/exclude`, not `.gitignore`.** The plugin must not create diffs
   in the user's repositories.
 - **Agent list from herdr, not hard-coded.** herdr adds kinds between releases;
