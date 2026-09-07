@@ -128,7 +128,7 @@ previous_agent = "prefix+up"               # Ctrl-a ↑ → previous agent in th
 # Plugin config lives in plugins/config/<id>/ (nothing tracked; herdr manages it).
 
 # agent-tab: open an agent in a new tab of THIS space — on the checkout, or on a
-# fresh .worktrees/<slug> worktree. herdr's own Ctrl-a G makes a space per
+# fresh .claude/worktrees/<slug> worktree. herdr's own Ctrl-a G makes a space per
 # worktree; this keeps space = project, tab = agent. https://github.com/MomePP/herdr-agent-tab
 [[keys.command]]
 key = "prefix+n"
