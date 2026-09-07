@@ -5,7 +5,8 @@
   },
   "attribution": {
     "commit": "",
-    "pr": ""
+    "pr": "",
+    "sessionUrl": false
   },
   "permissions": {
     "allow": [
@@ -77,15 +78,11 @@
       }
     ]
   },
-  "statusLine": {
-    "type": "command",
-    "command": "bash \"/Users/momeppkt/.claude/plugins/cache/claude-hud/claude-hud/0.8.0/scripts/claude-hud.sh\""
-  },
   "enabledPlugins": {
     "claude-hud@claude-hud": true,
     "context-mode@context-mode": true,
-    "context7@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true
+    "superpowers@claude-plugins-official": true,
+    "i-have-adhd@i-have-adhd": true
   },
   "extraKnownMarketplaces": {
     "claude-hud": {
@@ -99,13 +96,21 @@
         "source": "github",
         "repo": "mksglu/context-mode"
       }
+    },
+    "i-have-adhd": {
+      "source": {
+        "source": "github",
+        "repo": "ayghri/i-have-adhd"
+      }
     }
   },
   "effortLevel": "high",
-  "advisorModel": "fable",
   "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "editorMode": "vim",
+  "remoteControlAtStartup": false,
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "theme": "auto",
+  "model": "claude-fable-5-1[1m]"
 }

@@ -1,0 +1,243 @@
+# Superset transparent window
+
+How `~/Applications/Superset-transparent.app` gets its glass look, and the
+non-obvious things that had to be worked out to get there. Built August 2026
+against Superset v1.24.2.
+
+Superset ships opaque and has no setting for this — `superset settings list`
+has 33 keys and none touch opacity or window appearance, and the theme schema
+(`docs.superset.sh/custom-themes`) is only `ui`, `terminal` and `editor`
+colours. The capability comes entirely from patching the app bundle.
+
+## The moving parts
+
+| Piece | Where |
+| --- | --- |
+| patcher + re-signer | `bin/superset-repatch` (symlinked to `~/.local/bin`) |
+| the theme | `superset/oxocarbon-glass.json`, imported with `superset settings theme import` |
+| runs after upgrades | the `brew` wrapper in `zsh/.zshrc` calls `superset-repatch` |
+
+The patched copy lives beside the Homebrew-managed one rather than replacing
+it. A cask upgrade overwrites `/Applications/Superset.app` wholesale, so
+patching it in place would be reverted silently and need Gatekeeper satisfied
+again each time. `superset-repatch` rebuilds the private copy from the freshly
+upgraded original instead, and no-ops silently when the version is unchanged.
+
+## Patching an asar in place
+
+An asar is a JSON header of byte offsets and sizes followed by concatenated
+file bodies. **Same-length replacements keep every offset valid**, so a 1.2 GB
+archive never has to be extracted and repacked — each replacement is padded
+with spaces to match the original byte count. Making a string *longer* is what
+you cannot do; plan replacements to fit, e.g. `bg-background` (13) →
+`bg-accent` + 4 spaces.
+
+Two seals then have to be re-satisfied, and missing either means the app will
+not launch:
+
+1. **`ElectronAsarIntegrity`** in `Info.plist` holds a SHA256 of the asar.
+   Update it with **PlistBuddy, not `plutil`** — the key is literally
+   `Resources/app.asar`, and `plutil -replace` splits keypaths on `.`, so it
+   reads that as two nested keys.
+2. **Hardened runtime + Developer ID signature.** Any edit under `Contents/`
+   invalidates it; `codesign --force --deep --sign -` re-signs ad-hoc.
+
+Patches are matched by **content anchors, never byte offsets**, so they survive
+Superset's code moving between releases. A target that disappears is reported
+as `MISSED` and exits 2 rather than shipping a half-patched app.
+
+## The patches
+
+Eight, all same-length byte replacements:
+
+- **window transparency** — replaces the stock opaque `backgroundColor` with
+  `transparent: true` plus a `vibrancy` material (or an ARGB tint when there is
+  no material). Removing the opaque colour is not optional; it defeats
+  `transparent: true` on its own.
+- **xterm allowTransparency** — Superset never passes it, so xterm.js falls
+  back to `false`, paints the canvas opaque and flattens any rgba
+  `terminal.background` against black. The cost of turning it on: xterm
+  alpha-blends per cell instead of doing a fast opaque fill, so heavy scrollback
+  can get measurably slower.
+- **active tab** — `border-input` + **`bg-card`**, keeping the original shape.
+- **right-pane inactive tab** — `bg-border/30` → `bg-card`, so Files/Review lose
+  the fill the terminal row's inactive tabs never had. Matched together with
+  `text-muted-foreground/70`, because `bg-border/30` alone appears 8 times and
+  most are *active*-state uses elsewhere.
+- **chrome bar background** (×2 patterns) — the tab strip and workspace header
+  paint `bg-muted/45 dark:bg-muted/35`, a visible band over the wash. Patched
+  rather than zeroing `ui.muted`, which also drives `hover:bg-muted`.
+- **host-unreachable overlay** — `WorkspaceHostUnreachableState` ships with *no*
+  background class, relying on the pane beneath being opaque. Scoped by anchor
+  because that class string appears 9 times across unrelated components.
+- **dialog surface** — `Dialog`/`AlertDialog` paint `bg-background`, which in the
+  glass themes is the *window dim* (alpha 0.55), not a surface — so the delete-
+  workspace confirmation read as a tinted sheet with the terminal text legible
+  through it. `bg-popover` is what every other floating surface already uses
+  (`PopoverContent`, `DropdownMenuContent`), and the themes hold it at 0.97 for
+  exactly this reason. Matched on the shared head of `alertDialogContentClassName`
+  and `DialogContent`'s inline class string, which diverge only after
+  `max-w-[calc(100%-2rem)]`; `bg-background ` alone is far too common to anchor on.
+
+  `Sheet` and `Drawer` carry `bg-background` too, and are the same bug — but
+  1.25.0 tree-shakes them out: `data-slot="sheet-content"` exists only in the
+  shipped source copy, with no compiled counterpart. Left alone until one
+  actually renders.
+
+### `bg-card`, never `bg-background`, for anything meant to match a pane
+
+These are not interchangeable. In the dark theme `ui.background` carries the
+whole dim (alpha 0.55), so putting `bg-background` on a tab paints a *second*
+dim layer over the strip's and compounds into a darker slab. `card` is alpha 0
+in both themes, so tab and pane resolve to the same surface. This is the
+compounding trap again, in a single element.
+
+### Do not restyle by analogy
+
+A `TabsTrigger` in the bundle uses `rounded-[7px]`, and it is tempting to treat
+that as "how Superset does tabs". It is a different component from the
+right-pane Files/Changes/Review row, which is square with an open bottom edge —
+the same browser-tab form the workspace tabs already had. Rounding them made
+the two rows disagree rather than match, and had to be reverted.
+
+**Read the element, do not infer it.** Every one of these was settled in one
+look with DevTools (⌘⌥I, then ⌘⇧C) and guessed wrong at least once beforehand.
+
+## The compounding trap — the thing that cost the most time
+
+**Superset nests `bg-background` inside `bg-background`.** The tab strip, the
+tab itself, and the toolbars all paint it, inside parents that also do. Any
+alpha below 1 therefore composites with itself: at 0.32 two layers give 0.54
+and three give 0.69, so every nested chrome row reads visibly darker than the
+pane and the UI looks banded.
+
+This is not a shadow. Time was lost asserting "CSS `box-shadow`" and then
+"macOS window shadow" without checking; the DOM inspector settled it in one
+look. **Superset's DevTools is enabled** (⌘⌥I — `devTools: false` appears
+nowhere in the bundle) and is by far the fastest way to answer "why does this
+element look like that".
+
+The fix is to give **every surface alpha 0** and apply the dim as a single
+layer instead — on the window when there is no vibrancy material, or through
+`ui.background` when there is (see below). The
+same trap explains the terminal reading as a darker inset panel: the xterm
+canvas sits *inside* the card, so equal alphas were not equal (0.70 over 0.70
+composites to ~0.91). `terminal.background` at alpha 0 makes it inherit the
+card rather than stack on it.
+
+Consequence worth knowing: with surfaces at 0, **borders and `input` carry all
+the structure**, since nothing has fill to separate it from its neighbours.
+
+## Blur is a material, and it always saturates
+
+There is **no blur-radius knob**. Electron exposes the NSVisualEffectView
+material and nothing else, and CSS `backdrop-filter` cannot substitute — it
+blurs only content painted inside the page, never the desktop behind a
+transparent window.
+
+Two things about materials that cost several rounds of trial and error:
+
+- **Every vibrancy material boosts the saturation** of what it blurs. That is
+  what "vibrancy" means in the API, and it is why a blurred window looks more
+  colourful than the desktop behind it. There is no non-saturating material.
+- **Electron silently ignores an alpha `backgroundColor` when a material is
+  set.** Setting both looks like it should give ghostty's blur-plus-dim; the
+  colour is simply dropped.
+
+The combination that works: **material for the blur, `ui.background` for the
+dim.** The theme's root background paints *over* the vibrancy layer from inside
+the page, so it both darkens and desaturates the blur — which no window-level
+setting can do. Current: `hud` + `rgba(22,22,22,0.55)`.
+
+Keep `card`/`tertiary`/`sidebar` at alpha 0 while doing this, so only one layer
+carries alpha. That is what keeps the nested-`bg-background` banding away.
+
+`VIBRANCY`/`TINT` live at the top of `bin/superset-repatch`. The `--vibrancy`
+and `--tint` flags are for experimenting only: the `brew` wrapper runs the
+script bare, so a flag-chosen value would be lost at the next upgrade. The
+stamp records version, material and tint together, so a bare run after
+experimenting rebuilds back to the constants.
+
+## Screenshots lie
+
+Capturing a single focused window composites the transparency differently and
+makes the app look flat grey. Judge the result from a full-screen capture or
+the screen itself.
+
+## Related
+
+Terminal-side fallout from all this lives in [[claude-hud-transparent-terminal]] —
+dim spans and OSC 8 links render as opaque boxes once the terminal is
+see-through.
+
+## The editor's active line: theme override is ignored, patch instead
+
+`getEditorTheme()` derives the current-line band as
+`withAlpha(theme.ui.accent, 0.5)`, and `withAlpha` **replaces** the colour's
+alpha rather than scaling it. The glass themes set `ui.accent` to a near-white
+6% tint, so the band came out as `#f2f4f880` — a 50% white wash that swallowed
+the syntax colours underneath. In the opaque themes the same expression is
+merely faint (`#26262680`).
+
+`editor.colors.activeLine` in the theme JSON is the documented override and it
+**does not work** in 1.24.2. It survives the whole persistence path — the CLI
+stores it, `superset settings theme export` returns it, and app-state.json
+keeps it across restarts — but the theme object the renderer hands to
+`getEditorTheme` has no `editor` key, so the function always takes its
+`if (!theme.editor) return derived` early exit. Proven in the live DOM with the
+override stored:
+
+```js
+getComputedStyle(document.querySelector('.cm-activeLine')).backgroundColor
+// 'rgba(242, 244, 248, 0.5)'   ← the derived value, not #393939
+```
+
+Do not spend time re-testing this by re-importing and restarting; that loop was
+run four times. The fix is a `superset-repatch` entry, `editor active line`,
+which rewrites the derived expression to read a UI token instead:
+
+```
+withAlpha(theme.ui.accent, 0.5)  ->  theme.ui.tertiaryActive
+```
+
+`tertiaryActive` is the lever because it is the one UI token this build defines
+(`--tertiary-active`) and **never consumes** — grep the bundle and the only hits
+are the token map and the two CSS-variable declarations. Repurposing it moves no
+chrome, and it keeps the colour editable per theme from the JSON rather than
+freezing it into the patch. All five themes set it to `oxocarbon.nvim`'s
+`CursorLine` so the app and the editor agree — `#393939` dark, `#d0d0d0` light:
+
+```sh
+nvim --headless -c 'colorscheme oxocarbon' \
+  -c 'lua =("%06x"):format(vim.api.nvim_get_hl(0,{name="CursorLine"}).bg)' -c qa
+```
+
+**Opaque is correct even on glass.** nvim's own cursorline is opaque over a
+transparent terminal, so a solid band is what "matches nvim" means here; a
+translucent tint (0.10 was tried) stays invisible against a busy wallpaper.
+
+The themes still carry `editor.colors.activeLine` alongside the token. It costs
+nothing and takes over the day Superset wires the renderer up. Two more notes:
+
+- Any theme carrying an `editor` block gets the **full** derived editor palette
+  (every colour and syntax key) snapshotted into the stored theme at import.
+- There is no separate token for the active-line *gutter*; `.cm-activeLine` and
+  `.cm-activeLineGutter` share the value, so one fix covers both.
+
+
+## The live theme files are `~/.config/superset/`, not a feature worktree
+
+`superset settings theme import` copies the JSON **into the app's store**; the
+file is not read again afterwards. So editing a theme inside a `.superset`
+worktree changes nothing until the commit lands in `~/.config`, and re-running
+an import against `~/.config/superset/<theme>.json` will happily overwrite a
+newer value that was imported from elsewhere. Land the commit first, then
+import. `superset-repatch` re-imports from `~/.config` only when passed
+`--theme`; a bare `--force` rebuild leaves the store alone.
+
+**The app reads `themeState` once, at startup.** Importing a theme into a
+running app changes nothing, and it is easy to lose a race: `open` returns
+immediately, so `open … && superset settings theme import …` lets the renderer
+read the store *before* the import writes it. Always quit first, import, then
+launch — and check `app-state.json`'s mtime against the process start time
+(`ps -o lstart=`) before concluding a theme change had no effect.

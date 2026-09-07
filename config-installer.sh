@@ -1,7 +1,11 @@
 #!/bin/bash
 
 # WARN: must have brew installed
-brew install wget lazygit git-flow-avh git-delta ripgrep fd eza fnm neovim nushell gh bat pyenv tmux starship aerospace tree-sitter-cli carapace
+brew install wget lazygit git-flow-avh git-delta ripgrep fd eza fnm neovim gh bat pyenv tmux starship aerospace tree-sitter-cli carapace
+# Inline hints and syntax highlighting are the two things zsh has no built-in
+# equivalent for. .zshrc sources them behind an existence check, so a machine
+# without them still gets a working shell.
+brew install zsh-autosuggestions zsh-syntax-highlighting
 brew install opencode
 # brew install --cask ghostty kitty
 
@@ -48,6 +52,26 @@ install_config_file() {
 }
 
 # INFO: -- helper to symlink a config file into a location outside ~/.config
+# claude-hud refuses a symlinked config: since 0.8.0 its loader lstats the file
+# and ignores anything that is not a regular file, so a link silently drops the
+# whole config back to defaults. Copy instead — nothing else writes that file,
+# so the copy only drifts when you change it deliberately.
+copy_config() {
+    local source="$1" # relative to $config_path
+    local target="$2" # absolute path to create
+    local update="y"
+    if [[ -e "$target" ]]; then
+        read -p "found exist $(basename "$target") .. overwrite (y) or (n) ? : " update
+    fi
+    if [ "$update" = "y" ]; then
+        mkdir -p "$(dirname "$target")"
+        cp "${config_path}/${source}" "$target"
+        echo "copied $target !"
+    else
+        echo "skipped $(basename "$target").."
+    fi
+}
+
 symlink_config() {
     local source="$1" # relative to $config_path
     local target="$2" # absolute path to create
@@ -70,7 +94,7 @@ symlink_config() {
 }
 
 # INFO: -- install config directories
-config_dirs=(nvim aerospace aerospace-swipe bat bin carapace claude-code delta gh-dash ghostty git herdr homebrew kitty lazygit nushell opencode tmux)
+config_dirs=(nvim aerospace aerospace-swipe bat bin carapace claude-code delta eza gh-dash ghostty git herdr homebrew kitty lazygit opencode superset tmux zsh)
 for dir in "${config_dirs[@]}"; do
     install_config_dir "$dir"
 done
@@ -96,6 +120,14 @@ else
     echo "skipped gitconfig.."
 fi
 
+# INFO: -- symlink the zsh rc files
+#
+# zsh only reads these two from $HOME (or $ZDOTDIR, which we do not set), so
+# they cannot live under ~/.config on their own. .zprofile carries PATH and
+# exported env; .zshrc carries everything interactive.
+symlink_config "zsh/.zprofile" ~/.zprofile
+symlink_config "zsh/.zshrc" ~/.zshrc
+
 # INFO: -- symlink claude code settings + the caskroom relink helper
 #
 # claude-relink keeps ~/.local/bin/claude hardlinked to the current cask
@@ -104,12 +136,43 @@ fi
 # `brew upgrade` re-triggers "Data Access Blocked". The Stop hook in
 # settings.json runs the relink; both must be present for it to work.
 symlink_config "claude-code/settings.json" ~/.claude/settings.json
+symlink_config "claude-code/CLAUDE.md" ~/.claude/CLAUDE.md
 symlink_config "bin/claude-relink" ~/.local/bin/claude-relink
 
-# esp-clangd-update is called bare by the `brew` wrapper in nushell/config.nu,
+# claude-hud's display config. Copied, not linked — see copy_config above. It
+# lives beside plugins/cache rather than inside it, so it survives every plugin
+# update; only the statusLine path in settings.json is version-stamped, and
+# that one is deliberately untracked (see claude-settings-sync IGNORED_KEYS).
+copy_config "claude-code/claude-hud/config.json" ~/.claude/plugins/claude-hud/config.json
+
+# The whole skills dir is linked, so a new hand-written skill needs no extra
+# wiring here. Claude Code writes its own `learned/` skills into the same tree;
+# that path is gitignored in claude-code/.gitignore rather than kept out by
+# linking each skill separately.
+symlink_config "claude-code/skills" ~/.claude/skills
+
+# esp-clangd-update is called bare by the `brew` wrapper in zsh/.zshrc,
 # and ~/.config/bin is not on PATH — so it needs the same ~/.local/bin symlink
 # or every `brew update` on a fresh machine ends in "command not found".
 symlink_config "bin/esp-clangd-update" ~/.local/bin/esp-clangd-update
+
+# superset-repatch is called bare by the same `brew` wrapper, for the same
+# reason. It rebuilds ~/Applications/Superset-transparent.app from the freshly
+# upgraded /Applications/Superset.app, since a cask upgrade drops the
+# transparency patches, the asar-integrity hash and the ad-hoc signature.
+symlink_config "bin/superset-repatch" ~/.local/bin/superset-repatch
+
+# paseo-repatch is the same idea for Paseo, and needs the symlink for the same
+# reason. It also gets run by hand between cask upgrades: Paseo's in-app
+# electron-updater replaces /Applications/Paseo.app without telling brew, so on
+# the beta channel the wrapper never fires and the rebuild is manual.
+symlink_config "bin/paseo-repatch" ~/.local/bin/paseo-repatch
+
+# claude-settings-sync reports drift between ~/.claude/settings.json and the
+# copy tracked here. They cannot be symlinked: Superset rewrites the live file
+# on every app start, so the tracked copy is a template and deliberate settings
+# have to be carried across by hand.
+symlink_config "bin/claude-settings-sync" ~/.local/bin/claude-settings-sync
 
 # NOTE: the SessionStart hooks in settings.json are NOT tracked here.
 # ~/.claude/hooks/context-mode-cache-heal.mjs and herdr-agent-state.sh are

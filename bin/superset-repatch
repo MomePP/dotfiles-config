@@ -1,0 +1,496 @@
+#!/usr/bin/env python3
+"""Re-apply the transparency patches to a private copy of Superset.app.
+
+Homebrew replaces /Applications/Superset.app wholesale on every cask upgrade,
+which drops the patches, the rewritten asar-integrity hash, and the ad-hoc
+signature all at once. Rather than patch the managed app — where the next
+upgrade would silently revert it and Gatekeeper would have to be re-satisfied
+each time — this keeps a parallel copy at ~/Applications/Superset-transparent.app
+and rebuilds it from the freshly-upgraded original whenever the version moves.
+
+Run it bare after `brew upgrade`; the `brew` wrapper in zsh/.zshrc does that.
+Silent when the copy is already current, so it costs nothing on the no-op path.
+
+Why the patches are byte-for-byte same-length: an asar is a JSON header of file
+offsets followed by concatenated bodies. Replacing bytes without changing the
+total length keeps every offset valid, so a 1.2 GB archive never has to be
+unpacked and repacked. Each replacement is padded with spaces to match.
+
+Anchors are matched by content, never by byte offset, so the patches survive
+Superset's code moving between releases. A target that genuinely disappears is
+reported rather than silently skipped — that is the signal that a patch needs
+rewriting for a new version.
+"""
+
+import argparse
+import hashlib
+import plistlib
+import re
+import shutil
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+STOCK = Path("/Applications/Superset.app")
+PATCHED = Path.home() / "Applications" / "Superset-transparent.app"
+STAMP_NAME = ".patched-from-version"
+
+# --- the two looks ----------------------------------------------------------
+#
+# THEME is the persistent choice: the `brew` wrapper runs this script with no
+# arguments, so anything set only via a flag is lost on the next cask upgrade.
+# Try a variant with --theme, then write the winner here.
+#
+# Each variant pairs a window treatment with the Superset theme that expects it
+# — the two are not independent. A theme with alpha-0 surfaces looks flat on an
+# unpatched window, and a patched window with an opaque theme shows no glass at
+# all, so switching one without the other is always wrong.
+THEME = "dark"
+
+THEMES = {
+    "dark": {
+        "vibrancy": "hud",
+        "tint": "#59161616",
+        "id": "oxocarbon-glass",
+        "file": "superset/oxocarbon-glass.json",
+    },
+    "light": {
+        "vibrancy": "hud",
+        "tint": "#59f2f2f2",
+        "id": "oxocarbon-light-glass",
+        "file": "superset/oxocarbon-light-glass.json",
+    },
+}
+
+CONFIG_DIR = Path.home() / ".config"
+
+# VIBRANCY: a macOS NSVisualEffectView material, or None for no blur. There is
+# no blur-radius knob — Electron exposes the material and nothing else, and CSS
+# backdrop-filter cannot reach the desktop behind a transparent window.
+#
+#   None            no blur; TINT applies instead
+#   "hud"           tight and dark
+#   "sidebar"       lightest of the blurred options
+#   "under-window"  the macOS default feel
+#   "fullscreen-ui" broad and soft
+#
+# Every material also boosts the saturation of what it blurs — that is what
+# "vibrancy" means in the API — and Electron drops an alpha backgroundColor
+# whenever a material is set. So with a material, the dim has to come from the
+# theme's `ui.background`, which paints over the vibrancy and mutes it back.
+# TINT is only reachable when VIBRANCY is None.
+
+# (label, old, new, expected occurrences or None for "however many exist")
+PATCHES = [
+    (
+        # Built from VIBRANCY/TINT — see window_options(). The tint has to live
+        # on the window rather than in the theme because Superset nests
+        # `bg-background` rows inside `bg-background` parents: any alpha below 1
+        # composites with itself, so every nested chrome row reads darker than
+        # the pane. One layer beneath everything has nothing to compound with.
+        "window transparency",
+        b'backgroundColor: electron.nativeTheme.shouldUseDarkColors ? "#252525" : "#ffffff",',
+        None,  # filled in at runtime
+        1,
+    ),
+    (
+        "xterm allowTransparency",
+        b"allowTransparency: false",
+        b"allowTransparency: true ",
+        None,
+    ),
+    (
+        # The workspace tab is distinguished only by `bg-background`, and the
+        # glass theme puts every surface at alpha 0 so nested `bg-background`
+        # rows cannot compound — which leaves the active tab with no fill.
+        #
+        # Colour only — the SHAPE was already right. The right-pane
+        # Files/Changes/Review tabs are square with an open bottom edge, the
+        # same browser-tab form the workspace tabs use, so `border-b-transparent`
+        # has to stay. (A `TabsTrigger` in the bundle does use `rounded-[7px]`,
+        # but it is a different component than the right pane's tabs; rounding
+        # these made the two rows disagree rather than match.)
+        #
+        # `bg-card`, NOT `bg-background`: the active tab should read as part of
+        # the pane it opens into, and the pane is a card. `background` is not
+        # interchangeable with it — in the dark theme that token carries the
+        # whole dim (alpha 0.55), so `bg-background` here paints a second dim
+        # layer over the tab strip's and compounds into a darker slab. `card`
+        # sits at alpha 0 in both themes, so the tab and the pane resolve to the
+        # same surface and the tab genuinely has no fill.
+        #
+        # The border token changes too. `ui.border` is deliberately near
+        # invisible in the glass themes, which leaves the outline — the only
+        # thing marking the active tab once there is no fill — too faint to
+        # see. `border-input` is stronger and tunable from `ui.input`.
+        "active tab",
+        b"border border-border border-b-transparent bg-background text-foreground",
+        b"border border-input border-b-transparent bg-card text-foreground",
+        None,
+    ),
+    (
+        # The right pane's inactive tabs (Files/Review) paint `bg-border/30`,
+        # giving them a fill the terminal row's inactive tabs do not have — so
+        # the two tab rows disagree. `bg-card` is alpha 0 in both themes, which
+        # flattens them to match.
+        #
+        # Matched together with `text-muted-foreground/70` on purpose:
+        # `bg-border/30` alone appears 8 times and most are *active*-state uses
+        # elsewhere in the sidebar. The pair occurs only in
+        # SIDEBAR_HEADER_TAB_INACTIVE_INVERTED_CLASS_NAME — the bundle copy and
+        # the source copy beside it, hence 2.
+        "right-pane inactive tab",
+        b"bg-border/30 text-muted-foreground/70",
+        b"bg-card      text-muted-foreground/70",
+        2,
+    ),
+    (
+        # The chrome bars — the tab strip and the workspace header — paint
+        # `bg-muted/45 dark:bg-muted/35`, which lands as a visible band over the
+        # window wash because `ui.muted` carries real alpha. Zeroing the token
+        # instead would be simpler but wrong: `muted` also drives hover states
+        # (`hover:bg-muted`, `hover:bg-muted/60`), which would vanish with it.
+        #
+        # `bg-card` is alpha 0 in both themes, so the bars flatten into the
+        # surrounding glass while `muted` stays available for hovers.
+        "chrome bar background",
+        b"bg-muted/45 dark:bg-muted/35",
+        b"bg-card     dark:bg-card    ",
+        None,
+    ),
+    (
+        # Same bars, the variant that carries padding between the two classes.
+        "chrome bar background (padded)",
+        b"bg-muted/45 px-2 dark:bg-muted/35",
+        b"bg-card     px-2 dark:bg-card    ",
+        None,
+    ),
+    (
+        # Modal dialogs paint `bg-background`, and in the glass themes that
+        # token carries the window dim (alpha 0.55) rather than a surface — so
+        # a Dialog/AlertDialog reads as a tinted sheet with the terminal text
+        # underneath still legible through it.
+        #
+        # `bg-popover` is the token every other floating surface already uses:
+        # PopoverContent and DropdownMenuContent both open with
+        # `bg-popover text-popover-foreground`, and the themes keep it at alpha
+        # 0.97 precisely so a floating panel reads as solid against whatever it
+        # covers. Dialogs are the one overlay Superset left on `background`.
+        #
+        # The anchor is the shared head of `alertDialogContentClassName` and
+        # DialogContent's inline class string, which diverge only after
+        # `max-w-[calc(100%-2rem)]`. 6x: dialog and alert-dialog, each in the
+        # executing bundle, the source copy beside it, and the escaped-source
+        # copy. `bg-background ` alone appears far too often to match on.
+        "dialog surface",
+        b"bg-background data-[state=open]:animate-in data-[state=closed]:animate-out "
+        b"data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 "
+        b"data-[state=closed]:zoom-out-95",
+        b"bg-popover data-[state=open]:animate-in data-[state=closed]:animate-out "
+        b"data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 "
+        b"data-[state=closed]:zoom-out-95",
+        6,
+    ),
+    (
+        # The editor's current-line band. `getEditorTheme()` derives it as
+        # `withAlpha(theme.ui.accent, 0.5)`, and `withAlpha` *replaces* the
+        # alpha rather than scaling it — so the glass themes' near-white 6%
+        # accent becomes a 50% white wash that swallows the syntax colours.
+        #
+        # A theme-level `editor.colors.activeLine` override is the documented
+        # fix and it round-trips through the CLI and app-state.json intact, but
+        # the renderer's theme object arrives with no `editor` key at all, so
+        # `getEditorTheme` always takes the `!theme.editor` early return.
+        # Verified in the live DOM: `.cm-activeLine` computes to
+        # rgba(242, 244, 248, 0.5) with the override stored. Superset bug.
+        #
+        # `ui.tertiaryActive` is the lever because it is the one UI token this
+        # build defines (`--tertiary-active`) and never consumes — no chrome
+        # moves when we repurpose it, and the colour stays editable per theme
+        # from the JSON instead of being frozen into the patch. The themes set
+        # it to oxocarbon.nvim's CursorLine so the app matches nvim.
+        #
+        # 5x: the two bundle copies that execute, the source copy beside them,
+        # and two more in the shipped unit tests. Keep `editor.colors.activeLine`
+        # in the theme files — it costs nothing and takes over the day Superset
+        # wires the renderer up.
+        "editor active line",
+        b"withAlpha(theme.ui.accent, 0.5)",
+        b"theme.ui.tertiaryActive",
+        5,
+    ),
+]
+
+# (label, anchor, search window after anchor, old, new)
+SCOPED_PATCHES = [
+    (
+        "host-unreachable overlay background",
+        b"function WorkspaceHostUnreachableState(",
+        800,
+        b"flex h-full w-full items-center justify-center p-6",
+        b"grid size-full place-items-center bg-popover p-6",
+    ),
+]
+
+
+def window_options(vibrancy: str | None, tint: str) -> bytes:
+    """The BrowserWindow options replacing the stock opaque backgroundColor.
+
+    Vibrancy and tint compose rather than exclude each other, which is how
+    ghostty gets its look: a blur radius *and* a background opacity, so the
+    wallpaper becomes a calm uniform wash instead of legible detail behind
+    text. The material blurs; the ARGB tint dims what the blur produced.
+
+    Tint stays on the window rather than in the theme because Superset nests
+    `bg-background` inside `bg-background` — any alpha below 1 there composites
+    with itself and every nested chrome row reads darker than the pane.
+    """
+    parts = ["transparent: true,"]
+    if vibrancy:
+        # Measured, not assumed: Electron silently ignores an alpha
+        # backgroundColor whenever a material is set, so emitting it here would
+        # be noise. With a material, dim through the theme's `ui.background`
+        # instead — that layer paints *over* the vibrancy and mutes it.
+        #
+        # visualEffectState defaults to "followWindow", which swaps the
+        # material for a flat dark fill the moment the window loses focus — the
+        # blurred wallpaper vanishes and the app reads as a black slab until it
+        # is clicked again. "active" pins the material on regardless of focus.
+        # Only meaningful alongside a material, so it stays in this branch.
+        parts.append(f'vibrancy: "{vibrancy}", visualEffectState: "active",')
+    elif tint:
+        parts.append(f'backgroundColor: "{tint}",')
+    return " ".join(parts).encode()
+
+
+def apply_theme(look: dict, quiet: bool = False) -> int:
+    """Import and activate the Superset theme paired with this look.
+
+    Separate from patching on purpose: the theme is pure settings and touches no
+    bytes in the bundle, so it can be switched without a rebuild.
+    """
+    theme_file = CONFIG_DIR / look["file"]
+    if not theme_file.exists():
+        print(f"superset-repatch: {theme_file} missing — theme not applied", file=sys.stderr)
+        return 1
+    try:
+        subprocess.run(["superset", "settings", "theme", "import", str(theme_file)],
+                       check=True, capture_output=True)
+        subprocess.run(["superset", "settings", "theme", "set", look["id"]],
+                       check=True, capture_output=True)
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        # The CLI needs a running host; the patch is still valid without it.
+        print(f"superset-repatch: could not set theme — run "
+              f"`superset settings theme set {look['id']}` once the app is up", file=sys.stderr)
+        return 1
+    if not quiet:
+        print(f"superset-repatch: theme -> {look['id']}")
+    return 0
+
+
+def running_pids() -> list[str]:
+    """PIDs of the patched copy, if it is up.
+
+    Matched on the executable path rather than the bundle id, which both copies
+    share — quitting by id would take the stock app down instead.
+    """
+    macos = PATCHED / "Contents" / "MacOS"
+    if not macos.is_dir():
+        return []
+    # Anchored on the bare executable, because the helpers this app spawns run
+    # that same binary with a script argument and are meant to outlive a quit —
+    # the pty daemon and terminal host among them. An unanchored match sees
+    # those forever and the guard never clears.
+    exe = next(iter(sorted(macos.iterdir())))
+    found = subprocess.run(["pgrep", "-f", f"^{exe}$"], capture_output=True, text=True)
+    return found.stdout.split()
+
+
+def quit_patched() -> bool:
+    """Ask the patched copy to quit and wait for it to actually go.
+
+    A rebuild starts by deleting the bundle, so doing it under a live app
+    unlinks the executable and frameworks out from under it — and this bundle
+    is 2.1 GB, so the window in which that can go wrong is a wide one. Returns
+    False if it is still up after the grace period, which is a refusal to
+    proceed.
+    """
+    subprocess.run(["osascript", "-e", 'tell application id "com.superset.desktop" to quit'],
+                   capture_output=True)
+    for _ in range(40):
+        if not running_pids():
+            return True
+        time.sleep(0.5)
+    return False
+
+
+def app_version(app: Path) -> str:
+    info = plistlib.loads((app / "Contents" / "Info.plist").read_bytes())
+    return f"{info.get('CFBundleShortVersionString', '?')}+{info.get('CFBundleVersion', '?')}"
+
+
+def patch_asar(asar: Path, vibrancy: str | None, tint: str) -> tuple[str, list[str]]:
+    data = asar.read_bytes()
+    original_len = len(data)
+    notes: list[str] = []
+
+    for name, old, new, expect in PATCHES:
+        if new is None:  # the window options are composed from VIBRANCY/TINT
+            new = window_options(vibrancy, tint)
+        if len(new) > len(old):
+            sys.exit(f"{name}: replacement longer than original — would shift asar offsets")
+        hits = [m.start() for m in re.finditer(re.escape(old), data)]
+        if not hits:
+            notes.append(f"MISSED  {name}: target not found")
+            continue
+        if expect is not None and len(hits) != expect:
+            sys.exit(f"{name}: expected {expect} occurrence(s), found {len(hits)} — refusing to guess")
+        data = data.replace(old, new + b" " * (len(old) - len(new)))
+        notes.append(f"ok      {name} ({len(hits)}x)")
+
+    for name, anchor, window, old, new in SCOPED_PATCHES:
+        if len(new) > len(old):
+            sys.exit(f"{name}: replacement longer than original — would shift asar offsets")
+        anchors = [m.start() for m in re.finditer(re.escape(anchor), data)]
+        if not anchors:
+            notes.append(f"MISSED  {name}: anchor not found")
+            continue
+        padded = new + b" " * (len(old) - len(new))
+        done = 0
+        # The anchor matches the executing bundle and the source copy shipped
+        # beside it; patching both keeps them consistent and only one runs.
+        for lo in anchors:
+            at = data.find(old, lo, min(len(data), lo + window))
+            if at == -1:
+                continue
+            data = data[:at] + padded + data[at + len(old):]
+            done += 1
+        notes.append(f"ok      {name} ({done}x)" if done else f"MISSED  {name}: no match near anchor")
+
+    if len(data) != original_len:
+        sys.exit("length changed — asar offsets would break, refusing to write")
+
+    asar.write_bytes(data)
+    return hashlib.sha256(data).hexdigest(), notes
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--force", action="store_true", help="rebuild even when the version is unchanged")
+    ap.add_argument("--quiet", action="store_true", help="only speak up on error")
+    # Deliberately defaults to None rather than THEME: passing it is what asks
+    # for the Superset theme to be switched. A bare run — which is how the brew
+    # wrapper calls this — patches only, and leaves whatever theme is active
+    # alone, since an upgrade is no reason to override the user's choice.
+    ap.add_argument("--theme", choices=sorted(THEMES), default=None,
+                    help="switch to this look: patches for it AND applies its Superset theme. "
+                         f"Omit to patch only, leaving the active theme untouched (patches for {THEME!r})")
+    ap.add_argument("--restart", action="store_true",
+                    help="quit the patched copy before rebuilding and reopen it after, so "
+                         "applying a change is one command instead of three")
+    ap.add_argument("--vibrancy", metavar="MATERIAL", default=None,
+                    help="override the material for this run: none, hud, sidebar, under-window, "
+                         "fullscreen-ui, popover, menu, sheet, window, titlebar, selection, "
+                         "header, tooltip, content. Defaults to whatever --theme specifies")
+    ap.add_argument("--tint", metavar="AARRGGBB", default=None,
+                    help="override the ARGB tint for this run; only reachable when there is no material")
+    args = ap.parse_args()
+
+    if not STOCK.exists():
+        print(f"superset-repatch: no app at {STOCK}", file=sys.stderr)
+        return 1
+
+    look = THEMES[args.theme or THEME]
+    vibrancy = args.vibrancy if args.vibrancy is not None else look["vibrancy"]
+    vibrancy = None if str(vibrancy).lower() in ("none", "") else vibrancy
+    tint = args.tint if args.tint is not None else look["tint"]
+
+    version = app_version(STOCK)
+    stamp = PATCHED / "Contents" / "Resources" / STAMP_NAME
+
+    # Only what actually lands in the asar belongs in the stamp. The Superset
+    # theme is applied through the CLI and changes no bytes, so switching
+    # light/dark must not trigger a 2.1 GB copy and re-sign.
+    want = f"{version}|{window_options(vibrancy, tint).decode()}"
+    up_to_date = stamp.exists() and stamp.read_text().strip() == want
+
+    if up_to_date and not args.force:
+        if args.theme is None:
+            return 0  # nothing to patch and no theme asked for — stay silent
+        if not args.quiet:
+            print("superset-repatch: patch already current, switching theme only")
+        return apply_theme(look, quiet=args.quiet)
+
+    if running_pids():
+        if not args.restart:
+            print(f"superset-repatch: {PATCHED.name} is running — quit it first, "
+                  f"or pass --restart to have it quit and reopen around the rebuild",
+                  file=sys.stderr)
+            return 1
+        if not quit_patched():
+            print(f"superset-repatch: {PATCHED.name} did not quit — refusing to rebuild "
+                  f"a live bundle", file=sys.stderr)
+            return 1
+
+    if not args.quiet:
+        print(f"superset-repatch: rebuilding transparent copy from {version}")
+
+    if PATCHED.exists():
+        shutil.rmtree(PATCHED)
+    PATCHED.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(STOCK, PATCHED, symlinks=True)
+
+    digest, notes = patch_asar(PATCHED / "Contents" / "Resources" / "app.asar", vibrancy, tint)
+    if not args.quiet:
+        for note in notes:
+            print(f"  {note}")
+
+    # Electron refuses to load an asar whose hash does not match this key, and
+    # the key name contains a dot, so PlistBuddy (`:` separated) is required —
+    # `plutil -replace` would read "Resources/app.asar" as two nested keys.
+    subprocess.run(
+        ["/usr/libexec/PlistBuddy", "-c",
+         f"Set :ElectronAsarIntegrity:Resources/app.asar:hash {digest}",
+         str(PATCHED / "Contents" / "Info.plist")],
+        check=True,
+    )
+
+    # Before the signature, not after: the stamp lands in Contents/Resources,
+    # and anything added there once the bundle is sealed makes
+    # `codesign --verify` report a missing sealed resource. macOS launches such
+    # a bundle anyway, which is why this went unnoticed for months, but a
+    # signature that cannot be verified is no signature to check against.
+    stamp.write_text(want + "\n")
+
+    # Editing anything under Contents/ invalidates the Developer ID signature,
+    # and the hardened runtime means the app will not launch unsigned.
+    subprocess.run(["codesign", "--force", "--deep", "--sign", "-", str(PATCHED)], check=True)
+
+    # Reopened before the MISSED check, not after: the bundle is signed and
+    # launchable either way, and a patch that failed to apply is cosmetic.
+    # Quitting the user's app and then leaving it closed over a cosmetic miss
+    # is the worse trade.
+    #
+    # And before apply_theme, not after: that shells out to the `superset` CLI,
+    # which needs a running host — with --restart the app is down at this point
+    # and the theme switch would fail for want of one.
+    if args.restart:
+        subprocess.run(["open", "-a", str(PATCHED)], check=True)
+
+    if args.theme is not None:
+        apply_theme(look, quiet=args.quiet)
+
+    if any(n.startswith("MISSED") for n in notes):
+        print("superset-repatch: some patches did not apply — Superset's code moved, they need rewriting",
+              file=sys.stderr)
+        return 2
+
+    if not args.quiet:
+        done = "reopened" if args.restart else f"restart {PATCHED.name} to pick it up"
+        print(f"superset-repatch: done — {done}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

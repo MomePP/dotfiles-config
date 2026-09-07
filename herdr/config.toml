@@ -92,7 +92,6 @@ previous_agent = "prefix+up"               # Ctrl-a ↑ → previous agent in th
 
 # ── herdr defaults NOT overridden above (uncomment + edit to customise) ──────────
 # help                     = "prefix+?"        # show every active binding
-# settings                 = "prefix+s"
 # detach                   = "prefix+q"
 # toggle_sidebar           = "prefix+b"
 # open_notification_target = "prefix+o"
@@ -123,11 +122,52 @@ previous_agent = "prefix+up"               # Ctrl-a ↑ → previous agent in th
 # type = "pane"        # "pane" = temp pane that closes on exit; "shell" = detached
 # command = "lazygit"
 
-# herd.nvim round trip: <leader><tab> (leader-doubled) goes TO the agent from nvim;
-# prefix+tab comes back to the editor that spawned it (herdr default: unbound).
-# --resurrect: if nvim was quit (leaving an idle shell), prompt to relaunch it in
-# place instead of focusing a dead tab. HERD_EDITOR overrides the launch command.
+# ── plugins ─────────────────────────────────────────────────────────────────────
+# Bound by hand rather than via hunk-diff's `setup-keys`: its defaults would land
+# on prefix+shift+s and prefix+shift+a, which settings and annotate already use.
+# Plugin config lives in plugins/config/<id>/ (nothing tracked; herdr manages it).
+
+# agent-tab: open an agent in a new tab of THIS space — on the checkout, or on a
+# fresh .claude/worktrees/<slug> worktree. herdr's own Ctrl-a G makes a space per
+# worktree; this keeps space = project, tab = agent. https://github.com/MomePP/herdr-agent-tab
 [[keys.command]]
-key = 'prefix+tab'
-type = "shell"
-command = "nvim -l /Users/momeppkt/Developer/nvim-plugins/herd.nvim/bin/herd-return.lua --resurrect"
+key = "prefix+n"
+type = "plugin_action"
+command = "momepp.agent-tab.new"
+description = "new agent tab here"
+
+# annotate: select terminal text, comment, send it back to the agent
+[[keys.command]]
+key = "prefix+a"
+type = "plugin_action"
+command = "annotate.capture"
+description = "annotate text"
+
+[[keys.command]]
+key = "prefix+shift+a"
+type = "plugin_action"
+command = "annotate.copy-context"
+description = "copy annotations as context"
+
+# hunk-diff: review the agent's changes in hunk, send the comments back.
+# "review staged" is left unbound — reachable from the plugin action menu.
+[[keys.command]]
+key = "prefix+shift+h"
+type = "plugin_action"
+command = "jhochenbaum.hunkdiff.review"
+description = "hunk: review changes"
+
+[[keys.command]]
+key = "prefix+shift+s"
+type = "plugin_action"
+command = "jhochenbaum.hunkdiff.send-review"
+description = "hunk: send review to agent"
+
+[[keys.command]]
+key = "prefix+shift+c"
+type = "plugin_action"
+command = "jhochenbaum.hunkdiff.review:commit"
+description = "hunk: review last commit"
+
+[update]
+channel = "preview"

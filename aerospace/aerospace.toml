@@ -13,7 +13,10 @@ after-login-command = []
 # You can use it to add commands that run after AeroSpace startup.
 # 'after-startup-command' is run after 'after-login-command'
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
-after-startup-command = []
+# Focus workspace 1 on startup. The 'on-window-detected' rules below place the
+# windows but don't move focus, so without this AeroSpace stays on whatever
+# workspace it started on (an empty, unbound workspace 9).
+after-startup-command = ['workspace 1']
 
 # Start AeroSpace at login
 start-at-login = true
@@ -60,24 +63,17 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 [[on-window-detected]]
     if.app-id = 'com.mitchellh.ghostty'
     if.during-aerospace-startup = true
-    check-further-callbacks = true # fall through to the 'layout tiling' rule below
     run = 'move-node-to-workspace 1'
 
-[[on-window-detected]]
-    if.app-id = 'com.microsoft.teams2'
-    if.during-aerospace-startup = true
-    run = 'move-node-to-workspace 4'
-
-# Arc: both windows go to workspace 2 (app-id can't distinguish the two windows).
-# Move the second window to workspace 3 manually after startup.
 [[on-window-detected]]
     if.app-id = 'company.thebrowser.Browser'
     if.during-aerospace-startup = true
     run = 'move-node-to-workspace 2'
 
 [[on-window-detected]]
-    if.app-id = 'com.mitchellh.ghostty'
-    run = 'layout tiling'
+    if.app-id = 'com.microsoft.teams2'
+    if.during-aerospace-startup = true
+    run = 'move-node-to-workspace 4'
 
 # Possible values: (qwerty|dvorak|colemak)
 # See https://nikitabobko.github.io/AeroSpace/guide#key-mapping

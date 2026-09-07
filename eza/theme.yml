@@ -1,0 +1,113 @@
+# eza colours — oxocarbon, matching the ghostty theme and nvim colorscheme.
+#
+# Semantics are lifted from the old nushell dark_theme (green_bold header,
+# purple dates, cyan filesizes, white plain files) and repainted with
+# oxocarbon's actual hexes. Truecolor is used rather than the 30-37 ANSI codes
+# on purpose: oxocarbon remaps the ANSI slots (slot 1 "red" is cyan, slot 2
+# "green" is blue), so a plain `32` would render blue, not green.
+#
+#   cyan   #00dfdb    green  #00c15a    white  #f2f4f8
+#   blue   #00b4ff    purple #c693ff    grey   #585858
+#   pink   #ff4297    lpink  #ff74b8
+#
+# NOTE: eza silently ignores keys it does not recognise — a typo shows up as a
+# section that stayed default-coloured, never as an error. Verify by eye after
+# editing. EZA_COLORS, if ever set, overrides this file *and* drops the
+# underline eza puts on the header; leave it unset.
+
+filekinds:
+  normal: { foreground: "#f2f4f8" }
+  directory: { foreground: "#00b4ff", is_bold: true }
+  executable: { foreground: "#00c15a", is_bold: true }
+  symlink: { foreground: "#ff74b8" }
+  pipe: { foreground: "#c693ff" }
+  socket: { foreground: "#c693ff" }
+  block_device: { foreground: "#ff4297" }
+  char_device: { foreground: "#ff4297" }
+  special: { foreground: "#585858" }
+  mount_point: { foreground: "#00dfdb" }
+
+# read/write/execute keep the traffic-light idea, in oxocarbon's palette.
+perms:
+  user_read: { foreground: "#00dfdb" }
+  user_write: { foreground: "#ff4297" }
+  user_execute_file: { foreground: "#00c15a", is_bold: true }
+  user_execute_other: { foreground: "#00c15a" }
+  group_read: { foreground: "#00dfdb" }
+  group_write: { foreground: "#ff4297" }
+  group_execute: { foreground: "#00c15a" }
+  other_read: { foreground: "#00dfdb" }
+  other_write: { foreground: "#ff4297" }
+  other_execute: { foreground: "#00c15a" }
+  special_user_file: { foreground: "#c693ff" }
+  special_other: { foreground: "#585858" }
+  attribute: { foreground: "#585858" }
+
+# nushell coloured filesize cyan; units are dimmed so the number reads first.
+size:
+  major: { foreground: "#00dfdb" }
+  minor: { foreground: "#00dfdb" }
+  number_byte: { foreground: "#00dfdb" }
+  number_kilo: { foreground: "#00dfdb" }
+  number_mega: { foreground: "#00dfdb" }
+  number_giga: { foreground: "#00dfdb" }
+  number_huge: { foreground: "#00dfdb", is_bold: true }
+  unit_byte: { foreground: "#585858" }
+  unit_kilo: { foreground: "#585858" }
+  unit_mega: { foreground: "#585858" }
+  unit_giga: { foreground: "#585858" }
+  unit_huge: { foreground: "#585858" }
+
+users:
+  user_you: { foreground: "#ff74b8" }
+  user_root: { foreground: "#ff4297" }
+  user_other: { foreground: "#585858" }
+  group_yours: { foreground: "#585858" }
+  group_root: { foreground: "#ff4297" }
+  group_other: { foreground: "#585858" }
+
+links:
+  normal: { foreground: "#ff74b8" }
+  multi_link_file: { foreground: "#c693ff" }
+
+git:
+  new: { foreground: "#00c15a" }
+  modified: { foreground: "#00b4ff" }
+  deleted: { foreground: "#ff4297" }
+  renamed: { foreground: "#c693ff" }
+  typechange: { foreground: "#00dfdb" }
+  ignored: { foreground: "#585858" }
+  conflicted: { foreground: "#ff4297", is_bold: true }
+
+git_repo:
+  branch_main: { foreground: "#00c15a" }
+  branch_other: { foreground: "#c693ff" }
+  git_clean: { foreground: "#00c15a" }
+  git_dirty: { foreground: "#ff4297" }
+
+file_type:
+  image: { foreground: "#c693ff" }
+  video: { foreground: "#ff74b8" }
+  music: { foreground: "#00dfdb" }
+  lossless: { foreground: "#00dfdb" }
+  crypto: { foreground: "#ff4297" }
+  document: { foreground: "#f2f4f8" }
+  compressed: { foreground: "#ff74b8" }
+  temp: { foreground: "#585858" }
+  compiled: { foreground: "#585858" }
+  build: { foreground: "#00c15a" }
+  source: { foreground: "#00b4ff" }
+
+# The header keeps eza's underline; only colour and weight are set here.
+header: { foreground: "#00c15a", is_bold: true }
+
+date: { foreground: "#c693ff" }
+inode: { foreground: "#585858" }
+blocks: { foreground: "#585858" }
+octal: { foreground: "#00dfdb" }
+flags: { foreground: "#585858" }
+punctuation: { foreground: "#585858" }
+symlink_path: { foreground: "#585858" }
+control_char: { foreground: "#ff4297" }
+broken_symlink: { foreground: "#ff4297", is_bold: true }
+broken_path_overlay: { foreground: "#ff4297" }
