@@ -1,10 +1,6 @@
--- INFO: kept but disabled — herd.nvim is the nvim-to-agent bridge on this
--- branch (plugins/herd-config.lua). The spec stays so flipping back is one
--- line; while it is false the s/S keymaps below never register.
 local sidekick      = {
     'folke/sidekick.nvim',
     event = 'VeryLazy',
-    enabled = false,
 }
 
 -- INFO: numbered clones (claude_1, claude_2, ...) for multi-session per cwd.

@@ -55,16 +55,6 @@
             "command": "\"/Users/momeppkt/.claude/hooks/context-mode-cache-heal.mjs\""
           }
         ]
-      },
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash '/Users/momeppkt/.claude/hooks/herdr-agent-state.sh' session",
-            "timeout": 10
-          }
-        ]
       }
     ],
     "UserPromptSubmit": [

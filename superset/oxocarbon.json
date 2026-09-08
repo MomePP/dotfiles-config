@@ -3,7 +3,7 @@
   "name": "Oxocarbon",
   "type": "dark",
   "author": "momeppkt",
-  "description": "Oxocarbon (IBM Carbon) — matches ghostty theme=oxocarbon, kitty/oxocarbon.conf and herdr [theme.custom]",
+  "description": "Oxocarbon (IBM Carbon) — matches ghostty theme=oxocarbon and kitty/oxocarbon.conf",
   "ui": {
     "background": "#161616",
     "foreground": "#f2f4f8",

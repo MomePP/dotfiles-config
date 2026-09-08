@@ -94,7 +94,7 @@ symlink_config() {
 }
 
 # INFO: -- install config directories
-config_dirs=(nvim aerospace aerospace-swipe bat bin carapace claude-code delta eza gh-dash ghostty git herdr homebrew kitty lazygit opencode superset tmux zsh)
+config_dirs=(nvim aerospace aerospace-swipe bat bin carapace claude-code delta eza gh-dash ghostty git homebrew kitty lazygit opencode superset tmux zsh)
 for dir in "${config_dirs[@]}"; do
     install_config_dir "$dir"
 done
@@ -175,10 +175,9 @@ symlink_config "bin/paseo-repatch" ~/.local/bin/paseo-repatch
 symlink_config "bin/claude-settings-sync" ~/.local/bin/claude-settings-sync
 
 # NOTE: the SessionStart hooks in settings.json are NOT tracked here.
-# ~/.claude/hooks/context-mode-cache-heal.mjs and herdr-agent-state.sh are
-# vendor-managed — each tool redeploys and re-registers its own hook, so they
-# self-heal on a fresh machine. Tracking them would only mirror vendor output
-# into this repo on every plugin update.
+# ~/.claude/hooks/context-mode-cache-heal.mjs is vendor-managed — the tool
+# redeploys and re-registers its own hook, so it self-heals on a fresh machine.
+# Tracking it would only mirror vendor output into this repo on every update.
 
 # INFO: -- Claude reads the opencode config dir; symlink rather than duplicate it
 symlink_config "opencode" "$config_path/Claude"

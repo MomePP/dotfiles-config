@@ -26,7 +26,7 @@ LIVE = Path.home() / ".claude" / "settings.json"
 REPO = Path.home() / ".config" / "claude-code" / "settings.json"
 
 # `hooks` is re-registered by whoever owns it — Superset's 8 notify.sh entries
-# on app start, context-mode and herdr on theirs. Tracking it would mirror
+# on app start, context-mode on its own. Tracking it would mirror
 # vendor output into the repo on every update, and the installer already says
 # so for the SessionStart pair.
 IGNORED_KEYS = {

@@ -8,8 +8,6 @@ adjust-cell-height = 8%
 
 # cursor config
 mouse-hide-while-typing = true
-# auto-copy mouse selection to the system clipboard (native-style copy, incl. in
-# the herd.nvim float where win.mouse=false hands the mouse to ghostty)
 copy-on-select = clipboard
 # `title` sets the pane title from the shell (OSC 2) — tmux falls back to the
 # hostname without it, so `choose-tree` shows no path. nushell used to emit this
