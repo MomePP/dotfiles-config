@@ -11,6 +11,25 @@
 # config dir.
 _zcompdump="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
 mkdir -p "${_zcompdump:h}"
+# omp generates its completion script itself, and every run is a full bun boot
+# (~0.7s) — far too slow to eval on each shell. Cache it as an autoloadable
+# `_omp` instead: the generated script detects being loaded from $fpath and
+# calls itself, falling back to `compdef` only when sourced. This has to sit
+# before compinit so the directory is on $fpath when the dump is built.
+#
+# `-nt` follows the ~/.bun/bin/omp symlink to the dist/cli.js that bun rewrites
+# on install, so an upgrade regenerates on the next shell. Should a future bun
+# preserve tarball mtimes instead, delete the cached file to force a refresh.
+_omp_comps="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/completions"
+if (( $+commands[omp] )); then
+    if [[ ! -f $_omp_comps/_omp || $commands[omp] -nt $_omp_comps/_omp ]]; then
+        mkdir -p "$_omp_comps"
+        omp completions zsh > "$_omp_comps/_omp"
+    fi
+    fpath=("$_omp_comps" $fpath)
+fi
+unset _omp_comps
+
 autoload -Uz compinit && compinit -d "$_zcompdump"
 unset _zcompdump
 
