@@ -678,7 +678,42 @@ grid. The fix is a `VimResized` autocmd in `nvim/lua/plugins/llm-config.lua` tha
 re-applies sidekick's own arithmetic and writes the geometry over the window's
 *current* config, so the border, footer and title from `cli.win.config` survive.
 
-## Prior art
+## Prior art — the survey that led here (2026-08-05)
 
-[[tmux-agent-sidebar]] records the original evaluation of the upstream plugin
-and the gaps that motivated this fork.
+This plugin began as a design for a greenfield tmux sidebar (working name
+`drover`), written to replace herdr's sidebar after herdr's scroll performance
+became the reason to leave it. It was never built: the survey found an
+implementation close enough to fork, and forking beat 4–8 weeks of greenfield.
+
+The one constraint that ruled out most of the field: **agent state must come
+from the screen, not from CLI-side hooks.** Hook-based detection means patching
+`~/.claude/settings.json`, `~/.codex/config.toml` and friends per agent — it
+breaks when an agent changes its hook surface, and it cannot see an agent the
+installer never patched.
+
+| Project | Sidebar | Mouse | Agent state | Lang / license |
+|---|---|---|---|---|
+| [hiroppy/tmux-agent-sidebar](https://github.com/hiroppy/tmux-agent-sidebar) | yes | — | hooks | Rust, MIT, 434★ |
+| [sandudorogan/tmux-pane-tree](https://github.com/sandudorogan/tmux-pane-tree) | yes, mirrored | right-click menus | hooks only | Shell+Python, MIT, 48★ |
+| [samleeney/tmux-agent-status](https://github.com/samleeney/tmux-agent-status) | yes | fzf only | hooks | Shell, **no license**, 256★ |
+| [accessd/tmux-agent-indicator](https://github.com/accessd/tmux-agent-indicator) | no | no | hooks + process liveness | Shell, MIT, 85★ |
+| [brendandebeasi/tabby](https://github.com/brendandebeasi/tabby) | yes | **full mouse** | none | Go, MIT, 72★ |
+
+Useful as references rather than fork targets: **tmux-pane-tree** for sidebar
+mirroring mechanics, **tabby** for mouse handling.
+
+**Why `Ymirke/tmux-agent-switcher` won** (Rust, MIT, hookless, active): it
+already had the braille-spinner-in-OSC-title working detector, screen-tail
+regions with idle→busy debounce, claude/codex/opencode support, a self-starting
+poller, sessions-as-spaces grouping, pure-function detection tests, and prebuilt
+release binaries — which also answered the open distribution question, since
+cargo build-on-install under TPM is unpleasant.
+
+Its gaps at fork time were exactly the fork's work, and all three are now shipped
+here: it was a `display-popup` with a sidebar *layout mode* rather than a
+persistent docked pane; it captured the mouse but handled only scroll, no
+click-to-focus; and it installed its own bindings (`C-n`, `-n C-h/j/k/l`)
+instead of shipping commands, which collided with this config's own nav binds.
+Two design ideas from the original spec were deliberately **not** carried over:
+TOML detection manifests (hardcoded Rust match arms are simpler for three agents)
+and a `drover explain` subcommand.
