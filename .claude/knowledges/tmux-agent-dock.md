@@ -115,7 +115,7 @@ puts the move *in front of* the switch in one tmux invocation (`select_card` →
 `dock::carry_before_switch`): guard, remember the destination's geometry, move
 the dock, restore the window being left, switch, select, release. tmux runs the
 list in one pass and redraws once, so the first frame of the destination already
-has the sidebar in it. A switch made any other way — a prefix binding, herdr,
+has the sidebar in it. A switch made any other way — a prefix binding or a
 plain `select-window` — is caught by the follow hook instead, which by
 definition runs *after* the client has already moved.
 

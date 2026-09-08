@@ -39,7 +39,7 @@ deliberate settings and **not** vendor-injected hooks:
 - Superset's 8 `notify.sh` hooks (`SessionStart`, `UserPromptSubmit`,
   `SessionEnd`, `Stop`, `StopFailure`, `PostToolUse`, `PostToolUseFailure`,
   `PermissionRequest`) re-register themselves on app start.
-- `context-mode-cache-heal.mjs` and `herdr-agent-state.sh` likewise.
+- `context-mode-cache-heal.mjs` likewise.
 
 Tracking those would mirror vendor output into the repo on every update, which
 is the reason the installer already documents not doing it.
