@@ -37,6 +37,12 @@
       "mcp__codegraph__*"
     ],
     "deny": [
+      "Bash(git config user.email:*)",
+      "Bash(git config user.name:*)",
+      "Bash(git config --local user.email:*)",
+      "Bash(git config --local user.name:*)",
+      "Bash(git config --global user.email:*)",
+      "Bash(git config --global user.name:*)",
       "Bash(sudo *)",
       "Bash(curl http*)",
       "Bash(wget *)",
