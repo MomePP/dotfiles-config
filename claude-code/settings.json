@@ -72,7 +72,8 @@
     "claude-hud@claude-hud": true,
     "context-mode@context-mode": true,
     "superpowers@claude-plugins-official": true,
-    "i-have-adhd@i-have-adhd": true
+    "i-have-adhd@i-have-adhd": true,
+    "superset@skills-dir": false
   },
   "extraKnownMarketplaces": {
     "claude-hud": {
@@ -102,5 +103,5 @@
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
   "theme": "auto",
-  "model": "claude-fable-5-1[1m]"
+  "advisorModel": "fable"
 }
