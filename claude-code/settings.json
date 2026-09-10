@@ -53,6 +53,19 @@
     "defaultMode": "auto"
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/momeppkt/.config/claude-code/hooks/deny-git-identity-override.sh",
+            "timeout": 10,
+            "statusMessage": "Checking git identity..."
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "hooks": [
