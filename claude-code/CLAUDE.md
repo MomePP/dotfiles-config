@@ -1,5 +1,6 @@
 # Global instructions
 
+<!-- ponytail trial: superpowers disabled
 ## Workflow for new work
 
 Process skills set the approach before any code. This outranks brevity rules
@@ -14,6 +15,7 @@ Process skills set the approach before any code. This outranks brevity rules
   **before** proposing a fix.
 
 Skip a step only when I explicitly say so ("just do it", "skip the plan").
+-->
 
 ## Knowledge & plan artifacts → `.claude/` only
 
@@ -79,6 +81,7 @@ MR ready to merge or merged):
 Do this proactively at feature completion — it is part of finishing, not an
 optional cleanup.
 
+<!-- ponytail trial: superpowers disabled
 ### Superpowers plugin paths → redirect into `.claude/`
 
 The Superpowers skills default to writing under `docs/superpowers/`:
@@ -94,6 +97,7 @@ honoring this rule is sanctioned, not a deviation. **Strip their date prefix**
 — plain topic-led kebab-case filenames per rule 3 below (e.g.
 `per-game-shuttlecock-type-design.md`, NOT `2026-06-10-per-game-…`); both the
 directory and the filename change.
+-->
 
 ## Scratch files → `.claude/tmp/` only, never `/tmp`
 
@@ -167,6 +171,7 @@ Only escalate to the user if a second attempt — built from a fresh
 `Read` — also fails. The same rule applies to `Write` failures
 caused by stale file-state tracking: re-`Read`, then retry.
 
+<!-- ponytail trial: overlaps/conflicts with the ponytail ruleset
 ## Coding behavior
 
 Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
@@ -245,6 +250,7 @@ them with `file:line` like any other finding, at their real severity.
 
 For a full regression-safe cleanup pass (behavior locked by tests, ordered
 smell-focused passes, quality gates), invoke the `ai-slop-cleaner` skill.
+-->
 
 ---
 

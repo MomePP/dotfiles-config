@@ -90,9 +90,13 @@
   "enabledPlugins": {
     "claude-hud@claude-hud": true,
     "context-mode@context-mode": true,
-    "superpowers@claude-plugins-official": true,
-    "i-have-adhd@i-have-adhd": true,
-    "superset@skills-dir": false
+    "superpowers@claude-plugins-official": false,
+    "i-have-adhd@i-have-adhd": false,
+    "superset@skills-dir": false,
+    "ponytail@ponytail": true
+  },
+  "skillOverrides": {
+    "ai-slop-cleaner": "off"
   },
   "extraKnownMarketplaces": {
     "claude-hud": {
@@ -111,6 +115,12 @@
       "source": {
         "source": "github",
         "repo": "ayghri/i-have-adhd"
+      }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
       }
     }
   },
