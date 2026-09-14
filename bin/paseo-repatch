@@ -327,6 +327,9 @@ HTML_FLASH_GUARD = re.compile(
 #
 # `aria-modal` rather than `role="dialog"` alone: the backdrop wrapper carries
 # the role too, and painting that opaque would black out the whole window.
+#
+# Not every floating surface is reachable this way — see OVERLAY_SURFACES for
+# the ones that carry no role at all.
 OPAQUE_SURFACES_CSS = """
     <style id="paseo-repatch-opaque-surfaces">
       /* added by paseo-repatch: keep floating surfaces readable over glass */
@@ -378,6 +381,39 @@ DIFF_PALETTE = [
     ("empty rows",
      re.compile(r"emptyBackground:([A-Za-z_$][\w$]*)\.colors\.surface0,"),
      r"emptyBackground:__paseoOpaque(\1.colors.surface0),"),
+]
+
+# The browser pane's "Annotate element" popup is a floating surface too, but
+# nothing in OPAQUE_SURFACES_CSS can reach it: it is a plain React Native
+# `View` rendered through Paseo's own overlay portal, so it has no ARIA role,
+# no `aria-modal` and no test id — only a generated `unistyles_…` class whose
+# name is a content hash. It read straight through to the page being annotated,
+# with its own comment box (on `surface1`, never zeroed) the only legible part.
+#
+# So it is fixed at the style object instead — but *not* with __paseoOpaque,
+# which is a no-op here. Unistyles is configured with CSS variables on web, so
+# the theme handed to a `StyleSheet.create` callback is `cssThemes`: every
+# string value has already been replaced by `var(--colors-<key>)`, and the
+# real rgba never appears. `__paseoOpaque("var(--colors-surface0)")` does not
+# match its rgba pattern and returns the string untouched — the first attempt
+# at this patch applied cleanly and changed nothing on screen.
+#
+# `--colors-popover` is the same variable OPAQUE_SURFACES_CSS paints the other
+# floating surfaces with: it resolves to `surface2`, which no alpha is applied
+# to, so it is opaque on all seven themes and follows the theme picker. The
+# card now matches menus and dialogs instead of the app fill it used to use.
+#
+# The anchor keeps the keys preceding `backgroundColor` inside the style body
+# so it cannot drift onto another card, and matches the theme binding rather
+# than assuming `e`.
+#
+# DIFF_PALETTE is not affected by any of this: `createDiffPalette(o)` is an
+# ordinary function taking the runtime theme, where the values are the real
+# rgba strings the helper expects.
+OVERLAY_SURFACES = [
+    ("annotate card",
+     re.compile(r"(annotationCard:\{[^{}]*?backgroundColor:)[A-Za-z_$][\w$]*\.colors\.surface0"),
+     r'\1"var(--colors-popover)"'),
 ]
 
 # (slot, label, old, new-template, expected occurrences) — `{a}` is the slot's
@@ -647,6 +683,8 @@ def patch_renderer(path: Path, look: dict, term: dict, ansi: str) -> list[str]:
                    f".options.fontFamily={family},\\3.options.fontSize={size}", 1)
     for label, pattern, new in DIFF_PALETTE:
         replace_re(f"diff canvas {label}", pattern, new, 1)
+    for label, pattern, new in OVERLAY_SURFACES:
+        replace_re(f"opaque {label}", pattern, new, 1)
 
     path.write_text(src, encoding="utf8")
     return notes
