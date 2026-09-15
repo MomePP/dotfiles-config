@@ -52,6 +52,9 @@
     ],
     "defaultMode": "auto"
   },
+  "skillOverrides": {
+    "ai-slop-cleaner": "off"
+  },
   "hooks": {
     "PreToolUse": [
       {
@@ -90,13 +93,10 @@
   "enabledPlugins": {
     "claude-hud@claude-hud": true,
     "context-mode@context-mode": true,
-    "superpowers@claude-plugins-official": false,
     "i-have-adhd@i-have-adhd": false,
     "superset@skills-dir": false,
-    "ponytail@ponytail": true
-  },
-  "skillOverrides": {
-    "ai-slop-cleaner": "off"
+    "ponytail@ponytail": true,
+    "superpowers@claude-plugins-official": false
   },
   "extraKnownMarketplaces": {
     "claude-hud": {
@@ -124,13 +124,18 @@
       }
     }
   },
+  "statusLine": {
+    "type": "command",
+    "command": "bash \"/Users/momeppkt/.claude/plugins/cache/claude-hud/claude-hud/0.13.1/scripts/claude-hud.sh\"",
+    "refreshInterval": 5
+  },
   "effortLevel": "high",
+  "advisorModel": "fable",
   "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
+  "theme": "auto",
   "editorMode": "vim",
   "remoteControlAtStartup": false,
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true,
-  "theme": "auto",
-  "advisorModel": "fable"
+  "skipAutoPermissionPrompt": true
 }
