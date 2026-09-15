@@ -137,6 +137,38 @@ PADDING = "0 0 0 10px"      # CSS shorthand; left only, by preference
 CURSOR_STYLE = "bar"
 FONT_FAMILY: str | None = None   # None keeps Settings -> Code font in charge
 
+# Neither weight is reachable from Paseo either: it never passes fontWeight or
+# fontWeightBold, so the terminal sits on xterm's own defaults — "normal" (400)
+# and "bold" (700). That gap is what makes a bold-heavy TUI read heavy: the
+# regular face is one weight and SGR 1 jumps a full 300 to the bold one, with
+# nothing in between.
+#
+# A CSS keyword or a number 1-1000. Only weights installed as real faces change
+# anything — an unmapped number snaps to the nearest face, so 350 against Maple
+# Mono NF renders as its Light.
+#
+# 400/600 rather than the stock 400/700. Only the bold moves: SGR 1 is most of
+# what a git TUI paints, and against the regular face Maple Mono NF measures
+# +8.5% ink at Medium, +16.2% at SemiBold and +26.6% at Bold. Medium was tried
+# and read as barely bold at all, so SemiBold is the one that keeps the relief
+# while dropping a third of Bold's excess.
+#
+# The normal weight stays at 400 deliberately. Light was tried and looks taller
+# rather than lighter: across 300/400/500 the cap height is a constant 40.5 and
+# the advance a constant 8.109px, while the ink of `H` narrows 22.36 -> 21.17.
+# Same height in the same cell on a thinner glyph reads as condensed, not as a
+# lighter weight, which is not what the knob was for.
+#
+# Ghostty's own font-style/font-style-bold win over these when the config sets
+# them, so this is the fallback rather than the decision — and a machine with
+# no SemiBold face installed snaps back towards Regular on its own.
+#
+# None leaves the key out of the constructor entirely, which is Paseo's stock
+# behaviour and not the same as writing 400 back; --font-weight normal is the
+# one-run equivalent.
+FONT_WEIGHT: int | str | None = 400
+FONT_WEIGHT_BOLD: int | str | None = 600
+
 # --- ghostty ----------------------------------------------------------------
 #
 # Superset can import a Ghostty config for its in-app terminal; this is the
@@ -150,6 +182,8 @@ FONT_FAMILY: str | None = None   # None keeps Settings -> Code font in charge
 #   cursor-style          -> cursorStyle             (Paseo hardcodes "bar")
 #   adjust-cell-height N% -> lineHeight 1 + N/100
 #   font-family (repeats) -> fontFamily, joined      (Ghostty repeats for fallback)
+#   font-style            -> fontWeight                (style name -> weight)
+#   font-style-bold       -> fontWeightBold
 #
 #   font-size, background-opacity   deliberately NOT read — FONT_SIZE and the
 #                                   look's dim were tuned by eye against
@@ -164,12 +198,26 @@ FONT_FAMILY: str | None = None   # None keeps Settings -> Code font in charge
 #   bold-is-bright                  xterm's drawBoldTextInBrightColors is
 #                                   already true by default
 #   macos-option-as-alt             Paseo already sets macOptionIsMeta
+#   font-thicken                    no equivalent: xterm has no stroke
+#                                   thickening, only the two weights above
 #   mouse-hide-while-typing, copy-on-select, window-padding-balance,
 #   shell-integration-*, macos-*    no xterm equivalent
 #
 # `config-file` includes are not followed: the one in use points at a
 # keybinding file, and no keybind reaches xterm.
 GHOSTTY = Path.home() / ".config" / "ghostty" / "config"
+
+# Ghostty names a face by its style; xterm names one by CSS weight. These are
+# the style names font vendors actually ship, on the scale they correspond to.
+# Ghostty's own sentinels are deliberately absent: `default` means "let the
+# font decide" and `false` disables the style, and neither is a weight — both
+# fall through to the constants above.
+GHOSTTY_FONT_STYLES = {
+    "thin": 100, "extralight": 200, "ultralight": 200, "light": 300,
+    "book": 400, "normal": 400, "regular": 400, "text": 400,
+    "medium": 500, "demibold": 600, "semibold": 600, "bold": 700,
+    "extrabold": 800, "ultrabold": 800, "black": 900, "heavy": 900,
+}
 
 # The four adjacent constructor keys as one anchor, unique in the bundle. The
 # resolvers and the options object are reached through minified bindings, so
@@ -504,6 +552,16 @@ def ghostty_metrics(cfg: dict[str, list[str]]) -> tuple[dict, list[str]]:
     if "font-family" in cfg:
         out["font_family"] = ", ".join(cfg["font-family"])
 
+    for key, slot in (("font-style", "font_weight"),
+                      ("font-style-bold", "font_weight_bold")):
+        if key in cfg:
+            raw = cfg[key][-1]
+            weight = GHOSTTY_FONT_STYLES.get(re.sub(r"[\s_-]", "", raw.lower()))
+            if weight is None:
+                notes.append(f"        ghostty {key} {raw!r} has no CSS weight, using default")
+            else:
+                out[slot] = weight
+
     if "adjust-cell-height" in cfg:
         raw = cfg["adjust-cell-height"][-1]
         # Only the percentage form is a ratio. Ghostty also takes `Npx` and
@@ -515,6 +573,24 @@ def ghostty_metrics(cfg: dict[str, list[str]]) -> tuple[dict, list[str]]:
             notes.append(f"        ghostty adjust-cell-height {raw!r} is not a %, using default")
 
     return out, notes
+
+
+def parse_weight(raw: str) -> int:
+    """A weight off the command line: a number or one of the style names.
+
+    Normalised to a number, so the two spellings of one weight cannot produce
+    two different stamps and force a rebuild on the next bare run.
+    """
+    key = re.sub(r"[\s_-]", "", raw.lower())
+    if key.isdigit():
+        weight = int(key)
+        if not 1 <= weight <= 1000:
+            sys.exit(f"font weight {raw!r} is out of range — xterm accepts 1-1000")
+        return weight
+    if key in GHOSTTY_FONT_STYLES:
+        return GHOSTTY_FONT_STYLES[key]
+    sys.exit(f"font weight {raw!r} is neither 1-1000 nor one of: "
+             + ", ".join(sorted(GHOSTTY_FONT_STYLES)))
 
 
 def window_options(vibrancy: str | None) -> bytes:
@@ -675,9 +751,24 @@ def patch_renderer(path: Path, look: dict, term: dict, ansi: str) -> list[str]:
               if term["font_family"] is None else json.dumps(term["font_family"]))
     size = (r"(0,\1.resolveTerminalFontSize)(\2.fontSize)"
             if term["font_size"] is None else str(term["font_size"]))
+    # Two keys rather than one: xterm reads fontWeight for normal text and
+    # fontWeightBold for SGR 1, and how heavy a TUI looks is mostly the second.
+    # Absent constants emit neither key, which is not the same as writing
+    # xterm's own defaults back in.
+    #
+    # Unlike the family and the size, the weights need this one site only. The
+    # settings-sync effect reassigns fontFamily and fontSize and nothing else,
+    # and the only other readers of options.fontWeight are inside xterm's own
+    # renderer — nothing writes it after construction.
+    weights = "".join(
+        f"{key}:{json.dumps(value) if isinstance(value, str) else value},"
+        for key, value in (("fontWeight", term["font_weight"]),
+                           ("fontWeightBold", term["font_weight_bold"]))
+        if value is not None
+    )
     replace_re("terminal metrics", TERMINAL_METRICS,
                f'cursorStyle:"{term["cursor_style"]}",fontFamily:{family},'
-               f'fontSize:{size},lineHeight:{term["line_height"]},', 1)
+               f'fontSize:{size},{weights}lineHeight:{term["line_height"]},', 1)
     if term["font_family"] is not None or term["font_size"] is not None:
         replace_re("terminal metrics (settings sync)", TERMINAL_METRICS_SYNC,
                    f".options.fontFamily={family},\\3.options.fontSize={size}", 1)
@@ -736,6 +827,12 @@ def main() -> int:
     ap.add_argument("--line-height", type=float, metavar="RATIO", default=None,
                     help="terminal line height; overrides Ghostty's adjust-cell-height "
                          f"(default {LINE_HEIGHT} when neither is given)")
+    ap.add_argument("--font-weight", metavar="W", default=None,
+                    help="terminal weight for normal text: 1-1000 or a style name such as "
+                         f"light; overrides Ghostty's font-style (default {FONT_WEIGHT})")
+    ap.add_argument("--font-weight-bold", metavar="W", default=None,
+                    help="terminal weight for bold (SGR 1) text, the one a bold-heavy TUI "
+                         f"mostly shows; overrides font-style-bold (default {FONT_WEIGHT_BOLD})")
     ap.add_argument("--ghostty", type=Path, metavar="FILE", default=GHOSTTY,
                     help=f"Ghostty config to derive terminal metrics from (default {GHOSTTY})")
     ap.add_argument("--no-ghostty", action="store_true",
@@ -770,7 +867,8 @@ def main() -> int:
     # Precedence: explicit flag, then the Ghostty config, then the constant.
     term = {"font_size": None if args.font_size == 0 else args.font_size,
             "line_height": LINE_HEIGHT, "padding": PADDING,
-            "cursor_style": CURSOR_STYLE, "font_family": FONT_FAMILY}
+            "cursor_style": CURSOR_STYLE, "font_family": FONT_FAMILY,
+            "font_weight": FONT_WEIGHT, "font_weight_bold": FONT_WEIGHT_BOLD}
     ghostty_notes: list[str] = []
     if args.no_ghostty:
         ghostty_notes.append("ok      ghostty config (skipped by --no-ghostty)")
@@ -783,6 +881,10 @@ def main() -> int:
         ghostty_notes += extra
     if args.line_height is not None:
         term["line_height"] = args.line_height
+    if args.font_weight is not None:
+        term["font_weight"] = parse_weight(args.font_weight)
+    if args.font_weight_bold is not None:
+        term["font_weight_bold"] = parse_weight(args.font_weight_bold)
 
     version = app_version(STOCK)
     stamp = PATCHED / "Contents" / "Resources" / STAMP_NAME
