@@ -13,9 +13,8 @@ after-login-command = []
 # You can use it to add commands that run after AeroSpace startup.
 # 'after-startup-command' is run after 'after-login-command'
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
-# Focus workspace 1 on startup. The 'on-window-detected' rules below place the
-# windows but don't move focus, so without this AeroSpace stays on whatever
-# workspace it started on (an empty, unbound workspace 9).
+# Focus workspace 1 on startup, so AeroSpace doesn't stay on whatever
+# workspace it happened to start on.
 after-startup-command = ['workspace 1']
 
 # Start AeroSpace at login
@@ -54,41 +53,42 @@ automatically-unhide-macos-hidden-apps = true
 # Fallback value (if you omit the key): on-focused-monitor-changed = []
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
-# Pin apps to workspaces at AeroSpace startup. After a reboot, macOS reopens
-# all apps and AeroSpace assigns each detected window to whatever workspace is
-# active at that moment (an empty, unbound workspace 9), dumping everything
-# there. These 'during-aerospace-startup' rules force each app back to its home
-# workspace at launch. They only fire during startup, so normal window movement
-# during the day is unaffected.
-[[on-window-detected]]
-    if.app-id = 'com.mitchellh.ghostty'
-    if.during-aerospace-startup = true
-    run = 'move-node-to-workspace 1'
-
-[[on-window-detected]]
-    if.app-id = 'company.thebrowser.Browser'
-    if.during-aerospace-startup = true
-    run = 'move-node-to-workspace 2'
-
-[[on-window-detected]]
-    if.app-id = 'com.microsoft.teams2'
-    if.during-aerospace-startup = true
-    run = 'move-node-to-workspace 4'
+# Keep every allocated workspace alive even while empty and invisible.
+# REQUIRED under 'config-version = 2': v2 changed the fallback of this key to
+# an empty array, while v1 inferred it from the right hand side of the key
+# bindings. Without it, empty workspaces simply don't exist, so
+# 'workspace next|prev' and aerospace-swipe (which cycles over
+# 'list-workspaces --monitor focused') see only the workspaces that currently
+# hold a window - i.e. empty spaces get skipped.
+# Workspaces outside this list (9 and up) still work as move targets, they
+# just exist only while they hold a window and drop out of the cycle once
+# emptied.
+persistent-workspaces = ['1', '2', '3', '4', '5', '6', '7', '8']
 
 # Possible values: (qwerty|dvorak|colemak)
 # See https://nikitabobko.github.io/AeroSpace/guide#key-mapping
 [key-mapping]
     preset = 'qwerty'
 
+# Fixed 4 workspaces per monitor. Assumes the built-in display is the macOS
+# "main" display (System Settings -> Displays -> Use as), and that it sits
+# left of the second monitor, since the numeric pattern below is a 1-based
+# monitor sequence number from left to right.
+#   built-in: 1-4      second monitor: 5-8
+# 'secondary' only matches when exactly two monitors are connected, hence the
+# numeric fallback that keeps 5-8 on the second monitor with three connected.
+# The trailing 'main' keeps the workspace reachable (windows can still be
+# moved into it, and it shows up in the cycle while in use) when its monitor
+# is not connected.
 [workspace-to-monitor-force-assignment]
     1 = 'main'
     2 = 'main'
     3 = 'main'
     4 = 'main'
-    5 = ['secondary', 'main']
-    6 = ['secondary', 'main']
-    7 = ['secondary', 'main']
-    8 = ['secondary', 'main']
+    5 = ['secondary', 2, 'main']
+    6 = ['secondary', 2, 'main']
+    7 = ['secondary', 2, 'main']
+    8 = ['secondary', 2, 'main']
 
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
