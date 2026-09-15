@@ -1,13 +1,55 @@
 # MomePP's dotfiles
 > Requires `Homebrew` to be installed
 
+## Install
+The repo is meant to *be* `~/.config`. Clone it there and run the installer —
+cwd does not matter, it resolves its own directory:
+
+``` bash
+git clone https://github.com/MomePP/dotfiles-config ~/.config
+~/.config/config-installer.sh
+```
+
+`config-installer.sh` brew-installs the CLI tools, then leaves everything that
+already sits in `~/.config` alone and only creates the links that have to live
+outside it (`~/.gitconfig`, `~/.zshrc`, `~/.zprofile`, `~/.claude/*`,
+`~/.local/bin/*`). It detects that case itself: when the clone *is* the install
+target it prints `kept <name> config in place..` and copies nothing, so there is
+no window where a tracked directory is removed before being rewritten. A clone
+kept somewhere else — `~/dotfiles`, say — copies each tracked directory into
+`~/.config` instead. Anything outside `~/.config` prompts before it is replaced,
+so the script needs a terminal; do not detach it or pipe it to a pager.
+
+`git clone` refuses a `~/.config` that already exists and is not empty. Graft
+the repo onto it instead:
+
+``` bash
+git clone --no-checkout https://github.com/MomePP/dotfiles-config /tmp/dotfiles-config
+mv /tmp/dotfiles-config/.git ~/.config/.git
+rm -rf /tmp/dotfiles-config
+cd ~/.config && git checkout develop -- .
+```
+
+Left out of the installer on purpose:
+
+``` bash
+chsh -s /bin/zsh              # see zsh below
+brew trust nikitabobko/tap    # the aerospace cask is from an untrusted tap
+git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
+```
+
+> tpm has to live at `~/.config/tmux/plugins/tpm` — the path `tmux.conf` sources
+> on its last line — not at tpm's own documented `~/.tmux/plugins/tpm`. tmux
+> ignores a failing `run` silently, so a tpm in the wrong place leaves
+> `<prefix>I` unbound with no error anywhere.
+
 ## Neovim
 <img width="1672" alt="Image" src="https://github.com/user-attachments/assets/4031c96c-a562-4d4f-8946-9565a7aff63f" />
 
-Runs `neovim-installer.sh` script to install neovim with MomePP's configuration.
-``` bash
-./neovim-installer.sh
-```
+`config-installer.sh` installs the config; plugins are not tracked here. Neovim
+bootstraps them on first launch — [`lua/zpack-config.lua`](nvim/lua/zpack-config.lua)
+pulls [zpack.nvim](https://github.com/zuqini/zpack.nvim) via `vim.pack.add`, and
+the resolved revisions land in the untracked `nvim/nvim-pack-lock.json`.
 
 #### Keybindings
 Most of the keybindings can be modified in [keymaps.lua](nvim/lua/config/keymaps.lua).
