@@ -51,21 +51,6 @@ brew install zsh-autosuggestions zsh-syntax-highlighting
 > absolute path and the claude-code cask installs to a version-stamped dir, so
 > without it every `brew upgrade` re-triggers "Data Access Blocked".
 
-## Fish shell
-Requires `fish` and `fisher`(packages manager)
-
-[**`fish`**](https://fishshell.com/)
-``` bash
-brew install fish   # install fish shell
-chsh -s /bin/fish   # set default shell to fish
-```
-
-[**`fisher`**](https://github.com/jorgebucaran/fisher)
-``` bash
-curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher   # install fisher
-fisher update   # install all listed plugins in `fish_plugins`
-```
-
 ## tmux
 Requires `tmux` and `tmp`(tmux plugins manager)
 
@@ -96,14 +81,3 @@ brew install ncurses
 # compiling terminfo description to system database
 sudo tic -xe tmux-256color ~/tmux-256color.info
 ```
-
-## SKHD
-update service plist file to runs skhd using `/bin/bash`
-
-`~/Library/LaunchAgents/com.koekeishiya.skhd.plist`
-
-- Add `SHELL` key to env dict
-    ``` xml
-        <key>SHELL</key>
-        <string>/bin/bash</string>
-    ```

@@ -1,30 +1,54 @@
 #!/bin/bash
 
 # WARN: must have brew installed
-brew install wget lazygit git-flow-avh git-delta ripgrep fd eza fnm neovim gh bat pyenv tmux starship aerospace tree-sitter-cli carapace
+brew install wget lazygit git-flow-next git-delta ripgrep fd eza fnm neovim gh bat pyenv tmux starship aerospace tree-sitter-cli carapace
 # Inline hints and syntax highlighting are the two things zsh has no built-in
 # equivalent for. .zshrc sources them behind an existence check, so a machine
 # without them still gets a working shell.
 brew install zsh-autosuggestions zsh-syntax-highlighting
-brew install opencode
+# brew install opencode
 # brew install --cask ghostty kitty
 
 config_path=~/.config
 
+# INFO: -- resolve where this repo actually lives
+#
+# The repo can be cloned straight onto the install target
+# (`git clone … ~/.config`), in which case source and destination are the same
+# path: `install_config_dir` would `rm -rf` the tracked directory and then `cp`
+# something that no longer exists, destroying the config instead of installing
+# it. Resolve both sides up front and skip every item that is already in place.
+repo_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+mkdir -p "$config_path"
+config_path="$(cd "$config_path" && pwd -P)"
+if [[ "$repo_path" == "$config_path" ]]; then
+    echo "repo is ~/.config itself: config dirs/files stay in place, only external links are created"
+fi
+
 # INFO: -- helper to install a config directory
 install_config_dir() {
     local name="$1"
+    local source="$repo_path/$name"
+    local target="$config_path/$name"
     local update="y"
     local found=false
-    if [ -d "$config_path/$name" ]; then
+    if [ "$source" = "$target" ]; then
+        echo "kept $name config in place.."
+        return
+    fi
+    if [ ! -d "$source" ]; then
+        echo "missing $name in repo, skipped.."
+        return
+    fi
+    if [ -d "$target" ]; then
         found=true
         read -p "found exist $name config.. overwrite (y) or (n) ? : " update
     fi
     if [ "$update" = "y" ]; then
         if $found; then
-            rm -rf "$config_path/$name"
+            rm -rf "$target"
         fi
-        cp -r "$name" "$config_path"
+        cp -r "$source" "$config_path"
         echo "added $name config !"
     else
         echo "skipped $name config.."
@@ -34,17 +58,27 @@ install_config_dir() {
 # INFO: -- helper to install a config file
 install_config_file() {
     local name="$1"
+    local source="$repo_path/$name"
+    local target="$config_path/$name"
     local update="y"
     local found=false
-    if [ -f "$config_path/$name" ]; then
+    if [ "$source" = "$target" ]; then
+        echo "kept $name config in place.."
+        return
+    fi
+    if [ ! -f "$source" ]; then
+        echo "missing $name in repo, skipped.."
+        return
+    fi
+    if [ -f "$target" ]; then
         found=true
         read -p "found exist $name config.. overwrite (y) or (n) ? : " update
     fi
     if [ "$update" = "y" ]; then
         if $found; then
-            rm "$config_path/$name"
+            rm "$target"
         fi
-        cp "$name" "$config_path"
+        cp "$source" "$config_path"
         echo "added $name config !"
     else
         echo "skipped $name config.."
@@ -57,36 +91,48 @@ install_config_file() {
 # whole config back to defaults. Copy instead — nothing else writes that file,
 # so the copy only drifts when you change it deliberately.
 copy_config() {
-    local source="$1" # relative to $config_path
-    local target="$2" # absolute path to create
+    local source="$config_path/$1" # relative to $config_path
+    local target="$2"              # absolute path to create
     local update="y"
+    if [ ! -f "$source" ]; then
+        echo "missing $1 in ~/.config, skipped $(basename "$target").."
+        return
+    fi
     if [[ -e "$target" ]]; then
         read -p "found exist $(basename "$target") .. overwrite (y) or (n) ? : " update
     fi
     if [ "$update" = "y" ]; then
         mkdir -p "$(dirname "$target")"
-        cp "${config_path}/${source}" "$target"
+        cp "$source" "$target"
         echo "copied $target !"
     else
         echo "skipped $(basename "$target").."
     fi
 }
 
+# A pre-existing target may be a real directory, not just a file or a stale
+# link: Claude Code creates ~/.claude/skills itself. `ln -s` into a surviving
+# directory silently nests the link one level down, so the target is cleared
+# (after the prompt) whatever its type.
 symlink_config() {
-    local source="$1" # relative to $config_path
-    local target="$2" # absolute path to create
+    local source="$config_path/$1" # relative to $config_path
+    local target="$2"              # absolute path to create
     local update="y"
     local found=false
-    if [[ -f "$target" || -L "$target" ]]; then
+    if [ ! -e "$source" ]; then
+        echo "missing $1 in ~/.config, skipped $(basename "$target").."
+        return
+    fi
+    if [[ -e "$target" || -L "$target" ]]; then
         found=true
         read -p "found exist $(basename "$target") .. overwrite (y) or (n) ? : " update
     fi
     if [ "$update" = "y" ]; then
         if $found; then
-            rm "$target" # remove old symlink or old config file
+            rm -rf "$target" # remove old symlink, file or directory
         fi
         mkdir -p "$(dirname "$target")"
-        ln -s "${config_path}/${source}" "$target"
+        ln -s "$source" "$target"
         echo "linked $target !"
     else
         echo "skipped $(basename "$target").."
@@ -100,25 +146,15 @@ for dir in "${config_dirs[@]}"; do
 done
 
 # INFO: -- install config files
+#
+# .gitconfig is installed here rather than linked straight out of the clone:
+# the ~/.gitconfig link below points into ~/.config, so the file has to exist
+# there first or a clone living anywhere else leaves a dangling link.
 install_config_file "starship.toml"
+install_config_file ".gitconfig"
 
-# INFO: -- symlink gitconfig file
-gitconfig=~/.gitconfig
-update_gitconfig="y"
-found_gitconfig=false
-if [[ -f "$gitconfig" || -L "$gitconfig" ]]; then
-    found_gitconfig=true
-    read -p "found exist gitconfig file.. overwrite (y) or (n) ? : " update_gitconfig
-fi
-if [ "$update_gitconfig" = "y" ]; then
-    if $found_gitconfig; then
-        rm "$gitconfig" # remove old symlink or old config file
-    fi
-    ln -s "${config_path}/.gitconfig" "$gitconfig"
-    echo "update gitconfig !"
-else
-    echo "skipped gitconfig.."
-fi
+# INFO: -- symlink gitconfig file (git only reads it from $HOME)
+symlink_config ".gitconfig" ~/.gitconfig
 
 # INFO: -- symlink the zsh rc files
 #
