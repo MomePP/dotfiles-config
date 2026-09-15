@@ -8,6 +8,10 @@
     "tw93/tap"
   ],
   "trustedformulae": [
+    "can1357/tap/omp",
     "supabase/tap/supabase"
+  ],
+  "trustedcasks": [
+    "nikitabobko/tap/aerospace"
   ]
 }
