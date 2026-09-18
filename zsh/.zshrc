@@ -247,7 +247,6 @@ brew() {
     case "$1" in
         update)  esp-clangd-update --check ;;
         upgrade) esp-clangd-update --quiet || true
-                 superset-repatch || true
                  paseo-repatch || true
                  claude-settings-sync --quiet || true ;;
     esac
