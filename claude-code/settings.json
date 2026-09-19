@@ -136,5 +136,7 @@
   "editorMode": "vim",
   "remoteControlAtStartup": false,
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "autoCompactEnabled": true,
+  "syncClaudeAiSkills": false
 }
