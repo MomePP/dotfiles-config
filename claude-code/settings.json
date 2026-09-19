@@ -52,9 +52,6 @@
     ],
     "defaultMode": "auto"
   },
-  "skillOverrides": {
-    "ai-slop-cleaner": "off"
-  },
   "hooks": {
     "PreToolUse": [
       {
@@ -92,10 +89,7 @@
   },
   "enabledPlugins": {
     "claude-hud@claude-hud": true,
-    "context-mode@context-mode": true,
-    "i-have-adhd@i-have-adhd": false,
-    "ponytail@ponytail": true,
-    "superpowers@claude-plugins-official": false
+    "context-mode@context-mode": true
   },
   "extraKnownMarketplaces": {
     "claude-hud": {
@@ -108,18 +102,6 @@
       "source": {
         "source": "github",
         "repo": "mksglu/context-mode"
-      }
-    },
-    "i-have-adhd": {
-      "source": {
-        "source": "github",
-        "repo": "ayghri/i-have-adhd"
-      }
-    },
-    "ponytail": {
-      "source": {
-        "source": "github",
-        "repo": "DietrichGebert/ponytail"
       }
     }
   },
