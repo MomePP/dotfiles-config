@@ -464,6 +464,92 @@ OVERLAY_SURFACES = [
      r'\1"var(--colors-popover)"'),
 ]
 
+# --- idle frame rate -------------------------------------------------------
+#
+# The cost of glass is per frame, not per pixel. A transparent window cannot
+# be occlusion-culled, so every frame Paseo presents makes WindowServer
+# recomposite it against whatever is behind — and Paseo presents one every
+# 16ms whenever an agent is running, with nobody touching it. Measured on a
+# Mac16,13 at the 1710x1107 default: WindowServer at ~48% CPU and the GPU at
+# ~85% with the app idle, dropping to 2% the instant the renderer was frozen
+# with SIGSTOP. Hiding the app did not help; only stopping the frames did.
+#
+# Three things keep the frame pipeline busy while an agent runs, and their
+# frames add up rather than merge: the compositor only folds two changes into
+# one presented frame when they land in the same 16ms vsync slot, and three
+# animations on unrelated periods almost never do. A trace with two rings and
+# the loader stepped to 13 / 6 / 16 per second presented 31.8 frames a second
+# — half of display rate, not a tenth. So each has to be slow on its own, and
+# the sum is what WindowServer sees. Renderer CPU went 37% -> 12% at the first
+# stepping; the values below are the second, slower round.
+#
+#   * StatusRing, the ring around a running workspace's status dot and the
+#     "Agent running" badge on its tab. A native `element.animate()` call:
+#     an infinite linear rotate over STATUS_RING_PERIOD_MS (900), which the
+#     compositor advances every frame. Stepped and slowed: RING_STEPS
+#     positions per turn over RING_SLOWDOWN turns' worth of time, on a 13px
+#     ring. Slowdown is applied relative to Paseo's constant so a retuned
+#     period upstream still lands proportionally.
+#
+#   * SyncedLoader, the dot-matrix "thinking" indicator. One global clock
+#     re-arms itself with requestAnimationFrame while any loader is mounted,
+#     but only *writes* when the step changes: SYNCED_LOADER_DURATION_MS (950)
+#     over six dots, every 158ms. Sixty polls a second to notice a change six
+#     times a second. The cycle is slowed by LOADER_SLOWDOWN and polled with a
+#     timer at about half the resulting step, which sees every step with under
+#     half a step of latency and never aliases. Two arm sites: the
+#     self-rescheduling tick and the initial kick when the count goes 0 -> 1.
+#
+#   * The tool-call badge shimmer, a gradient swept across the badge label
+#     with `background-clip: text` for as long as a call is in flight — which
+#     is most of the time an agent is running. Its keyframes animate
+#     background-position, which the compositor cannot own, so it is a
+#     main-thread repaint per frame as well as a presented frame. Stepped to
+#     SHIMMER_STEPS across a sweep slowed by SHIMMER_SLOWDOWN; the duration is
+#     a prop, so the slowdown multiplies it in place rather than replacing it.
+#
+# At the defaults each runs at 3-4 frames a second, so all three together
+# stay near 10 presented frames a second. They are meant to read as calm
+# status, not as spinners; anyone who wants them lively again turns the
+# slowdowns to 1 and the steps back up.
+#
+# The inline `code:` strings beside these worklets are the native UI-runtime
+# copies and are inert on web; only the compiled JS functions are patched.
+#
+# Independent of the glass work in the sense that it costs nothing to keep,
+# but it is only *needed* because of the glass: an opaque window would let the
+# compositor cull the same frames for free.
+RING_STEPS = 6
+RING_SLOWDOWN = 2        # 900ms -> 1800ms per turn: 3.3 frames/s
+LOADER_SLOWDOWN = 2      # 950ms -> 1900ms per cycle: 3.2 writes/s
+LOADER_POLL_MS = 160     # ~half of the 317ms step
+SHIMMER_STEPS = 8
+SHIMMER_SLOWDOWN = 2     # 1.024s -> 2.048s per sweep: 3.9 frames/s
+
+# (label, pattern, replacement) — every minified binding is captured, never
+# assumed, and the ring's anchor is the option-object literal itself.
+FRAME_RATE = [
+    ("status ring",
+     re.compile(r'duration:([A-Za-z_$][\w$]*)\.STATUS_RING_PERIOD_MS,'
+                r'easing:"linear",iterations:Number\.POSITIVE_INFINITY'),
+     rf'duration:{RING_SLOWDOWN}*\1.STATUS_RING_PERIOD_MS,'
+     rf'easing:"steps({RING_STEPS})",iterations:Number.POSITIVE_INFINITY'),
+    ("synced loader cycle",
+     re.compile(r"SYNCED_LOADER_DURATION_MS:950,"),
+     f"SYNCED_LOADER_DURATION_MS:{950 * LOADER_SLOWDOWN},"),
+    ("synced loader tick",
+     re.compile(r"([A-Za-z_$][\w$]*)\.value!==([A-Za-z_$][\w$]*)&&\(\1\.value=\2\),"
+                r"requestAnimationFrame\(([A-Za-z_$][\w$]*)\)"),
+     rf"\1.value!==\2&&(\1.value=\2),setTimeout(\3,{LOADER_POLL_MS})"),
+    ("synced loader kick",
+     re.compile(r"([A-Za-z_$][\w$]*)\.value=([A-Za-z_$][\w$]*)\.value,"
+                r"requestAnimationFrame\(([A-Za-z_$][\w$]*)\)"),
+     rf"\1.value=\2.value,setTimeout(\3,{LOADER_POLL_MS})"),
+    ("tool-call shimmer",
+     re.compile(r"\$\{([A-Za-z_$][\w$]*)\.shimmerDuration\}s linear infinite"),
+     rf"${{\1.shimmerDuration*{SHIMMER_SLOWDOWN}}}s steps({SHIMMER_STEPS}) infinite"),
+]
+
 # (slot, label, old, new-template, expected occurrences) — `{a}` is the slot's
 # alpha. Patching the factories' *outputs* rather than the palettes feeding
 # them is what keeps this safe: `surface0` is also `primaryForeground` (button
@@ -776,6 +862,8 @@ def patch_renderer(path: Path, look: dict, term: dict, ansi: str) -> list[str]:
         replace_re(f"diff canvas {label}", pattern, new, 1)
     for label, pattern, new in OVERLAY_SURFACES:
         replace_re(f"opaque {label}", pattern, new, 1)
+    for label, pattern, new in FRAME_RATE:
+        replace_re(f"idle frame rate: {label}", pattern, new, 1)
 
     path.write_text(src, encoding="utf8")
     return notes
