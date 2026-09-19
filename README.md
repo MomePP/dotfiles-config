@@ -123,3 +123,39 @@ brew install ncurses
 # compiling terminfo description to system database
 sudo tic -xe tmux-256color ~/tmux-256color.info
 ```
+
+## Touch ID for sudo
+Not in the dotfiles — the file lives in `/etc` — so it is the one thing a new
+machine loses silently: `sudo` just asks for a password and nothing says why.
+`/etc/pam.d/sudo` already does `auth include sudo_local`; macOS ships only the
+commented-out template, and `sudo_local` survives OS updates where editing
+`sudo` itself does not.
+
+``` bash
+sudo tee /etc/pam.d/sudo_local >/dev/null <<'EOF'
+auth       sufficient     pam_tid.so
+EOF
+sudo chmod 444 /etc/pam.d/sudo_local
+```
+
+> `pam_reattach` is not needed. The folklore dates from tmux servers that
+> `setsid()` out of the Aqua session; tmux 3.7c keeps the audit session
+> (`getaudit_addr` reports the same `asid` and `HAS_GRAPHIC_ACCESS` inside the
+> server, and `LAContext.canEvaluatePolicy` returns true there). It would only
+> matter for a server first spawned from an SSH login.
+
+## Paseo
+Runs from a patched private copy, `~/Applications/Paseo-transparent.app`,
+rebuilt by [`bin/paseo-repatch`](bin/paseo-repatch) whenever the stock app
+updates. The script's docstring is the reference: what each patch does, why the
+asar ones are length-preserving, and the frame-rate knobs that keep the glass
+from costing WindowServer 40–50% CPU while an agent runs. The `brew` function
+re-runs it after cask upgrades; a beta taken through the in-app updater needs a
+bare `paseo-repatch` by hand.
+
+> Plan usage showing Claude as *Unavailable* while `claude auth status` says
+> logged in means a stale `~/.claude/.credentials.json` is present. Claude Code
+> keeps live credentials in the Keychain on macOS and never rewrites that file,
+> but Paseo reads the file first and only falls back to the Keychain when it is
+> absent — so an old file shadows a valid login with an expired token. Delete
+> the file; the CLI is unaffected.
