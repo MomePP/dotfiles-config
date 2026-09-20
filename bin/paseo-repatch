@@ -108,6 +108,25 @@ LOOKS = {
     "vibrancy": {"vibrancy": "hud", "dim": 0.85, "palette": False},
 }
 
+# Where the glass shows. "full" is the look as designed: every surface at
+# alpha 0, the whole window reads through to the blurred desktop. "sidebar"
+# keeps exactly that construction and adds one opaque sheet under the content
+# pane, so only the sidebar is glass — the way Slack's original macOS client
+# did it, and the reason it could afford a material at all.
+#
+# Nothing about ALPHAS changes between the two, which is the point: the sheet
+# is React Navigation's own backdrop, which already covers everything right of
+# the sidebar and nothing else (see NAVIGATOR_BACKDROP). Painting it opaque is
+# a one-value change, and the dim, the alphas and every other patch stay as
+# tuned for the full look.
+#
+# The material itself stays full-window either way — Electron gives no bounds
+# for it — so the saving is whatever WindowServer skips under opaque content.
+# Measured, not assumed: switch, leave the window focused and idle, read
+# `ioreg -l -w 0 | grep 'Device Utilization'`.
+SCOPE = "full"
+SCOPES = ("full", "sidebar")
+
 # Every surface token the React tree paints with. All zero, always — see DIM
 # above for why none of them may carry the dim.
 ALPHAS = {"surface0": 0.0, "background": 0.0, "sidebar": 0.0, "workspace": 0.0, "terminal": 0.0}
@@ -311,23 +330,34 @@ RENDERER_PATCHES = [
         "allowTransparency:!0",
         1,
     ),
-    (
-        # React Navigation's DefaultTheme, which Paseo never switches to a dark
-        # variant — it just paints `surface0` opaquely over the navigator and
-        # never sees it. Zero out surface0 and this light grey becomes the
-        # backdrop for everything right of the sidebar: an opaque 1423x1069
-        # sheet that blocks the window dim, the wallpaper and the blur at once,
-        # while the sidebar (outside the navigator) stays correctly clear.
-        #
-        # Found by reading computed styles off the live window over CDP rather
-        # than from the bundle — nothing in the source hints that this element
-        # is the one painting, and four passes of reasoning about it missed.
-        "react-navigation backdrop",
-        "background:'rgb(242, 242, 242)'",
-        "background:'transparent'",
-        1,
-    ),
 ]
+
+# React Navigation's DefaultTheme, which Paseo never switches to a dark
+# variant — it just paints `surface0` opaquely over the navigator and never
+# sees it. Zero out surface0 and this light grey becomes the backdrop for
+# everything right of the sidebar: an opaque 1423x1069 sheet that blocks the
+# window dim, the wallpaper and the blur at once, while the sidebar (outside
+# the navigator) stays correctly clear.
+#
+# That footprint is exactly the content pane, which makes it the one place the
+# two scopes differ. Full glass clears it; sidebar glass keeps it opaque, in
+# the dark surface Paseo ships in index.html's flash guard so the pane matches
+# the wash rather than a value hardcoded here. The theme picker's other dark
+# themes get that default surface for the pane; the sidebar still follows them.
+#
+# Found by reading computed styles off the live window over CDP rather than
+# from the bundle — nothing in the source hints that this element is the one
+# painting, and four passes of reasoning about it missed.
+NAVIGATOR_BACKDROP = "background:'rgb(242, 242, 242)'"
+
+
+def shipped_surface(app: Path) -> str:
+    """The dark surface hex Paseo paints before React mounts — `#rrggbb`."""
+    html = (app / "Contents" / "Resources" / "app-dist" / "index.html").read_text(encoding="utf8")
+    match = HTML_FLASH_GUARD.search(html)
+    if not match:
+        sys.exit("shipped surface: index.html flash-guard rule not found — cannot pick a pane colour")
+    return f"#{match[2]}"
 
 # Two places re-assert an opaque background *after* the window is constructed.
 # Either one alone is enough to hide `transparent: true` completely, which is
@@ -709,7 +739,7 @@ def look_signature(look: dict) -> str:
     a rebuild while re-running the same one stays a no-op.
     """
     opts = window_options(look["vibrancy"]).decode()
-    return f"{opts}|dim={look['dim']}|palette={look['palette']}"
+    return f"{opts}|dim={look['dim']}|palette={look['palette']}|scope={look['scope']}"
 
 
 def running_pids() -> list[str]:
@@ -823,6 +853,9 @@ def patch_renderer(path: Path, look: dict, term: dict, ansi: str) -> list[str]:
 
     for label, old, new, expect in RENDERER_PATCHES:
         replace(label, old, new, expect)
+    pane = "'transparent'" if look["scope"] == "full" else f"'{look['pane']}'"
+    replace(f"react-navigation backdrop ({look['scope']} glass)",
+            NAVIGATOR_BACKDROP, f"background:{pane}", 1)
 
     if look["palette"]:
         replace_re("oxocarbon palette", STOCK_PALETTE, OXOCARBON_PALETTE, 1)
@@ -942,13 +975,16 @@ def main() -> int:
                     help="override the material for this run: none, hud, sidebar, under-window, "
                          "fullscreen-ui, popover, menu, sheet, window, titlebar, selection, "
                          "header, tooltip, content. Defaults to whatever --look specifies")
+    ap.add_argument("--scope", choices=SCOPES, default=None,
+                    help=f"where the glass shows for this run: full (every surface) or "
+                         f"sidebar (content pane opaque). Defaults to {SCOPE!r}")
     args = ap.parse_args()
 
     if not STOCK.exists():
         print(f"paseo-repatch: no app at {STOCK}", file=sys.stderr)
         return 1
 
-    look = dict(LOOKS[args.look or LOOK])
+    look = dict(LOOKS[args.look or LOOK], scope=args.scope or SCOPE)
     if args.vibrancy is not None:
         look["vibrancy"] = None if args.vibrancy.lower() in ("none", "") else args.vibrancy
     if args.dim is not None:
@@ -1007,6 +1043,7 @@ def main() -> int:
 
     digest, notes = patch_asar(PATCHED / "Contents" / "Resources" / "app.asar", look["vibrancy"])
     notes += ghostty_notes
+    look["pane"] = shipped_surface(PATCHED)
     notes += patch_renderer(renderer_path(PATCHED), look, term, args.ansi)
     notes += patch_index_html(PATCHED, look["dim"], term["padding"])
 
