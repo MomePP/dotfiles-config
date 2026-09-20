@@ -690,11 +690,15 @@ def window_options(vibrancy: str | None) -> bytes:
     """
     parts = ["transparent: true,"]
     if vibrancy:
-        # followWindow is the Electron default, and it swaps the material for a
-        # flat dark fill the moment the window loses focus — the blurred
-        # wallpaper vanishes and the app reads as a black slab until it is
-        # clicked again. "active" pins the material on regardless of focus.
-        parts.append(f'vibrancy: "{vibrancy}", visualEffectState: "active",')
+        # visualEffectState is deliberately left at Electron's followWindow
+        # default, so the material goes to a flat dark fill when the window
+        # loses focus. That is macOS's own power path: an inactive material is
+        # not re-blurred, an active one is re-evaluated whenever anything
+        # behind the window changes — a terminal cursor, the tmux clock — and
+        # with the window idle that held the GPU near 40% against ~15% for the
+        # opaque stock app. Pinning it "active" bought glass while unfocused
+        # at that price, and unfocused is exactly when nobody is looking.
+        parts.append(f'vibrancy: "{vibrancy}",')
     return " ".join(parts).encode()
 
 
