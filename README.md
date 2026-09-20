@@ -145,7 +145,7 @@ sudo chmod 444 /etc/pam.d/sudo_local
 > matter for a server first spawned from an SSH login.
 
 ## Paseo
-Runs from a patched private copy, `~/Applications/Paseo-transparent.app`,
+Runs from a patched private copy, `~/Applications/Paseo-Vibrancy.app`,
 rebuilt by [`bin/paseo-repatch`](bin/paseo-repatch) whenever the stock app
 updates. The script's docstring is the reference: what each patch does, why the
 asar ones are length-preserving, and the frame-rate knobs that keep the glass

@@ -7,7 +7,7 @@ from GitHub releases without telling brew. Either one drops the patches, the
 rewritten asar-integrity hash, and the ad-hoc signature together. Rather than
 patch the managed app — where the next update would silently revert it and
 Gatekeeper would have to be re-satisfied each time — this keeps a parallel copy
-at ~/Applications/Paseo-transparent.app and rebuilds it from the freshly-updated
+at ~/Applications/Paseo-Vibrancy.app and rebuilds it from the freshly-updated
 original whenever the version moves.
 
 Run it bare after an update; the `brew` wrapper in zsh/.zshrc does that for cask
@@ -55,7 +55,7 @@ import time
 from pathlib import Path
 
 STOCK = Path("/Applications/Paseo.app")
-PATCHED = Path.home() / "Applications" / "Paseo-transparent.app"
+PATCHED = Path.home() / "Applications" / "Paseo-Vibrancy.app"
 STAMP_NAME = ".patched-from-version"
 
 # --- the three looks --------------------------------------------------------
@@ -998,7 +998,7 @@ def main() -> int:
             return 1
 
     if not args.quiet:
-        print(f"paseo-repatch: rebuilding transparent copy from {version} ({args.look or LOOK})")
+        print(f"paseo-repatch: rebuilding {PATCHED.name} from {version} ({args.look or LOOK})")
 
     if PATCHED.exists():
         shutil.rmtree(PATCHED)
