@@ -21,20 +21,30 @@
 //   surfaceSidebar = background
 //   foregroundMuted = mutedForeground, foregroundExtraMuted = ring
 //
-// `raised` is therefore the brightness knob, not `background`. Oxocarbon's own
-// second step is #262626, which lands ~8 points above the built-in dark
-// theme's surface1 (#1E2120) and read noticeably brighter across a full pane.
-// #1c1c1c is the palette's subtle step — what the repatch script uses for
-// surfaceDiffEmpty — and keeps a visible edge between pane and card without
-// lifting the whole window. Set it back to #262626 for more separation, or to
-// #161616 to make the pane vanish into the background entirely.
+// `raised` is therefore the brightness knob, not `background`, and it wants a
+// value below the palette's own ramp. oxocarbon.nvim derives its dark steps by
+// blending base00 into base06 in HSLuv, not sRGB:
+//
+//   base00 #161616   base01 #1b1b1b (0.085)   base02 #212121 (0.18)
+//   base03 #282828 (0.3)   float_bg #232323   blend #131313
+//
+// base01 is where a float or a cursorline sits — a small area. Paseo puts
+// surface1 under the entire content pane, and at that size even base01 lifts
+// the window; #262626, oxocarbon's second step, was 8 points above the
+// built-in dark theme's surface1 (#1E2120) and read clearly bright. #181818
+// sits between base00 and base01 deliberately: a pane edge that is visible
+// when looked for and invisible otherwise. #1b1b1b is the palette-faithful
+// alternative, #262626 gives real card separation, #161616 merges the pane
+// into the background.
 //
 // The terminal's 16 ANSI colours are NOT part of this. `addTheme` covers app
 // chrome only, so OXOCARBON_ANSI stays a bundle patch in paseo-repatch — and
 // has to, since a terminal should keep its palette whatever the chrome wears.
 //
-// Values are oxocarbon.nvim's, matching superset/oxocarbon-glass.json so Paseo,
-// nvim and Superset agree.
+// Values come from ~/Developer/nvim-plugins/oxocarbon.nvim and Ghostty's own
+// `oxocarbon` theme (background #161616, foreground #f2f4f8), so Paseo, nvim
+// and the terminal agree. Ghostty then runs that background at opacity 0.80,
+// which is why its base reads darker than the hex alone.
 import type { PluginClientContext } from "@getpaseo/plugin/client";
 
 export default function contribute(client: PluginClientContext) {
@@ -45,7 +55,7 @@ export default function contribute(client: PluginClientContext) {
     colors: {
       background: "#161616",
       foreground: "#f2f4f8",
-      raised: "#1c1c1c",
+      raised: "#181818",
       control: "#393939",
       border: "#393939",
       accent: "#c693ff",
