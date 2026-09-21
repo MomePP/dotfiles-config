@@ -120,10 +120,15 @@ LOOKS = {
 # a one-value change, and the dim, the alphas and every other patch stay as
 # tuned for the full look.
 #
-# The material itself stays full-window either way — Electron gives no bounds
-# for it — so the saving is whatever WindowServer skips under opaque content.
-# Measured, not assumed: switch, leave the window focused and idle, read
-# `ioreg -l -w 0 | grep 'Device Utilization'`.
+# A look, not a power setting. It was built to test whether WindowServer skips
+# the blur under opaque content, and it does not measurably: focused and idle,
+# the GPU counter read 38-67% on sidebar against 39-54% on full. The counter
+# turned out not to be Paseo's to move at all — with the app idle a
+# per-process view shows WindowServer at ~2% GPU and every Paseo process at
+# 0%, so whatever `ioreg`'s Device Utilization reports is unattributed to
+# either. The material stays full-window either way (Electron gives no bounds
+# for it); the only vibrancy cost that did measure is the focused/unfocused
+# gap, which followWindow already handles. Pick the scope by eye.
 SCOPE = "full"
 SCOPES = ("full", "sidebar")
 
