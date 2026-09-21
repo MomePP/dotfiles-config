@@ -7,15 +7,27 @@
 // Settings -> Appearance beside the built-ins, survives updates, and can be
 // switched away from.
 //
-// Paseo expands these eight colours into the full token set, so the values are
-// chosen for what it derives rather than for the slots they are named after:
+// Paseo expands these eight into the full token set. The mapping is not by
+// name — read off the bundle's own `buildDarkSemanticColors` call, which is
+// what decides how a value reads on screen:
 //
-//   background      the window fill, which every surface is layered over
-//   raised          panes and cards — oxocarbon's #262626, one step up
-//   control         inputs and controls, and what `border` matches
-//   accent          the purple the whole palette is identified by
-//   mutedForeground secondary text; the extra-muted tier is derived from it
-//   ring            focus outlines
+//   surface0 = background      the window fill
+//   surface1 = raised          panes and cards — and, in sidebar scope, the
+//                              whole content pane, so this is the value that
+//                              sets how bright the app looks
+//   surface2 = control         inputs, popovers, menus
+//   surface3 = border
+//   surface4 = ring
+//   surfaceSidebar = background
+//   foregroundMuted = mutedForeground, foregroundExtraMuted = ring
+//
+// `raised` is therefore the brightness knob, not `background`. Oxocarbon's own
+// second step is #262626, which lands ~8 points above the built-in dark
+// theme's surface1 (#1E2120) and read noticeably brighter across a full pane.
+// #1c1c1c is the palette's subtle step — what the repatch script uses for
+// surfaceDiffEmpty — and keeps a visible edge between pane and card without
+// lifting the whole window. Set it back to #262626 for more separation, or to
+// #161616 to make the pane vanish into the background entirely.
 //
 // The terminal's 16 ANSI colours are NOT part of this. `addTheme` covers app
 // chrome only, so OXOCARBON_ANSI stays a bundle patch in paseo-repatch — and
@@ -33,7 +45,7 @@ export default function contribute(client: PluginClientContext) {
     colors: {
       background: "#161616",
       foreground: "#f2f4f8",
-      raised: "#262626",
+      raised: "#1c1c1c",
       control: "#393939",
       border: "#393939",
       accent: "#c693ff",
