@@ -1121,8 +1121,16 @@ def main() -> int:
 
     version = app_version(STOCK)
     stamp = PATCHED / "Contents" / "Resources" / STAMP_NAME
+    # The script's own digest is part of the stamp, because the stamp's job is
+    # "does the copy on disk match what this script would build" and the
+    # patches are as much an input to that as the look is. Without it, editing
+    # a patch left a bare run silently deciding the old bundle was current —
+    # which is exactly what a silent no-op should never mean. A comment-only
+    # edit rebuilds too; a minute of work is the right price for never having
+    # to wonder whether a fix is in the bundle.
     want = (f"{version}|{look_signature(look)}|ansi={args.ansi}|"
-            + "|".join(f"{k}={v}" for k, v in sorted(term.items())))
+            + "|".join(f"{k}={v}" for k, v in sorted(term.items()))
+            + f"|script={hashlib.sha256(Path(__file__).read_bytes()).hexdigest()[:12]}")
 
     if stamp.exists() and stamp.read_text().strip() == want and not args.force:
         return 0  # already current — stay silent, this is the brew-wrapper path
