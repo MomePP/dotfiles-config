@@ -21,6 +21,17 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'   # case-insensitive
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
+# HASH_DIRS reads a PATH directory's whole listing the first time anything in it
+# is looked up, and zsh never re-reads it: a binary installed afterwards stays
+# invisible to *already-running* shells. Combined with AUTO_CD that is worse
+# than a "command not found" — a bare command word that also names a directory
+# in $PWD silently cd's there instead (typing `nvim` in ~/.config landed in
+# ~/.config/nvim after a `brew reinstall neovim` relinked the binary). This
+# rehashes before a completion attempt, which repairs the table on the first Tab
+# in any stale shell; the brew() wrapper below covers the shell doing the
+# installing.
+zstyle ':completion:*' rehash true
+
 # carapace covers what brew's site-functions do not (lazygit, tmux, cargo) and
 # bridges to fish/bash specs for the rest.
 source <(carapace _carapace zsh)
@@ -226,6 +237,9 @@ brew() {
     local rc
     command brew "$@"
     rc=$?
+    # a keg that was just linked/relinked is absent from this shell's command
+    # hash, and zsh does not re-read a PATH directory on its own.
+    rehash
     claude-relink
     (( rc == 0 )) || return $rc
     case "$1" in
