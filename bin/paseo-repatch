@@ -128,7 +128,7 @@ LOOKS = {
 # of anything here and must not be used to judge a look. The material stays
 # full-window either way (Electron gives no bounds for it), and nothing about
 # it has measured as a cost at idle. Pick the scope by eye.
-SCOPE = "full"
+SCOPE = "sidebar"
 SCOPES = ("full", "sidebar")
 
 # Every surface token the React tree paints with. All zero, always — see DIM
@@ -542,23 +542,32 @@ OVERLAY_SURFACES = [
 #     SHIMMER_STEPS across a sweep slowed by SHIMMER_SLOWDOWN; the duration is
 #     a prop, so the slowdown multiplies it in place rather than replacing it.
 #
-# At the defaults each runs at 3-4 frames a second, so all three together
-# stay near 10 presented frames a second. They are meant to read as calm
-# status, not as spinners; anyone who wants them lively again turns the
-# slowdowns to 1 and the steps back up.
+# The knobs are set where the cost stopped falling. Two rounds of stepping were
+# measured with an agent running: 60fps unpatched cost 37.3% renderer and
+# 16.0% gpu-process; ~32 presented fps cost 12.0% and 8.7%; ~12 presented fps
+# cost 10.0% and 4.2%. Nearly all of the win is in the first step, so the
+# second round's extra slowdown bought two points of renderer CPU for 2.6x
+# fewer frames — a bad trade for how the indicators read. These are the first
+# round's values: the animations keep their own periods and are only stepped,
+# so a spinner still looks like a spinner.
+#
+# The GPU was never the reason. An earlier version of this comment claimed an
+# idle GPU cost from `ioreg`'s "Device Utilization %"; `powermetrics` put the
+# same state at ~92% idle and ~100 mW. What did measure, by CPU accounting and
+# by SIGSTOP on the renderer (WindowServer 50% -> 2% within a sample), is that
+# WindowServer spends real CPU on every frame Paseo presents. That is what
+# these reduce, and it applies to the stock opaque app just as much.
 #
 # The inline `code:` strings beside these worklets are the native UI-runtime
 # copies and are inert on web; only the compiled JS functions are patched.
 #
-# Independent of the glass work in the sense that it costs nothing to keep,
-# but it is only *needed* because of the glass: an opaque window would let the
-# compositor cull the same frames for free.
-RING_STEPS = 6
-RING_SLOWDOWN = 2        # 900ms -> 1800ms per turn: 3.3 frames/s
-LOADER_SLOWDOWN = 2      # 950ms -> 1900ms per cycle: 3.2 writes/s
-LOADER_POLL_MS = 160     # ~half of the 317ms step
-SHIMMER_STEPS = 8
-SHIMMER_SLOWDOWN = 2     # 1.024s -> 2.048s per sweep: 3.9 frames/s
+# Upstream: getpaseo/paseo #4634 (loader) and #3692 (rings) are open.
+RING_STEPS = 12
+RING_SLOWDOWN = 1        # 900ms per turn, 12 positions: 13.3 frames/s
+LOADER_SLOWDOWN = 1      # 950ms per cycle, six dots: 6.3 writes/s
+LOADER_POLL_MS = 80      # ~half of the 158ms step
+SHIMMER_STEPS = 16
+SHIMMER_SLOWDOWN = 1     # 1.024s per sweep, 16 steps: 15.6 frames/s
 
 # (label, pattern, replacement) — every minified binding is captured, never
 # assumed, and the ring's anchor is the option-object literal itself.
