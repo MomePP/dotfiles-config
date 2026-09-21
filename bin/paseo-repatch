@@ -120,15 +120,14 @@ LOOKS = {
 # a one-value change, and the dim, the alphas and every other patch stay as
 # tuned for the full look.
 #
-# A look, not a power setting. It was built to test whether WindowServer skips
-# the blur under opaque content, and it does not measurably: focused and idle,
-# the GPU counter read 38-67% on sidebar against 39-54% on full. The counter
-# turned out not to be Paseo's to move at all — with the app idle a
-# per-process view shows WindowServer at ~2% GPU and every Paseo process at
-# 0%, so whatever `ioreg`'s Device Utilization reports is unattributed to
-# either. The material stays full-window either way (Electron gives no bounds
-# for it); the only vibrancy cost that did measure is the focused/unfocused
-# gap, which followWindow already handles. Pick the scope by eye.
+# A look, not a power setting. It was built on the belief that the material
+# was costing GPU at idle, and that belief came from `ioreg`'s "Device
+# Utilization %", which read 40-60% with the app idle. `powermetrics` — the
+# frequency-state residency, i.e. the hardware's own account — put the GPU at
+# ~92% idle and ~100 mW in the same state. The ioreg counter is not a measure
+# of anything here and must not be used to judge a look. The material stays
+# full-window either way (Electron gives no bounds for it), and nothing about
+# it has measured as a cost at idle. Pick the scope by eye.
 SCOPE = "full"
 SCOPES = ("full", "sidebar")
 
@@ -727,12 +726,15 @@ def window_options(vibrancy: str | None) -> bytes:
     if vibrancy:
         # visualEffectState is deliberately left at Electron's followWindow
         # default, so the material goes to a flat dark fill when the window
-        # loses focus. That is macOS's own power path: an inactive material is
-        # not re-blurred, an active one is re-evaluated whenever anything
-        # behind the window changes — a terminal cursor, the tmux clock — and
-        # with the window idle that held the GPU near 40% against ~15% for the
-        # opaque stock app. Pinning it "active" bought glass while unfocused
-        # at that price, and unfocused is exactly when nobody is looking.
+        # loses focus. That is macOS's own power path: an inactive material
+        # is not re-blurred, an active one is re-evaluated whenever anything
+        # behind the window changes — a terminal cursor, the tmux clock. The
+        # pin was removed on an ioreg GPU reading that later proved bogus (see
+        # SCOPE), so the measured case for this is nil; it stays because the
+        # default is the cheaper path by construction, and unfocused is
+        # exactly when nobody is looking. Restore `visualEffectState:
+        # "active"` here if the dark slab when unfocused is worse than
+        # whatever it costs.
         parts.append(f'vibrancy: "{vibrancy}",')
     return " ".join(parts).encode()
 
