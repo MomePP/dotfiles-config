@@ -1,0 +1,18 @@
+{
+  "name": "paseo-plugin-oxocarbon",
+  "private": true,
+  "version": "0.0.0",
+  "files": [
+    "paseo-plugin.json",
+    "index.client.tsx"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@getpaseo/plugin": "0.9.0-beta.2",
+    "@types/react": "~19.2.0",
+    "react": "19.1.0",
+    "typescript": "^5.9.3"
+  }
+}

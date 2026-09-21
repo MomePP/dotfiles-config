@@ -36,3 +36,7 @@ claude-code/skills/paseo*/
 # wrangler state landing here because a run resolved XDG_CONFIG_HOME to ~/.config;
 # config/default.toml holds a Cloudflare OAuth token and the logs can echo it
 /.wrangler/
+
+# plugin dev deps: type-only, restorable with `npm install`, ~90 MB unpacked
+/paseo/plugins/*/node_modules/
+/paseo/plugins/*/package-lock.json
