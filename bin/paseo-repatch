@@ -344,24 +344,39 @@ RENDERER_PATCHES = [
 # the navigator) stays correctly clear.
 #
 # That footprint is exactly the content pane, which makes it the one place the
-# two scopes differ. Full glass clears it; sidebar glass keeps it opaque, in
-# the dark surface Paseo ships in index.html's flash guard so the pane matches
-# the wash rather than a value hardcoded here. The theme picker's other dark
-# themes get that default surface for the pane; the sidebar still follows them.
+# two scopes differ. Full glass clears it; sidebar glass paints it
+# `--colors-surface1`, so the pane follows Settings -> Appearance instead of
+# freezing whichever hex the default theme happened to ship.
+#
+# A CSS variable rather than a colour because that is the only representation
+# that reaches here. Paseo emits every theme as a `:root.<name>` block of
+# `--colors-*` custom properties — `dark`, `light`, `darkZinc`, `darkMidnight`,
+# `darkClaude` and the rest — and unistyles hands style callbacks those `var()`
+# strings, never the resolved colour. SURFACE1 is the right choice in both
+# appearances: #1E2120 on dark, #fafafa on light, and always opaque, because
+# only surface0 and the four ALPHAS slots are zeroed.
 #
 # Found by reading computed styles off the live window over CDP rather than
 # from the bundle — nothing in the source hints that this element is the one
 # painting, and four passes of reasoning about it missed.
 NAVIGATOR_BACKDROP = "background:'rgb(242, 242, 242)'"
+SURFACE1_VAR = "var(--colors-surface1)"
 
-
-def shipped_surface(app: Path) -> str:
-    """The dark surface hex Paseo paints before React mounts — `#rrggbb`."""
-    html = (app / "Contents" / "Resources" / "app-dist" / "index.html").read_text(encoding="utf8")
-    match = HTML_FLASH_GUARD.search(html)
-    if not match:
-        sys.exit("shipped surface: index.html flash-guard rule not found — cannot pick a pane colour")
-    return f"#{match[2]}"
+# `surface0` is Paseo's dark-on-light inverse: the colour it paints *on top of*
+# an opaque fill. Zeroing the token took those foregrounds with it, so a
+# primary button ended up #fafafa with a label at alpha 0 — unreadable, and
+# the same for the confirm button's icons, the warning highlight's text and the
+# needs-input status glyph. Nine sites, four distinct minified bindings.
+#
+# Not fixable with __paseoOpaque: its rgba regex cannot match `var(...)`, which
+# is what a style callback actually receives (see NAVIGATOR_BACKDROP). SURFACE1
+# is the inverse in both appearances, which is exactly what these sites want.
+#
+# `borderColor:<x>.colors.surface0` has five more sites, deliberately left
+# alone: a border in the window's own surface reads as absent against glass,
+# which is plausibly the intent, and forcing it opaque would draw outlines
+# that are not there today.
+INK_SURFACE0 = re.compile(r"\bcolor:([A-Za-z_$][\w$]*)\.colors\.surface0\b")
 
 # Two places re-assert an opaque background *after* the window is constructed.
 # Either one alone is enough to hide `transparent: true` completely, which is
@@ -870,7 +885,7 @@ def patch_renderer(path: Path, look: dict, term: dict, ansi: str) -> list[str]:
 
     for label, old, new, expect in RENDERER_PATCHES:
         replace(label, old, new, expect)
-    pane = "'transparent'" if look["scope"] == "full" else f"'{look['pane']}'"
+    pane = "'transparent'" if look["scope"] == "full" else f"'{SURFACE1_VAR}'"
     replace(f"react-navigation backdrop ({look['scope']} glass)",
             NAVIGATOR_BACKDROP, f"background:{pane}", 1)
 
@@ -918,6 +933,8 @@ def patch_renderer(path: Path, look: dict, term: dict, ansi: str) -> list[str]:
         replace_re(f"opaque {label}", pattern, new, 1)
     for label, pattern, new in FRAME_RATE:
         replace_re(f"idle frame rate: {label}", pattern, new, 1)
+    replace_re("readable surface0 foregrounds", INK_SURFACE0,
+               f'color:"{SURFACE1_VAR}"', 9)
 
     path.write_text(src, encoding="utf8")
     return notes
@@ -1060,7 +1077,6 @@ def main() -> int:
 
     digest, notes = patch_asar(PATCHED / "Contents" / "Resources" / "app.asar", look["vibrancy"])
     notes += ghostty_notes
-    look["pane"] = shipped_surface(PATCHED)
     notes += patch_renderer(renderer_path(PATCHED), look, term, args.ansi)
     notes += patch_index_html(PATCHED, look["dim"], term["padding"])
 
