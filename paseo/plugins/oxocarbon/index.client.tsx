@@ -21,21 +21,22 @@
 //   surfaceSidebar = background
 //   foregroundMuted = mutedForeground, foregroundExtraMuted = ring
 //
-// `raised` is therefore the brightness knob, not `background`, and it wants a
-// value below the palette's own ramp. oxocarbon.nvim derives its dark steps by
-// blending base00 into base06 in HSLuv, not sRGB:
+// `raised` is therefore the brightness knob, not `background`. oxocarbon.nvim
+// derives its dark steps by blending base00 into base06 in HSLuv, not sRGB:
 //
 //   base00 #161616   base01 #1b1b1b (0.085)   base02 #212121 (0.18)
 //   base03 #282828 (0.3)   float_bg #232323   blend #131313
 //
-// base01 is where a float or a cursorline sits — a small area. Paseo puts
-// surface1 under the entire content pane, and at that size even base01 lifts
-// the window; #262626, oxocarbon's second step, was 8 points above the
-// built-in dark theme's surface1 (#1E2120) and read clearly bright. #181818
-// sits between base00 and base01 deliberately: a pane edge that is visible
-// when looked for and invisible otherwise. #1b1b1b is the palette-faithful
-// alternative, #262626 gives real card separation, #161616 merges the pane
-// into the background.
+// Every one of those steps is meant for a small area — a float, a cursorline.
+// Paseo puts surface1 under the entire content pane, and at that size any lift
+// above base00 reads as the whole window being brighter: #262626 was 8 points
+// above the built-in dark theme's surface1 (#1E2120) and obviously bright,
+// #181818 still showed. So base00 itself, and the pane simply is the
+// background — which is also what nvim and Ghostty are at.
+//
+// The cost is that surface1 no longer separates a card from the pane it sits
+// on; borders and surface2 have to carry that instead. Set this to #1b1b1b for
+// the palette-faithful step back, or #262626 for real card separation.
 //
 // The terminal's 16 ANSI colours are NOT part of this. `addTheme` covers app
 // chrome only, so OXOCARBON_ANSI stays a bundle patch in paseo-repatch — and
@@ -55,7 +56,7 @@ export default function contribute(client: PluginClientContext) {
     colors: {
       background: "#161616",
       foreground: "#f2f4f8",
-      raised: "#181818",
+      raised: "#161616",
       control: "#393939",
       border: "#393939",
       accent: "#c693ff",
