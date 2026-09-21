@@ -153,6 +153,21 @@ WindowServer CPU an agent turn costs from 40–50% to 10–15%. The `brew` funct
 re-runs it after cask upgrades; a beta taken through the in-app updater needs a
 bare `paseo-repatch` by hand.
 
+The Oxocarbon entry in Settings → Appearance is a plugin, not a patch:
+[`paseo/plugins/oxocarbon`](paseo/plugins/oxocarbon). `paseo plugin ls` shows it
+installed straight from this directory rather than a vendored copy, so an edit
+here is the live plugin — `paseo plugin reload oxocarbon` picks it up, and the
+app window needs reloading too when a client contribution changes. `install`
+runs once per plugin ID and errors on a second attempt; `reload` is the
+everyday command. Restore the type-only devDependencies with `npm install` in
+that directory; `npm run typecheck` is what verifies a call against Paseo's own
+types rather than the docs.
+
+> Paseo derives a plugin theme's whole token set from eight colours, and not by
+> name: `raised` becomes `surface1`, which fills panes and cards — in sidebar
+> scope, the entire content pane. It is the brightness knob, and `background`
+> is not. The mapping is written out in the plugin.
+
 > Plan usage showing Claude as *Unavailable* while `claude auth status` says
 > logged in means a stale `~/.claude/.credentials.json` is present. Claude Code
 > keeps live credentials in the Keychain on macOS and never rewrites that file,
