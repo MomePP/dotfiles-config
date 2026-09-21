@@ -733,18 +733,19 @@ def window_options(vibrancy: str | None) -> bytes:
     """
     parts = ["transparent: true,"]
     if vibrancy:
-        # visualEffectState is deliberately left at Electron's followWindow
-        # default, so the material goes to a flat dark fill when the window
-        # loses focus. That is macOS's own power path: an inactive material
-        # is not re-blurred, an active one is re-evaluated whenever anything
-        # behind the window changes — a terminal cursor, the tmux clock. The
-        # pin was removed on an ioreg GPU reading that later proved bogus (see
-        # SCOPE), so the measured case for this is nil; it stays because the
-        # default is the cheaper path by construction, and unfocused is
-        # exactly when nobody is looking. Restore `visualEffectState:
-        # "active"` here if the dark slab when unfocused is worse than
-        # whatever it costs.
-        parts.append(f'vibrancy: "{vibrancy}",')
+        # followWindow is the Electron default, and it swaps the material for
+        # a flat dark fill the moment the window loses focus — the blurred
+        # wallpaper vanishes and the app reads as a black slab until it is
+        # clicked again. "active" pins the material on regardless of focus.
+        #
+        # The pin was dropped once on an `ioreg` reading that said an active
+        # material cost ~25 points of GPU at idle. `powermetrics` then put the
+        # same state at ~92% idle and ~100 mW, so that number measured nothing
+        # and the pin is back. An active material is re-evaluated when what is
+        # behind the window changes, which is a real cost in principle and an
+        # unmeasured one here; nothing that did measure — WindowServer CPU per
+        # presented frame — comes from this line.
+        parts.append(f'vibrancy: "{vibrancy}", visualEffectState: "active",')
     return " ".join(parts).encode()
 
 

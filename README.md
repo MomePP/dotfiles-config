@@ -148,8 +148,8 @@ sudo chmod 444 /etc/pam.d/sudo_local
 Runs from a patched private copy, `~/Applications/Paseo-Vibrancy.app`,
 rebuilt by [`bin/paseo-repatch`](bin/paseo-repatch) whenever the stock app
 updates. The script's docstring is the reference: what each patch does, why the
-asar ones are length-preserving, and the frame-rate knobs that keep the glass
-from costing WindowServer 40–50% CPU while an agent runs. The `brew` function
+asar ones are length-preserving, and the frame-rate knobs that cut the
+WindowServer CPU an agent turn costs from 40–50% to 10–15%. The `brew` function
 re-runs it after cask upgrades; a beta taken through the in-app updater needs a
 bare `paseo-repatch` by hand.
 
@@ -159,3 +159,11 @@ bare `paseo-repatch` by hand.
 > but Paseo reads the file first and only falls back to the Keychain when it is
 > absent — so an old file shadows a valid login with an expired token. Delete
 > the file; the CLI is unaffected.
+
+> Do not measure GPU load with `ioreg`'s `"Device Utilization %"`. It read
+> 40–60% on this machine in a state where `sudo powermetrics --samplers
+> gpu_power` reported ~92% idle residency and ~100 mW, and it sent three
+> separate investigations here after the wrong process. `powermetrics` reads
+> the frequency-state residency from the hardware and is the only number worth
+> trusting; per-process CPU from `ps`/`top` is fine, and freezing a suspect
+> with `kill -STOP` settles attribution faster than any counter.
