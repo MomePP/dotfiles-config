@@ -1,0 +1,4 @@
+{
+  "id": "oxocarbon",
+  "requirements": { "paseo": ">=0.9.0-beta.1" }
+}

@@ -128,7 +128,7 @@ LOOKS = {
 # of anything here and must not be used to judge a look. The material stays
 # full-window either way (Electron gives no bounds for it), and nothing about
 # it has measured as a cost at idle. Pick the scope by eye.
-SCOPE = "full"
+SCOPE = "sidebar"
 SCOPES = ("full", "sidebar")
 
 # Every surface token the React tree paints with. All zero, always — see DIM
@@ -344,24 +344,39 @@ RENDERER_PATCHES = [
 # the navigator) stays correctly clear.
 #
 # That footprint is exactly the content pane, which makes it the one place the
-# two scopes differ. Full glass clears it; sidebar glass keeps it opaque, in
-# the dark surface Paseo ships in index.html's flash guard so the pane matches
-# the wash rather than a value hardcoded here. The theme picker's other dark
-# themes get that default surface for the pane; the sidebar still follows them.
+# two scopes differ. Full glass clears it; sidebar glass paints it
+# `--colors-surface1`, so the pane follows Settings -> Appearance instead of
+# freezing whichever hex the default theme happened to ship.
+#
+# A CSS variable rather than a colour because that is the only representation
+# that reaches here. Paseo emits every theme as a `:root.<name>` block of
+# `--colors-*` custom properties — `dark`, `light`, `darkZinc`, `darkMidnight`,
+# `darkClaude` and the rest — and unistyles hands style callbacks those `var()`
+# strings, never the resolved colour. SURFACE1 is the right choice in both
+# appearances: #1E2120 on dark, #fafafa on light, and always opaque, because
+# only surface0 and the four ALPHAS slots are zeroed.
 #
 # Found by reading computed styles off the live window over CDP rather than
 # from the bundle — nothing in the source hints that this element is the one
 # painting, and four passes of reasoning about it missed.
 NAVIGATOR_BACKDROP = "background:'rgb(242, 242, 242)'"
+SURFACE1_VAR = "var(--colors-surface1)"
 
-
-def shipped_surface(app: Path) -> str:
-    """The dark surface hex Paseo paints before React mounts — `#rrggbb`."""
-    html = (app / "Contents" / "Resources" / "app-dist" / "index.html").read_text(encoding="utf8")
-    match = HTML_FLASH_GUARD.search(html)
-    if not match:
-        sys.exit("shipped surface: index.html flash-guard rule not found — cannot pick a pane colour")
-    return f"#{match[2]}"
+# `surface0` is Paseo's dark-on-light inverse: the colour it paints *on top of*
+# an opaque fill. Zeroing the token took those foregrounds with it, so a
+# primary button ended up #fafafa with a label at alpha 0 — unreadable, and
+# the same for the confirm button's icons, the warning highlight's text and the
+# needs-input status glyph. Nine sites, four distinct minified bindings.
+#
+# Not fixable with __paseoOpaque: its rgba regex cannot match `var(...)`, which
+# is what a style callback actually receives (see NAVIGATOR_BACKDROP). SURFACE1
+# is the inverse in both appearances, which is exactly what these sites want.
+#
+# `borderColor:<x>.colors.surface0` has five more sites, deliberately left
+# alone: a border in the window's own surface reads as absent against glass,
+# which is plausibly the intent, and forcing it opaque would draw outlines
+# that are not there today.
+INK_SURFACE0 = re.compile(r"\bcolor:([A-Za-z_$][\w$]*)\.colors\.surface0\b")
 
 # Two places re-assert an opaque background *after* the window is constructed.
 # Either one alone is enough to hide `transparent: true` completely, which is
@@ -542,23 +557,32 @@ OVERLAY_SURFACES = [
 #     SHIMMER_STEPS across a sweep slowed by SHIMMER_SLOWDOWN; the duration is
 #     a prop, so the slowdown multiplies it in place rather than replacing it.
 #
-# At the defaults each runs at 3-4 frames a second, so all three together
-# stay near 10 presented frames a second. They are meant to read as calm
-# status, not as spinners; anyone who wants them lively again turns the
-# slowdowns to 1 and the steps back up.
+# The knobs are set where the cost stopped falling. Two rounds of stepping were
+# measured with an agent running: 60fps unpatched cost 37.3% renderer and
+# 16.0% gpu-process; ~32 presented fps cost 12.0% and 8.7%; ~12 presented fps
+# cost 10.0% and 4.2%. Nearly all of the win is in the first step, so the
+# second round's extra slowdown bought two points of renderer CPU for 2.6x
+# fewer frames — a bad trade for how the indicators read. These are the first
+# round's values: the animations keep their own periods and are only stepped,
+# so a spinner still looks like a spinner.
+#
+# The GPU was never the reason. An earlier version of this comment claimed an
+# idle GPU cost from `ioreg`'s "Device Utilization %"; `powermetrics` put the
+# same state at ~92% idle and ~100 mW. What did measure, by CPU accounting and
+# by SIGSTOP on the renderer (WindowServer 50% -> 2% within a sample), is that
+# WindowServer spends real CPU on every frame Paseo presents. That is what
+# these reduce, and it applies to the stock opaque app just as much.
 #
 # The inline `code:` strings beside these worklets are the native UI-runtime
 # copies and are inert on web; only the compiled JS functions are patched.
 #
-# Independent of the glass work in the sense that it costs nothing to keep,
-# but it is only *needed* because of the glass: an opaque window would let the
-# compositor cull the same frames for free.
-RING_STEPS = 6
-RING_SLOWDOWN = 2        # 900ms -> 1800ms per turn: 3.3 frames/s
-LOADER_SLOWDOWN = 2      # 950ms -> 1900ms per cycle: 3.2 writes/s
-LOADER_POLL_MS = 160     # ~half of the 317ms step
-SHIMMER_STEPS = 8
-SHIMMER_SLOWDOWN = 2     # 1.024s -> 2.048s per sweep: 3.9 frames/s
+# Upstream: getpaseo/paseo #4634 (loader) and #3692 (rings) are open.
+RING_STEPS = 12
+RING_SLOWDOWN = 1        # 900ms per turn, 12 positions: 13.3 frames/s
+LOADER_SLOWDOWN = 1      # 950ms per cycle, six dots: 6.3 writes/s
+LOADER_POLL_MS = 80      # ~half of the 158ms step
+SHIMMER_STEPS = 16
+SHIMMER_SLOWDOWN = 1     # 1.024s per sweep, 16 steps: 15.6 frames/s
 
 # (label, pattern, replacement) — every minified binding is captured, never
 # assumed, and the ring's anchor is the option-object literal itself.
@@ -724,18 +748,19 @@ def window_options(vibrancy: str | None) -> bytes:
     """
     parts = ["transparent: true,"]
     if vibrancy:
-        # visualEffectState is deliberately left at Electron's followWindow
-        # default, so the material goes to a flat dark fill when the window
-        # loses focus. That is macOS's own power path: an inactive material
-        # is not re-blurred, an active one is re-evaluated whenever anything
-        # behind the window changes — a terminal cursor, the tmux clock. The
-        # pin was removed on an ioreg GPU reading that later proved bogus (see
-        # SCOPE), so the measured case for this is nil; it stays because the
-        # default is the cheaper path by construction, and unfocused is
-        # exactly when nobody is looking. Restore `visualEffectState:
-        # "active"` here if the dark slab when unfocused is worse than
-        # whatever it costs.
-        parts.append(f'vibrancy: "{vibrancy}",')
+        # followWindow is the Electron default, and it swaps the material for
+        # a flat dark fill the moment the window loses focus — the blurred
+        # wallpaper vanishes and the app reads as a black slab until it is
+        # clicked again. "active" pins the material on regardless of focus.
+        #
+        # The pin was dropped once on an `ioreg` reading that said an active
+        # material cost ~25 points of GPU at idle. `powermetrics` then put the
+        # same state at ~92% idle and ~100 mW, so that number measured nothing
+        # and the pin is back. An active material is re-evaluated when what is
+        # behind the window changes, which is a real cost in principle and an
+        # unmeasured one here; nothing that did measure — WindowServer CPU per
+        # presented frame — comes from this line.
+        parts.append(f'vibrancy: "{vibrancy}", visualEffectState: "active",')
     return " ".join(parts).encode()
 
 
@@ -860,7 +885,7 @@ def patch_renderer(path: Path, look: dict, term: dict, ansi: str) -> list[str]:
 
     for label, old, new, expect in RENDERER_PATCHES:
         replace(label, old, new, expect)
-    pane = "'transparent'" if look["scope"] == "full" else f"'{look['pane']}'"
+    pane = "'transparent'" if look["scope"] == "full" else f"'{SURFACE1_VAR}'"
     replace(f"react-navigation backdrop ({look['scope']} glass)",
             NAVIGATOR_BACKDROP, f"background:{pane}", 1)
 
@@ -908,6 +933,8 @@ def patch_renderer(path: Path, look: dict, term: dict, ansi: str) -> list[str]:
         replace_re(f"opaque {label}", pattern, new, 1)
     for label, pattern, new in FRAME_RATE:
         replace_re(f"idle frame rate: {label}", pattern, new, 1)
+    replace_re("readable surface0 foregrounds", INK_SURFACE0,
+               f'color:"{SURFACE1_VAR}"', 9)
 
     path.write_text(src, encoding="utf8")
     return notes
@@ -1050,7 +1077,6 @@ def main() -> int:
 
     digest, notes = patch_asar(PATCHED / "Contents" / "Resources" / "app.asar", look["vibrancy"])
     notes += ghostty_notes
-    look["pane"] = shipped_surface(PATCHED)
     notes += patch_renderer(renderer_path(PATCHED), look, term, args.ansi)
     notes += patch_index_html(PATCHED, look["dim"], term["padding"])
 
