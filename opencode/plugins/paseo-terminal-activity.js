@@ -1,9 +1,3 @@
-const V1_STATUS_EVENTS = {
-  busy: "session.status.busy",
-  retry: "session.status.retry",
-  idle: "session.status.idle",
-};
-
 const V2_EVENTS = {
   "session.execution.started": "session.status.busy",
   "session.execution.succeeded": "session.status.idle",
@@ -12,14 +6,6 @@ const V2_EVENTS = {
   "permission.asked": "permission.asked",
   "permission.replied": "permission.replied",
 };
-
-function paseoEventForV1(event) {
-  const type = event.type;
-  if (type === "permission.asked") return "permission.asked";
-  if (type === "permission.replied") return "permission.replied";
-  if (type !== "session.status") return null;
-  return V1_STATUS_EVENTS[event.properties.status.type] ?? null;
-}
 
 let pendingHook = Promise.resolve();
 
@@ -40,14 +26,6 @@ function runPaseoHook(event) {
 
 export default {
   id: "paseo-terminal-activity",
-  server() {
-    return {
-      event: async ({ event }) => {
-        const paseoEvent = paseoEventForV1(event);
-        if (paseoEvent) await runPaseoHook(paseoEvent);
-      },
-    };
-  },
   setup(ctx) {
     const controller = new AbortController();
     void (async () => {

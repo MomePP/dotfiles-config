@@ -1,31 +1,30 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "permission": {
-    "lsp": "allow"
-  },
   "mcp": {
-    "codegraph": {
-      "type": "local",
-      "command": [
-        "codegraph",
-        "serve",
-        "--mcp"
-      ],
-      "enabled": true
+    "servers": {
+      "codegraph": {
+        "type": "local",
+        "command": [
+          "codegraph",
+          "serve",
+          "--mcp"
+        ],
+        "disabled": false
+      }
     }
   },
-  "plugin": [
+  "plugins": [
     "context-mode@latest",
     "@tarquinen/opencode-dcp@latest",
     "@slkiser/opencode-quota@latest",
     "oh-my-opencode-slim"
   ],
-  "agent": {
+  "agents": {
     "explore": {
-      "disable": true
+      "disabled": true
     },
     "general": {
-      "disable": true
+      "disabled": true
     }
   },
   "experimental": {
