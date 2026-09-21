@@ -378,6 +378,57 @@ SURFACE1_VAR = "var(--colors-surface1)"
 # that are not there today.
 INK_SURFACE0 = re.compile(r"\bcolor:([A-Za-z_$][\w$]*)\.colors\.surface0\b")
 
+# Hover fills, unified onto one translucent overlay.
+#
+# Paseo paints hover with whichever opaque surface was nearest to hand: 38
+# styles use `surface2`, 16 `surfaceSidebarHover`, 5 `surface1`. That is
+# invisible against a theme whose surfaces sit close together and glaring
+# against one whose don't — with oxocarbon's `raised` at base00 the sidebar's
+# hover (surface1) vanished into the background while the Changes rows
+# (surface2, #393939) lifted a whole step. Same gesture, two different greys.
+#
+# `interactionHighlight` is Paseo's own answer to this and already backs
+# `controlHovered`: rgba(255, 255, 255, 0.08) on dark, rgba(0, 0, 0, 0.06) on
+# light. Being translucent it reads the same everywhere, needs no relationship
+# between surfaces, and composites over the glass rather than punching an
+# opaque hole in it. Routing every hover through it is what makes hovering the
+# sidebar and hovering a file row look like the same thing.
+#
+# Selected states are left alone: `surfaceSidebarSelected` is persistent
+# rather than transient, and wants to be a surface.
+#
+# Counted rather than anchored — 59 sites at 0.9.0-beta.2, and any Paseo
+# release may add one. A sweep's count is inventory, not an anchor, so this
+# reports what it changed and only fails when the shape disappears entirely.
+HOVER_HIGHLIGHT = re.compile(
+    r"([a-zA-Z0-9]+Hover(?:ed)?):\{backgroundColor:([A-Za-z_$][\w$]*)"
+    r"\.colors\.(?:surface1|surface2|surfaceSidebarHover)\b"
+)
+
+# The pane resize handle, which is accent-coloured while hovered or dragged.
+#
+# Two styles make the divider: `handle` filled with `border`, which is the thin
+# line always there, and `highlight` filled with `accent`, which replaces it
+# under the pointer. On Paseo's own themes accent is a muted green and the
+# swap reads as emphasis; oxocarbon's is #c693ff, so a full-height purple bar
+# lights up whenever the mouse crosses a divider — and there is one either side
+# of the chat, so it happens constantly.
+#
+# `surface4` is the palette's top grey (#525252 here, ring), one clear step
+# above the resting `border` without introducing a hue. The divider still
+# answers the pointer; it just stops announcing it.
+#
+# Anchored on the handle's own style names rather than on the colour: three
+# styles in the bundle fill a background with `accent`, and this is the only
+# one that is a resize affordance. The dependency array repeats the colour, so
+# both copies have to move together or useMemo keeps handing back the old one.
+HANDLE_HIGHLIGHT = re.compile(
+    r"\[([A-Za-z_$][\w$]*)\.highlight,\"horizontal\"===([A-Za-z_$][\w$]*)\?"
+    r"\1\.highlightHorizontal:\1\.highlightVertical,"
+    r"\{backgroundColor:([A-Za-z_$][\w$]*)\.colors\.accent\}\],\[\2,\3\.colors\.accent\]"
+)
+HANDLE_HIGHLIGHT_TOKEN = "surface4"
+
 # Two places re-assert an opaque background *after* the window is constructed.
 # Either one alone is enough to hide `transparent: true` completely, which is
 # why the window patch on its own changed nothing visible.
@@ -883,6 +934,21 @@ def patch_renderer(path: Path, look: dict, term: dict, ansi: str) -> list[str]:
         src = pattern.sub(new, src)
         notes.append(f"ok      {label} ({hits}x)")
 
+    def sweep_re(label, pattern, new):
+        """A bulk rewrite whose count is inventory rather than an anchor.
+
+        `replace_re` exits on an unexpected count, which is right for a patch
+        aimed at one known site: a different number means the code moved and
+        guessing would be wrong. A sweep over every style of a given shape has
+        no such expectation — Paseo may add another hover next release — so
+        this reports what it touched and only complains when the shape is gone
+        entirely, which is the case that means the sweep needs rewriting.
+        """
+        nonlocal src
+        src, hits = pattern.subn(new, src)
+        notes.append(f"ok      {label} ({hits}x)" if hits
+                     else f"MISSED  {label}: no matching styles")
+
     for label, old, new, expect in RENDERER_PATCHES:
         replace(label, old, new, expect)
     pane = "'transparent'" if look["scope"] == "full" else f"'{SURFACE1_VAR}'"
@@ -935,6 +1001,11 @@ def patch_renderer(path: Path, look: dict, term: dict, ansi: str) -> list[str]:
         replace_re(f"idle frame rate: {label}", pattern, new, 1)
     replace_re("readable surface0 foregrounds", INK_SURFACE0,
                f'color:"{SURFACE1_VAR}"', 9)
+    sweep_re("subtle hover fills", HOVER_HIGHLIGHT,
+             r"\1:{backgroundColor:\2.colors.interactionHighlight")
+    replace_re("subtle resize handle", HANDLE_HIGHLIGHT,
+               lambda m: m[0].replace(f"{m[3]}.colors.accent",
+                                      f"{m[3]}.colors.{HANDLE_HIGHLIGHT_TOKEN}"), 1)
 
     path.write_text(src, encoding="utf8")
     return notes
