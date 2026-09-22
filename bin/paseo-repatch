@@ -397,12 +397,40 @@ INK_SURFACE0 = re.compile(r"\bcolor:([A-Za-z_$][\w$]*)\.colors\.surface0\b")
 # Selected states are left alone: `surfaceSidebarSelected` is persistent
 # rather than transient, and wants to be a surface.
 #
-# Counted rather than anchored — 59 sites at 0.9.0-beta.2, and any Paseo
+# `backdrop*` is excluded by name. `backdropSurfaceSidebarHover` looks like a
+# hover fill and is not one — see BACKDROP_MASKS — and turning a mask
+# translucent makes it stop masking.
+#
+# Counted rather than anchored — 58 sites at 0.9.0-beta.2, and any Paseo
 # release may add one. A sweep's count is inventory, not an anchor, so this
 # reports what it changed and only fails when the shape disappears entirely.
 HOVER_HIGHLIGHT = re.compile(
-    r"([a-zA-Z0-9]+Hover(?:ed)?):\{backgroundColor:([A-Za-z_$][\w$]*)"
+    r"\b(?!backdrop)([a-zA-Z0-9]+Hover(?:ed)?):\{backgroundColor:([A-Za-z_$][\w$]*)"
     r"\.colors\.(?:surface1|surface2|surfaceSidebarHover)\b"
+)
+
+# The slab behind a sidebar row's trailing stats.
+#
+# A workspace row renders its title and its diff stats in the same strip, and
+# paints an opaque rectangle under the stats so a long title runs behind them
+# rather than through them. Which colour is chosen is a prop — surface0,
+# surface1, surface2 or one of the surfaceSidebar tiers — picked to match
+# whatever the row is sitting on.
+#
+# That reasoning holds for an opaque app and breaks here. The row sits on
+# glass, and only some of those tokens are zeroed by ALPHAS: surface1 is not,
+# because in sidebar scope it is the content pane. With oxocarbon's raised at
+# base00 the mask became a near-black slab hanging in the middle of a
+# translucent sidebar, most visible on hover where the kebab widens it.
+#
+# Transparent, so the mask simply stops existing. The title is already
+# truncated with an ellipsis well before the stats, so the overlap it defends
+# against does not arise in practice — and a glass row wants nothing opaque
+# inside it. If a long title ever does collide with the stats, the honest fix
+# is a gradient to the row's own colour, not a rectangle.
+BACKDROP_MASKS = re.compile(
+    r"(backdrop(?:Surface[0-9]|SurfaceSidebar(?:Hover|Selected)?)):"
+    r"\{backgroundColor:[A-Za-z_$][\w$]*\.colors\.[a-zA-Z0-9]+"
 )
 
 # The pane resize handle, which is accent-coloured while hovered or dragged.
@@ -1003,6 +1031,8 @@ def patch_renderer(path: Path, look: dict, term: dict, ansi: str) -> list[str]:
                f'color:"{SURFACE1_VAR}"', 9)
     sweep_re("subtle hover fills", HOVER_HIGHLIGHT,
              r"\1:{backgroundColor:\2.colors.interactionHighlight")
+    sweep_re("clear row backdrop masks", BACKDROP_MASKS,
+             r'\1:{backgroundColor:"transparent"')
     replace_re("subtle resize handle", HANDLE_HIGHLIGHT,
                lambda m: m[0].replace(f"{m[3]}.colors.accent",
                                       f"{m[3]}.colors.{HANDLE_HIGHLIGHT_TOKEN}"), 1)
