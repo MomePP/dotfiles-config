@@ -433,6 +433,41 @@ BACKDROP_MASKS = re.compile(
     r"\{backgroundColor:[A-Za-z_$][\w$]*\.colors\.[a-zA-Z0-9]+"
 )
 
+# The gradient wedge at a sidebar row's right edge.
+#
+# Same job as BACKDROP_MASKS and a different mechanism, which is why clearing
+# those did not remove it: `TrailingActionScrim` paints a 48px-wide SVG
+# gradient over the row's right end — stop-opacity 0, then 1 from 55% on —
+# so a long title dissolves under the kebab instead of running into it. The
+# colour comes from the same backdrop prop through its own lookup table.
+#
+# On glass that table resolves to an opaque colour and the gradient becomes a
+# black wedge sitting on top of the row, clipping the diff stats it was meant
+# to sit behind. Every entry goes to `transparent`, which makes the gradient
+# fade from nothing to nothing; the title's own ellipsis already ends it well
+# short of the stats.
+#
+# The whole table is one anchor rather than six, because the entries are
+# indistinguishable from any other theme lookup once separated. Entry bodies
+# are matched loosely: the surface0 one has already been rewritten by
+# INK_SURFACE0 by the time this runs, and the anchor holds either way.
+SCRIM_COLOURS = re.compile(
+    r"\{surface0:([A-Za-z_$][\w$]*)=>\(\{color:[^{}]*\}\),"
+    r"surface1:\1=>\(\{color:[^{}]*\}\),"
+    r"surface2:\1=>\(\{color:[^{}]*\}\),"
+    r"surfaceSidebar:\1=>\(\{color:[^{}]*\}\),"
+    r"surfaceSidebarHover:\1=>\(\{color:[^{}]*\}\),"
+    r"surfaceSidebarSelected:\1=>\(\{color:[^{}]*\}\)\}"
+)
+SCRIM_CLEAR = (
+    r'{surface0:\1=>({color:"transparent"}),'
+    r'surface1:\1=>({color:"transparent"}),'
+    r'surface2:\1=>({color:"transparent"}),'
+    r'surfaceSidebar:\1=>({color:"transparent"}),'
+    r'surfaceSidebarHover:\1=>({color:"transparent"}),'
+    r'surfaceSidebarSelected:\1=>({color:"transparent"})}'
+)
+
 # The pane resize handle, which is accent-coloured while hovered or dragged.
 #
 # Two styles make the divider: `handle` filled with `border`, which is the thin
@@ -1033,6 +1068,7 @@ def patch_renderer(path: Path, look: dict, term: dict, ansi: str) -> list[str]:
              r"\1:{backgroundColor:\2.colors.interactionHighlight")
     sweep_re("clear row backdrop masks", BACKDROP_MASKS,
              r'\1:{backgroundColor:"transparent"')
+    replace_re("clear row trailing scrim", SCRIM_COLOURS, SCRIM_CLEAR, 1)
     replace_re("subtle resize handle", HANDLE_HIGHLIGHT,
                lambda m: m[0].replace(f"{m[3]}.colors.accent",
                                       f"{m[3]}.colors.{HANDLE_HIGHLIGHT_TOKEN}"), 1)
