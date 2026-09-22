@@ -366,11 +366,17 @@ SURFACE1_VAR = "var(--colors-surface1)"
 # an opaque fill. Zeroing the token took those foregrounds with it, so a
 # primary button ended up #fafafa with a label at alpha 0 — unreadable, and
 # the same for the confirm button's icons, the warning highlight's text and the
-# needs-input status glyph. Nine sites, four distinct minified bindings.
+# needs-input status glyph. Eight sites, four distinct minified bindings.
 #
 # Not fixable with __paseoOpaque: its rgba regex cannot match `var(...)`, which
 # is what a style callback actually receives (see NAVIGATOR_BACKDROP). SURFACE1
 # is the inverse in both appearances, which is exactly what these sites want.
+#
+# One of the nine is not a foreground at all: the scrim lookup writes
+# `=>({color:<theme>.colors.surface0})`, a gradient fill. No lexical test
+# separates it — three genuine ink sites are status glyphs written the same
+# way — so it is caught here and put back by SCRIM_SURFACE0, which can anchor
+# on the table key the sweep cannot see.
 #
 # `borderColor:<x>.colors.surface0` has five more sites, deliberately left
 # alone: a border in the window's own surface reads as absent against glass,
@@ -441,41 +447,39 @@ BACKDROP_MASKS = re.compile(
 # so a long title dissolves under the kebab instead of running into it. The
 # colour comes from the same backdrop prop through its own lookup table.
 #
-# On glass that table resolves to whatever surface the row claims to sit on,
-# and with oxocarbon's raised at base00 that is #161616 — a near-black wedge
-# on top of a translucent row, darker than anything around it.
+# Stock maps each key to the token of the same name, so the wedge always ends
+# in whatever the row is actually painted with and the seam is invisible.
+# That is correct, and two of the six keys stopped being true here:
 #
-# Clearing it outright was worse in a different way: the kebab then sits
-# directly on the diff stats with nothing between them. The fade is doing a
-# real job at the one spot where a control overlaps content. So the table is
-# repointed at a single token instead: every entry resolves to SCRIM_TOKEN,
-# which is read from the live theme and so still follows the theme picker.
+#   surfaceSidebarHover   the row's hover fill is `interactionHighlight` now
+#                         (HOVER_HIGHLIGHT), a translucent white, while the
+#                         token still resolves to surface1 — #161616 with
+#                         oxocarbon's raised at base00. An unfocused row
+#                         hovered therefore got a near-black wedge on a
+#                         translucent row. Repointed to match the fill, so the
+#                         wedge frosts with the row instead of punching
+#                         through it.
 #
-# `surface2` is the app's own control fill — #393939 here — and reads as a
-# soft grey against the row rather than a hole in it. `surface3`/`surface4`
-# are brighter if the button needs more separation; `surface1` is the
-# near-invisible end of the range, which is where this started.
+#   surfaceSidebar        zeroed by ALPHAS, so the wedge is already absent on
+#                         a resting row — correct, nothing to mask there.
 #
-# The whole table is one anchor rather than six, because the entries are
-# indistinguishable from any other theme lookup once separated. Entry bodies
-# are matched loosely: the surface0 one has already been rewritten by
-# INK_SURFACE0 by the time this runs, and the anchor holds either way.
-SCRIM_TOKEN = "surface2"
-SCRIM_COLOURS = re.compile(
-    r"\{surface0:([A-Za-z_$][\w$]*)=>\(\{color:[^{}]*\}\),"
-    r"surface1:\1=>\(\{color:[^{}]*\}\),"
-    r"surface2:\1=>\(\{color:[^{}]*\}\),"
-    r"surfaceSidebar:\1=>\(\{color:[^{}]*\}\),"
-    r"surfaceSidebarHover:\1=>\(\{color:[^{}]*\}\),"
-    r"surfaceSidebarSelected:\1=>\(\{color:[^{}]*\}\)\}"
+# The selected row is left alone deliberately: it is painted an opaque
+# surface, its wedge matches, and it reads right as-is. Separating the two is
+# the whole point — a focused row is a solid card and wants a solid fade, an
+# unfocused one is glass and wants a frosted one.
+#
+# One entry, anchored on its own key and asserting the identity body, so a
+# release that retargets the table fails loudly rather than silently leaving
+# the wedge black.
+SCRIM_HOVER = re.compile(
+    r"surfaceSidebarHover:([A-Za-z_$][\w$]*)=>\(\{color:\1\.colors\.surfaceSidebarHover\}\)"
 )
-SCRIM_RECOLOUR = (
-    rf'{{surface0:\1=>({{color:\1.colors.{SCRIM_TOKEN}}}),'
-    rf'surface1:\1=>({{color:\1.colors.{SCRIM_TOKEN}}}),'
-    rf'surface2:\1=>({{color:\1.colors.{SCRIM_TOKEN}}}),'
-    rf'surfaceSidebar:\1=>({{color:\1.colors.{SCRIM_TOKEN}}}),'
-    rf'surfaceSidebarHover:\1=>({{color:\1.colors.{SCRIM_TOKEN}}}),'
-    rf'surfaceSidebarSelected:\1=>({{color:\1.colors.{SCRIM_TOKEN}}})}}'
+SCRIM_HOVER_TOKEN = "interactionHighlight"
+
+# The scrim's own surface0 entry, put back after INK_SURFACE0 repaints it.
+# Anchored on the table key, which is the context the ink sweep cannot see.
+SCRIM_SURFACE0 = re.compile(
+    rf'surface0:([A-Za-z_$][\w$]*)=>\(\{{color:"{re.escape(SURFACE1_VAR)}"\}}\)'
 )
 
 # The pane resize handle, which is accent-coloured while hovered or dragged.
@@ -1078,7 +1082,10 @@ def patch_renderer(path: Path, look: dict, term: dict, ansi: str) -> list[str]:
              r"\1:{backgroundColor:\2.colors.interactionHighlight")
     sweep_re("clear row backdrop masks", BACKDROP_MASKS,
              r'\1:{backgroundColor:"transparent"')
-    replace_re("recolour row trailing scrim", SCRIM_COLOURS, SCRIM_RECOLOUR, 1)
+    replace_re("frosted scrim on hovered rows", SCRIM_HOVER,
+               rf"surfaceSidebarHover:\1=>({{color:\1.colors.{SCRIM_HOVER_TOKEN}}})", 1)
+    replace_re("scrim surface0 back to its own token", SCRIM_SURFACE0,
+               r"surface0:\1=>({color:\1.colors.surface0})", 1)
     replace_re("subtle resize handle", HANDLE_HIGHLIGHT,
                lambda m: m[0].replace(f"{m[3]}.colors.accent",
                                       f"{m[3]}.colors.{HANDLE_HIGHLIGHT_TOKEN}"), 1)
