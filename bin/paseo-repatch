@@ -439,29 +439,28 @@ BACKDROP_MASKS = re.compile(
     r"\{backgroundColor:[A-Za-z_$][\w$]*\.colors\.[a-zA-Z0-9]+"
 )
 
-# The gradient wedge at a sidebar row's right edge, and the button it exists
-# for.
+# The gradient wedge behind a trailing control, in sidebar rows and in tabs.
 #
-# `TrailingActionScrim` paints a 48px SVG gradient over the row's right end —
-# stop-opacity 0, then 1 from 55% on — coloured from the backdrop prop through
-# its own lookup table. Its purpose is not decoration: the kebab is an overlay
-# sitting on top of the diff stats, and the wedge hides the stats so the
-# button has something to read against.
+# `TrailingActionScrim` paints a 48px SVG gradient over a strip's right end —
+# stop-opacity 0, then 1 from 55% on — coloured from a backdrop prop through
+# its own lookup table, so text dissolves under the control instead of running
+# into it. Two callers feed that table different keys:
 #
-# That is a sound trick on an opaque app, where the wedge is the row's own
-# colour and the stats simply disappear under it. On glass there is no such
-# colour. Matching the token gives a near-black slab, because the token the
-# row claims resolves opaque; anything lighter reads as a patch laid over the
-# card; and anything translucent enough to blend leaves the button competing
-# with the digits underneath. Every colour is wrong because the premise is —
-# a 48px opaque wedge cannot be part of a translucent card.
+#   tabs          surface2 when active and focused, surface1 when filled,
+#                 surface0 otherwise — the close button
+#   sidebar rows  surfaceSidebar, surfaceSidebarHover, surfaceSidebarSelected,
+#                 and surface2 in one transient state — the kebab
 #
-# So the wedge goes, all six entries, and the job moves to the button. A
-# kebab with its own small solid chip reads against its own background
-# wherever it lands, the stats stay legible beside it, and nothing large and
-# opaque sits on the card. `surface2` is the app's control fill — the same
-# token `kebabButtonHovered` already uses — so the chip is what every other
-# control in Paseo is made of, and it follows the theme picker.
+# Tabs sit on opaque surfaces, so stock's identity mapping is right for them
+# and the fade reads as intended. surface0 is the exception: it is zeroed, so
+# an inactive tab's wedge must match what actually shows through it, which is
+# the pane — surface1 in sidebar scope, nothing at all in full.
+#
+# Sidebar rows sit on glass, where no colour works. Matching the row's token
+# gives a near-black slab, lighter reads as a patch laid over the card, and
+# translucent enough to blend leaves the button competing with the digits.
+# Their three tiers are transparent, and the job moves to the kebab itself:
+# KEBAB_CHIP gives it a background and KEBAB_GUTTER a space of its own.
 #
 # The table is one anchor rather than six: separated, the entries are
 # indistinguishable from any other theme lookup. Bodies are matched loosely
@@ -476,14 +475,19 @@ SCRIM_COLOURS = re.compile(
     r"surfaceSidebarHover:\1=>\(\{color:[^{}]*\}\),"
     r"surfaceSidebarSelected:\1=>\(\{color:[^{}]*\}\)\}"
 )
-SCRIM_CLEAR = (
-    r'{surface0:\1=>({color:"transparent"}),'
-    r'surface1:\1=>({color:"transparent"}),'
-    r'surface2:\1=>({color:"transparent"}),'
-    r'surfaceSidebar:\1=>({color:"transparent"}),'
-    r'surfaceSidebarHover:\1=>({color:"transparent"}),'
-    r'surfaceSidebarSelected:\1=>({color:"transparent"})}'
-)
+
+
+def scrim_table(pane: str) -> str:
+    """The scrim lookup, with surface0 set to what shows behind a clear tab."""
+    return (
+        rf'{{surface0:\1=>({{color:{pane}}}),'
+        r'surface1:\1=>({color:\1.colors.surface1}),'
+        r'surface2:\1=>({color:\1.colors.surface2}),'
+        r'surfaceSidebar:\1=>({color:"transparent"}),'
+        r'surfaceSidebarHover:\1=>({color:"transparent"}),'
+        r'surfaceSidebarSelected:\1=>({color:"transparent"})}'
+    )
+
 
 # Two kebabs, in the sidebar row and on a card, both unpainted in stock
 # because the wedge behind them did the work. The theme binding is borrowed
@@ -1119,7 +1123,7 @@ def patch_renderer(path: Path, look: dict, term: dict, ansi: str) -> list[str]:
              r"\1:{backgroundColor:\2.colors.interactionHighlight")
     sweep_re("clear row backdrop masks", BACKDROP_MASKS,
              r'\1:{backgroundColor:"transparent"')
-    replace_re("clear row trailing scrim", SCRIM_COLOURS, SCRIM_CLEAR, 1)
+    replace_re("trailing scrim per caller", SCRIM_COLOURS, scrim_table(pane), 1)
     sweep_re("kebab chip", KEBAB_CHIP,
              rf"kebabButton:{{padding:2,borderRadius:4\1,"
              rf"backgroundColor:\2.colors.{KEBAB_CHIP_TOKEN},uni__dependencies:[0]}},"
