@@ -243,9 +243,6 @@ four things the standard quality rubric does not cover:
 These are *additions* to the rubric already in use, not a replacement. Report
 them with `file:line` like any other finding, at their real severity.
 
-For a full regression-safe cleanup pass (behavior locked by tests, ordered
-smell-focused passes, quality gates), invoke the `ai-slop-cleaner` skill.
-
 ---
 
 <!-- CODEGRAPH_START -->
