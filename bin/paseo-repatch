@@ -495,6 +495,30 @@ KEBAB_CHIP = re.compile(
 )
 KEBAB_CHIP_TOKEN = "surface2"
 
+# A gutter for the kebab, so it sits beside the diff stats rather than on them.
+#
+# The row's trailing slot is `position: relative` and holds both the stats and
+# the kebab, which is `position: absolute; right: 0` — an overlay by design,
+# since the wedge used to hide whatever it covered. `reserveSlotWidth` looks
+# like the fix and is not: it only reserves room when there are no stats to
+# show, never while the kebab is visible, so the button always lands on the
+# last digits.
+#
+# Padding the slot moves the containing block's right edge inward for the
+# stats while an absolute child still pins to the padding edge — so the
+# stats end KEBAB_GUTTER short and the kebab occupies exactly that space.
+# 22px is Paseo's own `kebabSlot` width. Constant rather than hover-only, so
+# nothing shifts when the pointer arrives; the cost is 22px less title on
+# every row, which truncates with an ellipsis long before it matters.
+#
+# Both variants, anchored on their full literal: the reserved one carries
+# `minWidth:18` between the same keys.
+KEBAB_GUTTER = re.compile(
+    r'(trailingActionSlot(?:Reserved)?):\{position:"relative",(minWidth:18,)?minHeight:20,'
+    r'flexShrink:0,alignItems:"flex-end",justifyContent:"flex-start"\}'
+)
+KEBAB_GUTTER_PX = 22
+
 # The pane resize handle, which is accent-coloured while hovered or dragged.
 #
 # Two styles make the divider: `handle` filled with `border`, which is the thin
@@ -1100,6 +1124,9 @@ def patch_renderer(path: Path, look: dict, term: dict, ansi: str) -> list[str]:
              rf"kebabButton:{{padding:2,borderRadius:4\1,"
              rf"backgroundColor:\2.colors.{KEBAB_CHIP_TOKEN},uni__dependencies:[0]}},"
              rf"kebabButtonHovered:{{backgroundColor:\2.colors.")
+    replace_re("kebab gutter", KEBAB_GUTTER,
+               rf'\1:{{position:"relative",\2minHeight:20,flexShrink:0,'
+               rf'alignItems:"flex-end",justifyContent:"flex-start",paddingRight:{KEBAB_GUTTER_PX}}}', 2)
     replace_re("subtle resize handle", HANDLE_HIGHLIGHT,
                lambda m: m[0].replace(f"{m[3]}.colors.accent",
                                       f"{m[3]}.colors.{HANDLE_HIGHLIGHT_TOKEN}"), 1)
