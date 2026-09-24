@@ -97,7 +97,15 @@ LOOK = "glass"
 LOOKS = {
     # Full glass. Paseo's own hues are untouched, so its theme picker keeps
     # working and every built-in theme becomes a glass version of itself.
-    "glass": {"vibrancy": "hud", "dim": 0.65, "palette": False},
+    #
+    # Tuned for sidebar scope, where only the sidebar shows glass: the content
+    # pane is opaque and painted above `body`, so DIM reaches nothing else. The
+    # `sidebar` material is the semantic match and the lightest of the blurred
+    # ones, and with no wash on top the sidebar reads as the raw material —
+    # compared side by side against all fourteen, `hud` under a 0.65 wash was
+    # most of the way to black. Raise DIM from 0 if a busy wallpaper makes
+    # sidebar text hard to read.
+    "glass": {"vibrancy": "sidebar", "dim": 0.0, "palette": False},
     # Glass plus the oxocarbon colours from the Superset theme, so Paseo, nvim
     # and Superset agree. Overwrites Paseo's default green theme and the shared
     # dark ANSI set — see OXOCARBON_ANSI for why that reaches every theme.

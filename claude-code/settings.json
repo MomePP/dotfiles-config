@@ -89,7 +89,10 @@
   },
   "enabledPlugins": {
     "claude-hud@claude-hud": true,
-    "context-mode@context-mode": true
+    "context-mode@context-mode": true,
+    "product-management@synced": false,
+    "design@synced": false,
+    "cowork-plugin-management@synced": false
   },
   "extraKnownMarketplaces": {
     "claude-hud": {
@@ -120,5 +123,10 @@
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
   "autoCompactEnabled": true,
-  "syncClaudeAiSkills": false
+  "syncClaudeAiSkills": false,
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "high"
+    }
+  }
 }
