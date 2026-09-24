@@ -23,8 +23,7 @@ app then never runs, never self-updates, and brew stays the single source of
 truth about what is in /Applications.
 
 Both copies share CFBundleIdentifier, Application Support, and the daemon's
-singleton lock, so only one may run at a time — same constraint as
-Superset-transparent.app.
+singleton lock, so only one may run at a time.
 
 Two kinds of patch, and the difference matters:
 
@@ -1185,8 +1184,10 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--force", action="store_true", help="rebuild even when the version is unchanged")
     ap.add_argument("--quiet", action="store_true", help="only speak up on error")
+    default_look = LOOKS[LOOK]
     ap.add_argument("--look", choices=sorted(LOOKS), default=None,
-                    help=f"build this look for one run; omit to use {LOOK!r}")
+                    help=f"build this look for one run (default {LOOK}: vibrancy "
+                         f"{default_look['vibrancy'] or 'none'}, dim {default_look['dim']})")
     ap.add_argument("--font-size", type=float, metavar="PT", default=FONT_SIZE,
                     help=f"terminal font size, overriding Settings -> Code size for the "
                          f"terminal only (default {FONT_SIZE}); pass 0 to let the setting win")
@@ -1204,21 +1205,23 @@ def main() -> int:
     ap.add_argument("--no-ghostty", action="store_true",
                     help="ignore the Ghostty config and use the built-in defaults")
     ap.add_argument("--ansi", choices=("oxocarbon", "stock"), default=ANSI,
-                    help=f"terminal ANSI palette; oxocarbon matches Superset and nvim "
+                    help=f"terminal ANSI palette; oxocarbon matches nvim and Ghostty "
                          f"(default {ANSI})")
     ap.add_argument("--restart", action="store_true",
                     help="quit the patched copy before rebuilding and reopen it after, so "
                          "trying a look is one command instead of three")
     ap.add_argument("--dim", type=float, metavar="ALPHA", default=None,
-                    help="override the window wash for this run, 0 (clear) to 1 (solid). "
-                         "This is the only dimming knob — every surface above it is at 0")
+                    help=f"window wash for this run, 0 (clear) to 1 (solid); the only "
+                         f"dimming knob, every surface above it is at 0 "
+                         f"(default {default_look['dim']}, from --look)")
     ap.add_argument("--vibrancy", metavar="MATERIAL", default=None,
-                    help="override the material for this run: none, hud, sidebar, under-window, "
-                         "fullscreen-ui, popover, menu, sheet, window, titlebar, selection, "
-                         "header, tooltip, content. Defaults to whatever --look specifies")
+                    help=f"material for this run: none, sidebar, under-window, hud, "
+                         f"fullscreen-ui, menu, popover, tooltip, titlebar, header, sheet, "
+                         f"window, content, under-page, selection "
+                         f"(default {default_look['vibrancy'] or 'none'}, from --look)")
     ap.add_argument("--scope", choices=SCOPES, default=None,
                     help=f"where the glass shows for this run: full (every surface) or "
-                         f"sidebar (content pane opaque). Defaults to {SCOPE!r}")
+                         f"sidebar (content pane opaque) (default {SCOPE})")
     args = ap.parse_args()
 
     if not STOCK.exists():
