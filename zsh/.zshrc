@@ -22,14 +22,11 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'   # case-insensitive
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
 # HASH_DIRS reads a PATH directory's whole listing the first time anything in it
-# is looked up, and zsh never re-reads it: a binary installed afterwards stays
-# invisible to *already-running* shells. Combined with AUTO_CD that is worse
-# than a "command not found" — a bare command word that also names a directory
-# in $PWD silently cd's there instead (typing `nvim` in ~/.config landed in
-# ~/.config/nvim after a `brew reinstall neovim` relinked the binary). This
-# rehashes before a completion attempt, which repairs the table on the first Tab
-# in any stale shell; the brew() wrapper below covers the shell doing the
-# installing.
+# is looked up, and zsh never re-reads it: a binary installed afterwards is
+# missing from command-name completion in *already-running* shells (running it
+# still works — execution falls back to a PATH search). This rehashes before a
+# completion attempt, which repairs the table on the first Tab in any stale
+# shell; the brew() wrapper below covers the shell doing the installing.
 zstyle ':completion:*' rehash true
 
 # carapace covers what brew's site-functions do not (lazygit, tmux, cargo) and
@@ -74,7 +71,6 @@ setopt HIST_VERIFY             # expand !! into the buffer instead of running it
 
 # -- options ------------------------------------------------------------------
 setopt INTERACTIVE_COMMENTS
-setopt AUTO_CD
 setopt EXTENDED_GLOB
 setopt NO_BEEP
 
