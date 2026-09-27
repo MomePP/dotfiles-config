@@ -35,9 +35,6 @@ non-source artifact for a project, always place it under that project's
 - `.claude/specs/` — protocol specs, API contracts, RFCs, **and design docs**:
   the WHAT/WHY — requirements, architecture, the output of a brainstorming/
   design pass, *before* it's decomposed into implementation steps.
-- `.claude/tmp/`   — ephemeral artifacts: panic dumps, raw log captures,
-  scratch test outputs, intermediate data. Anything safe to wipe between
-  sessions. Do not commit; ensure `.claude/tmp/` is gitignored per project.
 
 ### Spec vs plan — don't conflate them
 
@@ -95,21 +92,7 @@ honoring this rule is sanctioned, not a deviation. **Strip their date prefix**
 `per-game-shuttlecock-type-design.md`, NOT `2026-06-10-per-game-…`); both the
 directory and the filename change.
 
-## Scratch files → `.claude/tmp/` only, never `/tmp`
-
-ALL transient/scratch files — redirected command output (`cmd > x.txt`),
-intermediate captures, generated-then-`cp`'d files, analysis dumps — go in
-the project's `.claude/tmp/` directory. **Never write to the system `/tmp`.**
-
-- Create `.claude/tmp/` if missing (`mkdir -p .claude/tmp`); do not ask.
-- It must be gitignored per project (add `.claude/tmp/` to `.gitignore`).
-- Reason: `/tmp` is outside the workspace, isn't visible to the user, and
-  files written there by a sandboxed tool (e.g. a Python `ctx_execute`
-  subprocess) are silently discarded — leading to "file not found" on a
-  later `cp`/`Read`. Keeping scratch in `.claude/tmp/` keeps it on the
-  real host filesystem, inside the repo, and easy to clean up.
-
-Rules:
+### Placement rules
 
 1. Never drop these files at the repo root or in `docs/` unless the user
    explicitly names that path.
