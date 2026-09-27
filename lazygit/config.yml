@@ -24,36 +24,11 @@ git:
   allBranchesLogCmds:
     - "git log --graph --all --color=always --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%n%C(reset)%C(dim cyan)%an <%ae>%n%C(reset)%C(white)%w(0,4,4)%B%C(reset)'"
 os:
-  open: "^open -R {{filename}}"
+  open: 'open -R {{filename}}'
   editPreset: 'nvim-remote'
-  edit: >-
-    if not ($env | columns | any { |col| $col == 'NVIM' }) {
-
-        nvim -- {{filename}}
-    } else {
-
-        nvim --server $env.NVIM --remote-send "q"
-        nvim --server $env.NVIM --remote {{filename}}
-    }
-  editAtLine: >-
-    if not ($env | columns | any { |col| $col == 'NVIM' }) {
-
-        nvim +{{line}} -- {{filename}}
-    } else {
-
-        nvim --server $env.NVIM --remote-send "q"
-        nvim --server $env.NVIM --remote {{filename}}
-        nvim --server $env.NVIM --remote-send ":{{line}}<CR>"
-    }
-  openDirInEditor: >-
-    if not ($env | columns | any { |col| $col == 'NVIM' }) {
-
-        nvim -- {{dir}}
-    } else {
-
-        nvim --server $env.NVIM --remote-send "q"
-        nvim --server $env.NVIM --remote {{dir}}
-    }
+  edit: '[ -z "$NVIM" ] && (nvim -- {{filename}}) || (nvim --server "$NVIM" --remote-send "q" && nvim --server "$NVIM" --remote {{filename}})'
+  editAtLine: '[ -z "$NVIM" ] && (nvim +{{line}} -- {{filename}}) || (nvim --server "$NVIM" --remote-send "q" && nvim --server "$NVIM" --remote {{filename}} && nvim --server "$NVIM" --remote-send ":{{line}}<CR>")'
+  openDirInEditor: '[ -z "$NVIM" ] && (nvim -- {{dir}}) || (nvim --server "$NVIM" --remote-send "q" && nvim --server "$NVIM" --remote {{dir}})'
 notARepository: 'quit'
 promptToReturnFromSubprocess: false
 keybinding:
