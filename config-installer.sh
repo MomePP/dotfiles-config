@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # WARN: must have brew installed
-brew install wget lazygit git-flow-next git-delta ripgrep fd eza fnm neovim gh bat pyenv tmux starship aerospace tree-sitter-cli carapace
+brew install lazygit git-flow-next git-delta ripgrep fd eza fnm neovim gh bat pyenv tmux starship nikitabobko/tap/aerospace tree-sitter-cli carapace jq oven-sh/bun/bun
 # Inline hints and syntax highlighting are the two things zsh has no built-in
 # equivalent for. .zshrc sources them behind an existence check, so a machine
 # without them still gets a working shell.
