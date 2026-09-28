@@ -201,7 +201,6 @@ alias pip='python3 -m pip'
 
 alias tma='tmux new-session -A -s default'
 alias tmd='tmux detach'
-alias kssh='kitty +kitten ssh'
 
 # -- functions ----------------------------------------------------------------
 cx() {

@@ -1,1 +1,0 @@
--o allow_remote_control=socket-only --listen-on unix:/tmp/momeppkt-kitty
