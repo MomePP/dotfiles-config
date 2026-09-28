@@ -22,7 +22,9 @@
       "Bash(ls *)",
       "Bash(find *)",
       "Bash(grep *)",
+      "mcp__plugin_playwright_playwright__*",
       "mcp__plugin_context-mode_context-mode__*",
+      "mcp__plugin_supabase_supabase__*",
       "mcp__codegraph__*"
     ],
     "deny": [
