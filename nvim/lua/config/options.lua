@@ -83,3 +83,25 @@ opt.iskeyword:append { '-' } -- consider string-string as whole word
 opt.formatoptions = 'jrqln1' -- see :h fo-table
 opt.shortmess     = 'fnxoOtTF'
 opt.jumpoptions   = 'stack'
+
+-- Diagnostics: signs only, worst first; diagflow shows the message
+vim.diagnostic.config {
+    update_in_insert = false,
+    severity_sort = true,
+    virtual_text = false,
+    virtual_lines = false,
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = '',
+            [vim.diagnostic.severity.WARN] = '',
+            [vim.diagnostic.severity.INFO] = '',
+            [vim.diagnostic.severity.HINT] = '',
+        },
+        numhl = {
+            [vim.diagnostic.severity.ERROR] = 'DiagnosticError',
+            [vim.diagnostic.severity.WARN] = 'DiagnosticWarn',
+            [vim.diagnostic.severity.INFO] = 'DiagnosticInfo',
+            [vim.diagnostic.severity.HINT] = 'DiagnosticHint',
+        },
+    }
+}
