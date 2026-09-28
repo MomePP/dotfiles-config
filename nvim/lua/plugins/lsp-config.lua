@@ -57,9 +57,9 @@ mason_module.config = function()
 
     -- INFO: config lsp log with formatting
     vim.lsp.log.set_level 'off' --    Levels by name: "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "OFF"
-    -- require('vim.lsp.log').set_format_func(vim.inspect)
 
-    -- INFO: load LSP configurations from individual files in ~/.config/nvim/lsp directory
+    -- INFO: every after/lsp/<server>.lua names a server to install and enable;
+    -- a `return {}` stub marks one that needs no overrides
     local server_names = vim.iter(vim.api.nvim_get_runtime_file('after/lsp/*.lua', true))
         :map(function(file) return vim.fn.fnamemodify(file, ':t:r') end)
         :totable()
@@ -90,7 +90,7 @@ local lspconfig_module = {
 lspconfig_module.config = function()
     -- INFO: config lsp keymaps
     local function lsp_keymap(bufnr, mapping)
-        local opts = { buffer = bufnr, silent = true, noremap = true }
+        local opts = { buffer = bufnr, silent = true }
 
         for _, keymap in pairs(mapping) do
             vim.keymap.set('n', keymap.key, keymap.cmd, opts)

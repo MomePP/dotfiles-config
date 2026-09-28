@@ -7,17 +7,6 @@ M.opts = function()
     local icons = require('config').defaults.icons
 
     local conditions = {
-        buffer_not_empty = function()
-            return vim.fn.empty(vim.fn.expand('%:t')) ~= 1
-        end,
-        hide_in_width = function()
-            return vim.fn.winwidth(0) > 80
-        end,
-        check_git_workspace = function()
-            local filepath = vim.fn.expand('%:p:h')
-            local gitdir = vim.fn.finddir('.git', filepath .. ';')
-            return gitdir and #gitdir > 0 and #gitdir < #filepath
-        end,
         check_lsp_started = function()
             return next(vim.lsp.get_clients()) ~= nil
         end,
@@ -58,31 +47,6 @@ M.opts = function()
         end,
         color = 'BlinkCmpGhostText',
     }
-
-    -- local diff = {
-    --     function()
-    --         local gitsigns = vim.b.gitsigns_status_dict
-    --         if not gitsigns then return '' end
-    --
-    --         local diff_icon = '▪'
-    --         local parts = {}
-    --
-    --         if gitsigns.added and gitsigns.added > 0 then
-    --             table.insert(parts, '%#GitSignsAdd#' .. diff_icon)
-    --         end
-    --         if gitsigns.changed and gitsigns.changed > 0 then
-    --             table.insert(parts, '%#GitSignsChange#' .. diff_icon)
-    --         end
-    --         if gitsigns.removed and gitsigns.removed > 0 then
-    --             table.insert(parts, '%#GitSignsDelete#' .. diff_icon)
-    --         end
-    --
-    --         if #parts > 0 then
-    --             return table.concat(parts) .. ' '
-    --         end
-    --         return ''
-    --     end,
-    -- }
 
     local blink_info = { source_name = '', kind = 0 }
     local blink_kinds = {}

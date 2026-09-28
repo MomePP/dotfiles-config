@@ -232,13 +232,12 @@ sidekick.opts = {
             },
             -- INFO: mirror snacks-terminal styling. winblend = 0 overrides the global
             -- default (options.lua sets 5 for slightly-transparent floats), same opt-out
-            -- pattern as noice-config.lua's chat sub-views.
+            -- pattern as noice-config.lua's win_options.
             wo = {
                 winblend     = 0,
                 winhighlight =
                 'Normal:SnacksTerminalNormal,NormalNC:SnacksTerminalNormal,FloatBorder:SnacksTerminalBorder,FloatFooter:SnacksTerminalFooter',
             },
-            -- split = { width = 0.45 },
         },
         tools = {
             claude = {

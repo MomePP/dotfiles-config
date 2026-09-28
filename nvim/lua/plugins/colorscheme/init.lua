@@ -1,13 +1,11 @@
-local M = {
+return {
+    'momepp/oxocarbon.nvim',
     name = 'nvim-colorscheme',
     -- dev = true,
     lazy = false,
     priority = 1000,
+    config = function()
+        vim.opt.background = 'dark'
+        vim.cmd.colorscheme 'oxocarbon'
+    end,
 }
-
--- INFO: selection colorscheme
-local theme = require('plugins.colorscheme.oxocarbon-config')
-M = vim.tbl_extend('force', M, theme.info)
-M.config = theme.setup
-
-return M

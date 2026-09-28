@@ -257,7 +257,7 @@ M.keys = function()
 
     local keymaps = require('config.keymaps').snacks
     local picker_keymap = keymaps.picker
-    local bufdetele_keymap = keymaps.bufdelete
+    local bufdelete_keymap = keymaps.bufdelete
     local terminal_keymap = keymaps.terminal
     local scratch_keymap = keymaps.scratch
 
@@ -281,7 +281,7 @@ M.keys = function()
         { picker_keymap.search_buffers,   function() snacks.picker.grep_buffers() end },
         { picker_keymap.grep_workspace,   function() snacks.picker.grep_word() end,   mode = { 'n', 'x' } },
 
-        { bufdetele_keymap.delete,        function() snacks.bufdelete.delete() end },
+        { bufdelete_keymap.delete,        function() snacks.bufdelete.delete() end },
 
         {
             scratch_keymap.toggle,

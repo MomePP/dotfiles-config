@@ -33,7 +33,6 @@ opt.showcmd        = false
 opt.showmode       = false
 opt.splitright     = true
 
--- opt.foldenable     = false
 opt.foldlevelstart = 99
 opt.foldcolumn     = '1'
 opt.foldtext       = ''
@@ -60,7 +59,6 @@ opt.laststatus    = 3
 opt.statusline    = ' '
 opt.numberwidth   = 3
 opt.signcolumn    = 'yes'
--- opt.statuscolumn  = "%=%{v:virtnum < 1 ? (v:relnum ? v:relnum : v:lnum < 10 ? v:lnum . '  ' : v:lnum) : ''}%=%s"
 
 opt.pumheight     = 10 -- Make popup menu smaller
 opt.pumblend      = 8  -- Make builtin completion menus slightly transparent
@@ -68,7 +66,6 @@ opt.winblend      = 5  -- Make floating windows slightly transparent
 
 -- Editing
 opt.ignorecase    = true -- Ignore case when searching (use `\C` to force not doing that)
-opt.incsearch     = true -- Show search results while typing
 opt.infercase     = true -- Infer letter cases for a richer built-in keyword completion
 opt.smartcase     = true -- Don't ignore case when searching if pattern has upper case
 opt.smartindent   = true -- Make indenting smart

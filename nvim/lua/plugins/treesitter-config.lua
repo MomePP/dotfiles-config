@@ -29,9 +29,6 @@ M.config = function()
     }
     require('nvim-treesitter').install(ensure_install)
 
-    -- NOTE: extra parser register if filetype not matched
-    -- vim.treesitter.language.register('ini', { 'dosini', 'confini' }) -- supported
-
     local installing = {}
     local lang_cache = {} -- filetype -> language | false
     local available_set -- lazy-built set of registry parsers

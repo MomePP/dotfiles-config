@@ -20,8 +20,6 @@ M.opts = {
     sign_priority = 15,
     -- disables mark tracking for specific filetypes. default {}
     excluded_filetypes = {
-        'toggleterm',
-        'lspinfo',
         'terminal',
         'help',
     },
