@@ -2,7 +2,8 @@ local M = {
     'nvim-treesitter/nvim-treesitter',
     branch = 'main',
     build = ':TSUpdate',
-    event = { 'BufReadPre', 'BufNewFile' },
+    -- NOTE: FileType covers buffers that never read a file (:enew + :set ft)
+    event = { 'BufReadPre', 'BufNewFile', 'FileType' },
     dependencies = {
         { 'nvim-treesitter/nvim-treesitter-context',     opts = { zindex = 5, max_lines = 3 } },
         { 'folke/ts-comments.nvim',                      opts = {} },

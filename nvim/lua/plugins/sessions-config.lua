@@ -27,6 +27,8 @@ M.config = function()
                 sessions.read(name)
             end
         end,
+        -- NOTE: nested lets the restored buffers fire BufReadPre/FileType, which
+        -- lazy-loads treesitter and LSP for them
         nested = true,
     })
 end
