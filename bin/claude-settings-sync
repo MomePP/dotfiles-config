@@ -50,7 +50,7 @@ def strip_vendor_hooks(hooks: dict | None) -> dict | None:
         groups = [
             {**g, "hooks": own}
             for g in groups if isinstance(g, dict)
-            if (own := [h for h in g.get("hooks", []) if isinstance(h, dict)
+            if (own := [h for h in g.get("hooks") or [] if isinstance(h, dict)
                         and not any(m in (h.get("command") or "") for m in VENDOR_HOOK_MARKERS)])
         ]
         if groups:
