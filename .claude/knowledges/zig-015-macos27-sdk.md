@@ -73,6 +73,7 @@ error coming back.
   links the `.dylib` zig already emits.
 
 `zig@0.15` was uninstalled on 2026-09-28 (it had been kept only for the herdr
-source build; nothing depended on it), and brew auto-removed its `llvm@20`
-dependency with it. If a project needs it again: `brew install zig@0.15` — it
+source build; nothing depended on it), and brew auto-removed the two
+dependencies nothing else used, `llvm@20` and `lld@20` (its `lz4`/`xz`/`zstd`
+deps stay, other formulae need them). If a project needs it again: `brew install zig@0.15` — it
 is keg-only, at `/opt/homebrew/opt/zig@0.15/bin/zig`, not on PATH.
