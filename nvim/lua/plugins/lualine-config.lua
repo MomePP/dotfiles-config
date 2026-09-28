@@ -5,7 +5,6 @@ local M = {
 
 M.opts = function()
     local icons = require('config').defaults.icons
-    local utils = require('config.fn-utils')
 
     local conditions = {
         buffer_not_empty = function()
@@ -26,7 +25,7 @@ M.opts = function()
             return vim.v.this_session ~= ''
         end,
         check_cmp_visible = function()
-            return utils.is_loaded('blink.cmp') and require('blink.cmp').is_visible()
+            return package.loaded['blink.cmp'] ~= nil and require('blink.cmp').is_visible()
         end,
     }
 

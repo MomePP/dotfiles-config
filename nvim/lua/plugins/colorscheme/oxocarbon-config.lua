@@ -10,15 +10,4 @@ M.setup = function()
     vim.cmd.colorscheme 'oxocarbon'
 end
 
-M.lualine = function()
-    return 'oxocarbon'
-end
-
-M.colors = function()
-    local oxocarbon_status, oxocarbon = pcall(require, 'oxocarbon')
-    if not oxocarbon_status then return {} end
-
-    return oxocarbon.oxocarbon
-end
-
 return M
