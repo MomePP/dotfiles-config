@@ -5,8 +5,8 @@
 wrong for keeping it linked afterwards.
 
 Several writers touch the live file: Claude Code itself (every `/config`
-change), and tools that register their own hooks in it — context-mode, Paseo,
-termio. The live file ends up a plain file, not a link. And while a link *is*
+change), and tools that register their own hooks in it — context-mode and
+Paseo. The live file ends up a plain file, not a link. And while a link *is*
 in place, those writes land straight in this repo as uncommitted drift. That
 is how `remoteControlAtStartup` once appeared as a repo change without anyone
 editing it.
@@ -22,9 +22,9 @@ deliberate settings and your own hooks (`deny-git-identity-override.sh`,
 - Vendor hooks — each tool re-registers its own on install/start, so they
   self-heal on a fresh machine. `claude-settings-sync` drops any hook whose
   command matches `VENDOR_HOOK_MARKERS` from both sides before comparing:
-  `context-mode-cache-heal.mjs`, `PASEO_HOOK_CLI` (Paseo agent status),
-  `termiod` (termio session status). A new tool that injects hooks shows up as
-  `hooks` drift until its marker is added there.
+  `context-mode-cache-heal.mjs` and `PASEO_HOOK_CLI` (Paseo agent status). A
+  new tool that injects hooks shows up as `hooks` drift until its marker is
+  added there.
 
 ## Porting a deliberate change
 

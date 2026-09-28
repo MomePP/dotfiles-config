@@ -36,11 +36,10 @@ IGNORED_KEYS = {
 }
 
 
-# Hook commands that a tool re-registers on its own: context-mode's cache heal,
-# Paseo's agent-status hooks, and termio's session-status hooks. They are
-# dropped from both sides before comparing, so only hooks you own are
-# drift-checked and ported.
-VENDOR_HOOK_MARKERS = ("context-mode-cache-heal.mjs", "PASEO_HOOK_CLI", "termiod")
+# Hook commands that a tool re-registers on its own: context-mode's cache heal
+# and Paseo's agent-status hooks. They are dropped from both sides before
+# comparing, so only hooks you own are drift-checked and ported.
+VENDOR_HOOK_MARKERS = ("context-mode-cache-heal.mjs", "PASEO_HOOK_CLI")
 
 
 def strip_vendor_hooks(hooks: dict | None) -> dict | None:

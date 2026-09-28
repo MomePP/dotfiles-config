@@ -201,7 +201,7 @@ symlink_config "bin/paseo-repatch" ~/.local/bin/paseo-repatch
 
 # claude-settings-sync reports drift between ~/.claude/settings.json and the
 # copy tracked here. The symlink above is only for provisioning: Claude Code and
-# hook-registering tools (context-mode, Paseo, termio) rewrite the live file, so
+# hook-registering tools (context-mode, Paseo) rewrite the live file, so
 # the tracked copy is a template and deliberate settings are carried across by
 # hand — see .claude/knowledges/claude-settings-ownership.md.
 symlink_config "bin/claude-settings-sync" ~/.local/bin/claude-settings-sync
