@@ -7,7 +7,8 @@ gh
 .nuxt/devtools
 .copilot
 mole
-/opencode/context-mode/sessions
+/opencode/context-mode/
+/opencode/opencode-quota
 /.tmp/external-context
 /glab-cli
 /.claude/settings.local.json
