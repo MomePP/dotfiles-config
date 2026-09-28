@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Report (or port) drift between the live Claude settings and the tracked copy.
 
-`~/.claude/settings.json` is not symlinked into this repo: Claude Code writes
-there whenever /config changes, and through a symlink those writes would land
-here as unexplained drift. So the tracked copy is a template for provisioning a
-fresh machine, not a live mirror, and deliberate settings have to be carried
+`~/.claude/settings.json` is symlinked here only to provision a fresh machine:
+Claude Code (/config) and hook-registering tools rewrite the live file, and
+while a link is in place those writes land here as unexplained drift. So the
+tracked copy is a template, not a live mirror, and deliberate settings have to be carried
 across by hand — which is easy to forget
 for weeks. This makes the forgetting visible.
 

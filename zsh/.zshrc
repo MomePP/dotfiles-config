@@ -30,7 +30,7 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' rehash true
 
 # carapace covers what brew's site-functions do not (lazygit, tmux, cargo) and
-# bridges to fish/bash specs for the rest.
+# bridges to bash specs for the rest.
 source <(carapace _carapace zsh)
 
 # -- tool init ----------------------------------------------------------------
