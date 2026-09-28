@@ -3,22 +3,14 @@ gui:
   showBottomLine: false
   showListFooter: false
   showRootItemInFileTree: false
-  useHunkModeInStagingView: true
   theme:
     selectedLineBgColor:
       - '#393939'
   border: 'hidden'
   expandFocusedSidePanel: true
-  expandedSidePanelWeight: 2
 git:
   diffRenderers:
     - command: delta --paging=never
-  log:
-    showGraph: always
-    # showWholeGraph: true
-    # branchLogCmd: "git log --graph --color --abbrev-commit --decorate --relative-date --pretty=medium {{branchName}} --"
-    # branchLogCmd: "git log --graph --color --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%n%C(reset)%C(dim cyan)%an <%ae>%n%C(reset)%C(white)%w(0,4,4)%B%C(reset)' {{branchName}} --"
-    # allBranchesLogCmd: "git log --graph --all --color=always --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim cyan)- %an%C(reset)%C(bold yellow)%d%C(reset)'"
   # same format both sides: branch-scoped on <3>, whole repo on <a> from status
   branchLogCmd: "git log --graph --color=always --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%n%C(reset)%C(dim cyan)%an <%ae>%n%C(reset)%C(white)%w(0,4,4)%B%C(reset)' {{branchName}} --"
   allBranchesLogCmds:
@@ -33,5 +25,4 @@ notARepository: 'quit'
 promptToReturnFromSubprocess: false
 keybinding:
   universal:
-    confirm-alt1: <disabled>
     copyToClipboard: 'y'
