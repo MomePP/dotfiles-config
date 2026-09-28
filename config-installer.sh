@@ -200,10 +200,10 @@ symlink_config "bin/esp-clangd-update" ~/.local/bin/esp-clangd-update
 symlink_config "bin/paseo-repatch" ~/.local/bin/paseo-repatch
 
 # claude-settings-sync reports drift between ~/.claude/settings.json and the
-# copy tracked here. They are not symlinked: Claude Code writes /config changes
-# into the live file, and through a symlink those would land in this repo as
-# unexplained drift. So the tracked copy is a template and deliberate settings
-# have to be carried across by hand.
+# copy tracked here. The symlink above is only for provisioning: Claude Code and
+# hook-registering tools (context-mode, Paseo, termio) rewrite the live file, so
+# the tracked copy is a template and deliberate settings are carried across by
+# hand — see .claude/knowledges/claude-settings-ownership.md.
 symlink_config "bin/claude-settings-sync" ~/.local/bin/claude-settings-sync
 
 # NOTE: the SessionStart hooks in settings.json are NOT tracked here.

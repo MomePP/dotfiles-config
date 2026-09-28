@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Report (or port) drift between the live Claude settings and the tracked copy.
 
-`~/.claude/settings.json` cannot stay symlinked into this repo: Superset
-rewrites it in place on every app start, replacing the link with a plain file,
-and Claude Code writes there too whenever /config changes. So the tracked copy
-is a template for provisioning a fresh machine, not a live mirror, and
-deliberate settings have to be carried across by hand — which is easy to forget
+`~/.claude/settings.json` is not symlinked into this repo: Claude Code writes
+there whenever /config changes, and through a symlink those writes would land
+here as unexplained drift. So the tracked copy is a template for provisioning a
+fresh machine, not a live mirror, and deliberate settings have to be carried
+across by hand — which is easy to forget
 for weeks. This makes the forgetting visible.
 
 Read-only by default. `--write` ports the drift into the repo copy, leaving it
@@ -13,9 +13,11 @@ staged for review rather than committed: a settings change is the user's to
 describe, and silently rewriting tracked files is how surprises like an
 unexplained `remoteControlAtStartup` diff happen.
 
-IGNORED_KEYS are vendor-managed and deliberately never tracked — see
-.claude/knowledges/claude-settings-ownership.md.
+IGNORED_KEYS and VENDOR_HOOK_MARKERS are vendor-managed and deliberately never
+tracked — see .claude/knowledges/claude-settings-ownership.md.
 """
+
+from __future__ import annotations
 
 import argparse
 import json
@@ -25,18 +27,36 @@ from pathlib import Path
 LIVE = Path.home() / ".claude" / "settings.json"
 REPO = Path.home() / ".config" / "claude-code" / "settings.json"
 
-# `hooks` is re-registered by whoever owns it — Superset's 8 notify.sh entries
-# on app start, context-mode on its own. Tracking it would mirror
-# vendor output into the repo on every update, and the installer already says
-# so for the SessionStart pair.
 IGNORED_KEYS = {
-    "hooks",
     # Written by the claude-hud plugin with a version-stamped path into
     # plugins/cache, so it changes on every plugin release — tracking it means
     # drift after each update and a pinned version that is wrong on any other
     # machine. The plugin sets it on install, so a fresh machine gets one too.
     "statusLine",
 }
+
+
+# Hook commands that a tool re-registers on its own: context-mode's cache heal,
+# Paseo's agent-status hooks, and termio's session-status hooks. They are
+# dropped from both sides before comparing, so only hooks you own are
+# drift-checked and ported.
+VENDOR_HOOK_MARKERS = ("context-mode-cache-heal.mjs", "PASEO_HOOK_CLI", "termiod")
+
+
+def strip_vendor_hooks(hooks: dict | None) -> dict | None:
+    if not hooks:
+        return None
+    kept = {}
+    for event, groups in hooks.items():
+        groups = [
+            {**g, "hooks": own}
+            for g in groups
+            if (own := [h for h in g.get("hooks", [])
+                        if not any(m in h.get("command", "") for m in VENDOR_HOOK_MARKERS)])
+        ]
+        if groups:
+            kept[event] = groups
+    return kept or None
 
 
 def summarise(value, width: int = 88) -> str:
@@ -64,6 +84,12 @@ def main() -> int:
 
     live = json.loads(LIVE.read_text())
     repo = json.loads(REPO.read_text())
+    for settings in (live, repo):
+        if "hooks" in settings:
+            # Assigned in place, not popped and re-added, so --write keeps key order.
+            settings["hooks"] = strip_vendor_hooks(settings["hooks"])
+            if settings["hooks"] is None:
+                del settings["hooks"]
 
     ignored = set() if args.all else IGNORED_KEYS
     drift = sorted(k for k in set(live) | set(repo)
