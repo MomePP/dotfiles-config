@@ -2,7 +2,7 @@ local M = {
     'nvim-treesitter/nvim-treesitter',
     branch = 'main',
     build = ':TSUpdate',
-    event = 'BufEnter',
+    event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
         { 'nvim-treesitter/nvim-treesitter-context',     opts = { zindex = 5, max_lines = 3 } },
         { 'folke/ts-comments.nvim',                      opts = {} },

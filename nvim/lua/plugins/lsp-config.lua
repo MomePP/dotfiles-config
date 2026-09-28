@@ -7,7 +7,7 @@ local mason_module = {
         { 'mason-org/mason.nvim', opts = { ui = { border = 'solid' } } },
         { 'neovim/nvim-lspconfig' }
     },
-    event = 'BufEnter',
+    event = { 'BufReadPre', 'BufNewFile' },
 }
 
 mason_module.config = function()
