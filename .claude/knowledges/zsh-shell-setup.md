@@ -134,7 +134,7 @@ invocations must stay cheap.
 ## Everything else inherits the login shell
 
 tmux (no `default-shell`/`default-command`), ghostty, kitty, lazygit,
-gh-dash, aerospace, opencode, superset, and every LaunchAgent pick the shell
+gh-dash, aerospace, opencode, and every LaunchAgent pick the shell
 up from the passwd entry — none of them pin one. nvim sets no `vim.o.shell`.
 `bin/claude-relink` and `bin/esp-clangd-update` are `#!/bin/sh`.
 

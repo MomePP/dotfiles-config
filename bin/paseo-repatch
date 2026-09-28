@@ -105,8 +105,8 @@ LOOKS = {
     # most of the way to black. Raise DIM from 0 if a busy wallpaper makes
     # sidebar text hard to read.
     "glass": {"vibrancy": "sidebar", "dim": 0.0, "palette": False},
-    # Glass plus the oxocarbon colours from the Superset theme, so Paseo, nvim
-    # and Superset agree. Overwrites Paseo's default green theme and the shared
+    # Glass plus the oxocarbon.nvim colours, so Paseo and nvim agree.
+    # Overwrites Paseo's default green theme and the shared
     # dark ANSI set — see OXOCARBON_ANSI for why that reaches every theme.
     "oxocarbon": {"vibrancy": "hud", "dim": 0.65, "palette": True},
     # Nearly solid: the same construction with a heavy wash, so the desktop
@@ -201,8 +201,7 @@ FONT_WEIGHT_BOLD: int | str | None = 600
 
 # --- ghostty ----------------------------------------------------------------
 #
-# Superset can import a Ghostty config for its in-app terminal; this is the
-# same idea for Paseo. The file is read at build time and the handful of keys
+# Paseo's terminal follows the Ghostty config. The file is read at build time and the handful of keys
 # xterm has an equivalent for are mapped onto the constructor. Edit Ghostty,
 # re-run, Paseo follows — one source of truth. A missing file is not an error,
 # just the fallbacks above.
@@ -216,8 +215,8 @@ FONT_WEIGHT_BOLD: int | str | None = 600
 #   font-style-bold       -> fontWeightBold
 #
 #   font-size, background-opacity   deliberately NOT read — FONT_SIZE and the
-#                                   look's dim were tuned by eye against
-#                                   Superset, and Paseo renders at a different
+#                                   look's dim were tuned by eye, and
+#                                   Paseo renders at a different
 #                                   scale than Ghostty so a literal copy would
 #                                   not look the same anyway
 #   window-padding-x/y              NOT read either: Ghostty pads all four
@@ -270,8 +269,7 @@ TERMINAL_METRICS_SYNC = re.compile(
 )
 
 # Paseo's default dark theme, replaced wholesale for the oxocarbon look. The
-# slot names are Paseo's; the values are the oxocarbon.nvim palette already used
-# by superset/oxocarbon-glass.json. Alpha is applied by ALPHAS at runtime, so
+# slot names are Paseo's; the values are the oxocarbon.nvim palette. Alpha is applied by ALPHAS at runtime, so
 # every value here stays an opaque hex.
 OXOCARBON_PALETTE = (
     r'\1({surface0:"#161616",surface1:"#262626",surface2:"#262626",surface3:"#393939",'
@@ -282,9 +280,7 @@ OXOCARBON_PALETTE = (
     'terminalBlack:"#161616",terminalBrightBlack:"#525252"})'
 )
 
-# The 16 ANSI colours, deliberately remapped rather than transliterated — the
-# same remap superset/oxocarbon-glass.json uses, so a terminal in Paseo and a
-# terminal in Superset render identically.
+# The 16 ANSI colours, deliberately remapped rather than transliterated.
 #
 # Its own knob rather than part of the oxocarbon look, because the two are
 # useful separately: lazygit, eza and friends name ANSI slots rather than hex,
@@ -1325,8 +1321,7 @@ def main() -> int:
     # Before the signature, not after: the stamp lands in Contents/Resources,
     # and anything added there once the bundle is sealed makes
     # `codesign --verify` report a missing sealed resource. macOS still launches
-    # such a bundle — Superset-transparent.app has carried exactly that break
-    # for months — but a signature that cannot be verified is no signature to
+    # such a bundle, but a signature that cannot be verified is no signature to
     # check against when something does go wrong.
     stamp.write_text(want + "\n")
 

@@ -140,7 +140,7 @@ symlink_config() {
 }
 
 # INFO: -- install config directories
-config_dirs=(nvim aerospace aerospace-swipe bat bin carapace claude-code delta eza gh-dash ghostty git homebrew kitty lazygit opencode superset tmux zsh)
+config_dirs=(nvim aerospace aerospace-swipe bat bin carapace claude-code delta eza gh-dash ghostty git homebrew kitty lazygit opencode tmux zsh)
 for dir in "${config_dirs[@]}"; do
     install_config_dir "$dir"
 done
@@ -192,21 +192,17 @@ symlink_config "claude-code/skills" ~/.claude/skills
 # or every `brew update` on a fresh machine ends in "command not found".
 symlink_config "bin/esp-clangd-update" ~/.local/bin/esp-clangd-update
 
-# superset-repatch is called bare by the same `brew` wrapper, for the same
-# reason. It rebuilds ~/Applications/Superset-transparent.app from the freshly
-# upgraded /Applications/Superset.app, since a cask upgrade drops the
-# transparency patches, the asar-integrity hash and the ad-hoc signature.
-symlink_config "bin/superset-repatch" ~/.local/bin/superset-repatch
-
-# paseo-repatch is the same idea for Paseo, and needs the symlink for the same
-# reason. It also gets run by hand between cask upgrades: Paseo's in-app
+# paseo-repatch is called bare by the same `brew` wrapper, so it needs the same
+# symlink. It rebuilds a transparent Paseo.app after a cask upgrade drops the
+# patches, and also gets run by hand between cask upgrades: Paseo's in-app
 # electron-updater replaces /Applications/Paseo.app without telling brew, so on
 # the beta channel the wrapper never fires and the rebuild is manual.
 symlink_config "bin/paseo-repatch" ~/.local/bin/paseo-repatch
 
 # claude-settings-sync reports drift between ~/.claude/settings.json and the
-# copy tracked here. They cannot be symlinked: Superset rewrites the live file
-# on every app start, so the tracked copy is a template and deliberate settings
+# copy tracked here. They are not symlinked: Claude Code writes /config changes
+# into the live file, and through a symlink those would land in this repo as
+# unexplained drift. So the tracked copy is a template and deliberate settings
 # have to be carried across by hand.
 symlink_config "bin/claude-settings-sync" ~/.local/bin/claude-settings-sync
 
