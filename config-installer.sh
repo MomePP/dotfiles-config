@@ -210,6 +210,3 @@ symlink_config "bin/claude-settings-sync" ~/.local/bin/claude-settings-sync
 # ~/.claude/hooks/context-mode-cache-heal.mjs is vendor-managed — the tool
 # redeploys and re-registers its own hook, so it self-heals on a fresh machine.
 # Tracking it would only mirror vendor output into this repo on every update.
-
-# INFO: -- Claude reads the opencode config dir; symlink rather than duplicate it
-symlink_config "opencode" "$config_path/Claude"

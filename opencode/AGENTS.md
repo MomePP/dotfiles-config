@@ -4,24 +4,6 @@
 > The active CLI tool is opencode — do not assume Claude Code conventions,
 > paths, or behaviors.
 
-# Path Compatibility: ~/.config/Claude → ~/.config/opencode
-
-Anthropic's API injects a server-side Claude Code system prompt that
-references `~/.config/Claude/` paths. These paths don't exist — our
-files live under `~/.config/opencode/`. A symlink bridges the gap:
-
-```bash
-# If ~/.config/Claude does not exist, create the symlink:
-# ln -s ~/.config/opencode ~/.config/Claude
-```
-
-**Why this matters**: subagents (e.g., ContextScout) receive the
-Anthropic-injected paths and fail to resolve context files without it.
-This is NOT an OpenCode bug — it's Anthropic's server-side injection
-using hardcoded Claude Code paths.
-
-**Verify**: `ls -la ~/.config/Claude` should show `-> ~/.config/opencode`
-
 # Code Intelligence
 
 Prefer LSP over Grep/Glob/Read for code navigation:
