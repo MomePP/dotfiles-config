@@ -192,7 +192,6 @@ alias vi='nvim'
 alias lg='lazygit'
 alias cat='bat'
 
-alias rbrew='arch -x86_64 /usr/local/bin/brew'
 alias rosetta='arch -x86_64'
 
 alias py='python3'
