@@ -2,12 +2,9 @@
 	name = momeppkt
 	email = peeranut32@gmail.com
 [core]
-	excludesfile = /Users/momeppkt/.gitignore_global
 	pager = delta --paging=never
 [interactive]
     diffFilter = delta --color-only
-[add.interactive]
-    useBuiltin = false
 [init]
 	defaultBranch = main
 [difftool]
@@ -15,8 +12,6 @@
 [diff]
     colorMoved = default
     tool = nvimdiff
-[difftool "nvimdiff"]
-	cmd = nvim -d $LOCAL $REMOTE
 [merge]
     conflictstyle = diff3
     tool = nvimmerge
@@ -24,17 +19,13 @@
 	keepBackup = false
 	prompt = false
 [mergetool "nvimmerge"]
-	; cmd = nvim -d $MERGED $REMOTE $LOCAL -c 'wincmd J | norm ]c'
 	cmd = nvim -d $MERGED
 [delta]
-    navigate = true
 	features = oxocarbon
 [include]
-	path = /Users/momeppkt/.config/delta/themes.gitconfig
+	path = ~/.config/delta/themes.gitconfig
 [pull]
 	rebase = true
-[credential]
-	helper = osxkeychain
 [credential "https://gitlab.com"]
 	helper = 
 	helper = !glab auth git-credential
