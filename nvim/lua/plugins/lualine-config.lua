@@ -162,7 +162,7 @@ M.opts = function()
 
     return {
         options = {
-            theme = require('plugins.colorscheme').lualine,
+            theme = 'oxocarbon',
             icons_enabled = true,
             section_separators = ' ',
             component_separators = ' ',
