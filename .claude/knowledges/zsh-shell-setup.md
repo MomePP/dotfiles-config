@@ -30,12 +30,12 @@ Order in `.zshrc` matters: `compinit` first (carapace's init calls `compdef`,
 which does not exist until the completion system is loaded), then the rest.
 
 ```zsh
-autoload -Uz compinit && compinit -d "$XDG_CACHE_HOME/zsh/zcompdump"
-source <(carapace _carapace zsh)
+autoload -Uz compinit && compinit -d "$_zcompdump"
+(( $+commands[carapace] )) && source <(carapace _carapace zsh)
 eval "$(starship init zsh)"
 eval "$(fnm env --use-on-cd --shell zsh)"
 eval "$(pyenv init - zsh)"
-source <(SHELL=zsh bun completions)
+(( $+commands[bun] )) && source <(SHELL=zsh bun completions)
 ```
 
 Gotchas behind those lines:
@@ -129,7 +129,9 @@ It also mirrors brew's own split for the Espressif clangd fork, which has no
 formula and no PlatformIO package: `esp-clangd-update --check` on `update`
 (reports what is available), `--quiet` on `upgrade` (installs it). Only those
 two subcommands, since each costs a GitHub API call and `brew --prefix`-style
-invocations must stay cheap.
+invocations must stay cheap. `upgrade` also runs `paseo-repatch` (rebuild the
+transparent Paseo.app after a cask upgrade) and `claude-settings-sync --quiet`
+(report settings drift), each `|| true` so neither masks a successful upgrade.
 
 ## Everything else inherits the login shell
 
