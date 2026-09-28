@@ -1274,6 +1274,12 @@ def main() -> int:
 
     if running_pids():
         if not args.restart:
+            # A MISSED build is recorded in the stamp so this refusal can still
+            # say so — otherwise a broken patch stays invisible for as long as
+            # Paseo happens to be open during `brew upgrade`.
+            if stamp.exists() and "missed" in stamp.read_text().split():
+                print("paseo-repatch: the last build left patches unapplied (MISSED) — "
+                      "Paseo's code moved and they need rewriting", file=sys.stderr)
             print(f"paseo-repatch: {PATCHED.name} is running — quit it first, "
                   f"or pass --restart to have it quit and reopen around the rebuild",
                   file=sys.stderr)
@@ -1326,11 +1332,10 @@ def main() -> int:
     # and anything added there once the bundle is sealed makes
     # `codesign --verify` report a missing sealed resource. macOS still launches
     # such a bundle, but a signature that cannot be verified is no signature to
-    # check against when something does go wrong. Only a complete build is
-    # stamped: a MISSED patch has to keep failing loudly on every run until the
-    # patch is rewritten, not once and then go quiet as "already current".
-    if not missed:
-        stamp.write_text(want + "\n")
+    # check against when something does go wrong. A MISSED build is stamped as
+    # such, which never equals `want`: every later run rebuilds and fails loudly
+    # until the patch is rewritten, instead of going quiet as "already current".
+    stamp.write_text(want + ("\nmissed" if missed else "") + "\n")
 
     # Editing anything under Contents/ invalidates the Developer ID signature,
     # and the hardened runtime means the app will not launch unsigned.
