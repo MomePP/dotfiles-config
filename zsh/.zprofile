@@ -9,8 +9,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # -- PATH ---------------------------------------------------------------------
 #
-# Listed low-to-high precedence so the resulting order matches what nushell's
-# `path add` produced. pyenv shims and the fnm multishell dir are NOT here —
+# Listed low-to-high precedence. pyenv shims and the fnm multishell dir are NOT here —
 # their inits in .zshrc prepend them, which is how both tools want it.
 #
 # rustup is spelled out rather than `$(brew --prefix rustup)`: the opt/ path is

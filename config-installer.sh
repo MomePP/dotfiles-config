@@ -7,7 +7,7 @@ brew install lazygit git-flow-next git-delta ripgrep fd eza fnm neovim gh bat py
 # without them still gets a working shell.
 brew install zsh-autosuggestions zsh-syntax-highlighting
 # brew install opencode
-# brew install --cask ghostty@tip
+# brew install --cask ghostty@tip font-maple-mono-nf
 
 config_path=~/.config
 
@@ -42,7 +42,7 @@ install_config_dir() {
     fi
     if [ -d "$target" ]; then
         found=true
-        read -p "found exist $name config.. overwrite (y) or (n) ? : " update
+        read -r -p "found exist $name config.. overwrite (y) or (n) ? : " update
     fi
     if [ "$update" = "y" ]; then
         if $found; then
@@ -72,7 +72,7 @@ install_config_file() {
     fi
     if [ -f "$target" ]; then
         found=true
-        read -p "found exist $name config.. overwrite (y) or (n) ? : " update
+        read -r -p "found exist $name config.. overwrite (y) or (n) ? : " update
     fi
     if [ "$update" = "y" ]; then
         if $found; then
@@ -99,7 +99,7 @@ copy_config() {
         return
     fi
     if [[ -e "$target" ]]; then
-        read -p "found exist $(basename "$target") .. overwrite (y) or (n) ? : " update
+        read -r -p "found exist $(basename "$target") .. overwrite (y) or (n) ? : " update
     fi
     if [ "$update" = "y" ]; then
         mkdir -p "$(dirname "$target")"
@@ -125,7 +125,7 @@ symlink_config() {
     fi
     if [[ -e "$target" || -L "$target" ]]; then
         found=true
-        read -p "found exist $(basename "$target") .. overwrite (y) or (n) ? : " update
+        read -r -p "found exist $(basename "$target") .. overwrite (y) or (n) ? : " update
     fi
     if [ "$update" = "y" ]; then
         if $found; then
@@ -140,7 +140,7 @@ symlink_config() {
 }
 
 # INFO: -- install config directories
-config_dirs=(nvim aerospace aerospace-swipe bat bin carapace claude-code delta eza gh-dash ghostty git homebrew lazygit opencode tmux zsh)
+config_dirs=(nvim aerospace aerospace-swipe bat bin carapace claude-code delta eza gh-dash ghostty git homebrew lazygit opencode paseo tmux zsh)
 for dir in "${config_dirs[@]}"; do
     install_config_dir "$dir"
 done
