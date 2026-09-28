@@ -42,6 +42,8 @@ reported rather than silently skipped — that is the signal that a patch needs
 rewriting for a new version.
 """
 
+from __future__ import annotations
+
 import argparse
 import hashlib
 import json
@@ -1305,8 +1307,10 @@ def main() -> int:
     else:
         notes.append("MISSED  updater neutered: app-update.yml not found")
 
+    missed = any(n.startswith("MISSED") for n in notes)
     for note in notes:
-        print(f"  {note}")
+        if not args.quiet or note.startswith("MISSED"):
+            print(f"  {note}")
 
     # Electron refuses to load an asar whose hash does not match this key, and
     # the key name contains a dot, so PlistBuddy (`:` separated) is required —
@@ -1322,8 +1326,11 @@ def main() -> int:
     # and anything added there once the bundle is sealed makes
     # `codesign --verify` report a missing sealed resource. macOS still launches
     # such a bundle, but a signature that cannot be verified is no signature to
-    # check against when something does go wrong.
-    stamp.write_text(want + "\n")
+    # check against when something does go wrong. Only a complete build is
+    # stamped: a MISSED patch has to keep failing loudly on every run until the
+    # patch is rewritten, not once and then go quiet as "already current".
+    if not missed:
+        stamp.write_text(want + "\n")
 
     # Editing anything under Contents/ invalidates the Developer ID signature,
     # and the hardened runtime means the app will not launch unsigned.
@@ -1336,7 +1343,7 @@ def main() -> int:
     if args.restart:
         subprocess.run(["open", "-a", str(PATCHED)], check=True)
 
-    if any(n.startswith("MISSED") for n in notes):
+    if missed:
         print("paseo-repatch: some patches did not apply — Paseo's code moved, they need rewriting",
               file=sys.stderr)
         return 2

@@ -49,13 +49,31 @@ def strip_vendor_hooks(hooks: dict | None) -> dict | None:
     for event, groups in hooks.items():
         groups = [
             {**g, "hooks": own}
-            for g in groups
-            if (own := [h for h in g.get("hooks", [])
-                        if not any(m in h.get("command", "") for m in VENDOR_HOOK_MARKERS)])
+            for g in groups if isinstance(g, dict)
+            if (own := [h for h in g.get("hooks", []) if isinstance(h, dict)
+                        and not any(m in (h.get("command") or "") for m in VENDOR_HOOK_MARKERS)])
         ]
         if groups:
             kept[event] = groups
     return kept or None
+
+
+def with_key(repo: dict, key: str, value, live_order: list) -> dict:
+    """Set repo[key]; a key new to the repo goes right after the key that
+    precedes it in live, so the template keeps the live file's order instead
+    of collecting new keys at the end. Existing keys stay where they are."""
+    if key in repo:
+        repo[key] = value
+        return repo
+    before = [k for k in live_order[:live_order.index(key)] if k in repo]
+    out = {}
+    if not before:
+        out[key] = value
+    for k, v in repo.items():
+        out[k] = v
+        if before and k == before[-1]:
+            out[key] = value
+    return out
 
 
 def summarise(value, width: int = 88) -> str:
@@ -112,7 +130,7 @@ def main() -> int:
 
     for key in drift:
         if key in live:
-            repo[key] = live[key]
+            repo = with_key(repo, key, live[key], list(live))
         else:
             # Present in the repo but gone from live: Claude Code dropped it,
             # so the template should drop it too rather than resurrect it.

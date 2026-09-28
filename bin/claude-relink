@@ -8,7 +8,7 @@
 # after each `brew upgrade` or you keep running the stale binary.
 set -e
 
-target=$(readlink /opt/homebrew/bin/claude)
+target=$(readlink /opt/homebrew/bin/claude) || target=
 [ -x "$target" ] || { echo "claude-relink: no cask binary at $target" >&2; exit 1; }
 
 # Silent on the no-op path: this runs after every `brew` invocation via the
