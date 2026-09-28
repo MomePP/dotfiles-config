@@ -11,8 +11,9 @@ mouse-hide-while-typing = true
 copy-on-select = clipboard
 # `title` sets the pane title from the shell (OSC 2) — tmux falls back to the
 # hostname without it, so `choose-tree` shows no path; zsh ships nothing of the
-# sort. `cursor` stays off: .zshrc sets the shape per vi keymap itself.
-shell-integration-features = title
+# sort. `no-cursor`: .zshrc sets the shape per vi keymap itself (an omitted
+# feature keeps its default, and cursor defaults on).
+shell-integration-features = no-cursor,title
 cursor-style = block
 
 # macos icon
