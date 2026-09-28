@@ -3,7 +3,8 @@
 ## Anything with a `FileType` autocmd loads on `BufReadPre`/`BufNewFile`
 
 nvim-treesitter (`plugins/treesitter-config.lua`) and mason-lspconfig
-(`plugins/lsp-config.lua`) use `event = { 'BufReadPre', 'BufNewFile' }`.
+(`plugins/lsp-config.lua`) use `event = { 'BufReadPre', 'BufNewFile' }`;
+treesitter also loads on `FileType`, so `:enew` + `:set ft=…` gets highlighting.
 
 They used to load on `BufEnter`. zpack replays only the triggering event
 after loading a plugin, and for the file passed on the command line
@@ -16,9 +17,6 @@ starts treesitter for Lua itself.
 Session restore works because `plugins/sessions-config.lua` sources the session
 from a `VimEnter` autocmd with `nested = true`; without `nested`, restored
 buffers never fire `FileType` and get neither treesitter nor LSP.
-
-Buffers that never read a file (`nvim -`, `:enew` then `:set ft=…`) don't
-trigger the load until a real file is opened.
 
 Headless check (4 s lets servers attach):
 
@@ -42,3 +40,24 @@ before adding a mapping.
 `plugins/lualine-config.lua` sets `theme = 'oxocarbon'` directly (oxocarbon.nvim
 ships `lua/lualine/themes/oxocarbon.lua`). A `nil` theme silently falls back to
 lualine's `auto`.
+
+## blink.cmp loads with the LSP, not on InsertEnter
+
+blink registers its completion capabilities for every server from its
+`plugin/` file when it loads. Lazy-loaded on `InsertEnter`, every server that
+started at file open missed them. It is now a dependency of the
+mason-lspconfig spec (~10 ms on the first file open). Check: a client's
+`capabilities.textDocument.completion` differs from
+`vim.lsp.protocol.make_client_capabilities()`'s once blink applied.
+
+mason-lspconfig's `automatic_enable` excludes `ts_ls` and `omnisharp_mono`:
+vtsls covers TS/JS, and `ts_ls` would attach alongside it.
+
+## Side effects go in `config`, not in `keys` or at module top
+
+zpack calls a spec's `config(plugin, merged_opts)` *instead of* its default
+`setup(opts)`, so a `config` that calls `require('x').setup(opts)` itself is
+not a double setup. Autocmds a plugin needs (marks' `BufWritePost` refresh,
+sidekick's `VimResized` float re-fit) live there, in an augroup — not in the
+`keys` resolver or at module import, where they run whether or not the plugin
+ever loads.

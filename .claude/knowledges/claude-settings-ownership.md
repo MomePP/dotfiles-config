@@ -26,6 +26,13 @@ deliberate settings and your own hooks (`deny-git-identity-override.sh`,
   new tool that injects hooks shows up as `hooks` drift until its marker is
   added there.
 
+## Plugin permissions stay global even when the plugin isn't
+
+`enabledPlugins` in the global file is not the full list: playwright and
+supabase are enabled per project (`badminton-platform`, `gogo-code`, …), so
+their `mcp__plugin_*__*` allows in the global template are live. Check project
+`.claude/settings.json` files before calling a plugin permission dead.
+
 ## Porting a deliberate change
 
 Run `claude-settings-sync` — it reports drift by key, exits 1 when there is

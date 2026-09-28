@@ -10,9 +10,13 @@ The old `default-terminal $TERM` copied whichever client *started the server*
 the pane `TERM` was effectively random.
 
 Outer-terminal capabilities are negotiated per client by the
-`terminal-features` lines (keyed on the client's `TERM`: `xterm-256color*`,
-`xterm-ghostty`), so RGB and `usstyle` (undercurl, underline colour) reach
-Ghostty regardless of the pane's `TERM`. Verified 2026-09-28: nvim inside a
+`terminal-features` lines only (keyed on the client's `TERM`:
+`xterm-256color*`, `xterm-ghostty`), so RGB and `usstyle` (undercurl, underline
+colour) reach Ghostty regardless of the pane's `TERM`. There are no
+`terminal-overrides` (the old `Tc`/`Smulx`/`Setulc` lines duplicated those
+features); `set -gu terminal-features` / `terminal-overrides` at the top of
+`tmux.conf` resets both on every reload, so a `source-file` never stacks copies
+and drops rules removed from the file. Verified 2026-09-28: nvim inside a
 `tmux-256color` pane emits undercurl (tmux stores `4:3` cells), keeps
 `termguicolors` on, and it renders curly in Ghostty inside and outside tmux.
 
@@ -35,3 +39,8 @@ sleep 2; tmux -L t capture-pane -p -e | grep -c '4:3'; tmux -L t kill-server
 
 Parse-check the full conf without running it:
 `env -u TMUX tmux -L p -f /dev/null new -d \; source-file -n ~/.config/tmux/tmux.conf \; kill-server`.
+
+The status line lives in `tmux/tmux.status.conf` (was `tmux.powerline.conf`),
+sourced from `tmux.conf`. To prove a cleanup changed nothing, dump
+`show -g`, `show -gw`, `show -s` and `list-keys` from a private server that
+sources the conf with the `run`/tpm lines stripped, and diff before/after.
