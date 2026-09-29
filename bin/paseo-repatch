@@ -249,13 +249,16 @@ GHOSTTY_FONT_STYLES = {
     "extrabold": 800, "ultrabold": 800, "black": 900, "heavy": 900,
 }
 
-# The four adjacent constructor keys as one anchor, unique in the bundle. The
-# resolvers and the options object are reached through minified bindings, so
-# both are captured; `\1` and `\2` assert the size pair uses the same ones.
+# The constructor keys from cursorStyle to lineHeight as one anchor, unique in
+# the bundle. The resolvers and the options object are reached through minified
+# bindings, so both are captured; `\1` and `\2` assert the size pair uses the
+# same ones. Whatever keys sit between fontSize and lineHeight (0.10.1 added
+# `linkHandler:{activate:f}`) are captured as `\3` and carried through as-is.
 TERMINAL_METRICS = re.compile(
     r'cursorStyle:"bar",'
     r"fontFamily:\(0,([A-Za-z_$][\w$]*)\.resolveTerminalFontFamily\)\(([A-Za-z_$][\w$]*)\.fontFamily\),"
     r"fontSize:\(0,\1\.resolveTerminalFontSize\)\(\2\.fontSize\),"
+    r"((?:[A-Za-z_$][\w$]*:(?:\{[^{}]*\}|[^,{}()]+),)*?)"
     r"lineHeight:1,"
 )
 
@@ -1114,7 +1117,7 @@ def patch_renderer(path: Path, look: dict, term: dict, ansi: str) -> list[str]:
     )
     replace_re("terminal metrics", TERMINAL_METRICS,
                f'cursorStyle:"{term["cursor_style"]}",fontFamily:{family},'
-               f'fontSize:{size},{weights}lineHeight:{term["line_height"]},', 1)
+               f'fontSize:{size},{weights}\\3lineHeight:{term["line_height"]},', 1)
     if term["font_family"] is not None or term["font_size"] is not None:
         replace_re("terminal metrics (settings sync)", TERMINAL_METRICS_SYNC,
                    f".options.fontFamily={family},\\3.options.fontSize={size}", 1)
