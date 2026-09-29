@@ -9,7 +9,7 @@ return {
             },
             diagnostics = {
                 enable = true,
-                globals = { 'vim', 'use' },
+                globals = { 'vim' },
             },
             hint = {
                 enable = true,

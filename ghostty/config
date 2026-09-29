@@ -10,9 +10,10 @@ adjust-cell-height = 8%
 mouse-hide-while-typing = true
 copy-on-select = clipboard
 # `title` sets the pane title from the shell (OSC 2) — tmux falls back to the
-# hostname without it, so `choose-tree` shows no path. nushell used to emit this
-# itself via shell_integration.osc2; zsh ships nothing of the sort.
-shell-integration-features = cursor,title
+# hostname without it, so `choose-tree` shows no path; zsh ships nothing of the
+# sort. `no-cursor`: .zshrc sets the shape per vi keymap itself (an omitted
+# feature keeps its default, and cursor defaults on).
+shell-integration-features = no-cursor,title
 cursor-style = block
 
 # macos icon

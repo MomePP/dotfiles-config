@@ -1,66 +1,44 @@
-# ~/.claude/settings.json is not ours to symlink
+# ~/.claude/settings.json is a template, not a mirror
 
 `config-installer.sh` symlinks `claude-code/settings.json` to
 `~/.claude/settings.json`, which is right for provisioning a fresh machine and
 wrong for keeping it linked afterwards.
 
-**Superset rewrites that file in place every time the app starts**, replacing
-the symlink with a plain file. Claude Code writes to it too — `/config` changes
-land there. Re-linking only resets a countdown to the next Superset restart.
+Several writers touch the live file: Claude Code itself (every `/config`
+change), and tools that register their own hooks in it — context-mode and
+Paseo. The live file ends up a plain file, not a link. And while a link *is*
+in place, those writes land straight in this repo as uncommitted drift. That
+is how `remoteControlAtStartup` once appeared as a repo change without anyone
+editing it.
 
-Tested twice in August 2026, because the first result had an obvious
-alternative explanation:
+## What the tracked copy carries
 
-1. Symlinked to a repo copy with **no** Superset hooks, restarted → plain file,
-   hooks restored. Consistent with "it writes when its hooks are missing".
-2. So the hooks were tracked in the repo copy, making live and repo
-   byte-identical, and it was symlinked and restarted again → **still replaced
-   with a plain file**, even with nothing to add.
+`claude-code/settings.json` is what a new machine starts from. It carries
+deliberate settings and your own hooks (`deny-git-identity-override.sh`,
+`codegraph prompt-hook`), and **not**:
 
-The write is unconditional. Tracking the vendor hooks buys nothing, so it was
-reverted and they stay untracked for the original reason.
+- `statusLine` — claude-hud writes it with a version-stamped plugin-cache path
+  (`claude-settings-sync`'s `IGNORED_KEYS`).
+- Vendor hooks — each tool re-registers its own on install/start, so they
+  self-heal on a fresh machine. `claude-settings-sync` drops any hook whose
+  command matches `VENDOR_HOOK_MARKERS` from both sides before comparing:
+  `context-mode-cache-heal.mjs` and `PASEO_HOOK_CLI` (Paseo agent status). A
+  new tool that injects hooks shows up as `hooks` drift until its marker is
+  added there.
 
-Worth noting the app rewrites on *its* start, not the host service's — the
-`terminal-host.pid` mtime was unchanged across the second test while
-`settings.json` picked up a fresh timestamp.
+## Plugin permissions stay global even when the plugin isn't
 
-## What survives a Superset rewrite
+`enabledPlugins` in the global file is not the full list: playwright and
+supabase are enabled per project (`badminton-platform`, `gogo-code`, …), so
+their `mcp__plugin_*__*` allows in the global template are live. Check project
+`.claude/settings.json` files before calling a plugin permission dead.
 
-Superset preserves the file's existing content and adds only its own hook
-entries — `theme`, `statusLine`, `permissions`, `enabledPlugins` all came
-through untouched. So the live file is safe to edit by hand; it just will not
-stay a symlink.
+## Porting a deliberate change
 
-## Treat the repo copy as a template, not a mirror
-
-`claude-code/settings.json` is what a new machine starts from. It should carry
-deliberate settings and **not** vendor-injected hooks:
-
-- Superset's 8 `notify.sh` hooks (`SessionStart`, `UserPromptSubmit`,
-  `SessionEnd`, `Stop`, `StopFailure`, `PostToolUse`, `PostToolUseFailure`,
-  `PermissionRequest`) re-register themselves on app start.
-- `context-mode-cache-heal.mjs` likewise.
-
-Tracking those would mirror vendor output into the repo on every update, which
-is the reason the installer already documents not doing it.
-
-To port a deliberate change from live into the repo, diff the two by key —
-comparing file sizes is misleading, since the hooks block alone accounts for
-most of the difference:
-
-```bash
-python3 -c "
-import json
-live=json.load(open('$HOME/.claude/settings.json'))
-repo=json.load(open('claude-code/settings.json'))
-print([k for k in set(live)|set(repo) if live.get(k)!=repo.get(k)])"
-```
-
-## Watch out for
-
-If the symlink *is* in place when Claude Code writes settings, the write goes
-straight into the dotfiles repo and shows up as uncommitted drift. That is how
-`remoteControlAtStartup` appeared as a repo change without anyone editing it.
+Run `claude-settings-sync` — it reports drift by key, exits 1 when there is
+any. `--write` ports live into the repo copy (vendor hooks stripped, key order
+kept) and stages it for review; it never commits. `--all` includes
+`IGNORED_KEYS`.
 
 ## claude-hud's config must be copied, never symlinked
 

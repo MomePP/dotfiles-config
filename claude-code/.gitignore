@@ -49,7 +49,3 @@ debug/
 *.bak
 *.swp
 .DS_Store
-
-# Superset installs its own Claude Code plugin here (.superset-managed marker);
-# vendor-owned, updated by the app — same reasoning as skills/learned/.
-/skills/superset/

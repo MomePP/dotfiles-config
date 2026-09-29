@@ -1,16 +1,11 @@
-local utils = require('config.fn-utils')
-local M = {
+return {
+    'momepp/oxocarbon.nvim',
     name = 'nvim-colorscheme',
     -- dev = true,
     lazy = false,
     priority = 1000,
+    config = function()
+        vim.opt.background = 'dark'
+        vim.cmd.colorscheme 'oxocarbon'
+    end,
 }
-
--- INFO: selection colorscheme
-local theme = require('plugins.colorscheme.oxocarbon-config')
-M = utils.merge(M, theme.info)
-M.config = theme.setup
-M.colors = theme.colors()
-M.lualine = theme.lualine()
-
-return M

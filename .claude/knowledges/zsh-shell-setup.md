@@ -30,12 +30,12 @@ Order in `.zshrc` matters: `compinit` first (carapace's init calls `compdef`,
 which does not exist until the completion system is loaded), then the rest.
 
 ```zsh
-autoload -Uz compinit && compinit -d "$XDG_CACHE_HOME/zsh/zcompdump"
-source <(carapace _carapace zsh)
+autoload -Uz compinit && compinit -d "$_zcompdump"
+(( $+commands[carapace] )) && source <(carapace _carapace zsh)
 eval "$(starship init zsh)"
 eval "$(fnm env --use-on-cd --shell zsh)"
 eval "$(pyenv init - zsh)"
-source <(SHELL=zsh bun completions)
+(( $+commands[bun] )) && source <(SHELL=zsh bun completions)
 ```
 
 Gotchas behind those lines:
@@ -129,12 +129,14 @@ It also mirrors brew's own split for the Espressif clangd fork, which has no
 formula and no PlatformIO package: `esp-clangd-update --check` on `update`
 (reports what is available), `--quiet` on `upgrade` (installs it). Only those
 two subcommands, since each costs a GitHub API call and `brew --prefix`-style
-invocations must stay cheap.
+invocations must stay cheap. `upgrade` also runs `paseo-repatch` (rebuild the
+transparent Paseo.app after a cask upgrade) and `claude-settings-sync --quiet`
+(report settings drift), each `|| true` so neither masks a successful upgrade.
 
 ## Everything else inherits the login shell
 
-tmux (no `default-shell`/`default-command`), ghostty, kitty, lazygit,
-gh-dash, aerospace, opencode, superset, and every LaunchAgent pick the shell
+tmux (no `default-shell`/`default-command`), ghostty, lazygit,
+gh-dash, aerospace, and every LaunchAgent pick the shell
 up from the passwd entry — none of them pin one. nvim sets no `vim.o.shell`.
 `bin/claude-relink` and `bin/esp-clangd-update` are `#!/bin/sh`.
 
@@ -208,3 +210,16 @@ Three eza traps, all found the hard way on 0.23.5:
 wrong nesting level (`ui.header` instead of top-level `header`) produces no
 error, just a section that stayed default-coloured. Verify by eye, or grep the
 output of `eza --color=always … | cat -v` for the expected `38;2;R;G;B`.
+
+## Ghostty shell-integration features need an explicit `no-`
+
+`shell-integration-features` only changes the features it names; an omitted
+one keeps its default. `cursor` defaults on, so turning it off (zsh sets the
+cursor shape per vi keymap in `zle-keymap-select`) takes `no-cursor,title`, not
+`title`. Verify with `ghostty +show-config --changes-only=false`.
+
+## fnm in nested shells
+
+Each `fnm env` creates a fresh `fnm_multishells/<pid>` dir and prepends it, so
+a shell started from another shell inherits the parent's too. `.zshrc` strips
+`*/fnm_multishells/*` from `path` before `fnm env`, leaving exactly one.

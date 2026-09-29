@@ -5,17 +5,6 @@ keymaps.setup = function()
     vim.keymap.set({ 'n', 'x' }, 'j', [[v:count == 0 ? 'gj' : 'j']], { expr = true, silent = true })
     vim.keymap.set({ 'n', 'x' }, 'k', [[v:count == 0 ? 'gk' : 'k']], { expr = true, silent = true })
 
-    -- INFO: command-line abbreviations
-    -- vim.keymap.set('c', 'W', 'w')
-    -- vim.keymap.set('c', 'W!', 'w!')
-    -- vim.keymap.set('c', 'Wq', 'wq')
-    -- vim.keymap.set('c', 'WQ', 'wq')
-    -- vim.keymap.set('c', 'Wa', 'wa')
-    -- vim.keymap.set('c', 'Q', 'q')
-    -- vim.keymap.set('c', 'Q!', 'q!')
-    -- vim.keymap.set('c', 'Qa', 'qa')
-    -- vim.keymap.set('c', 'QA', 'qa')
-
     -- INFO: add undo break points
     vim.keymap.set('i', ',', ',<C-g>u')
     vim.keymap.set('i', '.', '.<C-g>u')
@@ -23,8 +12,6 @@ keymaps.setup = function()
     vim.keymap.set('i', '?', '?<C-g>u')
 
     -- INFO: windows/buffers navigated keys
-    -- vim.keymap.set('n', '<Tab>', '<Cmd>bnext<CR>')
-    -- vim.keymap.set('n', '<S-Tab>', '<Cmd>bprev<CR>')
     vim.keymap.set('n', 'wq', '<C-w>q')
 
     -- INFO: enter command mode with lua prefix
@@ -37,18 +24,11 @@ keymaps.setup = function()
     vim.keymap.set('n', '<leader>d', '"_d') -- delete without yank
     vim.keymap.set('n', 'c', '"_c')
     vim.keymap.set('n', 'x', '"_x')
-    vim.keymap.set('x', 'p', '"_c<C-r>+<Esc>') -- replace-paste in insert mode
+    vim.keymap.set('x', 'p', '"_c<C-r>"<Esc>') -- replace-paste in insert mode
     vim.keymap.set('i', '<S-Tab>', '<C-d>')    -- de-tab while in insert mode
-    vim.keymap.set('n', 'Y', 'y$')             -- Yank line after cursor
     vim.keymap.set('n', 'P', '<cmd>pu<CR>')    -- Paste on new line
     vim.keymap.set('v', '<', '<gv')
     vim.keymap.set('v', '>', '>gv')
-
-    -- INFO: resize window
-    -- vim.keymap.set('n', '<C-w><left>', '<C-w><')
-    -- vim.keymap.set('n', '<C-w><right>', '<C-w>>')
-    -- vim.keymap.set('n', '<C-w><up>', '<C-w>+')
-    -- vim.keymap.set('n', '<C-w><down>', '<C-w>-')
 
     -- INFO: remap jump keys
     vim.keymap.set('n', '<C-j>', '<C-i>')

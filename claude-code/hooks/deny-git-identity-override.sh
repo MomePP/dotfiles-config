@@ -27,22 +27,25 @@ deny() {
 
 boundary='(^|[[:space:];&|(`]|\$\()'
 
+# The identity commits must carry — the one ~/.gitconfig sets.
+identity='momeppkt <peeranut32@gmail.com>'
+
 # GIT_AUTHOR_* / GIT_COMMITTER_* environment overrides.
 if printf '%s' "$cmd" | grep -qE "${boundary}GIT_(AUTHOR|COMMITTER)_(NAME|EMAIL)="; then
-  deny "Blocked: GIT_AUTHOR_*/GIT_COMMITTER_* override the commit identity for this command. Commits must be authored momeppkt <peeranut32@gmail.com>. Drop the variable and let git read the configured identity."
+  deny "Blocked: GIT_AUTHOR_*/GIT_COMMITTER_* override the commit identity for this command. Commits must be authored $identity. Drop the variable and let git read the configured identity."
 fi
 
 # git -c user.name=... / -c user.email=...
 if printf '%s' "$cmd" | grep -qE "${boundary}git([[:space:]]+[^[:space:]]+)*[[:space:]]+-c[[:space:]]*user\.(name|email)="; then
-  deny "Blocked: 'git -c user.name/user.email=' overrides the commit identity for this command. Commits must be authored momeppkt <peeranut32@gmail.com>."
+  deny "Blocked: 'git -c user.name/user.email=' overrides the commit identity for this command. Commits must be authored $identity."
 fi
 
 # git config ... user.name/user.email <value>, and --unset/--add/--replace-all.
 if printf '%s' "$cmd" | grep -qE "${boundary}git([[:space:]]+[^[:space:]]+)*[[:space:]]+config([[:space:]]+[^[:space:]]+)*[[:space:]]+user\.(name|email)[[:space:]]+[^-[:space:]]"; then
-  deny "Blocked: writing user.name/user.email changes the commit identity. Commits must be authored momeppkt <peeranut32@gmail.com>. Reads are fine: 'git config --get user.email'."
+  deny "Blocked: writing user.name/user.email changes the commit identity. Commits must be authored $identity. Reads are fine: 'git config --get user.email'."
 fi
 if printf '%s' "$cmd" | grep -qE "${boundary}git([[:space:]]+[^[:space:]]+)*[[:space:]]+config[[:space:]]+([^[:space:]]+[[:space:]]+)*--(unset|unset-all|add|replace-all)([[:space:]]+[^[:space:]]+)*[[:space:]]+user\.(name|email)"; then
-  deny "Blocked: unsetting or rewriting user.name/user.email changes the commit identity. Commits must be authored momeppkt <peeranut32@gmail.com>."
+  deny "Blocked: unsetting or rewriting user.name/user.email changes the commit identity. Commits must be authored $identity."
 fi
 
 exit 0

@@ -1,4 +1,4 @@
-vim.opt.number = false
-vim.opt.relativenumber = false
-vim.opt.signcolumn = "no"
-vim.o.cursorline = true
+vim.opt_local.number = false
+vim.opt_local.relativenumber = false
+vim.opt_local.signcolumn = "no"
+vim.opt_local.cursorline = true

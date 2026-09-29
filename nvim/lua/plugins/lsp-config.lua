@@ -5,9 +5,12 @@ local mason_module = {
     'mason-org/mason-lspconfig.nvim',
     dependencies = {
         { 'mason-org/mason.nvim', opts = { ui = { border = 'solid' } } },
-        { 'neovim/nvim-lspconfig' }
+        { 'neovim/nvim-lspconfig' },
+        -- NOTE: blink registers its completion capabilities for every server
+        -- when it loads, so it must load before the first server starts.
+        { 'saghen/blink.cmp' },
     },
-    event = 'BufEnter',
+    event = { 'BufReadPre', 'BufNewFile' },
 }
 
 mason_module.config = function()
@@ -32,12 +35,9 @@ mason_module.config = function()
 
     -- INFO: config lsp log with formatting
     vim.lsp.log.set_level 'off' --    Levels by name: "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "OFF"
-    -- require('vim.lsp.log').set_format_func(vim.inspect)
 
-    -- INFO: global default capabilities for all servers
-    vim.lsp.config('*', { capabilities = vim.lsp.protocol.make_client_capabilities() })
-
-    -- INFO: load LSP configurations from individual files in ~/.config/nvim/lsp directory
+    -- INFO: every after/lsp/<server>.lua names a server to install and enable;
+    -- a `return {}` stub marks one that needs no overrides
     local server_names = vim.iter(vim.api.nvim_get_runtime_file('after/lsp/*.lua', true))
         :map(function(file) return vim.fn.fnamemodify(file, ':t:r') end)
         :totable()
@@ -53,7 +53,8 @@ mason_module.config = function()
     -- NOTE: automatically setup lsp from default config installed via mason.nvim
     require('mason-lspconfig').setup {
         ensure_installed = server_names,
-        automatic_enable = true,
+        -- NOTE: vtsls covers TS/JS; ts_ls would attach alongside it
+        automatic_enable = { exclude = { 'ts_ls', 'omnisharp_mono' } },
     }
 end
 
@@ -67,7 +68,7 @@ local lspconfig_module = {
 lspconfig_module.config = function()
     -- INFO: config lsp keymaps
     local function lsp_keymap(bufnr, mapping)
-        local opts = { buffer = bufnr, silent = true, noremap = true }
+        local opts = { buffer = bufnr, silent = true }
 
         for _, keymap in pairs(mapping) do
             vim.keymap.set('n', keymap.key, keymap.cmd, opts)
@@ -82,6 +83,8 @@ lspconfig_module.config = function()
         end
 
         local inlayhint_augroup = vim.api.nvim_create_augroup('inlayhint_augroup', { clear = false })
+        vim.api.nvim_clear_autocmds({ group = inlayhint_augroup, buffer = bufnr })
+
         vim.api.nvim_create_autocmd('InsertEnter', {
             buffer = bufnr,
             group = inlayhint_augroup,
@@ -143,29 +146,6 @@ local diagnostic_module = {
     'dgagn/diagflow.nvim',
     event = 'LspAttach',
 }
-
-diagnostic_module.init = function()
-    vim.diagnostic.config {
-        update_in_insert = false,
-        severity_sort = true,
-        virtual_text = false,
-        virtual_lines = false,
-        signs = {
-            text = {
-                [vim.diagnostic.severity.ERROR] = '',
-                [vim.diagnostic.severity.WARN] = '',
-                [vim.diagnostic.severity.INFO] = '',
-                [vim.diagnostic.severity.HINT] = '',
-            },
-            numhl = {
-                [vim.diagnostic.severity.ERROR] = 'DiagnosticError',
-                [vim.diagnostic.severity.WARN] = 'DiagnosticWarn',
-                [vim.diagnostic.severity.INFO] = 'DiagnosticInfo',
-                [vim.diagnostic.severity.HINT] = 'DiagnosticHint',
-            },
-        }
-    }
-end
 
 diagnostic_module.opts = {
     scope = 'line',

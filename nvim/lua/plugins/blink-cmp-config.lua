@@ -8,7 +8,7 @@ local M = {
     dependencies = {
         { 'saghen/blink.lib' },
         { 'rafamadriz/friendly-snippets' },
-        { 'fang2hou/blink-copilot',      opts = { max_completions = 2, max_attemps = 3 } },
+        { 'fang2hou/blink-copilot',      opts = { max_completions = 2 } },
     },
 }
 

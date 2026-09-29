@@ -2,7 +2,8 @@ local M = {
     'nvim-treesitter/nvim-treesitter',
     branch = 'main',
     build = ':TSUpdate',
-    event = 'BufEnter',
+    -- NOTE: FileType covers buffers that never read a file (:enew + :set ft)
+    event = { 'BufReadPre', 'BufNewFile', 'FileType' },
     dependencies = {
         { 'nvim-treesitter/nvim-treesitter-context',     opts = { zindex = 5, max_lines = 3 } },
         { 'folke/ts-comments.nvim',                      opts = {} },
@@ -27,10 +28,6 @@ M.config = function()
         'latex',
     }
     require('nvim-treesitter').install(ensure_install)
-
-    -- NOTE: extra parser register if filetype not matched
-    -- vim.treesitter.language.register('ini', { 'dosini', 'confini' }) -- supported
-    vim.treesitter.language.register('jsonc', 'json')
 
     local installing = {}
     local lang_cache = {} -- filetype -> language | false

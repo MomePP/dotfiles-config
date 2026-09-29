@@ -93,8 +93,16 @@ brew install zsh-autosuggestions zsh-syntax-highlighting
 > absolute path and the claude-code cask installs to a version-stamped dir, so
 > without it every `brew upgrade` re-triggers "Data Access Blocked".
 
+## Ghostty
+Terminal is the Ghostty tip build, with Maple Mono NF (`ghostty/config`), and
+the prompt is starship (`starship.toml`, initialised from `.zshrc`).
+
+``` bash
+brew install --cask ghostty@tip font-maple-mono-nf
+```
+
 ## tmux
-Requires `tmux` and `tmp`(tmux plugins manager)
+Requires `tmux` and `tpm` (tmux plugin manager)
 
 Already configured with following keybindings
 - **Session** - follow by uppercase-letter
@@ -103,15 +111,15 @@ Already configured with following keybindings
 
 | **Actions**     | Session                    | Window                             | Pane                       |
 | :---        | ---                        | ---                                | ---                        |
-| new         | `<prefix>N`                | `<prefix><C-n>`                    | `<prefix>n`                |
-| next        | `<prefix>J` or `<prefix>O` | `<prefix><C-j>` or `<prefix><C-o>` | `<prefix>j` or `<prefix>o` |
-| previous    | `<prefix>K`                | `<prefix><C-k>`                    | `<prefix>k`                |
-| kill        | `<prefix>X`                | `<prefix><C-x>`                    | `<prefix>x`                |
+| new         | `<prefix>N`                               | `<prefix><C-n>`                          | `<prefix><Enter>` or `<prefix>\|` (side by side), `<prefix>_` (stacked) |
+| next        | `<prefix>J`, `<prefix>L` or `<prefix>O`   | `<prefix><C-j>` or `<prefix><C-o>`       | `<prefix>j`, `<prefix>l` or `<prefix>o` |
+| previous    | `<prefix>K` or `<prefix>H`                | `<prefix><C-k>`                          | `<prefix>k` or `<prefix>h`              |
+| move        |                                           | `<prefix><C-h>` / `<prefix><C-l>` (swap) |                                         |
+| kill        | `<prefix>X`                               | `<prefix><C-x>`                          | `<prefix>x`                             |
 
 ##### Note about tmux terminfo
-the correct way to set up tmux terminfo on macOS, we need to compile the description by using `infocmp` from latest ncurses → [Ref. Notes](https://gist.github.com/joshuarli/247018f8617e6715e1e0b5fd2d39bb6c)
-
-> If you are using kitty terminal, needed to set terminfo to `xterm-kitty`. otherwise, the undercurl is not usable.
+Only needed when `infocmp tmux-256color` fails (macOS 27 ships the entry). The
+correct way to set up tmux terminfo on macOS, we need to compile the description by using `infocmp` from latest ncurses → [Ref. Notes](https://gist.github.com/joshuarli/247018f8617e6715e1e0b5fd2d39bb6c)
 
 ``` bash
 # install latest ncurses

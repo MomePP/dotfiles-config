@@ -18,7 +18,7 @@ opt.mousemodel     = 'extend'
 opt.clipboard      = vim.env.SSH_TTY and '' or 'unnamedplus'
 
 opt.sessionoptions = { 'buffers', 'curdir', 'winsize', 'folds' }
-opt.wildignore     = '**/node_module/*, **/.pio/*, **/.git/*'
+opt.wildignore     = '**/node_modules/*,**/.pio/*,**/.git/*'
 
 -- UI editor
 opt.number         = true
@@ -33,7 +33,6 @@ opt.showcmd        = false
 opt.showmode       = false
 opt.splitright     = true
 
--- opt.foldenable     = false
 opt.foldlevelstart = 99
 opt.foldcolumn     = '1'
 opt.foldtext       = ''
@@ -60,7 +59,6 @@ opt.laststatus    = 3
 opt.statusline    = ' '
 opt.numberwidth   = 3
 opt.signcolumn    = 'yes'
--- opt.statuscolumn  = "%=%{v:virtnum < 1 ? (v:relnum ? v:relnum : v:lnum < 10 ? v:lnum . '  ' : v:lnum) : ''}%=%s"
 
 opt.pumheight     = 10 -- Make popup menu smaller
 opt.pumblend      = 8  -- Make builtin completion menus slightly transparent
@@ -68,7 +66,6 @@ opt.winblend      = 5  -- Make floating windows slightly transparent
 
 -- Editing
 opt.ignorecase    = true -- Ignore case when searching (use `\C` to force not doing that)
-opt.incsearch     = true -- Show search results while typing
 opt.infercase     = true -- Infer letter cases for a richer built-in keyword completion
 opt.smartcase     = true -- Don't ignore case when searching if pattern has upper case
 opt.smartindent   = true -- Make indenting smart
@@ -86,3 +83,25 @@ opt.iskeyword:append { '-' } -- consider string-string as whole word
 opt.formatoptions = 'jrqln1' -- see :h fo-table
 opt.shortmess     = 'fnxoOtTF'
 opt.jumpoptions   = 'stack'
+
+-- Diagnostics: signs only, worst first; diagflow shows the message
+vim.diagnostic.config {
+    update_in_insert = false,
+    severity_sort = true,
+    virtual_text = false,
+    virtual_lines = false,
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = '',
+            [vim.diagnostic.severity.WARN] = '',
+            [vim.diagnostic.severity.INFO] = '',
+            [vim.diagnostic.severity.HINT] = '',
+        },
+        numhl = {
+            [vim.diagnostic.severity.ERROR] = 'DiagnosticError',
+            [vim.diagnostic.severity.WARN] = 'DiagnosticWarn',
+            [vim.diagnostic.severity.INFO] = 'DiagnosticInfo',
+            [vim.diagnostic.severity.HINT] = 'DiagnosticHint',
+        },
+    }
+}

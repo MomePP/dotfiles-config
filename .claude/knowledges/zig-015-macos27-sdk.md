@@ -72,6 +72,8 @@ error coming back.
 - Failure 2 needs either an aligned zig archiver upstream or a build script that
   links the `.dylib` zig already emits.
 
-`zig@0.15` is keg-only: `/opt/homebrew/opt/zig@0.15/bin/zig`, not on PATH.
-It currently has no brew dependents (`brew uses --installed zig@0.15` is empty)
-— it was kept for the herdr source build and can go once nothing needs it.
+`zig@0.15` was uninstalled on 2026-09-28 (it had been kept only for the herdr
+source build; nothing depended on it), and brew auto-removed the two
+dependencies nothing else used, `llvm@20` and `lld@20` (its `lz4`/`xz`/`zstd`
+deps stay, other formulae need them). If a project needs it again: `brew install zig@0.15` — it
+is keg-only, at `/opt/homebrew/opt/zig@0.15/bin/zig`, not on PATH.

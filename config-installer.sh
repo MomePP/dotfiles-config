@@ -1,13 +1,12 @@
 #!/bin/bash
 
 # WARN: must have brew installed
-brew install wget lazygit git-flow-next git-delta ripgrep fd eza fnm neovim gh bat pyenv tmux starship aerospace tree-sitter-cli carapace
+brew install lazygit git-flow-next git-delta ripgrep fd eza fnm neovim gh bat pyenv tmux starship nikitabobko/tap/aerospace tree-sitter-cli carapace jq oven-sh/bun/bun
 # Inline hints and syntax highlighting are the two things zsh has no built-in
 # equivalent for. .zshrc sources them behind an existence check, so a machine
 # without them still gets a working shell.
 brew install zsh-autosuggestions zsh-syntax-highlighting
-# brew install opencode
-# brew install --cask ghostty kitty
+# brew install --cask ghostty@tip font-maple-mono-nf
 
 config_path=~/.config
 
@@ -42,7 +41,7 @@ install_config_dir() {
     fi
     if [ -d "$target" ]; then
         found=true
-        read -p "found exist $name config.. overwrite (y) or (n) ? : " update
+        read -r -p "found exist $name config.. overwrite (y) or (n) ? : " update
     fi
     if [ "$update" = "y" ]; then
         if $found; then
@@ -72,7 +71,7 @@ install_config_file() {
     fi
     if [ -f "$target" ]; then
         found=true
-        read -p "found exist $name config.. overwrite (y) or (n) ? : " update
+        read -r -p "found exist $name config.. overwrite (y) or (n) ? : " update
     fi
     if [ "$update" = "y" ]; then
         if $found; then
@@ -99,7 +98,7 @@ copy_config() {
         return
     fi
     if [[ -e "$target" ]]; then
-        read -p "found exist $(basename "$target") .. overwrite (y) or (n) ? : " update
+        read -r -p "found exist $(basename "$target") .. overwrite (y) or (n) ? : " update
     fi
     if [ "$update" = "y" ]; then
         mkdir -p "$(dirname "$target")"
@@ -125,7 +124,7 @@ symlink_config() {
     fi
     if [[ -e "$target" || -L "$target" ]]; then
         found=true
-        read -p "found exist $(basename "$target") .. overwrite (y) or (n) ? : " update
+        read -r -p "found exist $(basename "$target") .. overwrite (y) or (n) ? : " update
     fi
     if [ "$update" = "y" ]; then
         if $found; then
@@ -140,7 +139,7 @@ symlink_config() {
 }
 
 # INFO: -- install config directories
-config_dirs=(nvim aerospace aerospace-swipe bat bin carapace claude-code delta eza gh-dash ghostty git homebrew kitty lazygit opencode superset tmux zsh)
+config_dirs=(nvim aerospace aerospace-swipe bat bin carapace claude-code delta eza gh-dash ghostty git homebrew lazygit paseo tmux zsh)
 for dir in "${config_dirs[@]}"; do
     install_config_dir "$dir"
 done
@@ -192,28 +191,21 @@ symlink_config "claude-code/skills" ~/.claude/skills
 # or every `brew update` on a fresh machine ends in "command not found".
 symlink_config "bin/esp-clangd-update" ~/.local/bin/esp-clangd-update
 
-# superset-repatch is called bare by the same `brew` wrapper, for the same
-# reason. It rebuilds ~/Applications/Superset-transparent.app from the freshly
-# upgraded /Applications/Superset.app, since a cask upgrade drops the
-# transparency patches, the asar-integrity hash and the ad-hoc signature.
-symlink_config "bin/superset-repatch" ~/.local/bin/superset-repatch
-
-# paseo-repatch is the same idea for Paseo, and needs the symlink for the same
-# reason. It also gets run by hand between cask upgrades: Paseo's in-app
+# paseo-repatch is called bare by the same `brew` wrapper, so it needs the same
+# symlink. It rebuilds a transparent Paseo.app after a cask upgrade drops the
+# patches, and also gets run by hand between cask upgrades: Paseo's in-app
 # electron-updater replaces /Applications/Paseo.app without telling brew, so on
 # the beta channel the wrapper never fires and the rebuild is manual.
 symlink_config "bin/paseo-repatch" ~/.local/bin/paseo-repatch
 
 # claude-settings-sync reports drift between ~/.claude/settings.json and the
-# copy tracked here. They cannot be symlinked: Superset rewrites the live file
-# on every app start, so the tracked copy is a template and deliberate settings
-# have to be carried across by hand.
+# copy tracked here. The symlink above is only for provisioning: Claude Code and
+# hook-registering tools (context-mode, Paseo) rewrite the live file, so
+# the tracked copy is a template and deliberate settings are carried across by
+# hand — see .claude/knowledges/claude-settings-ownership.md.
 symlink_config "bin/claude-settings-sync" ~/.local/bin/claude-settings-sync
 
 # NOTE: the SessionStart hooks in settings.json are NOT tracked here.
 # ~/.claude/hooks/context-mode-cache-heal.mjs is vendor-managed — the tool
 # redeploys and re-registers its own hook, so it self-heals on a fresh machine.
 # Tracking it would only mirror vendor output into this repo on every update.
-
-# INFO: -- Claude reads the opencode config dir; symlink rather than duplicate it
-symlink_config "opencode" "$config_path/Claude"

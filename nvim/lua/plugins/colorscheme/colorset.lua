@@ -37,11 +37,4 @@ M.todocomments = {
     hack  = '#D19A66',
 }
 
-M.lualine = {
-    a = { bg = M.colors.transparent, gui = 'bold' },
-    b = { fg = M.colors.white, bg = M.colors.transparent },
-    c = { fg = M.colors.white, bg = M.colors.transparent },
-}
-
-
 return M

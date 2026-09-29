@@ -30,8 +30,8 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' rehash true
 
 # carapace covers what brew's site-functions do not (lazygit, tmux, cargo) and
-# bridges to fish/bash specs for the rest.
-source <(carapace _carapace zsh)
+# bridges to bash specs for the rest.
+(( $+commands[carapace] )) && source <(carapace _carapace zsh)
 
 # -- tool init ----------------------------------------------------------------
 #
@@ -46,19 +46,20 @@ fi
 
 eval "$(starship init zsh)"
 
-# --use-on-cd switches node per .nvmrc/.node-version on every cd. The nushell
-# config only ever had this as a commented-out env_change hook.
+# --use-on-cd switches node per .nvmrc/.node-version on every cd. Each shell
+# gets its own fnm_multishells dir; drop any inherited from a parent shell first,
+# or every nested shell stacks another one onto PATH.
+path=(${path:#*/fnm_multishells/*})
 eval "$(fnm env --use-on-cd --shell zsh)"
 
-# Does more than the bare shims-on-PATH the nushell config had: also loads
-# pyenv's own completions and defines the pyenv() wrapper that makes
-# `pyenv shell <version>` work.
+# Does more than bare shims-on-PATH: also loads pyenv's own completions and
+# defines the pyenv() wrapper that makes `pyenv shell <version>` work.
 eval "$(pyenv init - zsh)"
 
 # SHELL is pinned rather than inherited: bun picks the completion dialect from
 # $SHELL and hard-errors on anything it does not recognise, which would break
 # this file when sourced from a shell launched before `chsh` took effect.
-source <(SHELL=zsh bun completions)
+(( $+commands[bun] )) && source <(SHELL=zsh bun completions)
 
 # -- history ------------------------------------------------------------------
 HISTFILE="$HOME/.zsh_history"
@@ -192,7 +193,6 @@ alias vi='nvim'
 alias lg='lazygit'
 alias cat='bat'
 
-alias rbrew='arch -x86_64 /usr/local/bin/brew'
 alias rosetta='arch -x86_64'
 
 alias py='python3'
@@ -201,7 +201,6 @@ alias pip='python3 -m pip'
 
 alias tma='tmux new-session -A -s default'
 alias tmd='tmux detach'
-alias kssh='kitty +kitten ssh'
 
 # -- functions ----------------------------------------------------------------
 cx() {
