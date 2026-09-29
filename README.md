@@ -1,6 +1,6 @@
 <div align="center">
 
-<h1>momeppkt's dotfiles</h1>
+<h1>MomePP's dotfiles</h1>
 
 <p>My macOS <code>~/.config</code>, one oxocarbon theme across every tool.</p>
 
