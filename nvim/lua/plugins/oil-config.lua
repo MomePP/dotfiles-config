@@ -1,5 +1,5 @@
 local M = {
-    'barrettruth/canola.nvim',
+    'https://forge.barrettruth.com/barrettruth/canola.nvim',
     dependencies = 'nvim-mini/mini.icons',
     main = 'oil'
 }

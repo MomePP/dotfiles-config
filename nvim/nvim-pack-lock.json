@@ -22,7 +22,7 @@
     },
     "canola.nvim": {
       "rev": "407c8949deafb39c5aa373bb06f9796c09e0635e",
-      "src": "https://github.com/barrettruth/canola.nvim"
+      "src": "https://forge.barrettruth.com/barrettruth/canola.nvim"
     },
     "diagflow.nvim": {
       "rev": "b13321b517ff64bf42eeac2214085d3c76d83a0d",
@@ -61,7 +61,7 @@
       "src": "https://github.com/cvlmtg/inline-diff.nvim"
     },
     "leap.nvim": {
-      "rev": "32bde2e932417e8a065f039f00f0cebdd0da4710",
+      "rev": "277e04fad21e3af05a55cc414757b09a704f2a92",
       "src": "https://codeberg.org/andyg/leap.nvim"
     },
     "live-rename.nvim": {
@@ -77,7 +77,7 @@
       "src": "https://github.com/MomePP/marks.nvim"
     },
     "mason-lspconfig.nvim": {
-      "rev": "137bd0feba2c1885545b6934d36f5e5aa6adb486",
+      "rev": "b3298993d55fa194279b5eb9dbfb3a43da65cadf",
       "src": "https://github.com/mason-org/mason-lspconfig.nvim"
     },
     "mason.nvim": {
