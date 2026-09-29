@@ -1,192 +1,233 @@
-# MomePP's dotfiles
-> Requires `Homebrew` to be installed
+<div align="center">
+
+<h1>momeppkt's dotfiles</h1>
+
+<p>My macOS <code>~/.config</code>, one oxocarbon theme across every tool.</p>
+
+<p>
+<img alt="macOS" src="https://img.shields.io/badge/macOS-161616?style=flat-square&logo=apple&logoColor=f2f4f8">
+<img alt="Neovim" src="https://img.shields.io/badge/Neovim-161616?style=flat-square&logo=neovim&logoColor=42be65">
+<img alt="Ghostty" src="https://img.shields.io/badge/Ghostty-161616?style=flat-square&logo=ghostty&logoColor=78a9ff">
+<img alt="tmux" src="https://img.shields.io/badge/tmux-161616?style=flat-square&logo=tmux&logoColor=33b1ff">
+<img alt="zsh" src="https://img.shields.io/badge/zsh-161616?style=flat-square&logo=zsh&logoColor=be95ff">
+<img alt="theme: oxocarbon" src="https://img.shields.io/badge/theme-oxocarbon-ee5396?style=flat-square&labelColor=161616">
+</p>
+
+<img alt="Neovim with the oxocarbon theme" src=".github/assets/neovim.png" />
+
+<p>
+<a href="#install">Install</a>
+&nbsp;&middot;&nbsp;
+<a href="#tools">Tools</a>
+&nbsp;&middot;&nbsp;
+<a href="#machine-setup">Machine setup</a>
+</p>
+
+</div>
 
 ## Install
-The repo is meant to *be* `~/.config`. Clone it there and run the installer —
-cwd does not matter, it resolves its own directory:
 
-``` bash
+Requires [Homebrew](https://brew.sh). The repo is meant to *be* `~/.config`:
+
+```bash
 git clone https://github.com/MomePP/dotfiles-config ~/.config
 ~/.config/config-installer.sh
 ```
 
-`config-installer.sh` brew-installs the CLI tools, then leaves everything that
-already sits in `~/.config` alone and only creates the links that have to live
-outside it (`~/.gitconfig`, `~/.zshrc`, `~/.zprofile`, `~/.claude/*`,
-`~/.local/bin/*`). It detects that case itself: when the clone *is* the install
-target it prints `kept <name> config in place..` and copies nothing, so there is
-no window where a tracked directory is removed before being rewritten. A clone
-kept somewhere else — `~/dotfiles`, say — copies each tracked directory into
-`~/.config` instead. Anything outside `~/.config` prompts before it is replaced,
-so the script needs a terminal; do not detach it or pipe it to a pager.
+The installer brew-installs the CLI tools and creates the links that have to live outside `~/.config`: `~/.gitconfig`, `~/.zshrc`, `~/.zprofile`, `~/.claude/*` and `~/.local/bin/*`. It prompts before replacing anything, so run it in a terminal and don't pipe it.
 
-`git clone` refuses a `~/.config` that already exists and is not empty. Graft
-the repo onto it instead:
+<details>
+<summary><code>~/.config</code> already exists</summary>
 
-``` bash
+<br>
+
+`git clone` refuses a non-empty target, so graft the repo onto it instead:
+
+```bash
 git clone --no-checkout https://github.com/MomePP/dotfiles-config /tmp/dotfiles-config
 mv /tmp/dotfiles-config/.git ~/.config/.git
 rm -rf /tmp/dotfiles-config
 cd ~/.config && git checkout develop -- .
 ```
 
-Left out of the installer on purpose:
+If the clone lives somewhere else (for example `~/dotfiles`), the installer copies each directory into `~/.config` instead of keeping it in place.
 
-``` bash
-chsh -s /bin/zsh              # see zsh below
-brew trust nikitabobko/tap    # the aerospace cask is from an untrusted tap
+</details>
+
+The installer leaves these out on purpose:
+
+```bash
+chsh -s /bin/zsh
+brew trust nikitabobko/tap
+brew install --cask ghostty@tip font-maple-mono-nf
+brew install momepp/formulae/aerospace-swipe
 git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
 ```
 
-> tpm has to live at `~/.config/tmux/plugins/tpm` — the path `tmux.conf` sources
-> on its last line — not at tpm's own documented `~/.tmux/plugins/tpm`. tmux
-> ignores a failing `run` silently, so a tpm in the wrong place leaves
-> `<prefix>I` unbound with no error anywhere.
+## Tools
 
-## Neovim
-<img width="1672" alt="Image" src="https://github.com/user-attachments/assets/4031c96c-a562-4d4f-8946-9565a7aff63f" />
+| Tool | Config | Role |
+| :--- | :--- | :--- |
+| [Neovim](#neovim) | [`nvim/`](nvim) | Editor |
+| [Ghostty](#ghostty) | [`ghostty/`](ghostty) | Terminal |
+| [tmux](#tmux) | [`tmux/`](tmux) | Multiplexer |
+| [zsh](#zsh) | [`zsh/`](zsh), [`starship.toml`](starship.toml) | Shell and prompt |
+| [AeroSpace](#aerospace) | [`aerospace/`](aerospace), [`aerospace-swipe/`](aerospace-swipe) | Tiling window manager |
+| [Git](#git) | [`.gitconfig`](.gitconfig), [`git/`](git), [`delta/`](delta), [`lazygit/`](lazygit), [`gh-dash/`](gh-dash) | Git, diffs, TUIs |
+| [CLI tools](#cli-tools) | [`bat/`](bat), [`eza/`](eza), [`homebrew/`](homebrew) | Pager, `ls`, brew taps |
+| [Claude Code](#claude-code) | [`claude-code/`](claude-code) | Agent settings, hooks, skills |
+| [Paseo](#paseo) | [`paseo/`](paseo), [`bin/paseo-repatch`](bin/paseo-repatch) | Agent workspace app |
+| [Scripts](#scripts) | [`bin/`](bin) | Helpers, linked into `~/.local/bin` |
 
-`config-installer.sh` installs the config; plugins are not tracked here. Neovim
-bootstraps them on first launch — [`lua/zpack-config.lua`](nvim/lua/zpack-config.lua)
-pulls [zpack.nvim](https://github.com/zuqini/zpack.nvim) via `vim.pack.add`, and
-the resolved revisions land in the untracked `nvim/nvim-pack-lock.json`.
+---
 
-#### Keybindings
-Most of the keybindings can be modified in [keymaps.lua](nvim/lua/config/keymaps.lua).
+### Neovim
 
-#### Plugins
-All the installed plugins are listed in [plugins/init.lua](nvim/lua/plugins/init.lua) or [plugins/](nvim/lua/plugins/)
+Neovim nightly with the [oxocarbon](https://github.com/momepp/oxocarbon.nvim) colorscheme.
 
-## zsh
-The login shell. Uses the zsh macOS ships (`/bin/zsh`, 5.9) — Homebrew's is
-5.9.2, a patch bump with nothing user-visible, and the system one is already
-listed in `/etc/shells` so it needs no `sudo` and cannot leave the account
-shell-less if a `brew upgrade` fails part-way.
+- **Plugins**: [zpack.nvim](https://github.com/zuqini/zpack.nvim), bootstrapped through `vim.pack` on first launch ([`zpack-config.lua`](nvim/lua/zpack-config.lua)). Specs live in [`lua/plugins/`](nvim/lua/plugins), and revisions are pinned in [`nvim-pack-lock.json`](nvim/nvim-pack-lock.json).
+- **Keymaps**: [`lua/config/keymaps.lua`](nvim/lua/config/keymaps.lua).
+- **LSP**: mason + nvim-lspconfig, with per-server overrides in [`after/lsp/`](nvim/after/lsp). Completion is blink.cmp with Copilot.
+- **VS Code**: [`vscode/`](nvim/vscode) holds the keymaps loaded when running under vscode-neovim.
 
-``` bash
-chsh -s /bin/zsh
-```
+### Ghostty
 
-`config-installer.sh` symlinks both rc files, which zsh only reads from `$HOME`:
+The tip build, with Maple Mono NF, 80% opacity with blur, and a hidden titlebar. ``cmd+` `` toggles the quick terminal.
 
-| File | Holds |
-| --- | --- |
-| [`zsh/.zprofile`](zsh/.zprofile) | `brew shellenv`, PATH, exported env — runs once per login shell |
-| [`zsh/.zshrc`](zsh/.zshrc) | completions, prompt, vi mode, keybinds, aliases, functions |
+- [`config`](ghostty/config): font, theme, window settings.
+- [`keybinding`](ghostty/keybinding): global keys, plus CSI u for `ctrl+enter` and `shift+enter` so tmux and Neovim can tell them apart.
 
-Tool init lives in `.zshrc`: `starship`, `carapace` (after `compinit`, which it
-needs for `compdef`), `fnm --use-on-cd`, `pyenv init -`, and `bun completions`.
-Most CLI completions come free — `brew shellenv` puts
-`/opt/homebrew/share/zsh/site-functions` on `FPATH` and `compinit` picks them
-all up; carapace covers what brew does not ship (`lazygit`, `tmux`, `cargo`).
+### tmux
 
-Inline hints and syntax highlighting are the two things zsh does not have built
-in. `config-installer.sh` installs them; `.zshrc` sources both behind an
-existence check, so a machine without them still gets a working shell.
+The prefix is `C-a`. Plugins are managed by tpm: sensible, yank, resurrect, continuum and [agent-dock](https://github.com/MomePP/tmux-agent-dock).
 
-``` bash
-brew install zsh-autosuggestions zsh-syntax-highlighting
-```
+| Action | Session | Window | Pane |
+| :--- | :--- | :--- | :--- |
+| new | `<prefix>N` | `<prefix><C-n>` | `<prefix><Enter>`, `<prefix>\|` (side by side), `<prefix>_` (stacked) |
+| next | `<prefix>J`, `<prefix>L`, `<prefix>O` | `<prefix><C-j>`, `<prefix><C-o>` | `<prefix>j`, `<prefix>l`, `<prefix>o` |
+| previous | `<prefix>K`, `<prefix>H` | `<prefix><C-k>` | `<prefix>k`, `<prefix>h` |
+| move | | `<prefix><C-h>` / `<prefix><C-l>` (swap) | |
+| kill | `<prefix>X` | `<prefix><C-x>` | `<prefix>x` |
 
-> The `brew` function in `.zshrc` is not a convenience — it re-runs
-> `claude-relink` after every invocation. macOS TCC grants app-data access by
-> absolute path and the claude-code cask installs to a version-stamped dir, so
-> without it every `brew upgrade` re-triggers "Data Access Blocked".
+Session keys are uppercase, window keys use Ctrl, and pane keys are lowercase.
 
-## Ghostty
-Terminal is the Ghostty tip build, with Maple Mono NF (`ghostty/config`), and
-the prompt is starship (`starship.toml`, initialised from `.zshrc`).
+> [!IMPORTANT]
+> tpm must be at `~/.config/tmux/plugins/tpm`, the path `tmux.conf` sources, not tpm's documented `~/.tmux/plugins/tpm`. tmux ignores a failing `run` silently, so with tpm in the wrong place `<prefix>I` is simply unbound.
 
-``` bash
-brew install --cask ghostty@tip font-maple-mono-nf
-```
+<details>
+<summary>Missing <code>tmux-256color</code> terminfo</summary>
 
-## tmux
-Requires `tmux` and `tpm` (tmux plugin manager)
+<br>
 
-Already configured with following keybindings
-- **Session** - follow by uppercase-letter
-- **Window** - follow by Ctrl-key to hold
-- **Pane** - follow by lowercase-letter
+macOS 27 ships the entry. Only do this if `infocmp tmux-256color` fails: compile the entry with the latest ncurses ([notes](https://gist.github.com/joshuarli/247018f8617e6715e1e0b5fd2d39bb6c)).
 
-| **Actions**     | Session                    | Window                             | Pane                       |
-| :---        | ---                        | ---                                | ---                        |
-| new         | `<prefix>N`                               | `<prefix><C-n>`                          | `<prefix><Enter>` or `<prefix>\|` (side by side), `<prefix>_` (stacked) |
-| next        | `<prefix>J`, `<prefix>L` or `<prefix>O`   | `<prefix><C-j>` or `<prefix><C-o>`       | `<prefix>j`, `<prefix>l` or `<prefix>o` |
-| previous    | `<prefix>K` or `<prefix>H`                | `<prefix><C-k>`                          | `<prefix>k` or `<prefix>h`              |
-| move        |                                           | `<prefix><C-h>` / `<prefix><C-l>` (swap) |                                         |
-| kill        | `<prefix>X`                               | `<prefix><C-x>`                          | `<prefix>x`                             |
-
-##### Note about tmux terminfo
-Only needed when `infocmp tmux-256color` fails (macOS 27 ships the entry). The
-correct way to set up tmux terminfo on macOS, we need to compile the description by using `infocmp` from latest ncurses → [Ref. Notes](https://gist.github.com/joshuarli/247018f8617e6715e1e0b5fd2d39bb6c)
-
-``` bash
-# install latest ncurses
+```bash
 brew install ncurses
-
-# export tmux terminfo
 /opt/homebrew/Cellar/ncurses/<version>/bin/infocmp tmux-256color > ~/tmux-256color.info
-
-# compiling terminfo description to system database
 sudo tic -xe tmux-256color ~/tmux-256color.info
 ```
 
-## Touch ID for sudo
-Not in the dotfiles — the file lives in `/etc` — so it is the one thing a new
-machine loses silently: `sudo` just asks for a password and nothing says why.
-`/etc/pam.d/sudo` already does `auth include sudo_local`; macOS ships only the
-commented-out template, and `sudo_local` survives OS updates where editing
-`sudo` itself does not.
+</details>
 
-``` bash
+### zsh
+
+The login shell is the system `/bin/zsh`. It is already in `/etc/shells`, so `chsh` needs no `sudo` and a failed `brew upgrade` can't leave the account without a shell.
+
+| File | Holds |
+| :--- | :--- |
+| [`.zprofile`](zsh/.zprofile) | `brew shellenv`, PATH, exported env. Runs once per login shell. |
+| [`.zshrc`](zsh/.zshrc) | Completions, prompt, vi mode, keybinds, aliases, functions. |
+
+Both are symlinked into `$HOME`. `.zshrc` initialises starship, carapace, fnm, pyenv and bun, and sources zsh-autosuggestions and zsh-syntax-highlighting only when they are installed.
+
+> [!NOTE]
+> The `brew` function in `.zshrc` runs `claude-relink` after every call, and after `brew upgrade` also runs `paseo-repatch`, `claude-settings-sync` and `esp-clangd-update`. The claude-code cask installs to a version-stamped path, so without the relink every upgrade re-triggers macOS's "Data Access Blocked".
+
+### AeroSpace
+
+A tiling window manager, installed from `nikitabobko/tap`. [aerospace-swipe](https://github.com/MomePP/AerospaceSwipe) adds four-finger trackpad swipes between workspaces.
+
+| Keys | Action |
+| :--- | :--- |
+| `alt-1` … `alt-8` | Go to workspace |
+| `alt-shift-1` … `alt-shift-8` | Move window to workspace |
+| `cmd-j` / `cmd-k` | Focus next / previous window |
+| `cmd-shift-hjkl` | Focus in a direction |
+| `alt-shift-hjkl` | Move window |
+| `alt-minus` / `alt-equal` | Resize |
+| `alt-shift-;` | Service mode: reset, float, join |
+
+### Git
+
+- [`.gitconfig`](.gitconfig): delta as pager, nvim as diff and merge tool, `pull.rebase`, and the gh/glab credential helpers. Symlinked to `~/.gitconfig`.
+- [`git/ignore`](git/ignore): the global ignore file (XDG).
+- [`delta/`](delta): the oxocarbon diff theme.
+- [`lazygit/`](lazygit): delta diffs, and edits open in the surrounding Neovim.
+- [`gh-dash/`](gh-dash): sections for PRs, issues and notifications.
+
+### CLI tools
+
+- [`bat/`](bat): the `oxocarbon-dark` theme, shared with delta. `cat` is aliased to `bat`.
+- [`eza/`](eza): oxocarbon colours. `ls`, `ll`, `la` and `lt` are aliased to eza.
+- [`homebrew/trust.json`](homebrew/trust.json): the third-party taps and formulae that are trusted.
+
+### Claude Code
+
+[`claude-code/`](claude-code) holds the global `CLAUDE.md`, the settings template, hooks, skills, and the claude-hud statusline config. The installer links them into `~/.claude/`.
+
+> [!NOTE]
+> `settings.json` is a template rather than a live mirror: Claude Code and hook-registering tools rewrite the live file. Run `claude-settings-sync` to see drift, and `--write` to port it back. See [`claude-settings-ownership.md`](.claude/knowledges/claude-settings-ownership.md).
+
+### Paseo
+
+Paseo runs from a patched copy, `~/Applications/Paseo-Vibrancy.app`, which [`paseo-repatch`](bin/paseo-repatch) rebuilds whenever the stock app updates. The patches add transparency, the oxocarbon ANSI colours, terminal metrics taken from the Ghostty config, and lower idle frame rates. The script's docstring documents each patch.
+
+The Oxocarbon theme in Settings > Appearance is a plugin, [`paseo/plugins/oxocarbon`](paseo/plugins/oxocarbon), installed straight from this directory. Edit it here, then run `paseo plugin reload oxocarbon`.
+
+<details>
+<summary>Notes</summary>
+
+<br>
+
+- **Updates**: the `brew` wrapper re-runs `paseo-repatch` after `brew upgrade`. A beta taken through the in-app updater needs a bare `paseo-repatch` by hand.
+- **Plugin theme**: Paseo derives the whole token set from eight colours, and not by name. `raised` becomes `surface1`, which fills panes and cards (in sidebar scope, the entire content pane), so it is the brightness knob, not `background`.
+- **Plugin types**: run `npm install` in the plugin directory to restore the type-only devDependencies, then `npm run typecheck` to check calls against Paseo's own types.
+- **Claude shows "Unavailable"** while `claude auth status` says you're logged in: delete the stale `~/.claude/.credentials.json`. Paseo reads that file before falling back to the Keychain, where Claude Code keeps the live login.
+- **GPU load**: trust `sudo powermetrics --samplers gpu_power`, not `ioreg`'s "Device Utilization %". `ioreg` read 40–60% here while powermetrics showed ~92% idle.
+
+</details>
+
+### Scripts
+
+The installer symlinks these into `~/.local/bin`.
+
+| Script | Does |
+| :--- | :--- |
+| [`claude-relink`](bin/claude-relink) | Hardlinks `~/.local/bin/claude` to the current cask binary so the macOS privacy grant survives upgrades |
+| [`claude-settings-sync`](bin/claude-settings-sync) | Reports drift between the live Claude settings and the template; `--write` ports it back |
+| [`paseo-repatch`](bin/paseo-repatch) | Rebuilds the patched Paseo app |
+| [`esp-clangd-update`](bin/esp-clangd-update) | Installs the latest Espressif clangd, needed for ESP32 Xtensa targets |
+
+---
+
+## Machine setup
+
+These live outside the repo, so a new machine has to set them up by hand.
+
+<details>
+<summary>Touch ID for <code>sudo</code></summary>
+
+<br>
+
+Use `sudo_local`, which survives OS updates where editing `/etc/pam.d/sudo` does not:
+
+```bash
 sudo tee /etc/pam.d/sudo_local >/dev/null <<'EOF'
 auth       sufficient     pam_tid.so
 EOF
 sudo chmod 444 /etc/pam.d/sudo_local
 ```
 
-> `pam_reattach` is not needed. The folklore dates from tmux servers that
-> `setsid()` out of the Aqua session; tmux 3.7c keeps the audit session
-> (`getaudit_addr` reports the same `asid` and `HAS_GRAPHIC_ACCESS` inside the
-> server, and `LAContext.canEvaluatePolicy` returns true there). It would only
-> matter for a server first spawned from an SSH login.
+`pam_reattach` is not needed: tmux 3.7c keeps the audit session, so Touch ID works inside tmux. It would only matter for a tmux server first started from an SSH login.
 
-## Paseo
-Runs from a patched private copy, `~/Applications/Paseo-Vibrancy.app`,
-rebuilt by [`bin/paseo-repatch`](bin/paseo-repatch) whenever the stock app
-updates. The script's docstring is the reference: what each patch does, why the
-asar ones are length-preserving, and the frame-rate knobs that cut the
-WindowServer CPU an agent turn costs from 40–50% to 10–15%. The `brew` function
-re-runs it after cask upgrades; a beta taken through the in-app updater needs a
-bare `paseo-repatch` by hand.
-
-The Oxocarbon entry in Settings → Appearance is a plugin, not a patch:
-[`paseo/plugins/oxocarbon`](paseo/plugins/oxocarbon). `paseo plugin ls` shows it
-installed straight from this directory rather than a vendored copy, so an edit
-here is the live plugin — `paseo plugin reload oxocarbon` picks it up, and the
-app window needs reloading too when a client contribution changes. `install`
-runs once per plugin ID and errors on a second attempt; `reload` is the
-everyday command. Restore the type-only devDependencies with `npm install` in
-that directory; `npm run typecheck` is what verifies a call against Paseo's own
-types rather than the docs.
-
-> Paseo derives a plugin theme's whole token set from eight colours, and not by
-> name: `raised` becomes `surface1`, which fills panes and cards — in sidebar
-> scope, the entire content pane. It is the brightness knob, and `background`
-> is not. The mapping is written out in the plugin.
-
-> Plan usage showing Claude as *Unavailable* while `claude auth status` says
-> logged in means a stale `~/.claude/.credentials.json` is present. Claude Code
-> keeps live credentials in the Keychain on macOS and never rewrites that file,
-> but Paseo reads the file first and only falls back to the Keychain when it is
-> absent — so an old file shadows a valid login with an expired token. Delete
-> the file; the CLI is unaffected.
-
-> Do not measure GPU load with `ioreg`'s `"Device Utilization %"`. It read
-> 40–60% on this machine in a state where `sudo powermetrics --samplers
-> gpu_power` reported ~92% idle residency and ~100 mW, and it sent three
-> separate investigations here after the wrong process. `powermetrics` reads
-> the frequency-state residency from the hardware and is the only number worth
-> trusting; per-process CPU from `ps`/`top` is fine, and freezing a suspect
-> with `kill -STOP` settles attribution faster than any counter.
+</details>
