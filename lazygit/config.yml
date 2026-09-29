@@ -26,3 +26,25 @@ promptToReturnFromSubprocess: false
 keybinding:
   universal:
     copyToClipboard: 'y'
+customCommands:
+  # C in Files (replaces built-in "commit with git editor"; use `c` then `e` for that):
+  # Claude (haiku) proposes 5 Conventional Commit subjects from the staged diff
+  # -> pick one -> nvim opens `git commit` prefilled to refine/add a body.
+  - key: 'C'
+    context: 'files'
+    description: 'AI commit message (Claude)'
+    prompts:
+      - type: 'menuFromCommand'
+        title: 'AI commit message'
+        key: 'Msg'
+        command: >-
+          sh -c 'git diff --cached --quiet && { echo "nothing staged" >&2; exit 1; };
+          git diff --cached | claude -p --model haiku --tools "" --strict-mcp-config --no-session-persistence
+          "Write 5 alternative git commit subject lines for the staged diff on stdin.
+          Conventional Commits format: type(optional scope): summary, imperative mood, max 72 chars.
+          Output exactly 5 lines, one message per line, nothing else: no numbering, bullets, quotes, backticks, or blank lines."'
+        filter: '^(?P<msg>\S.*)$'
+        valueFormat: '{{ .msg }}'
+        labelFormat: '{{ .msg | green }}'
+    command: 'GIT_EDITOR=nvim git commit --edit -m {{.Form.Msg | quote}}'
+    output: terminal
