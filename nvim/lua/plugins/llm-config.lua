@@ -258,17 +258,6 @@ sidekick.opts = {
                     return env
                 end)(),
             },
-            opencode = {
-                env = {
-                    OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS = 'true',
-                    OPENCODE_EXPERIMENTAL_LSP_TOOL = 'true',
-                },
-                keys = {
-                    prompt = { '<a-p>', 'prompt' },
-                },
-                native_scroll = true,
-                continue = { '--continue' },
-            },
             omp = {
                 cmd = { 'omp' },
                 native_scroll = false,

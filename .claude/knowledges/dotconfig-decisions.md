@@ -9,8 +9,7 @@ that flags these as problems is wrong about intent, not about mechanics.
   focus.nvim splits, `wt` size toggle, `wq` close, `wQ` bufdelete) stay. The
   400 ms `timeoutlen` wait from sharing a prefix with nvim's `gr…` defaults and
   the `w` motion is accepted.
-- **Tool-injected CODEGRAPH blocks** in `claude-code/CLAUDE.md` and
-  `opencode/AGENTS.md` stay as written; codegraph rewrites them, and the global
+- **Tool-injected CODEGRAPH blocks** in `claude-code/CLAUDE.md` stays as written; codegraph rewrites them, and the global
   CLAUDE.md is the user's.
 - **git identity** is `momeppkt <peeranut32@gmail.com>` in a public repo, on
   purpose — see `git-config.md`.

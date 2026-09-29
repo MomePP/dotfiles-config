@@ -1,6 +1,5 @@
 {
   "trustedtaps": [
-    "anomalyco/tap",
     "momepp/formulae",
     "nikitabobko/tap",
     "oven-sh/bun",
