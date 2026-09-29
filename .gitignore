@@ -25,3 +25,7 @@ claude-code/skills/paseo*/
 
 # brew's flock file for trust.json
 /homebrew/trust.json.lock
+
+# Paseo reinstalls its opencode activity hook here on every start while
+# enableTerminalAgentHooks is on (no per-agent toggle), opencode or not
+/opencode/
