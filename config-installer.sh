@@ -186,6 +186,13 @@ copy_config "claude-code/claude-hud/config.json" ~/.claude/plugins/claude-hud/co
 # linking each skill separately.
 symlink_config "claude-code/skills" ~/.claude/skills
 
+# INFO: -- symlink OMP (oh-my-pi) global rules
+#
+# OMP does not read ~/.claude/CLAUDE.md by default; its user-level rules file is
+# ~/.omp/agent/AGENTS.md. omp/AGENTS.md adds the OMP tool mapping and pulls in
+# claude-code/CLAUDE.md via an `@` import, so the shared rules stay single-source.
+symlink_config "omp/AGENTS.md" ~/.omp/agent/AGENTS.md
+
 # esp-clangd-update is called bare by the `brew` wrapper in zsh/.zshrc,
 # and ~/.config/bin is not on PATH — so it needs the same ~/.local/bin symlink
 # or every `brew update` on a fresh machine ends in "command not found".
