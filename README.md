@@ -34,7 +34,7 @@ git clone https://github.com/MomePP/dotfiles-config ~/.config
 ~/.config/config-installer.sh
 ```
 
-The installer brew-installs the CLI tools and creates the links that have to live outside `~/.config`: `~/.gitconfig`, `~/.zshrc`, `~/.zprofile`, `~/.claude/*` and `~/.local/bin/*`. It prompts before replacing anything, so run it in a terminal and don't pipe it.
+The installer brew-installs the CLI tools and creates the links that have to live outside `~/.config`: `~/.gitconfig`, `~/.zshrc`, `~/.zprofile`, `~/.claude/*`, `~/.omp/agent/AGENTS.md` and `~/.local/bin/*`. It prompts before replacing anything, so run it in a terminal and don't pipe it.
 
 <details>
 <summary><code>~/.config</code> already exists</summary>
@@ -76,6 +76,7 @@ git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
 | [Git](#git) | [`.gitconfig`](.gitconfig), [`git/`](git), [`delta/`](delta), [`lazygit/`](lazygit), [`gh-dash/`](gh-dash) | Git, diffs, TUIs |
 | [CLI tools](#cli-tools) | [`bat/`](bat), [`eza/`](eza), [`homebrew/`](homebrew) | Pager, `ls`, brew taps |
 | [Claude Code](#claude-code) | [`claude-code/`](claude-code) | Agent settings, hooks, skills |
+| [OMP](#omp) | [`omp/`](omp) | oh-my-pi agent rules |
 | [Paseo](#paseo) | [`paseo/`](paseo), [`bin/paseo-repatch`](bin/paseo-repatch) | Agent workspace app |
 | [Scripts](#scripts) | [`bin/`](bin) | Helpers, linked into `~/.local/bin` |
 
@@ -177,6 +178,22 @@ A tiling window manager, installed from `nikitabobko/tap`. [aerospace-swipe](htt
 
 > [!NOTE]
 > `settings.json` is a template rather than a live mirror: Claude Code and hook-registering tools rewrite the live file. Run `claude-settings-sync` to see drift, and `--write` to port it back. See [`claude-settings-ownership.md`](.claude/knowledges/claude-settings-ownership.md).
+
+### OMP
+
+OMP (oh-my-pi) does not read `~/.claude/CLAUDE.md` by default; its user-level rules file is `~/.omp/agent/AGENTS.md`, which the installer links to [`omp/AGENTS.md`](omp/AGENTS.md). That file maps Claude/Superpowers tool names onto OMP's (`skill://`, `task`, `todo`, `reviewer`) and pulls in [`claude-code/CLAUDE.md`](claude-code/CLAUDE.md) through an `@` import, so the shared rules stay in one place.
+
+Plugins come from OMP's marketplace, not the installer:
+
+```bash
+omp plugin marketplace add mksglu/context-mode
+omp plugin install context-mode@context-mode
+omp plugin marketplace add obra/superpowers
+omp plugin install superpowers@superpowers-dev
+```
+
+> [!NOTE]
+> Superpowers injects a "Pi tool mapping" that says there are no subagents or task list. `omp/AGENTS.md` overrides it; keep that section if you edit the file.
 
 ### Paseo
 
