@@ -77,7 +77,7 @@ git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
 | [CLI tools](#cli-tools) | [`bat/`](bat), [`eza/`](eza), [`homebrew/`](homebrew) | Pager, `ls`, brew taps |
 | [Claude Code](#claude-code) | [`claude-code/`](claude-code) | Agent settings, hooks, skills |
 | [OMP](#omp) | [`omp/`](omp) | oh-my-pi agent rules |
-| [Paseo](#paseo) | [`paseo/`](paseo), [`bin/paseo-repatch`](bin/paseo-repatch) | Agent workspace app |
+| [Paseo](#paseo) | [Paseo-Vibrancy](https://github.com/MomePP/Paseo-Vibrancy), [Paseo-Oxocarbon](https://github.com/MomePP/Paseo-Oxocarbon) | Agent workspace app |
 | [Scripts](#scripts) | [`bin/`](bin) | Helpers, linked into `~/.local/bin` |
 
 ---
@@ -142,7 +142,7 @@ The login shell is the system `/bin/zsh`. It is already in `/etc/shells`, so `ch
 Both are symlinked into `$HOME`. `.zshrc` initialises starship, carapace, fnm, pyenv and bun, and sources zsh-autosuggestions and zsh-syntax-highlighting only when they are installed.
 
 > [!NOTE]
-> The `brew` function in `.zshrc` runs `claude-relink` after every call, and after `brew upgrade` also runs `paseo-repatch`, `claude-settings-sync` and `esp-clangd-update`. The claude-code cask installs to a version-stamped path, so without the relink every upgrade re-triggers macOS's "Data Access Blocked".
+> The `brew` function in `.zshrc` runs `claude-relink` after every call, and after `brew upgrade` also runs `claude-settings-sync` and `esp-clangd-update`. The claude-code cask installs to a version-stamped path, so without the relink every upgrade re-triggers macOS's "Data Access Blocked".
 
 ### AeroSpace
 
@@ -197,18 +197,23 @@ omp plugin install superpowers@superpowers-dev
 
 ### Paseo
 
-Paseo runs from a patched copy, `~/Applications/Paseo-Vibrancy.app`, which [`paseo-repatch`](bin/paseo-repatch) rebuilds whenever the stock app updates. The patches add transparency, the oxocarbon ANSI colours, terminal metrics taken from the Ghostty config, and lower idle frame rates. The script's docstring documents each patch.
+Paseo runs from a patched copy, `~/Applications/Paseo-Vibrancy.app`, built and kept up to date by the [Paseo-Vibrancy](https://github.com/MomePP/Paseo-Vibrancy) plugin: glass, the oxocarbon ANSI colours, terminal metrics taken from the Ghostty config, and lower idle frame rates. The Oxocarbon theme in Settings > Appearance is [Paseo-Oxocarbon](https://github.com/MomePP/Paseo-Oxocarbon).
 
-The Oxocarbon theme in Settings > Appearance is a plugin, [`paseo/plugins/oxocarbon`](paseo/plugins/oxocarbon), installed straight from this directory. Edit it here, then run `paseo plugin reload oxocarbon`.
+Both live in their own repos, cloned to `~/Developer/paseo-plugins/` and installed from there so edits load with `paseo plugin reload`:
+
+```bash
+git clone https://github.com/MomePP/Paseo-Vibrancy ~/Developer/paseo-plugins/Paseo-Vibrancy
+git clone https://github.com/MomePP/Paseo-Oxocarbon ~/Developer/paseo-plugins/Paseo-Oxocarbon
+paseo plugin install ~/Developer/paseo-plugins/Paseo-Vibrancy
+paseo plugin install ~/Developer/paseo-plugins/Paseo-Oxocarbon
+```
 
 <details>
 <summary>Notes</summary>
 
 <br>
 
-- **Updates**: the `brew` wrapper re-runs `paseo-repatch` after `brew upgrade`. A beta taken through the in-app updater needs a bare `paseo-repatch` by hand.
-- **Plugin theme**: Paseo derives the whole token set from eight colours, and not by name. `raised` becomes `surface1`, which fills panes and cards (in sidebar scope, the entire content pane), so it is the brightness knob, not `background`.
-- **Plugin types**: run `npm install` in the plugin directory to restore the type-only devDependencies, then `npm run typecheck` to check calls against Paseo's own types.
+- **Updates**: Settings > Plugins > paseo-vibrancy > Vibrancy > Update & restart. The patched copy's own updater is disabled.
 - **Claude shows "Unavailable"** while `claude auth status` says you're logged in: delete the stale `~/.claude/.credentials.json`. Paseo reads that file before falling back to the Keychain, where Claude Code keeps the live login.
 - **GPU load**: trust `sudo powermetrics --samplers gpu_power`, not `ioreg`'s "Device Utilization %". `ioreg` read 40–60% here while powermetrics showed ~92% idle.
 
@@ -222,7 +227,6 @@ The installer symlinks these into `~/.local/bin`.
 | :--- | :--- |
 | [`claude-relink`](bin/claude-relink) | Hardlinks `~/.local/bin/claude` to the current cask binary so the macOS privacy grant survives upgrades |
 | [`claude-settings-sync`](bin/claude-settings-sync) | Reports drift between the live Claude settings and the template; `--write` ports it back |
-| [`paseo-repatch`](bin/paseo-repatch) | Rebuilds the patched Paseo app |
 | [`esp-clangd-update`](bin/esp-clangd-update) | Installs the latest Espressif clangd, needed for ESP32 Xtensa targets |
 
 ---

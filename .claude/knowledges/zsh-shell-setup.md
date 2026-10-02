@@ -129,8 +129,7 @@ It also mirrors brew's own split for the Espressif clangd fork, which has no
 formula and no PlatformIO package: `esp-clangd-update --check` on `update`
 (reports what is available), `--quiet` on `upgrade` (installs it). Only those
 two subcommands, since each costs a GitHub API call and `brew --prefix`-style
-invocations must stay cheap. `upgrade` also runs `paseo-repatch` (rebuild the
-transparent Paseo.app after a cask upgrade) and `claude-settings-sync --quiet`
+invocations must stay cheap. `upgrade` also runs `claude-settings-sync --quiet`
 (report settings drift), each `|| true` so neither masks a successful upgrade.
 
 ## Everything else inherits the login shell

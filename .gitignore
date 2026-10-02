@@ -19,10 +19,6 @@ claude-code/skills/paseo*/
 # config/default.toml holds a Cloudflare OAuth token and the logs can echo it
 /.wrangler/
 
-# plugin dev deps: type-only, restorable with `npm install`, ~90 MB unpacked
-/paseo/plugins/*/node_modules/
-/paseo/plugins/*/package-lock.json
-
 # brew's flock file for trust.json
 /homebrew/trust.json.lock
 

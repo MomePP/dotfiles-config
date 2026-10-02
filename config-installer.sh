@@ -139,7 +139,7 @@ symlink_config() {
 }
 
 # INFO: -- install config directories
-config_dirs=(nvim aerospace aerospace-swipe bat bin carapace claude-code delta eza gh-dash ghostty git homebrew lazygit paseo tmux zsh)
+config_dirs=(nvim aerospace aerospace-swipe bat bin carapace claude-code delta eza gh-dash ghostty git homebrew lazygit tmux zsh)
 for dir in "${config_dirs[@]}"; do
     install_config_dir "$dir"
 done
@@ -198,13 +198,6 @@ symlink_config "omp/AGENTS.md" ~/.omp/agent/AGENTS.md
 # or every `brew update` on a fresh machine ends in "command not found".
 symlink_config "bin/esp-clangd-update" ~/.local/bin/esp-clangd-update
 
-# paseo-repatch is called bare by the same `brew` wrapper, so it needs the same
-# symlink. It rebuilds a transparent Paseo.app after a cask upgrade drops the
-# patches, and also gets run by hand between cask upgrades: Paseo's in-app
-# electron-updater replaces /Applications/Paseo.app without telling brew, so on
-# the beta channel the wrapper never fires and the rebuild is manual.
-symlink_config "bin/paseo-repatch" ~/.local/bin/paseo-repatch
-
 # claude-settings-sync reports drift between ~/.claude/settings.json and the
 # copy tracked here. The symlink above is only for provisioning: Claude Code and
 # hook-registering tools (context-mode, Paseo) rewrite the live file, so
@@ -216,3 +209,8 @@ symlink_config "bin/claude-settings-sync" ~/.local/bin/claude-settings-sync
 # ~/.claude/hooks/context-mode-cache-heal.mjs is vendor-managed — the tool
 # redeploys and re-registers its own hook, so it self-heals on a fresh machine.
 # Tracking it would only mirror vendor output into this repo on every update.
+
+# NOTE: Paseo is not provisioned here. The patched app and the theme come from
+# two plugin repos, cloned to ~/Developer/paseo-plugins/ and installed by hand —
+# see the Paseo section of README.md. The plugin then builds and updates the app
+# from Settings -> Plugins -> paseo-vibrancy -> Vibrancy.
