@@ -134,14 +134,14 @@ persistent-workspaces = ['1', '2', '3', '4', '5', '6', '7', '8']
     cmd-h = [] # Disable "hide application"
     cmd-alt-h = [] # Disable "hide others"
 
-    alt-v = '''exec-and-forget osascript -e "
-        tell application \"System Events\"
-            delay 0.1
-            key code 49 using {command down}
-            delay 0.1
-            key code 21 using {command down}
-        end tell"
-    '''
+    # alt-v = '''exec-and-forget osascript -e "
+    #     tell application \"System Events\"
+    #         delay 0.1
+    #         key code 49 using {command down}
+    #         delay 0.1
+    #         key code 21 using {command down}
+    #     end tell"
+    # '''
 
     ctrl-right = 'workspace next --wrap-around'
     ctrl-left = 'workspace prev --wrap-around'
