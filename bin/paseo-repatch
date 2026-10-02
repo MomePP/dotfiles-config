@@ -684,9 +684,19 @@ DIFF_PALETTE = [
 # DIFF_PALETTE is not affected by any of this: `createDiffPalette(o)` is an
 # ordinary function taking the runtime theme, where the values are the real
 # rgba strings the helper expects.
+#
+# The toast pill is the same case. `ToastViewport` draws every toast — the
+# "Updating messages" / "Reconnecting to host" pill floated over the chat while
+# a timeline catches up, and the app-shell confirmations — as a rounded
+# `Pressable` on `surface0`. Its `role="alert"` sits on the animated wrapper
+# above it, not on the painted pill, so OPAQUE_SURFACES_CSS cannot reach it
+# either; without this the chat text reads straight through the pill.
 OVERLAY_SURFACES = [
     ("annotate card",
      re.compile(r"(annotationCard:\{[^{}]*?backgroundColor:)[A-Za-z_$][\w$]*\.colors\.surface0"),
+     r'\1"var(--colors-popover)"'),
+    ("toast pill",
+     re.compile(r"(toast:Object\.assign\(\{[^{}]*?backgroundColor:)[A-Za-z_$][\w$]*\.colors\.surface0"),
      r'\1"var(--colors-popover)"'),
 ]
 
