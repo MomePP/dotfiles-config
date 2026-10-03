@@ -77,7 +77,7 @@ git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
 | [CLI tools](#cli-tools) | [`bat/`](bat), [`eza/`](eza), [`homebrew/`](homebrew) | Pager, `ls`, brew taps |
 | [Claude Code](#claude-code) | [`claude-code/`](claude-code) | Agent settings, hooks, skills |
 | [OMP](#omp) | [`omp/`](omp) | oh-my-pi agent rules |
-| [Paseo](#paseo) | [Paseo-Vibrancy](https://github.com/MomePP/Paseo-Vibrancy), [Paseo-Oxocarbon](https://github.com/MomePP/Paseo-Oxocarbon) | Agent workspace app |
+| [Paseo](#paseo) | [paseo-vibrancy](https://github.com/MomePP/paseo-vibrancy), [paseo-oxocarbon](https://github.com/MomePP/paseo-oxocarbon) | Agent workspace app |
 | [Scripts](#scripts) | [`bin/`](bin) | Helpers, linked into `~/.local/bin` |
 
 ---
@@ -197,15 +197,15 @@ omp plugin install superpowers@superpowers-dev
 
 ### Paseo
 
-Paseo runs from a patched copy, `~/Applications/Paseo-Vibrancy.app`, built and kept up to date by the [Paseo-Vibrancy](https://github.com/MomePP/Paseo-Vibrancy) plugin: glass, the oxocarbon ANSI colours, terminal metrics taken from the Ghostty config, and lower idle frame rates. The Oxocarbon theme in Settings > Appearance is [Paseo-Oxocarbon](https://github.com/MomePP/Paseo-Oxocarbon).
+Paseo runs from a patched copy, `~/Applications/Paseo-Vibrancy.app`, built and kept up to date by the [paseo-vibrancy](https://github.com/MomePP/paseo-vibrancy) plugin: glass, the oxocarbon ANSI colours, terminal settings that follow the Ghostty config, and lower idle frame rates. The Oxocarbon theme in Settings > Appearance is [paseo-oxocarbon](https://github.com/MomePP/paseo-oxocarbon).
 
-Both live in their own repos, cloned to `~/Developer/paseo-plugins/` and installed from there so edits load with `paseo plugin reload`:
+Both are installed from GitHub; clones for editing live in `~/Developer/paseo-plugins/`:
 
 ```bash
-git clone https://github.com/MomePP/Paseo-Vibrancy ~/Developer/paseo-plugins/Paseo-Vibrancy
-git clone https://github.com/MomePP/Paseo-Oxocarbon ~/Developer/paseo-plugins/Paseo-Oxocarbon
-paseo plugin install ~/Developer/paseo-plugins/Paseo-Vibrancy
-paseo plugin install ~/Developer/paseo-plugins/Paseo-Oxocarbon
+paseo plugin install github:MomePP/paseo-vibrancy
+paseo plugin install github:MomePP/paseo-oxocarbon
+git clone https://github.com/MomePP/paseo-vibrancy ~/Developer/paseo-plugins/paseo-vibrancy
+git clone https://github.com/MomePP/paseo-oxocarbon ~/Developer/paseo-plugins/paseo-oxocarbon
 ```
 
 <details>
