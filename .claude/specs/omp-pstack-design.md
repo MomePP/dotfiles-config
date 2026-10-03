@@ -140,10 +140,12 @@ call; the README states the cost.
 
 - `upstream.lock.json`: `{ "repo", "tag", "commit", "version" }`.
 - `scripts/sync.sh [tag]`: resolve the latest `v*` tag of pstack-claude (or the
-  given one); shallow-clone it; `rsync --delete` `plugins/pstack/skills/` into
+  given one; repo URL overridable by `PSTACK_CLAUDE_REPO` for tests);
+  shallow-clone it; `rsync --delete` `plugins/pstack/skills/` into
   `plugin/skills/`; copy upstream `LICENSE`, `LICENSE-cursor-team-kit`,
   `NOTICE.md`, `NOTICE-skills.md` into `upstream-licenses/`; write the lock;
-  set catalog version to `<VERSION>-omp.1` when the upstream version changed.
+  set catalog version to `<VERSION>-omp.1` when the upstream version changed;
+  print `added: <skill>` / `removed: <skill>` lines for the PR body.
   Idempotent: rerunning on the locked tag changes nothing.
 - `.github/workflows/sync.yml`: daily cron and `workflow_dispatch`. Runs
   `sync.sh`, then `check.sh`. When the tree changed, opens or updates one PR
@@ -166,7 +168,7 @@ Fails on:
 3. a `pstack:<name>` skill reference with no `plugin/skills/<name>/`;
 4. invalid JSON in the catalog or lock.
 
-Prints added and removed skill names against the previous lock for the PR body.
+The added/removed skill report comes from `sync.sh`, which sees both trees.
 
 ## Part 2 — dotfiles (`~/.config`, branch `feature/omp-pstack`)
 
@@ -178,18 +180,19 @@ text unchanged:
 | Fragment | Content | Claude Code | OMP pstack |
 |---|---|---|---|
 | `workflow-superpowers.md` | Workflow for new work | yes | no |
-| `artifacts-knowledge.md` | `.claude/` placement for notes and knowledges, placement rules | yes | yes |
-| `artifacts-specs-plans.md` | specs vs plans, feature-done promotion, superpowers path redirect | yes | no |
+| `artifacts.md` | Knowledge & plan artifacts (whole section: subpaths, spec vs plan, feature-done promotion, superpowers redirect, placement rules) | yes | no |
 | `branch-names.md` | git-flow branch naming | yes | yes |
 | `edit-retries.md` | Edit-tool retries | yes | yes |
 | `subagent-worktrees.md` | absolute paths for subagents in worktrees | yes | yes |
 | `coding-behavior.md` | Coding behavior 1–5 incl. anti-slop delta | yes | yes |
 
-`CLAUDE.md` keeps its title and intro, `@`-imports every fragment in the
-original order, and keeps the `CODEGRAPH_START`/`CODEGRAPH_END` block inline
-(the codegraph installer manages it by marker). Where the current "Knowledge &
-plan artifacts" section interleaves the two artifact topics, the split keeps
-each sentence's wording and only regroups it.
+`CLAUDE.md` keeps its title, `@`-imports every fragment by absolute
+`~/.config/claude-code/instructions/` path in the original order, and keeps the
+`---` rule and the `CODEGRAPH_START`/`CODEGRAPH_END` block inline (the codegraph
+installer manages it by marker). Expanded, `CLAUDE.md` reads exactly as
+before. The artifacts section stays whole because its parts cross-reference
+each other ("per rule 3 below"); regrouping would reorder what Claude Code
+reads.
 
 ### New `omp/AGENTS.md`
 
@@ -201,9 +204,13 @@ each sentence's wording and only regroups it.
   - pstack autonomy applies to reversible local work;
   - push, force-push, opening a PR, arming auto-merge, and merging always ask
     first, including inside babysit, shipping, and autopilot playbooks;
-  - pstack chooses where todo files and decision trails go; durable knowledge
-    still goes to `.claude/knowledges/`.
-- `@`-imports of the five shared fragments.
+  - pstack chooses where todo files and decision trails go.
+- An OMP-only "Artifacts" section: `.claude/notes/` for point-in-time
+  investigation notes, `.claude/knowledges/` for durable multi-session
+  findings, kebab-case topic-led filenames, never at repo root or in `docs/`
+  unless named.
+- `@`-imports of the four shared fragments (`branch-names`, `edit-retries`,
+  `subagent-worktrees`, `coding-behavior`).
 
 ### Runtime state (not in git)
 
