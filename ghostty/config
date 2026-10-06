@@ -32,8 +32,13 @@ window-padding-x = 8
 window-padding-y = 4
 
 # quick terminal config
+quick-terminal-size = 99.5%,99.5%
+quick-terminal-animation-duration = 0
 quick-terminal-space-behavior = remain
-quick-terminal-screen = macos-menu-bar
+
+# The quick terminal reuses its last frame (saved across restarts) instead of
+# quick-terminal-size; `never` stops that state from surviving a quit.
+window-save-state = never
 
 # input config
 macos-option-as-alt = true
