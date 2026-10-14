@@ -35,6 +35,7 @@ window-padding-y = 4
 quick-terminal-size = 99.5%,99.5%
 quick-terminal-animation-duration = 0
 quick-terminal-space-behavior = remain
+quick-terminal-screen = mouse
 # Launch with no window: the quick terminal is the main entry point. Opening
 # Ghostty again (dock/Spotlight) or cmd+n still creates a normal window.
 initial-window = false
