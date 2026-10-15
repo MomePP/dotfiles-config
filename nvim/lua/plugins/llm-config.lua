@@ -265,6 +265,12 @@ sidekick.opts = {
                 continue = { '--continue' },
 
             },
+            -- INFO: key must match the binary name, ensure_clone resolves it via exepath.
+            -- Bare `kiro-cli` starts chat; clones drop args (cmd = { clone }).
+            ['kiro-cli'] = {
+                cmd = { 'kiro-cli' },
+                is_proc = '\\<kiro-cli\\>',
+            },
         },
         mux = {
             enabled = true,
