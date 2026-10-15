@@ -25,3 +25,7 @@ claude-code/skills/paseo*/
 # Paseo reinstalls its opencode activity hook here on every start while
 # enableTerminalAgentHooks is on (no per-agent toggle), opencode or not
 /opencode/
+
+# carapace's zsh bridge (CARAPACE_BRIDGES in zsh/.zprofile) writes a throwaway
+# ZDOTDIR here: an empty .zshrc and a compdump it regenerates on demand
+/carapace/bridge/
