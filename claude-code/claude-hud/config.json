@@ -27,7 +27,6 @@
     "showAgents": false,
     "showTodos": false,
     "showPendingPermission": false,
-    "orchestrationSource": "superpowers",
     "showOrchestration": true,
     "showOrchestrationDetail": false,
     "showDuration": false,

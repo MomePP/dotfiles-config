@@ -62,9 +62,9 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ### 5. Anti-slop delta on review passes
 
-On any code review pass — a `superpowers:subagent-driven-development` task
-review, `/code-review`, `superpowers:requesting-code-review` — also check the
-four things the standard quality rubric does not cover:
+On any code review pass — `/code-review`, or a pstack review skill
+(`thermos`, `interrogate`, `blast-radius`) — also check the four things the
+standard quality rubric does not cover:
 
 1. Dead code, unreachable branches, stale flags, unused exports
 2. Pass-through wrappers, speculative indirection, single-use helper layers

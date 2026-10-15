@@ -1,6 +1,6 @@
 # Global instructions
 
-@~/.config/claude-code/instructions/workflow-superpowers.md
+@~/.config/claude-code/instructions/workflow-pstack.md
 
 @~/.config/claude-code/instructions/artifacts.md
 
