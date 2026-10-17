@@ -73,7 +73,9 @@
     "context-mode@context-mode": true,
     "product-management@synced": false,
     "design@synced": false,
-    "cowork-plugin-management@synced": false
+    "cowork-plugin-management@synced": false,
+    "superpowers@synced": false,
+    "pstack@pstack-claude": true
   },
   "extraKnownMarketplaces": {
     "claude-hud": {
@@ -86,6 +88,12 @@
       "source": {
         "source": "github",
         "repo": "mksglu/context-mode"
+      }
+    },
+    "pstack-claude": {
+      "source": {
+        "source": "github",
+        "repo": "michael-denyer/pstack-claude"
       }
     }
   },
