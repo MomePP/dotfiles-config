@@ -192,6 +192,8 @@ symlink_config "claude-code/skills" ~/.claude/skills
 # ~/.omp/agent/AGENTS.md. omp/AGENTS.md adds the OMP tool mapping and pulls in
 # claude-code/CLAUDE.md via an `@` import, so the shared rules stay single-source.
 symlink_config "omp/AGENTS.md" ~/.omp/agent/AGENTS.md
+# Entry point for the pi-lean-ctx plugin in replace mode (see the file header).
+symlink_config "omp/extensions/lean-ctx.ts" ~/.omp/agent/extensions/lean-ctx.ts
 
 # esp-clangd-update is called bare by the `brew` wrapper in zsh/.zshrc,
 # and ~/.config/bin is not on PATH — so it needs the same ~/.local/bin symlink
