@@ -15,6 +15,12 @@ mole
 # installed and auto-updated by Paseo (each carries .paseo-managed-files.json)
 claude-code/skills/paseo*/
 
+# lean-ctx: its skill is reinstalled by `lean-ctx init --agent claude`; only
+# config.toml (allowlist, telemetry off, style blocks off) is ours
+claude-code/skills/lean-ctx/
+/lean-ctx/*
+!/lean-ctx/config.toml
+
 # wrangler state landing here because a run resolved XDG_CONFIG_HOME to ~/.config;
 # config/default.toml holds a Cloudflare OAuth token and the logs can echo it
 /.wrangler/

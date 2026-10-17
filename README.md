@@ -186,10 +186,16 @@ OMP (oh-my-pi) does not read `~/.claude/CLAUDE.md` by default; its user-level ru
 Plugins come from OMP's marketplace, not the installer:
 
 ```bash
-omp plugin marketplace add mksglu/context-mode
-omp plugin install context-mode@context-mode
 omp plugin marketplace add obra/superpowers
 omp plugin install superpowers@superpowers-dev
+```
+
+Context-window compression is [lean-ctx](https://github.com/yvgude/lean-ctx), from Homebrew, wired into both agents:
+
+```bash
+brew trust yvgude/lean-ctx && brew install lean-ctx
+lean-ctx telemetry off
+lean-ctx init --agent claude && lean-ctx init --agent omp   # run outside a git repo
 ```
 
 > [!NOTE]

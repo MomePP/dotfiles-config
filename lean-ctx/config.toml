@@ -1,0 +1,17 @@
+compression_level = "off"
+shell_allowlist_extra = [
+    "claude",
+    "omp",
+    "paseo",
+    "tmux",
+    "nvim",
+    "open",
+    "claude-settings-sync",
+    "deny-git-identity-override.sh",
+]
+[telemetry]
+enabled = false
+preference = "explicitly_disabled"
+
+[solution]
+enabled = false

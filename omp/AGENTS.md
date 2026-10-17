@@ -58,13 +58,10 @@ These override pstack where they disagree:
 
 ---
 
-<!-- CODEGRAPH_START -->
-## CodeGraph
+<!-- lean-ctx-rules -->
+<!-- version: 11 -->
 
-In repositories indexed by CodeGraph (a `.codegraph/` directory exists at the repo root), reach for it BEFORE grep/find or reading files when you need to understand or locate code:
-
-- **MCP tool** (when available): `codegraph_explore` answers most code questions in one call — the relevant symbols' verbatim source plus the call paths between them, including dynamic-dispatch hops grep can't follow. Name a file or symbol in the query to read its current line-numbered source. If it's listed but deferred, load it by name via tool search.
-- **Shell** (always works): `codegraph explore "<symbol names or question>"` prints the same output.
-
-If there is no `.codegraph/` directory, skip CodeGraph entirely — indexing is the user's decision.
-<!-- CODEGRAPH_END -->
+lean-ctx shadow mode: native read/search/shell calls auto-route to ctx_* — no tool-mapping needed.
+File editing → the host's native edit tool (lean-ctx only handles reads); if denied, use ctx_patch.
+Exclusive tools (no native trigger): ctx_compose (understand code, call first), ctx_search(action=symbol) (exact symbol), ctx_search(action=semantic) (by meaning), ctx_callgraph (callers), ctx_knowledge / ctx_session (memory).
+<!-- /lean-ctx-rules -->

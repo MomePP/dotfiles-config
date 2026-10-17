@@ -4,7 +4,8 @@
     "nikitabobko/tap",
     "oven-sh/bun",
     "supabase/tap",
-    "tw93/tap"
+    "tw93/tap",
+    "yvgude/lean-ctx"
   ],
   "trustedformulae": [
     "can1357/tap/omp"

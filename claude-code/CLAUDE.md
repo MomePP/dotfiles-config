@@ -14,13 +14,24 @@
 
 ---
 
-<!-- CODEGRAPH_START -->
-## CodeGraph
+<!-- lean-ctx -->
+<!-- lean-ctx-claude-v10 -->
+## lean-ctx — Replace Mode (native Grep/Glob denied by policy)
 
-In repositories indexed by CodeGraph (a `.codegraph/` directory exists at the repo root), reach for it BEFORE grep/find or reading files when you need to understand or locate code:
+Native Grep/Glob are denied by policy. Prefer `ctx_*` MCP tools for project work:
+- `ctx_read` for exploration reads (cached, 10 modes incl. map/signatures)
+- `ctx_shell` for shell commands (95+ compression patterns)
+- `ctx_search` instead of Grep/rg (compact results)
+- `ctx_tree` instead of ls/find (compact directory maps)
+- `ctx_glob` instead of Glob (file pattern matching)
+- Project edits: `ctx_read(mode="anchored")` → `ctx_patch` (line+hash anchors; `op=create` for new files).
 
-- **MCP tool** (when available): `codegraph_explore` answers most code questions in one call — the relevant symbols' verbatim source plus the call paths between them, including dynamic-dispatch hops grep can't follow. Name a file or symbol in the query to read its current line-numbered source. If it's listed but deferred, load it by name via tool search.
-- **Shell** (always works): `codegraph explore "<symbol names or question>"` prints the same output.
+Native `Read` is reserved for the edit gate (read-before-write) only.
+For exploration, orientation, and code understanding: ALWAYS use `ctx_read`.
+Claude auto memory (`~/.claude/projects/<slug>/memory/` — MEMORY.md and topic
+files) uses native Read/Edit internally; do NOT call MCP `resources/read` with
+file:// URIs (lean-ctx resources are `lean-ctx://context/*` only). Native Delete is fine.
 
-If there is no `.codegraph/` directory, skip CodeGraph entirely — indexing is the user's decision.
-<!-- CODEGRAPH_END -->
+Read modes: anchored (edit), full (verbatim), map (overview), signatures (API), diff (post-edit), lines:N-M (range), auto.
+Details live in the `lean-ctx` skill (loads on demand — keep this file lean).
+<!-- /lean-ctx -->

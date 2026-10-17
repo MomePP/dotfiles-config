@@ -23,9 +23,7 @@
       "Bash(find *)",
       "Bash(grep *)",
       "mcp__plugin_playwright_playwright__*",
-      "mcp__plugin_context-mode_context-mode__*",
-      "mcp__plugin_supabase_supabase__*",
-      "mcp__codegraph__*"
+      "mcp__plugin_supabase_supabase__*"
     ],
     "deny": [
       "Bash(git config user.email:*)",
@@ -46,7 +44,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Bash",
+        "matcher": "Bash|mcp__lean-ctx__ctx_shell|mcp__lean-ctx__shell",
         "hooks": [
           {
             "type": "command",
@@ -56,25 +54,15 @@
           }
         ]
       }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "codegraph prompt-hook"
-          }
-        ]
-      }
     ]
   },
   "enabledPlugins": {
     "claude-hud@claude-hud": true,
-    "context-mode@context-mode": true,
     "product-management@synced": false,
     "design@synced": false,
     "cowork-plugin-management@synced": false,
     "superpowers@synced": false,
+    "i-have-adhd@synced": false,
     "pstack@pstack-claude": true
   },
   "extraKnownMarketplaces": {
@@ -82,12 +70,6 @@
       "source": {
         "source": "github",
         "repo": "momepp/claude-hud"
-      }
-    },
-    "context-mode": {
-      "source": {
-        "source": "github",
-        "repo": "mksglu/context-mode"
       }
     },
     "pstack-claude": {

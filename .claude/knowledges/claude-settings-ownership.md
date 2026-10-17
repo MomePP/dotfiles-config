@@ -5,7 +5,7 @@
 wrong for keeping it linked afterwards.
 
 Several writers touch the live file: Claude Code itself (every `/config`
-change), and tools that register their own hooks in it — context-mode and
+change), and tools that register their own hooks in it — lean-ctx and
 Paseo. The live file ends up a plain file, not a link. And while a link *is*
 in place, those writes land straight in this repo as uncommitted drift. That
 is how `remoteControlAtStartup` once appeared as a repo change without anyone
@@ -14,15 +14,15 @@ editing it.
 ## What the tracked copy carries
 
 `claude-code/settings.json` is what a new machine starts from. It carries
-deliberate settings and your own hooks (`deny-git-identity-override.sh`,
-`codegraph prompt-hook`), and **not**:
+deliberate settings and your own hook (`deny-git-identity-override.sh`), and
+**not**:
 
 - `statusLine` — claude-hud writes it with a version-stamped plugin-cache path
   (`claude-settings-sync`'s `IGNORED_KEYS`).
 - Vendor hooks — each tool re-registers its own on install/start, so they
   self-heal on a fresh machine. `claude-settings-sync` drops any hook whose
   command matches `VENDOR_HOOK_MARKERS` from both sides before comparing:
-  `context-mode-cache-heal.mjs` and `PASEO_HOOK_CLI` (Paseo agent status). A
+  `lean-ctx hook` and `PASEO_HOOK_CLI` (Paseo agent status). A
   new tool that injects hooks shows up as `hooks` drift until its marker is
   added there.
 
