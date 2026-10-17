@@ -9,7 +9,7 @@
       "src": "https://github.com/fang2hou/blink-copilot"
     },
     "blink.cmp": {
-      "rev": "8219b58f1c11a2fb1644d3c7116c509fa8348ec0",
+      "rev": "10198f904da1e7f77aeb0368414f871568c0d898",
       "src": "https://github.com/saghen/blink.cmp"
     },
     "blink.lib": {
@@ -113,11 +113,11 @@
       "src": "https://github.com/MunifTanjim/nui.nvim"
     },
     "nvim-colorscheme": {
-      "rev": "748272fd0bffecfd7deb761a123d51f5a0b0ccf8",
+      "rev": "27cc7c08c9e5c28bcd2d2ea46ad6d6a1b9b7feed",
       "src": "https://github.com/momepp/oxocarbon.nvim"
     },
     "nvim-lspconfig": {
-      "rev": "ac062d0d01c019c0dbdb798968f3e5d8b35c3853",
+      "rev": "45a3a444b710511c39abca3b60bb6e23a21e3de5",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-treesitter": {
