@@ -41,7 +41,7 @@ if printf '%s' "$cmd" | grep -qE "${boundary}git([[:space:]]+[^[:space:]]+)*[[:s
 fi
 
 # git config ... user.name/user.email <value>, and --unset/--add/--replace-all.
-if printf '%s' "$cmd" | grep -qE "${boundary}git([[:space:]]+[^[:space:]]+)*[[:space:]]+config([[:space:]]+[^[:space:]]+)*[[:space:]]+user\.(name|email)[[:space:]]+[^-[:space:]]"; then
+if printf '%s' "$cmd" | grep -qE "${boundary}git([[:space:]]+[^[:space:]]+)*[[:space:]]+config([[:space:]]+[^[:space:]]+)*[[:space:]]+user\.(name|email)[[:space:]]+[^-[:space:];&|)]"; then
   deny "Blocked: writing user.name/user.email changes the commit identity. Commits must be authored $identity. Reads are fine: 'git config --get user.email'."
 fi
 if printf '%s' "$cmd" | grep -qE "${boundary}git([[:space:]]+[^[:space:]]+)*[[:space:]]+config[[:space:]]+([^[:space:]]+[[:space:]]+)*--(unset|unset-all|add|replace-all)([[:space:]]+[^[:space:]]+)*[[:space:]]+user\.(name|email)"; then
