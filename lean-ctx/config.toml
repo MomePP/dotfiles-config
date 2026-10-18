@@ -8,7 +8,26 @@ shell_allowlist_extra = [
     "open",
     "claude-settings-sync",
     "deny-git-identity-override.sh",
+    "pio",
+    "esptool",
+    "esptool.py",
+    "python",
+    "python3",
+    "caffeinate",
+    "timeout",
+    "git",
+    "glab",
+    "gh",
+    "rsync",
+    "node",
+    "mkdir",
+    "rmdir",
 ]
+# python/python3 are already allowed, so blocking `python -c` and heredocs adds
+# little; agents can write the same code to a file and run it.
+shell_allow_inline_scripts = true
+# Paseo worktrees live outside each session's project root.
+allow_paths = ["/Users/momeppkt/.paseo/worktrees"]
 [telemetry]
 enabled = false
 preference = "explicitly_disabled"
