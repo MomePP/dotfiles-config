@@ -11,6 +11,9 @@ import { join } from "node:path";
 export default async function (pi: unknown) {
 	process.env.LEAN_CTX_PI_MODE ??= "replace";
 	process.env.LEAN_CTX_PROJECT_ROOT ??= process.cwd();
+	// ctx_compose gives up on ranking after 4 s, too short for gogo-firmware
+	// (~10 s); the bridge's MCP server inherits this env.
+	process.env.LEAN_CTX_COMPOSE_BUDGET_MS ??= "20000";
 	const entry = join(homedir(), ".omp/plugins/node_modules/pi-lean-ctx/extensions/index.ts");
 	const { default: leanCtx } = await import(entry);
 	return leanCtx(pi);
