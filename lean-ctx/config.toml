@@ -22,6 +22,8 @@ shell_allowlist_extra = [
     "node",
     "mkdir",
     "rmdir",
+    "base64",
+    "uhubctl",
 ]
 # python/python3 are already allowed, so blocking `python -c` and heredocs adds
 # little; agents can write the same code to a file and run it.
