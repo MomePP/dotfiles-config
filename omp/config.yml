@@ -1,0 +1,79 @@
+symbolPreset: nerd
+setupVersion: 2
+theme:
+  dark: dark-github
+  light: light
+statusLine:
+  preset: custom
+  separator: none
+  sessionAccent: true
+  transparent: true
+  contextLine: embedded
+  compactThinkingLevel: true
+  showHookStatus: true
+  leftSegments:
+    - model
+    - path
+    - mode
+    - git
+    - pr
+  rightSegments:
+    - session_name
+    - context_pct
+  segmentOptions:
+    model:
+      showThinkingLevel: false
+    path:
+      abbreviate: true
+      maxLength: 40
+    git:
+      showBranch: true
+      showStaged: true
+      showUnstaged: true
+      showUntracked: false
+modelRoles:
+  default: anthropic/claude-opus-5-5
+  opus: anthropic/claude-opus-5-5:high
+  fable: anthropic/claude-fable-5-1:high
+  sonnet: anthropic/claude-sonnet-5-5:medium
+  haiku: anthropic/claude-haiku-5-5:low
+  plan: "@opus:xhigh"
+  slow: "@opus:high"
+  refuter: "@opus:high"
+  debugger: "@opus:high"
+  task: "@sonnet:medium"
+  researcher: "@sonnet:medium"
+  vision: "@sonnet"
+  advisor: "@sonnet"
+  smol: "@haiku:medium"
+  tiny: "@haiku:low"
+  commit: "@haiku:low"
+task:
+  agentModelOverrides:
+    scout: "@smol"
+    sonic: "@smol"
+    task: "@task"
+    reviewer: "@refuter"
+    security-reviewer: "@refuter"
+tui:
+  textSizing: true
+  tight: false
+composer:
+  shape: band
+advisor:
+  enabled: false
+browser:
+  headless: true
+memory:
+  backend: local
+autolearn:
+  enabled: false
+defaultThinkingLevel: auto
+marketplace:
+  autoUpdate: auto
+display:
+  hideToolActivity: false
+  subagentLivePreview: true
+compaction:
+  idleEnabled: true
+  idleTimeoutSeconds: 3240
