@@ -56,6 +56,8 @@ These override pstack where they disagree:
 
 @~/.config/claude-code/instructions/coding-behavior.md
 
+@~/.config/claude-code/instructions/context-handoff.md
+
 ---
 
 <!-- lean-ctx-rules -->

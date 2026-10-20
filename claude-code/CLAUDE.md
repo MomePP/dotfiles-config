@@ -12,6 +12,8 @@
 
 @~/.config/claude-code/instructions/coding-behavior.md
 
+@~/.config/claude-code/instructions/context-handoff.md
+
 ---
 
 <!-- lean-ctx -->
