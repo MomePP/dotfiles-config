@@ -21,6 +21,10 @@ claude-code/skills/lean-ctx/
 /lean-ctx/*
 !/lean-ctx/config.toml
 
+# installed and updated by the `skills` CLI (npx skills add), which keeps the
+# real copy in ~/.agents/skills and tracks it in ~/.agents/.skill-lock.json
+claude-code/skills/design-taste-frontend
+
 # wrangler state landing here because a run resolved XDG_CONFIG_HOME to ~/.config;
 # config/default.toml holds a Cloudflare OAuth token and the logs can echo it
 /.wrangler/
