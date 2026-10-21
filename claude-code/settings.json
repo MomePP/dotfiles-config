@@ -112,6 +112,12 @@
             "command": "/Users/momeppkt/.config/claude-code/hooks/deny-git-identity-override.sh",
             "timeout": 10,
             "statusMessage": "Checking git identity..."
+          },
+          {
+            "type": "command",
+            "command": "/Users/momeppkt/.config/claude-code/hooks/deny-shell-commands.sh",
+            "timeout": 10,
+            "statusMessage": "Checking shell denylist..."
           }
         ]
       }

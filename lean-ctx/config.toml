@@ -1,4 +1,8 @@
 compression_level = "off"
+# The allowlist only logs. Commands are refused by
+# ~/.config/claude-code/hooks/deny-shell-commands.sh, which Claude's PreToolUse
+# hook and the OMP shell-guard extension run on every ctx_shell call.
+shell_security = "warn"
 shell_allowlist_extra = [
     "claude",
     "omp",
