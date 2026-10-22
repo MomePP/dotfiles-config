@@ -202,15 +202,10 @@ symlink_config "bin/esp-clangd-update" ~/.local/bin/esp-clangd-update
 
 # claude-settings-sync reports drift between ~/.claude/settings.json and the
 # copy tracked here. The symlink above is only for provisioning: Claude Code and
-# hook-registering tools (context-mode, Paseo) rewrite the live file, so
+# hook-registering tools (Paseo) rewrite the live file, so
 # the tracked copy is a template and deliberate settings are carried across by
 # hand — see .claude/knowledges/claude-settings-ownership.md.
 symlink_config "bin/claude-settings-sync" ~/.local/bin/claude-settings-sync
-
-# NOTE: the SessionStart hooks in settings.json are NOT tracked here.
-# ~/.claude/hooks/context-mode-cache-heal.mjs is vendor-managed — the tool
-# redeploys and re-registers its own hook, so it self-heals on a fresh machine.
-# Tracking it would only mirror vendor output into this repo on every update.
 
 # NOTE: Paseo is not provisioned here. The patched app and the theme come from
 # two plugin repos, cloned to ~/Developer/paseo-plugins/ and installed by hand —

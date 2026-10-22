@@ -24,7 +24,6 @@ session-env/
 
 # Caches and installed artifacts (hundreds of MB)
 plugins/
-context-mode/
 cache/
 backups/
 downloads/
