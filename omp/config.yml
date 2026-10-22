@@ -49,6 +49,7 @@ modelRoles:
   tiny: "@haiku:low"
   commit: "@haiku:low"
 task:
+  enableEffort: true
   agentModelOverrides:
     scout: "@smol"
     sonic: "@smol"
@@ -77,3 +78,5 @@ display:
 compaction:
   idleEnabled: true
   idleTimeoutSeconds: 3240
+dev:
+  autoqa: false

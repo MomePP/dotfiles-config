@@ -8,13 +8,13 @@ OMP translation, the pstack policy, and OMP's artifact rules.
 
 - **Skills**: load with `read skill://<name>`. There is no `Skill` tool.
 - **Subagent dispatch** → `task`. Inside a pstack skill, follow the skill's
-  agent and model choices as the pstack routing rule translates them: when
-  the skill names a model (`opus`, `fable`, `sonnet`, `haiku`), every task
-  item carries `model: "@<alias>"`. Outside pstack skills: implementers use
-  the default `task` agent; code reviewers use `reviewer` (or `refuter` for
-  adversarial verification of a finished change); hard root-causing uses
-  `debugger`; doc/source fact-finding uses `researcher`; leave `model` unset
-  so the configured model roles decide.
+  agent and model choices as `rule://pstack-omp-tools` maps them: `task` has
+  no per-item `model` field, so a named model (`opus`, `fable`, `sonnet`,
+  `haiku`) selects a model-pinned agent (`task-<alias>`, `poteto-<alias>`).
+  Outside pstack skills: implementers use the default `task` agent; code
+  reviewers use `reviewer` (or `refuter` for adversarial verification of a
+  finished change); hard root-causing uses `debugger`; doc/source
+  fact-finding uses `researcher`; their models come from `modelRoles`.
 - **Task tracking** → `todo`. Do not create a repo `TODO.md`.
 - **Claude tool names** in the imported rules map to OMP tools: `Read` →
   `read`, `Edit` → `edit`, `Write` → `write`, `Bash` → `bash`, `Grep` →

@@ -57,11 +57,13 @@ When the gate fails, fix on `main` and rerun the workflow: each run rebuilds
 - pstack policy: autonomy for reversible local work only; push, force-push,
   opening a PR/MR, arming auto-merge, and merging always ask first, including
   in babysit/shipping/autopilot/orchestrate playbooks.
-- `modelRoles` `opus`, `fable`, `sonnet`, `haiku` exist so skill model aliases
-  resolve as `model: "@fable"` etc. Panels (`interrogate`, `arena`,
-  `architect`) need these to point at different models to stay diverse.
+- `modelRoles` `opus`, `fable`, `sonnet`, `haiku` back the model-pinned agents
+  `task-<alias>` and `poteto-<alias>` in pstack-omp, which stand in for the
+  per-item `model` field OMP 18.8.2 removed from `task`. Panels (`interrogate`,
+  `arena`, `architect`) need these to point at different models to stay
+  diverse.
 - Runtime: `superpowers@superpowers-dev` disabled, `pstack@pstack-omp`
-  installed; context-mode unchanged.
+  installed; no context tool (lean-ctx removed 2026-10-23, OMP native tools).
 
 Revert to superpowers in OMP: restore the pre-pstack `omp/AGENTS.md` from git,
 `omp plugin enable superpowers@superpowers-dev`,
