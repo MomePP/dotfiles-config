@@ -190,18 +190,6 @@ omp plugin marketplace add obra/superpowers
 omp plugin install superpowers@superpowers-dev
 ```
 
-Context-window compression is [lean-ctx](https://github.com/yvgude/lean-ctx), from Homebrew, wired into both agents:
-
-```bash
-brew trust yvgude/lean-ctx && brew install lean-ctx
-lean-ctx telemetry off
-lean-ctx init --agent claude && lean-ctx init --agent omp   # run outside a git repo
-omp plugin install pi-lean-ctx
-jq 'del(.mcpServers["lean-ctx"])' ~/.omp/agent/mcp.json   # write back: the plugin runs its own MCP bridge
-```
-
-In OMP, lean-ctx runs through [`omp/extensions/lean-ctx.ts`](omp/extensions/lean-ctx.ts), which loads `pi-lean-ctx` in replace mode: OMP's native `read`/`bash`/`grep`/`find`/`ls` are hidden and only the `ctx_*` tools remain. `lean-ctx init --agent omp` is still needed for the rules block in `omp/AGENTS.md`, but it re-adds the `mcp.json` entry, so delete that again afterward.
-
 > [!NOTE]
 > Superpowers injects a "Pi tool mapping" that says there are no subagents or task list. `omp/AGENTS.md` overrides it; keep that section if you edit the file.
 

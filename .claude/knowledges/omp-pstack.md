@@ -48,14 +48,12 @@ When the gate fails, fix on `main` and rerun the workflow: each run rebuilds
 ## Dotfiles side
 
 - `claude-code/CLAUDE.md` is only `@~/.config/claude-code/instructions/*.md`
-  imports plus lean-ctx's injected block; expanded it is byte-identical to the
-  pre-split file. Fragments: `workflow-superpowers`, `artifacts` (Claude only);
+  imports. Fragments: `workflow-superpowers`, `artifacts` (Claude only);
   `branch-names`, `edit-retries`, `subagent-worktrees`, `coding-behavior`
   (shared).
 - `omp/AGENTS.md` (symlinked as `~/.omp/agent/AGENTS.md`, which shadows any
   `~/.claude/CLAUDE.md` in OMP) has the OMP harness mapping, pstack policy
-  overrides, an OMP-only Artifacts section, the four shared imports, and its own
-  lean-ctx rules block.
+  overrides, an OMP-only Artifacts section, and the shared imports.
 - pstack policy: autonomy for reversible local work only; push, force-push,
   opening a PR/MR, arming auto-merge, and merging always ask first, including
   in babysit/shipping/autopilot/orchestrate playbooks.

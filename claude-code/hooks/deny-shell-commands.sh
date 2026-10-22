@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 # PreToolUse/Bash hook: the shell denylist for every command-running tool.
 #
-# permissions.deny only covers the native Bash tool. lean-ctx's ctx_shell is an
-# MCP tool, so those rules never see it, and lean-ctx itself runs with
-# shell_security = "warn" (its allowlist logs, never blocks). This script is the
-# one place commands are refused, for Claude (PreToolUse) and OMP (the
-# shell-guard extension) alike. Keep it in step with permissions.deny.
+# permissions.deny matches command prefixes, so wrapped forms (bash -c 'sudo …')
+# slip past it, and OMP has no permissions.deny at all. This script is the one
+# place commands are refused, for Claude (PreToolUse) and OMP (the shell-guard
+# extension) alike. Keep it in step with permissions.deny.
 #
 # stdin: PreToolUse JSON. stdout: deny verdict, or nothing when the command is fine.
 

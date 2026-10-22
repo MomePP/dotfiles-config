@@ -5,9 +5,9 @@
 wrong for keeping it linked afterwards.
 
 Several writers touch the live file: Claude Code itself (every `/config`
-change), and tools that register their own hooks in it — lean-ctx and
-Paseo. The live file ends up a plain file, not a link. And while a link *is*
-in place, those writes land straight in this repo as uncommitted drift. That
+change), and tools that register their own hooks in it, such as Paseo. The
+live file ends up a plain file, not a link. And while a link *is* in place,
+those writes land straight in this repo as uncommitted drift. That
 is how `remoteControlAtStartup` once appeared as a repo change without anyone
 editing it.
 
@@ -22,7 +22,7 @@ deliberate settings and your own hook (`deny-git-identity-override.sh`), and
 - Vendor hooks — each tool re-registers its own on install/start, so they
   self-heal on a fresh machine. `claude-settings-sync` drops any hook whose
   command matches `VENDOR_HOOK_MARKERS` from both sides before comparing:
-  `lean-ctx hook` and `PASEO_HOOK_CLI` (Paseo agent status). A
+  `PASEO_HOOK_CLI` (Paseo agent status). A
   new tool that injects hooks shows up as `hooks` drift until its marker is
   added there.
 

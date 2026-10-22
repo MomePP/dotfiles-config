@@ -3,9 +3,6 @@
 // agents share one definition: this feeds each script the command and blocks on
 // the first deny verdict.
 //
-// lean-ctx runs with shell_security = "warn", so these scripts are what refuses
-// commands sent through ctx_shell.
-//
 // Only tools that run commands are checked. edit/write are skipped, because a
 // file that merely mentions `git config user.email` is not a command.
 import { spawnSync } from "node:child_process";
@@ -14,7 +11,7 @@ import { join } from "node:path";
 
 const HOOKS = join(homedir(), ".config/claude-code/hooks");
 const SCRIPTS = [join(HOOKS, "deny-git-identity-override.sh"), join(HOOKS, "deny-shell-commands.sh")];
-const COMMAND_TOOLS = new Set(["bash", "ctx_shell", "shell", "eval"]);
+const COMMAND_TOOLS = new Set(["bash", "eval"]);
 
 type ToolCallEvent = { toolName?: string; input?: Record<string, unknown> };
 
