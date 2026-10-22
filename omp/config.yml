@@ -78,5 +78,7 @@ display:
 compaction:
   idleEnabled: true
   idleTimeoutSeconds: 3240
+  modelThresholds:
+    anthropic/*: f750000
 dev:
   autoqa: false
