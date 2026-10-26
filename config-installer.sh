@@ -195,6 +195,9 @@ symlink_config "omp/AGENTS.md" ~/.omp/agent/AGENTS.md
 # Shell guard: OMP's version of the claude-code/hooks/deny-*.sh PreToolUse hooks.
 symlink_config "omp/extensions/shell-guard.ts" ~/.omp/agent/extensions/shell-guard.ts
 
+# Idle compaction for Paseo's rpc-ui sessions; OMP only runs it in the TUI.
+symlink_config "omp/extensions/idle-compaction.ts" ~/.omp/agent/extensions/idle-compaction.ts
+
 # esp-clangd-update is called bare by the `brew` wrapper in zsh/.zshrc,
 # and ~/.config/bin is not on PATH — so it needs the same ~/.local/bin symlink
 # or every `brew update` on a fresh machine ends in "command not found".
