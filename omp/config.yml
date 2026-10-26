@@ -77,8 +77,7 @@ display:
   subagentLivePreview: true
 compaction:
   idleEnabled: true
-  idleTimeoutSeconds: 3240
   modelThresholds:
-    anthropic/*: f750000
+    anthropic/*: f900000
 dev:
   autoqa: false
