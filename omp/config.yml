@@ -66,9 +66,9 @@ advisor:
 browser:
   headless: true
 memory:
-  backend: local
+  backend: mnemopi
 autolearn:
-  enabled: false
+  enabled: true
 defaultThinkingLevel: auto
 marketplace:
   autoUpdate: auto
