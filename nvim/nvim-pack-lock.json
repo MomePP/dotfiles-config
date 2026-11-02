@@ -9,7 +9,7 @@
       "src": "https://github.com/fang2hou/blink-copilot"
     },
     "blink.cmp": {
-      "rev": "d4318ec75309a37e09757de0f16faa67bf22b890",
+      "rev": "eece1c590dc575d489589c95499ec3acbf004e42",
       "src": "https://github.com/saghen/blink.cmp"
     },
     "blink.lib": {
@@ -21,7 +21,7 @@
       "src": "https://github.com/saghen/blink.pairs"
     },
     "canola.nvim": {
-      "rev": "a3908c0c46b7fb0899079fe126d415d52eb523fa",
+      "rev": "d666c3b9eae1704bbaae2de45e8013bf6308488a",
       "src": "https://forge.barrettruth.com/barrettruth/canola.nvim"
     },
     "diagflow.nvim": {
