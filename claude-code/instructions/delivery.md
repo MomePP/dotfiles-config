@@ -26,12 +26,23 @@ range.
   format, an API field, a config key, a register) means listing every reader
   in every repo and changing them together. Another repo's side is its own
   PR or MR; make it a draft if someone else owns that repo.
-- **User decisions.**
-  - Present each choice as a short table: what changes for users, the risk,
-    and a recommendation.
-  - Risky items stay the user's call even after "do all": security and
-    auth, persisted data and migrations, public APIs and wire formats,
-    release, deploy and boot paths.
+- **User decisions.** Sort each decision first:
+  - **Direction change: wait for the user's reply.** It changes what the
+    work is for or how it is built: scope (adding or dropping a feature),
+    the design or architecture, behavior users or other code rely on, a
+    breaking change, a new dependency or cost, or a risky item (security
+    and auth, persisted data and migrations, public APIs and wire formats,
+    release, deploy and boot paths). Risky items stay the user's call even
+    after "do all". Present the choice as a short table (what changes for
+    users, the risk, a recommendation) and keep doing the work that does
+    not depend on it.
+  - **Small decision: decide and go.** It stays inside the agreed direction
+    and is cheap to undo: naming, file placement, choosing between
+    equivalent implementations, test layout, a default the user can change
+    later. Take what fits the codebase, or the recommended option, record
+    it, and list it in the report. For these, this overrides "if uncertain,
+    ask" in coding behavior; the pick is never silent.
+  - Unsure which kind it is: treat it as a direction change.
   - An agent whose fix would settle an open user question stops and reports
     instead of fixing.
   - A "skip" cancels that work and removes its scratch files and worktree.

@@ -25,3 +25,7 @@ are the ones that bind you, on top of your brief:
 - Stop and report instead of fixing when the fix would settle a question the
   user has not decided, or touches security or auth, persisted data or
   migrations, public APIs or wire formats, or release and deploy paths.
+- Small decisions inside your brief (naming, file placement, choosing
+  between equivalent implementations): take what fits the codebase and
+  list each one in your report. Anything that changes direction: stop and
+  report.
