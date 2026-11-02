@@ -64,8 +64,10 @@ When the gate fails, fix on `main` and rerun the workflow: each run rebuilds
   session doesn't load it).
 - pstack policy: autonomy for reversible local work only; push, opening a
   PR/MR, arming auto-merge and merging ask first unless the change takes the
-  no-ask path (proven, nothing breaks, no downside; merge, re-check target
-  branch, record, report). Force-push always asks.
+  no-ask path (proven; breaking changes only if the user approved them in
+  the decision phase and the note exists; no downside; visible changes
+  announced before merge; re-check target branch, record, session report).
+  Force-push always asks.
 - `modelRoles` `opus`, `fable`, `sonnet`, `haiku` back the model-pinned agents
   `task-<alias>` and `poteto-<alias>` in pstack-omp, which stand in for the
   per-item `model` field OMP 18.8.2 removed from `task`. Panels (`interrogate`,

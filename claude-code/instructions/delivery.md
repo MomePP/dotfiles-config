@@ -8,7 +8,8 @@ agent does the work or a coordinator runs several:
 2. Prove it on the real artifact: run it and exercise the changed path.
 3. The cleanup gate (pstack policy). Its passes must not change behavior:
    prove that as below, or redo step 2.
-4. If the change is visible, the user checks it on the device or UI.
+4. If the change is visible, the user checks it on the device or UI; on the
+   no-ask path they are told before the merge and check after it.
 5. Ask, then push or open the PR or MR, unless the change qualifies for
    the no-ask path (pstack policy).
 6. Merge only on the user's word, or through the no-ask path.

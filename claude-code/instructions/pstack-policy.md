@@ -13,24 +13,32 @@ These override pstack where they disagree:
   all of these hold; if any is in doubt, ask:
   - **Proven:** delivery steps 1–3 are done, the gate's review said SHIP,
     and CI is green.
-  - **Nothing breaks:** nothing other code reads changes (shared formats),
-    no risky item from the user-decisions list, and no change a user would
-    notice that needs their check (delivery step 4).
+  - **Breaks only what the user approved:** a breaking change (anything
+    other code reads, or an item from the user-decisions list) qualifies
+    only when the user approved that change in the decision phase, the
+    decision is in the notes, and every reader in the user's repos is
+    updated in the same run and passes its tests. A reader in a repo
+    someone else owns rules the change out.
   - **No downside:** the user owns the repo, the target is the integration
     branch (never a release, production or hotfix branch), and merging
     triggers no deploy, release, data change or cost.
 
   Then, in order:
-  1. Push and open the PR or MR, saying it took the no-ask path and why.
+  1. Push and open the PR or MR, saying it took the no-ask path and why,
+     with the decision note for any breaking change.
   2. Wait for CI and any review bots; treat their findings like a review.
-  3. Merge the way the repo merges.
-  4. Check the target branch: update it, then build, test and smoke the
+  3. If the change is visible, tell the user before merging: what they will
+     see and how to check it. Their check (delivery step 4) comes after the
+     merge.
+  4. Merge the way the repo merges.
+  5. Check the target branch: update it, then build, test and smoke the
      merged head, and `/code-review` the merged change.
-  5. Record the merge and the checks in the notes (record every decision).
-  6. Tell the user: PR link, what changed for users, the checks run.
+  6. Record the merge and the checks in the notes (record every decision).
+  7. Report in the session: PR link, what changed for users, the checks
+     run.
 
-  If step 4 finds a problem, stop: open a revert PR or MR without merging
-  it and tell the user at once.
+  If step 5 finds a problem, stop: open a revert PR or MR without merging
+  it and report it in the session at once.
 - pstack decides where its todo files and decision trails go.
 - **Cleanup gate before every PR or MR.** pstack's playbooks name `/deslop`
   before commit and `/no-comments` before review, but they get skipped. Treat
