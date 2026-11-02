@@ -7,9 +7,10 @@ is compacted, cut off or resumed by someone else.
 Where:
 
 - If the project keeps run notes (for example `.claude/notes/` on a notes
-  branch), put it there as `handoff-<YYYY-MM-DD>.md`, commit and push it.
+  branch), put it there as `handoff-<YYYY-MM-DD>.md` and commit it.
 - Otherwise put it in `.claude/notes/handoff-<YYYY-MM-DD>.md` in the current
   worktree (see the artifacts rules) and commit it.
+- Pushing it follows the push rule: ask first.
 
 What it must hold, so a fresh session can continue without the transcript:
 

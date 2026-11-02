@@ -1,8 +1,9 @@
 # Global instructions (OMP + pstack)
 
 OMP runs pstack (the `pstack@pstack-omp` plugin) as its workflow. Shared rules
-live in the Claude Code fragments imported at the bottom; this file adds the
-OMP translation, the pstack policy, and OMP's artifact rules.
+live in the Claude Code fragments imported at the bottom; this file adds only
+the OMP translation. OMP subagents receive none of this file, imports
+included.
 
 ## OMP harness mapping
 
@@ -23,19 +24,9 @@ OMP translation, the pstack policy, and OMP's artifact rules.
   snapshot, retry once before escalating.
 - **`/code-review`** → spawn the `reviewer` agent.
 
-## pstack policy
-
-These override pstack where they disagree:
-
-- pstack's autonomy ("never block on the human", "just do it") applies to
-  reversible local work: edits, commits on a feature branch, local runs,
-  subagents.
-- **Always ask first** before pushing, force-pushing, opening a PR or MR,
-  arming auto-merge, or merging — including inside the babysit, shipping,
-  autopilot, and orchestrate playbooks. Prepare the work, then stop and ask.
-- pstack decides where its todo files and decision trails go.
-
 ## Shared rules
+
+@~/.config/claude-code/instructions/pstack-policy.md
 
 @~/.config/claude-code/instructions/artifacts.md
 
@@ -48,3 +39,7 @@ These override pstack where they disagree:
 @~/.config/claude-code/instructions/coding-behavior.md
 
 @~/.config/claude-code/instructions/context-handoff.md
+
+@~/.config/claude-code/instructions/delivery.md
+
+@~/.config/claude-code/instructions/hardware.md

@@ -192,6 +192,8 @@ symlink_config "claude-code/skills" ~/.claude/skills
 # ~/.omp/agent/AGENTS.md. omp/AGENTS.md adds the OMP tool mapping and pulls in
 # claude-code/CLAUDE.md via an `@` import, so the shared rules stay single-source.
 symlink_config "omp/AGENTS.md" ~/.omp/agent/AGENTS.md
+# OMP subagents never see AGENTS.md; this rule carries the rules they must follow.
+symlink_config "omp/rules/subagent-brief.md" ~/.omp/agent/rules/subagent-brief.md
 # Shell guard: OMP's version of the claude-code/hooks/deny-*.sh PreToolUse hooks.
 symlink_config "omp/extensions/shell-guard.ts" ~/.omp/agent/extensions/shell-guard.ts
 

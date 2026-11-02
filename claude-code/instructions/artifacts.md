@@ -19,13 +19,16 @@ Pick the location by who needs the file and for how long:
 | This worktree, rerun during the current work | `.claude/test/` | hardware test scripts, host harnesses, probe and measurement scripts |
 | Shared across worktrees, sessions or agents | `/tmp` | build and board locks, handoff files between checkouts |
 | Needed after this work ends, or by other worktrees | commit it (`test/`, `scripts/`) | a harness a knowledge file depends on |
+| Device backups, kept until the user drops them | main checkout's `.claude/backups/` | flash images before a write (see Hardware) |
 
 - Paths are relative to the checkout you are working in, so each worktree
   keeps its own `.claude/tmp/` and `.claude/test/`.
-- Both are ignored globally (`~/.config/git/ignore`); never commit them.
-  Create them if missing; do not ask.
+- `.claude/tmp/`, `.claude/test/` and `.claude/backups/` are ignored
+  globally (`~/.config/git/ignore`); never commit them. Create them if
+  missing; do not ask.
 - A `.claude/knowledges/` file must not depend on a `.claude/tmp/` or
   `.claude/test/` path: that file is gone in every other checkout. Commit the
   script first, or describe the check in the knowledge file itself.
 - When the work lands, delete the worktree's `.claude/tmp/` and
-  `.claude/test/` with it.
+  `.claude/test/` with it. Delete `.claude/backups/` only when the user says
+  so.

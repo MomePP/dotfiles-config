@@ -48,16 +48,24 @@ When the gate fails, fix on `main` and rerun the workflow: each run rebuilds
 ## Dotfiles side
 
 - `claude-code/CLAUDE.md` is only `@~/.config/claude-code/instructions/*.md`
-  imports. Fragments: `workflow-pstack` (Claude only); `artifacts`
-  (notes, knowledges, scope-based scratch dirs), `branch-names`,
-  `edit-retries`, `subagent-worktrees`, `coding-behavior`, `context-handoff`
-  (shared).
+  imports. Fragments: `workflow-pstack` (Claude only); `pstack-policy`
+  (autonomy limits, ask-before-push, cleanup gate), `artifacts`,
+  `branch-names`, `edit-retries`, `subagent-worktrees`, `coding-behavior`,
+  `context-handoff`, `delivery` (change pipeline, decisions, coordinated
+  work, sweep), `hardware` (conditional) (shared).
 - `omp/AGENTS.md` (symlinked as `~/.omp/agent/AGENTS.md`, which shadows any
-  `~/.claude/CLAUDE.md` in OMP) has the OMP harness mapping, pstack policy
-  overrides, and the shared imports.
-- pstack policy: autonomy for reversible local work only; push, force-push,
-  opening a PR/MR, arming auto-merge, and merging always ask first, including
-  in babysit/shipping/autopilot/orchestrate playbooks.
+  `~/.claude/CLAUDE.md` in OMP) has only the OMP harness mapping plus the
+  shared imports. OMP subagents get none of `AGENTS.md`, imports included
+  (probed 2026-11-02 with `sonic` and `task` agents: no `## Artifacts`
+  heading), despite `omp://tools/task.md` saying imported text passes
+  through. The rules implementer subagents need live in
+  `omp/rules/subagent-brief.md` (linked to `~/.omp/agent/rules/`,
+  `alwaysApply`, `agents: [task, task-*, poteto-*, sonic, sub]`, so the main
+  session doesn't load it).
+- pstack policy: autonomy for reversible local work only; push, opening a
+  PR/MR, arming auto-merge and merging ask first unless the change takes the
+  no-ask path (proven, nothing breaks, no downside; merge, re-check target
+  branch, record, report). Force-push always asks.
 - `modelRoles` `opus`, `fable`, `sonnet`, `haiku` back the model-pinned agents
   `task-<alias>` and `poteto-<alias>` in pstack-omp, which stand in for the
   per-item `model` field OMP 18.8.2 removed from `task`. Panels (`interrogate`,
