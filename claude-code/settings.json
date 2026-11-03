@@ -62,7 +62,7 @@
       }
     ]
   },
-  "model": "opus",
+  "model": "opus[1m]",
   "enabledPlugins": {
     "claude-hud@claude-hud": true,
     "product-management@synced": false,
@@ -87,9 +87,10 @@
     }
   },
   "effortLevel": "high",
+  "maxEffortLevel": "high",
   "modelSettings": {
     "claude-opus-5-5": {
-      "effortLevel": "medium"
+      "effortLevel": "high"
     }
   },
   "advisorModel": "fable",
