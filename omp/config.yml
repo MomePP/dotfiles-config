@@ -37,7 +37,7 @@ modelRoles:
   fable: anthropic/claude-fable-5-1:high
   sonnet: anthropic/claude-sonnet-5-5:medium
   haiku: anthropic/claude-haiku-5-5:high
-  plan: "@opus:xhigh"
+  plan: "@opus:high"
   slow: "@opus:high"
   refuter: "@opus:high"
   debugger: "@opus:high"
@@ -50,6 +50,7 @@ modelRoles:
   commit: "@haiku:low"
 task:
   enableEffort: true
+  maxEffort: high
   agentModelOverrides:
     scout: "@smol"
     sonic: "@smol"
@@ -69,7 +70,7 @@ memory:
   backend: mnemopi
 autolearn:
   enabled: true
-defaultThinkingLevel: auto
+defaultThinkingLevel: high
 marketplace:
   autoUpdate: auto
 display:
