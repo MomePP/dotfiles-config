@@ -37,7 +37,7 @@ modelRoles:
   fable: anthropic/claude-fable-5-1:high
   sonnet: anthropic/claude-sonnet-5-5:medium
   haiku: anthropic/claude-haiku-5-5:high
-  plan: "@opus:high"
+  plan: "@opus:xhigh"
   slow: "@opus:high"
   refuter: "@opus:high"
   debugger: "@opus:high"
