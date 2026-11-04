@@ -10,14 +10,14 @@ Where:
   branch), put it there as `handoff-<YYYY-MM-DD>.md` and commit it.
 - Otherwise put it in `.claude/notes/handoff-<YYYY-MM-DD>.md` in the current
   worktree (see the artifacts rules) and commit it.
-- Pushing it follows the push rule: ask first.
+- Push it with the work; no need to ask.
 
 What it must hold, so a fresh session can continue without the transcript:
 
 1. Where the source of truth lives (decision log, MR list, notes) and the
    commit that holds the latest version.
 2. The binding rules for this work (locks, checkouts not to touch, review
-   and push rules, owner decisions already taken).
+   and merge rules, owner decisions already taken).
 3. Hardware or environment state as last seen (ports, what is flashed,
    locks held).
 4. Every agent or job still running: name, task, repo/branch/worktree, and

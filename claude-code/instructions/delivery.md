@@ -8,11 +8,10 @@ agent does the work or a coordinator runs several:
 2. Prove it on the real artifact: run it and exercise the changed path.
 3. The cleanup gate (pstack policy). Its passes must not change behavior:
    prove that as below, or redo step 2.
-4. If the change is visible, the user checks it on the device or UI; on the
-   no-ask path they are told before the merge and check after it.
-5. Ask, then push or open the PR or MR, unless the change qualifies for
-   the no-ask path (pstack policy).
-6. Merge only on the user's word, or through the no-ask path.
+4. Push and open the PR or MR without asking (pstack policy), and report
+   it. If the change is visible, say what the user will see and how to
+   check it on the device or UI.
+5. Merge only on the user's word, after their review in the session.
 
 A review verdict of FIX means new commits, then a re-review of only the fix
 range.
@@ -51,7 +50,7 @@ range.
   if it keeps them (for example a notes branch); otherwise
   `.claude/notes/<topic>.md` in the current worktree, created if missing.
   Check merge and PR state against the forge before recording it. Commit
-  the notes with the work; pushing them follows the push rule.
+  the notes with the work and push them with it.
 - **Reports to the user.**
   - Plain words and short tables, with what changed for users first.
   - Before-and-after numbers, and what is untested.
