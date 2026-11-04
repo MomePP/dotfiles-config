@@ -1,5 +1,10 @@
 ## Hardware
 
+Flashing a development build to a test board the work already uses is a
+small decision: do it without asking, under the rules below, and report what
+is on the board. Still ask before writing eFuses, secure boot or flash
+encryption, or touching a device that ships or that the user is using.
+
 When the work flashes, configures or tests a physical device:
 
 - Pick a device by its serial number or MAC, never by its port name; ports

@@ -8,7 +8,12 @@ These override pstack where they disagree:
 - **Always ask first** before pushing, force-pushing, opening a PR or MR,
   arming auto-merge, or merging — including inside the babysit, shipping,
   autopilot, and orchestrate playbooks. Prepare the work, then stop and ask.
-  The one exception is the no-ask path below; force-pushing always asks.
+  The exceptions are the two items below; force-pushing always asks.
+- **Pushing to an open PR or MR is a small decision.** New commits (never
+  a force-push) to the branch of a PR or MR that is already open, in a repo
+  the user owns, need no ask once the cleanup gate has run on them: push,
+  then report it. Opening, merging and arming auto-merge still ask unless
+  they take the no-ask path.
 - **No-ask path.** Push, open, merge and report without asking only when
   all of these hold; if any is in doubt, ask:
   - **Proven:** delivery steps 1–3 are done, the gate's review said SHIP,
