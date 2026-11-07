@@ -43,3 +43,5 @@ included.
 @~/.config/claude-code/instructions/delivery.md
 
 @~/.config/claude-code/instructions/hardware.md
+
+@~/.config/claude-code/instructions/ci-minutes.md
