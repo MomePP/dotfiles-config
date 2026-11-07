@@ -93,7 +93,6 @@
       "effortLevel": "high"
     }
   },
-  "advisorModel": "fable",
   "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "theme": "auto",
