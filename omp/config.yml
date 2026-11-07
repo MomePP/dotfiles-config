@@ -1,5 +1,5 @@
 symbolPreset: nerd
-setupVersion: 2
+setupVersion: 3
 theme:
   dark: dark-github
   light: light
@@ -82,3 +82,5 @@ compaction:
     anthropic/*: f900000
 dev:
   autoqa: false
+update:
+  auto: true
