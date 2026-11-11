@@ -33,3 +33,6 @@ claude-code/skills/design-taste-frontend
 # carapace's zsh bridge (CARAPACE_BRIDGES in zsh/.zprofile) writes a throwaway
 # ZDOTDIR here: an empty .zshrc and a compdump it regenerates on demand
 /carapace/bridge/
+
+# OMP's flock file for config.yml
+/omp/config.yml.lock
