@@ -34,7 +34,7 @@ statusLine:
 modelRoles:
   default: anthropic/claude-opus-5-5
   opus: anthropic/claude-opus-5-5:high
-  fable: anthropic/claude-fable-5-1:high
+  fable: anthropic/claude-fable-5-2:high
   sonnet: anthropic/claude-sonnet-5-5:medium
   haiku: anthropic/claude-haiku-5-5:high
   plan: "@opus:xhigh"
