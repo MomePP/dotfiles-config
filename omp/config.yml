@@ -57,6 +57,7 @@ task:
     task: "@task"
     reviewer: "@refuter"
     security-reviewer: "@refuter"
+    comment-sicko: "@sonnet"
 tui:
   textSizing: true
   tight: false
