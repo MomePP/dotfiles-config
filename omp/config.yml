@@ -34,23 +34,25 @@ statusLine:
 modelRoles:
   default: anthropic/claude-opus-5-5
   opus: anthropic/claude-opus-5-5:medium
-  fable: anthropic/claude-fable-5-2:medium
   sonnet: anthropic/claude-sonnet-5-5:high
   haiku: anthropic/claude-haiku-5-5:high
   plan: "@opus:xhigh"
   slow: "@opus:high"
-  refuter: "@opus:high"
-  debugger: "@opus:high"
-  task: "@sonnet:medium"
-  researcher: "@sonnet:medium"
+  refuter: "@opus"
+  debugger: "@opus"
+  task: "@sonnet"
+  researcher: "@sonnet"
   vision: "@sonnet"
   advisor: "@sonnet"
-  smol: "@haiku:medium"
+  smol: "@haiku"
   tiny: "@haiku:low"
   commit: "@haiku:low"
 task:
   enableEffort: true
-  maxEffort: high
+  maxEffort: xhigh
+  disabledAgents:
+    - poteto-fable
+    - task-fable
   agentModelOverrides:
     scout: "@smol"
     sonic: "@smol"
@@ -58,8 +60,6 @@ task:
     reviewer: "@refuter"
     security-reviewer: "@refuter"
     comment-sicko: "@sonnet"
-    poteto-fable: "@opus"
-    task-fable: "@opus"
     poteto-agent: "@opus"
     thermo-nuclear-review-subagent: "@opus"
     thermo-nuclear-code-quality-review-subagent: "@opus"

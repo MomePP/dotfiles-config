@@ -10,8 +10,10 @@ included.
 - **Skills**: load with `read skill://<name>`. There is no `Skill` tool.
 - **Subagent dispatch** → `task`. Inside a pstack skill, follow the skill's
   agent and model choices as `rule://pstack-omp-tools` maps them: `task` has
-  no per-item `model` field, so a named model (`opus`, `fable`, `sonnet`,
-  `haiku`) selects a model-pinned agent (`task-<alias>`, `poteto-<alias>`).
+  no per-item `model` field, so a named model (`opus`, `sonnet`, `haiku`)
+  selects a model-pinned agent (`task-<alias>`, `poteto-<alias>`). `fable`
+  has no pinned agent: a single `fable` role runs on the matching `opus`
+  agent with `effort: "hi"`, and a multi-model panel drops its `fable` seat.
   Outside pstack skills: implementers use the default `task` agent; code
   reviewers use `reviewer` (or `refuter` for adversarial verification of a
   finished change); hard root-causing uses `debugger`; doc/source
