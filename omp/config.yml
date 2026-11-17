@@ -87,3 +87,5 @@ dev:
   autoqa: false
 update:
   auto: true
+claudeResets:
+  autoRedeemWeekly: "no"
