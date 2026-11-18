@@ -47,3 +47,5 @@ included.
 @~/.config/claude-code/instructions/hardware.md
 
 @~/.config/claude-code/instructions/ci-minutes.md
+
+@~/.config/claude-code/instructions/file-paths.md
