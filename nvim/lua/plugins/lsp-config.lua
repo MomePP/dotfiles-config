@@ -38,7 +38,7 @@ mason_module.config = function()
 
     -- INFO: every after/lsp/<server>.lua names a server to install and enable;
     -- a `return {}` stub marks one that needs no overrides
-    local server_names = vim.iter(vim.api.nvim_get_runtime_file('after/lsp/*.lua', true))
+    local server_names = vim.iter(vim.fn.glob(vim.fn.stdpath('config') .. '/after/lsp/*.lua', false, true))
         :map(function(file) return vim.fn.fnamemodify(file, ':t:r') end)
         :totable()
 
