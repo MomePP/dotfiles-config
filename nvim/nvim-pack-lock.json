@@ -9,7 +9,7 @@
       "src": "https://github.com/fang2hou/blink-copilot"
     },
     "blink.cmp": {
-      "rev": "7b31e1b6497be70f620bbad83a789929248697ac",
+      "rev": "3d3631f641e6e9b60066f269f435d23c524ceeb0",
       "src": "https://github.com/saghen/blink.cmp"
     },
     "blink.lib": {
@@ -21,7 +21,7 @@
       "src": "https://github.com/saghen/blink.pairs"
     },
     "canola.nvim": {
-      "rev": "d666c3b9eae1704bbaae2de45e8013bf6308488a",
+      "rev": "27f5078552b7183b6682fe43baa23133abc01ce2",
       "src": "https://forge.barrettruth.com/barrettruth/canola.nvim"
     },
     "diagflow.nvim": {
@@ -29,7 +29,7 @@
       "src": "https://github.com/dgagn/diagflow.nvim"
     },
     "focus.nvim": {
-      "rev": "36ebedeebe82ebea250c9d671769194caa033902",
+      "rev": "0f9047a403a4e6ed724c7870ea8ce0d59f1020a9",
       "src": "https://github.com/nvim-focus/focus.nvim"
     },
     "friendly-snippets": {
@@ -37,7 +37,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "gitsigns.nvim": {
-      "rev": "ef707fb93301a9b856f36eae4c8f56f5b988a794",
+      "rev": "c0862d382a35b7b45757d8d151a6a634c09bf3ce",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "guess-indent.nvim": {
@@ -61,7 +61,7 @@
       "src": "https://github.com/cvlmtg/inline-diff.nvim"
     },
     "leap.nvim": {
-      "rev": "277e04fad21e3af05a55cc414757b09a704f2a92",
+      "rev": "5af48b78f6c1310ab1f61131d785387faae4cdd4",
       "src": "https://codeberg.org/andyg/leap.nvim"
     },
     "live-rename.nvim": {
@@ -77,7 +77,7 @@
       "src": "https://github.com/MomePP/marks.nvim"
     },
     "mason-lspconfig.nvim": {
-      "rev": "55eceab8975036ac43a4176cbfe0d4bf1ddae93f",
+      "rev": "761d376b5fbe6b21f659432ffadc1205c660176c",
       "src": "https://github.com/mason-org/mason-lspconfig.nvim"
     },
     "mason.nvim": {
@@ -85,23 +85,23 @@
       "src": "https://github.com/mason-org/mason.nvim"
     },
     "mini.ai": {
-      "rev": "98a5d73937930a2bb08129020601ab8d5016d706",
+      "rev": "813d10a43d5d4eda4816e6a27eb6bf6250f75ea8",
       "src": "https://github.com/nvim-mini/mini.ai"
     },
     "mini.icons": {
-      "rev": "eab3e692d796d78ea6ffc978d8a380ff26fcf4e3",
+      "rev": "5d58117d176c133f4cb5585ec8cb3450881c89a0",
       "src": "https://github.com/nvim-mini/mini.icons"
     },
     "mini.move": {
-      "rev": "5207c4de3d7db84aadedf72e4a27048d9e46ccf9",
+      "rev": "640f7e3524e4d749d4dcaf1b462d974c3d38bd73",
       "src": "https://github.com/nvim-mini/mini.move"
     },
     "mini.sessions": {
-      "rev": "ecf7507070bb2f3bac8f139ee182d79f9c60b801",
+      "rev": "eb8f08cef4c64acb8a82ebecd3b51e0b8e54b692",
       "src": "https://github.com/nvim-mini/mini.sessions"
     },
     "mini.surround": {
-      "rev": "5357f00aca51a3b43e7775901b1ad9699f8c2678",
+      "rev": "77f376bdebb3440ad13bc40b48062b29bccb7577",
       "src": "https://github.com/nvim-mini/mini.surround"
     },
     "noice.nvim": {
@@ -117,11 +117,11 @@
       "src": "https://github.com/momepp/oxocarbon.nvim"
     },
     "nvim-lspconfig": {
-      "rev": "443d92c6bea761ab54cdde46fb197a2b4d614bdd",
+      "rev": "4648fd8ba5c678d7e2db75ae44ffac269bb589d8",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-treesitter": {
-      "rev": "19bdfc04f40ed2ccb3340591d125f759b0406875",
+      "rev": "37e52c733ada9d8d544d53a763140ef1ba404353",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter",
       "version": "'main'"
     },
@@ -139,7 +139,7 @@
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "render-markdown.nvim": {
-      "rev": "9c235bedc4f96145e63fcad5b78cd78bce8822c4",
+      "rev": "a67f826164c38c836fc6060f32b275c4c43317a7",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "sidekick.nvim": {
@@ -163,7 +163,7 @@
       "src": "https://github.com/folke/ts-comments.nvim"
     },
     "zpack.nvim": {
-      "rev": "bfd84e346ec69018731317fbaf01d5037a9fccff",
+      "rev": "324559ae60852be1d92ee191766958ee3664e830",
       "src": "https://github.com/zuqini/zpack.nvim"
     }
   }
