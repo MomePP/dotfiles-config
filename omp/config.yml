@@ -89,3 +89,4 @@ update:
   auto: true
 claudeResets:
   autoRedeemWeekly: "no"
+  autoRedeem5h: "no"
