@@ -79,11 +79,12 @@ the subagents do the work.
   - Parallel implementers on files that don't overlap work in their own
     scratch worktrees and hand back commits or patches. The coordinator
     integrates them once the main tree's writer is done.
-- **Shared locks** guard builds and devices. Take one with
+- **Shared locks** guard devices. Take one with
   `mkdir /tmp/<repo>-<resource>.lock`, then write an `owner` file inside
   naming the agent, worktree, task and start time; remove the directory
   when done. A lock whose agent is no longer running is stale: confirm that
-  before removing it, and never remove a live agent's lock.
+  before removing it, and never remove a live agent's lock. Builds use the
+  `flock` lock of the build-load rule instead.
 - **After a failed agent**, check its worktree, the locks and any device
   state, then resume the same agent with a message.
 - **Post-merge sweep**, only when the user asks. On a new branch (named per
