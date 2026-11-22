@@ -22,6 +22,4 @@
 
 @~/.config/claude-code/instructions/ci-minutes.md
 
-@~/.config/claude-code/instructions/build-load.md
-
 @~/.config/claude-code/instructions/file-paths.md

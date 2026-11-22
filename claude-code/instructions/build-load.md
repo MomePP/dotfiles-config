@@ -11,7 +11,7 @@ at 0.7 GB each, plus `cppcheck` at 1.3 GB.
   build (`pio run`, `pio check`, `cmake --build`, `make`, `cargo build`),
   any render or emulator run, and any full test suite that compiles. The
   lock waits its turn and frees itself when the command ends or dies.
-  `flock` is `/opt/homebrew/bin/flock`, and OMP has it as a shell builtin.
+  `flock` is the OMP shell builtin; nothing to install.
 - Cap parallel jobs at 4: `pio run -j 4`, `make -j4`, `cmake --build . -j 4`,
   `cargo build -j 4`.
 - Host tests that compile one file at a time, a lint, or a single `g++` need
