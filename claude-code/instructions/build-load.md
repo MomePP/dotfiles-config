@@ -1,7 +1,8 @@
 ## Build load → at most two heavy jobs at a time on this Mac
 
 The work runs on a MacBook Pro M5 with 32 GB of RAM (owner, 2026-11-25:
-two heavy jobs and three working agents at once). The 16 GB and 24 GB
+two heavy jobs at `-j 2` each, three working agents; `-j 4` per build made
+the fan loud). The 16 GB and 24 GB
 MacBook Airs before it ran short with several agents: on 2026-11-22, about
 20 GB of app memory, 9 GB held compressed and about 43 GB swapped out over
 8 days. The peaks came from parallel builds, about 10 compiler processes at
@@ -20,8 +21,8 @@ MacBook Airs before it ran short with several agents: on 2026-11-22, about
   shell builtin; nothing to install. It exists only in the tool shell, not
   inside a script run with `bash script.sh`: call `flock` from the tool
   shell around the script, never inside it.
-- Cap parallel jobs at 4 per build: `pio run -j 4`, `make -j4`,
-  `cmake --build . -j 4`, `cargo build -j 4`.
+- Cap parallel jobs at 2 per build: `pio run -j 2`, `make -j2`,
+  `cmake --build . -j 2`, `cargo build -j 2`.
 - Host tests that compile one file at a time, a lint, or a single `g++` need
   no lock.
 - Never hold a slot across a wait, a sleep or a question to the user.
