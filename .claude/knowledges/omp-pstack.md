@@ -1,7 +1,8 @@
 # OMP runs pstack (via MomePP/pstack-omp)
 
 OMP (driven through Paseo) uses Lauren Tan's pstack as its workflow instead of
-superpowers. Claude Code still uses superpowers. The two share rule fragments.
+superpowers. Claude Code uses `pstack@pstack-claude` directly. The two share
+rule fragments.
 
 ## Pieces
 
@@ -11,8 +12,9 @@ superpowers. Claude Code still uses superpowers. The two share rule fragments.
 | Skills | `plugin/skills/` | Copied verbatim from `michael-denyer/pstack-claude` release tags by `scripts/sync.sh`. Never hand-edited. |
 | Routing rule | `plugin/rules/pstack-routing.md` (`alwaysApply`) | Route multi-file / design / unknown-cause bug / perf work through `skill://poteto-mode`; inline Claude→OMP translations; playbook steps go into `todo`, skipped steps are `drop`ped with a stated `skip: <reason>` |
 | Mapping rule | `plugin/rules/pstack-omp-tools.md` (`rule://pstack-omp-tools`) | Full Claude Code → OMP table (`Agent`→`task`, `AskUserQuestion`→`ask`, `TodoWrite`→`todo`, transcripts→`~/.omp/agent/sessions`, …) |
-| Agents | `plugin/agents/poteto-agent.md` (`autoloadSkills: [poteto-mode]`), `comment-sicko.md` (upstream body) | Marketplace installs do surface plugin `agents/` and `rules/` on omp 18.5.0 |
-| Gate | `scripts/check.sh` | Fails on: no skills, skill without `name`/`description`, unknown `pstack:` agent or skill ref, rule/agent `skill://` or `autoloadSkills` ref with no skill, invalid catalog/lock JSON, catalog without version |
+| Agents | `plugin/agents/poteto-agent.md` (`autoloadSkills: [poteto-mode]`), its model-pinned copies `poteto-{opus,sonnet,haiku}` and `task-{opus,sonnet,haiku}`, the two thermo-nuclear reviewers, `comment-sicko.md` | `comment-sicko` is copied verbatim by `sync.sh`; the rest are hand ports. Marketplace installs do surface plugin `agents/` and `rules/` on omp 18.5.0 |
+| Port baseline | `port.lock.json` | Upstream tag and blob of each hand-ported file (`plugins/pstack/agents/*`, `omp/`, `hooks/session-start-context.md`, `omp-tools.md`). `sync.sh` prints `port:` for a blob that differs; `scripts/sync.sh --ack <tag>` records a port. |
+| Gate | `scripts/check.sh` | Fails on: no skills, skill without `name`/`description`, unknown `pstack:` agent or skill ref, rule/agent `skill://` or `autoloadSkills` ref with no skill, a pinned agent body that differs from its base, a panel list in `pstack-omp-tools` that differs from upstream's generated `codex-tools.md` list, invalid catalog/lock JSON, catalog without version |
 | Version | `.omp-plugin/marketplace.json` | `<pstack-claude VERSION>-omp.<n>`: new upstream VERSION → `.1`; new upstream commit, same VERSION → `n+1`; local changes → bump `n` by hand. `omp plugin upgrade` only sees catalog version changes. |
 
 Why skills stay verbatim: every other OMP port (negoro26, Zukitata03, Jrecos,
@@ -25,7 +27,9 @@ pstack-claude's own Pi extension is not used: it duplicates OMP's
 
 1. `sync.yml` runs daily (and on `workflow_dispatch`): `sync.sh` to the latest
    `v*` tag, `check.sh`, then `peter-evans/create-pull-request@v8` opens
-   `sync/pstack-claude` → `main`. Gate fail → draft PR, no auto-merge.
+   `sync/pstack-claude` → `main`. Gate fail → draft PR, no auto-merge. A
+   `port:` line (upstream changed a hand-ported file since `port.lock.json`)
+   → PR stays open, auto-merge off, body links the upstream compare.
 2. The PR is opened with secret `SYNC_TOKEN` (fine-grained PAT, this repo only,
    Contents + Pull requests read/write). A PR opened with `GITHUB_TOKEN` does
    not start `check` without maintainer approval, so it would never merge.
@@ -42,6 +46,11 @@ pstack-claude's own Pi extension is not used: it duplicates OMP's
 
 When the gate fails, fix on `main` and rerun the workflow: each run rebuilds
 `sync/pstack-claude` from `main`, so commits pushed to that branch are lost.
+To clear a `port:` hold, port the change, run `scripts/sync.sh --ack <tag>`,
+and commit `port.lock.json` with it; the push to `main` reruns the sync,
+which arms auto-merge. A port that needs the new skills (e.g. a panel list
+the gate compares with them) goes in one PR on top of `scripts/sync.sh <tag>`
+instead (as #45 did for v0.9.157); the next run closes the sync PR as empty.
 `check.yml` runs on push to `main` and on PRs, with `actions/checkout@v7`
 (Node 24).
 
@@ -62,17 +71,17 @@ When the gate fails, fix on `main` and rerun the workflow: each run rebuilds
   `omp/rules/subagent-brief.md` (linked to `~/.omp/agent/rules/`,
   `alwaysApply`, `agents: [task, task-*, poteto-*, sonic, sub]`, so the main
   session doesn't load it).
-- pstack policy: autonomy for reversible local work only; push, opening a
-  PR/MR, arming auto-merge and merging ask first unless the change takes the
-  no-ask path (proven; breaking changes only if the user approved them in
-  the decision phase and the note exists; no downside; visible changes
-  announced before merge; re-check target branch, record, session report).
-  Force-push always asks.
-- `modelRoles` `opus`, `fable`, `sonnet`, `haiku` back the model-pinned agents
+- pstack policy (`claude-code/instructions/pstack-policy.md`): autonomy up to
+  the merge (edits, commits, push, force-push of the work's own branch,
+  opening a PR/MR, fixing CI); merging and arming auto-merge wait for the
+  user. Cleanup gate before every PR/MR: `/deslop`, `/no-comments`, then a
+  `/code-review` pass.
+- `modelRoles` `opus`, `sonnet`, `haiku` back the model-pinned agents
   `task-<alias>` and `poteto-<alias>` in pstack-omp, which stand in for the
-  per-item `model` field OMP 18.8.2 removed from `task`. Panels (`interrogate`,
-  `arena`, `architect`) need these to point at different models to stay
-  diverse.
+  per-item `model` field OMP 18.8.2 removed from `task`. `fable` has no agent
+  (pstack-omp #43): its role runs on `opus` at `effort: "hi"`. Panels
+  (`arena`, `interrogate` since upstream 0.9.140) need the aliases to point
+  at different models to stay diverse.
 - Runtime: `superpowers@superpowers-dev` disabled, `pstack@pstack-omp`
   installed; no context tool (lean-ctx removed 2026-10-23, OMP native tools).
 

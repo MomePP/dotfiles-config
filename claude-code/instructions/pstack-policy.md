@@ -5,8 +5,7 @@ These override pstack where they disagree:
 - pstack's autonomy ("never block on the human", "just do it") covers the
   whole road up to the merge: edits, commits, pushing, force-pushing the
   work's own branch, opening a PR or MR, fixing CI, including inside the
-  babysit, shipping, autopilot, and orchestrate playbooks. Do it, then
-  report it.
+  babysit, shipping, and autopilot playbooks. Do it, then report it.
 - **Merging waits for the user.** Never merge or arm auto-merge on your
   own; pushing straight to the integration, release or hotfix branch counts
   as merging. Bring the PR or MR to ready (cleanup gate done, review said
