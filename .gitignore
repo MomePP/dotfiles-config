@@ -3,11 +3,7 @@ tmux/plugins
 
 github-copilot
 gh
-.nuxtrc
-.nuxt/devtools
-.copilot
 mole
-/.tmp/external-context
 /glab-cli
 /.claude/settings.local.json
 /.claude/tmp/
