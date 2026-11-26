@@ -12,6 +12,14 @@ agent does the work or a coordinator runs several:
    it. If the change is visible, say what the user will see and how to
    check it on the device or UI.
 5. Merge only on the user's word, after their review in the session.
+6. Once the PR or MR is merged or closed, remove every checkout made for
+   it: the work's worktree and each review, audit, bench or scratch
+   checkout. First check each one: no uncommitted change, no commit
+   missing from the remote, and nothing kept only in `.claude/` (notes,
+   flash images). A checkout that fails a check goes to the user instead.
+   Remove with `git worktree remove`, never `rm -rf`, then delete the
+   local branch, and report what was removed. A session that ends before
+   the merge lists its open checkouts in its report or handoff instead.
 
 A review verdict of FIX means new commits, then a re-review of only the fix
 range.
@@ -75,7 +83,11 @@ the subagents do the work.
     path, one commit per item, no push, and which gate steps it runs.
 - **One writer per worktree.**
   - Read-only reviewers and auditors get their own detached checkout of the
-    commit under review.
+    commit under review. The coordinator removes it once the verdict is in.
+  - Every checkout is made with `git worktree add` from the repo's main
+    checkout, never with a second `git clone` into a worktrees directory: a
+    clone's local branches and stashes are invisible to `git worktree list`
+    and to any sweep that relies on it.
   - Parallel implementers on files that don't overlap work in their own
     scratch worktrees and hand back commits or patches. The coordinator
     integrates them once the main tree's writer is done.
