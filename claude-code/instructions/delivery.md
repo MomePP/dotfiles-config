@@ -15,11 +15,14 @@ agent does the work or a coordinator runs several:
 6. Once the PR or MR is merged or closed, remove every checkout made for
    it: the work's worktree and each review, audit, bench or scratch
    checkout. First check each one: no uncommitted change, no commit
-   missing from the remote, and nothing kept only in `.claude/` (notes,
-   flash images). A checkout that fails a check goes to the user instead.
-   Remove with `git worktree remove`, never `rm -rf`, then delete the
-   local branch, and report what was removed. A session that ends before
-   the merge lists its open checkouts in its report or handoff instead.
+   missing from the remote, nothing kept only in `.claude/` (notes,
+   flash images), and no other checkout borrowing its git objects (a
+   submodule `objects/info/alternates` under the repo's
+   `.git/worktrees/` that points into it). A checkout that fails a check
+   goes to the user instead. Remove with `git worktree remove`, never
+   `rm -rf`, then delete the local branch, and report what was removed. A
+   session that ends before the merge lists its open checkouts in its
+   report or handoff instead.
 
 A review verdict of FIX means new commits, then a re-review of only the fix
 range.
